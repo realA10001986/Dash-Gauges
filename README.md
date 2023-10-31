@@ -35,7 +35,7 @@ The control board is a modified TCD control board from CircuitSetup:
 - The ENTER button is removed from the PCB and its pins serve as the "Side Switch".
 - The white LED serves as the "Empty" LED in the "Roentgens" meter; it needs to desoldered.
 - The other LEDS need to be removed from the PCB as they are not needed.
-- The volume pot can be removed; this is, of course, optional, but since this board is assumingly hiddem somewhere, the pot would be inaccessible anyway.
+- The volume pot can be removed; this is, of course, optional, but since this board is assumingly hidden somewhere, the pot would be inaccessible anyway.
 
 ### Switch board
 
