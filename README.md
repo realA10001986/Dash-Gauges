@@ -61,7 +61,7 @@ Connectors on the Switch Board:
   * IO13: From "IO13" on the Control Board
   * IO27: From "IO27" on the Control Board
  
-- 5V/GND: 5V and GND from the Control Board. There are two connectors for power pn the Switch Board; you can choose which one suits you better.
+- 5V/GND: 5V and GND from the Control Board. There are two connectors for power on the Switch Board; you can choose which one suits you better.
 
 - SCL/SDA: The i2c signal from he Control Board.
 
