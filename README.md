@@ -1,4 +1,4 @@
-# Plutonium Gauges
+# Dash Gauges
 
 This repository holds some DIY instructions for building a Plutonium Gauge panel, as seen in the Back To The Future movies, and a suitable firmware for that panel. This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](https://tcd.backtothefutu.re) as it relies on the TCD's keypad to control many of its functions.
 
