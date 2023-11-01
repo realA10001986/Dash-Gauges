@@ -377,7 +377,7 @@ The TCD can communicate with the Dash Gauges wirelessly, via WiFi. It can send o
 
 Note that the TCD's firmware must be up to date for BTTFN. You can use [this](http://tcd.backtothefutu.re) one or CircuitSetup's release 2.9 or later.
 
-![BTTFN connection](https://github.com/realA10001986/Dash-Gauges/assets/76924199/3a74968c-efdc-4493-a1a0-c1622bce636d)
+![BTTFN connection](https://github.com/realA10001986/Dash-Gauges/assets/76924199/9342b658-b772-4106-9c57-56d135f6962b)
 
 In order to connect your Dash Gauges to the TCD using BTTFN, just enter the TCD's IP address or hostname in the **_IP address or hostname of TCD_** field in the Dash Gauges's Config Portal. On the TCD, no special configuration is required. Note that you need TCD firmware 2.9.99 or later for using a hostname; previous versions only work with an IP address.
   
@@ -408,7 +408,7 @@ The Dash Gauges can - to some extent - be controlled through messages sent to to
 
 If both TCD and Dash Gauges are connected to the same broker, and the option **_Send event notifications_** is checked on the TCD's side, the Dash Gauges will receive information on time travel and alarm and play their sequences in sync with the TCD. Unlike BTTFN, however, no other communication takes place.
 
-![MQTT connection](https://github.com/realA10001986/Dash-Gauges/assets/76924199/9d4aac23-d6ce-4dc6-8b49-42d7cd80717b)
+![MQTT connection](https://github.com/realA10001986/Dash-Gauges/assets/76924199/f2a84eb4-ee50-44c4-9dc0-9a60345dbbaa)
 
 MQTT and BTTFN can co-exist. However, the TCD only sends out time travel and alarm notifications through either MQTT or BTTFN, never both. If you have other MQTT-aware devices listening to the TCD's public topic (bttf/tcd/pub) in order to react to time travel or alarm messages, use MQTT (ie check **_Send event notifications_**). If only BTTFN-aware devices are to be used, uncheck this option to use BTTFN as it has less latency.
 
