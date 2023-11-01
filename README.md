@@ -36,7 +36,7 @@ The control board is a modified TCD control board from CircuitSetup:
 - The white LED serves as the "Empty" LED in the "Roentgens" meter; it needs to desoldered.
 - The other LEDS need to be removed from the PCB as they stick out and are not needed.
 - The volume pot can be removed; this is, of course, optional, but since this board is assumingly hidden somewhere, the pot would be inaccessible anyway.
-- The connectors at the top of the PCB (i2c, audio) were relocated to the front side of the PCB (they are normally on the back)
+- The i2c, audio and IO connectors were relocated to the front side of the PCB (they are normally on the back)
 
 ![ControlBoard](https://github.com/realA10001986/Dash-Gauges/assets/76924199/82f25c22-d60b-493c-a785-5c8b78f2ca32)
 
