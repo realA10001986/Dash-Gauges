@@ -1001,9 +1001,7 @@ static float getRawVolume()
             avg2 = round((float)avg2 / (float)(VOL_SMOOTH_SIZE/2));
             avg = (abs(avg1-prev_avg) < abs(avg2-prev_avg)) ? avg1 : avg2;
 
-            /*
-            Serial.printf("%d %d %d %d\n", raw, avg1, avg2, avg);
-            */
+            //Serial.printf("%d %d %d %d\n", raw, avg1, avg2, avg);
             
             prev_avg = avg;
         }

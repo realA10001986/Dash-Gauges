@@ -70,7 +70,7 @@ void mp_makeShuffle(bool enable);
 int  mp_checkForFolder(int num);
 
 // Default volume (index or 255 for knob)
-#define DEFAULT_VOLUME 255
+#define DEFAULT_VOLUME 6
 
 #define PA_LOOP    0x0001
 #define PA_INTRMUS 0x0002
