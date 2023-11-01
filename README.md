@@ -1,8 +1,8 @@
 # Dash Gauges
 
-This repository holds some DIY instructions for building a Plutonium Gauge panel, as seen in the Back To The Future movies, and a suitable firmware for that panel. This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](https://tcd.backtothefutu.re) as it relies on the TCD's keypad to control many of its functions.
+This repository holds some DIY instructions for building a Dash Gauge panel, as seen in the Back To The Future movies, and a suitable firmware for that panel. This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](https://tcd.backtothefutu.re) as it relies on the TCD's keypad to control many of its functions.
 
-![my_pg](https://github.com/realA10001986/Plutonium-Gauges/assets/76924199/ef3f93a9-6b5a-4fb9-8c58-12dc777d61da)
+![my_pg](https://github.com/realA10001986/Dash-Gauges/assets/76924199/ef3f93a9-6b5a-4fb9-8c58-12dc777d61da)
 
 The Panel consists of several parts:
 - Aluminum (Aluminium for non-Americans) enclosure; the measurements are in the ["enclosure"](enclosure) folder of this repository.
@@ -41,11 +41,11 @@ The control board is a modified TCD control board from CircuitSetup:
 
 In order to reduce cable chaos I designed a simple "switch board" which mounts on the smaller gauges. It carries the MCP4728 break out board, a single channel relay board, all resistors for the gauges and LEDs, the LEDs for the smaller gauges and connectors for cables to the control board and to the "Roentgens" gauge. Also, it has connectors for an external Time Travel button and the door switches. An early version is depicted below:
 
-![sb1](https://github.com/realA10001986/Plutonium-Gauges/assets/76924199/27d6e492-9447-42bb-bfdc-15e2d20b4e66)
+![sb1](https://github.com/realA10001986/Dash-Gauges/assets/76924199/27d6e492-9447-42bb-bfdc-15e2d20b4e66)
 
 It carries this relay module for the lights (desolder the screw terminals, put in pin socket, pitch 5mm, 3 positions, for example Samtec HPF-03-01-T-S):
 
-![relay](https://github.com/realA10001986/Plutonium-Gauges/assets/76924199/eef6cc62-21e1-4700-99df-499739c4ea61)
+![relay](https://github.com/realA10001986/Dash-Gauges/assets/76924199/eef6cc62-21e1-4700-99df-499739c4ea61)
 
 This module is not the most elegant solution but the easiest one if you, like me, are using real lamps instead of LEDs: also, it allows for an external power source for the lights (eg 12V).
 
@@ -87,11 +87,11 @@ For the backlight, I drilled a hole in the rear of the metal enclosure, center b
 
 The big "Roentgens" gauge is more of a problem. I was lucky to score a Simpson 49L VU-meter, which is operated with a 3k6 resistor in series (R5+R6 on the Switch Board). Its lighting is through two 6V lamps which need no resistor; R11 on the Switch Board therefore needs to be bridged with a wire. If you prefer LEDs, put a suitable resistor in place instead.
 
-Properly looking Simpson meters are obtainable, even on ebay, but there are many different ones. In the movie, they used one with lights (BA9S, 6V), which means that the enclosure is much thicker than on those without. That thickness, however, is needed for the "Empty" light. The second problem is that the meters mostly are for voltages beyond what we have available. Since I am more of a software guy, I can't give any further advice here; maybe the voltmeters can be modified somehow (I assume they have big resistors which can be removed or bridged), or a level shifter can be used. In the worst case, the meter can only show two values - 0 and "full" via a level shifter or a relay, using external power. For the purpose of the Plutonium Gauges that is not perfect, but enough for re-creating the movie scenes.
+Properly looking Simpson meters are obtainable, even on ebay, but there are many different ones. In the movie, they used one with lights (BA9S, 6V), which means that the enclosure is much thicker than on those without. That thickness, however, is needed for the "Empty" light. The second problem is that the meters mostly are for voltages beyond what we have available. Since I am more of a software guy, I can't give any further advice here; maybe the voltmeters can be modified somehow (I assume they have big resistors which can be removed or bridged), or a level shifter can be used. In the worst case, the meter can only show two values - 0 and "full" via a level shifter or a relay, using external power. For the purpose of the Dash Gauges that is not perfect, but enough for re-creating the movie scenes.
 
 The "Empty" light: That was the easy part; I used a button like this one:
 
-![emptybutton](https://github.com/realA10001986/Plutonium-Gauges/assets/76924199/53187b70-9399-44a4-bd78-090f055a3423)
+![emptybutton](https://github.com/realA10001986/Dash-Gauges/assets/76924199/53187b70-9399-44a4-bd78-090f055a3423)
 
 The LED in those buttons is driven with 12V using a resistor; this resistor needs to be removed. No need to take out the blue part for this modification; just remove the red cover and pull out the LED; then desolder the LED and bridge the resistor.
 
@@ -107,11 +107,11 @@ The enclosure consists of three parts: The front and two side pieces. Measuremen
 
 There are different alternative ways to install this firmware:
 
-1) If a previous version of the Plutonium Gauges firmware was installed on your device, you can upload the provided pre-compiled binary to update to the current version: Enter the [Config Portal](#the-config-portal), click on "Update" and select the pre-compiled binary file provided in this repository ("install/plutoniumgauges-A10001986.ino.nodemcu-32s.bin").
+1) If a previous version of the Dash Gauges firmware was installed on your device, you can upload the provided pre-compiled binary to update to the current version: Enter the [Config Portal](#the-config-portal), click on "Update" and select the pre-compiled binary file provided in this repository ("install/dashgauges-A10001986.ino.nodemcu-32s.bin").
 
-If you, like me, use a TCD control board to drive your Plutonium Gauges, installation in this way is also possible if the TCD firmware are installed on your ESP32 before.
+If you, like me, use a TCD control board to drive your Dash Gauges, installation in this way is also possible if the TCD firmware are installed on your ESP32 before.
 
-2) Using the Arduino IDE or PlatformIO: Download the sketch source code, all required libraries, compile and upload it. This method is the one for fresh ESP32 boards and/or folks familiar with the programming tool chain. Detailed build information is in [plutoniumgauges-A10001986.ino](https://github.com/realA10001986/Plutonium-Gauges/blob/main/plutoniumgauges-A10001986/plutoniumgauges-A10001986.ino).
+2) Using the Arduino IDE or PlatformIO: Download the sketch source code, all required libraries, compile and upload it. This method is the one for fresh ESP32 boards and/or folks familiar with the programming tool chain. Detailed build information is in [dashgauges-A10001986.ino](https://github.com/realA10001986/Dash-Gauges/blob/main/dashgauges-A10001986/dashgauges-A10001986.ino).
 
  *Important: After a firmware update, the "empty" LED might blink for up to a minute after reboot. Do NOT unplug the device during this time.*
 
@@ -120,9 +120,9 @@ If you, like me, use a TCD control board to drive your Plutonium Gauges, install
 The firmware comes with a number of sound files which need to be installed separately. These sound files are not updated as often as the firmware itself. If you have previously installed the latest version of the sound-pack, you normally don't have to re-install the audio files when you update the firmware. Only if either a new version of the sound-pack is released, or your device is quiet after a firmware update, a re-installation is needed.
 
 - Download "install/sound-pack-xxxxxxxx.zip" and extract it to the root directory of of a FAT32 formatted SD card
-- power down the Plutonium Gauges,
+- power down the Dash Gauges,
 - insert this SD card into the device's slot and 
-- power up the Plutonium Gauges.
+- power up the Dash Gauges.
  
 If (and only if) the **exact and complete contents of sound-pack archive** is found on the SD card, the device will install the audio files (automatically).
 
@@ -130,7 +130,7 @@ After installation, the SD card can be re-used for [other purposes](#sd-card).
 
 ## Short summary of first steps
 
-A good first step would be to establish access to the Config Portal in order to configure your Plutonium Gauges.
+A good first step would be to establish access to the Config Portal in order to configure your Dash Gauges.
 
 As long as the device is unconfigured, as is the case with a brand new one, or later if it for some reason fails to connect to a configured WiFi network, it starts in "access point" mode, i.e. it creates a WiFi network of its own named "PG-AP". This is called "Access point mode", or "AP-mode".
 
@@ -138,7 +138,7 @@ As long as the device is unconfigured, as is the case with a brand new one, or l
 - Connect your computer or handheld device to the WiFi network "PG-AP".
 - Navigate your browser to http://gauges.local or http://192.168.4.1 to enter the Config Portal.
  
-If you want your Plutonium Gauges to connect to another access point, such as your WiFi network, click on "Configure WiFi". The bare minimum is to select an SSID (WiFi network name) and a WiFi password.
+If you want your Dash Gauges to connect to another access point, such as your WiFi network, click on "Configure WiFi". The bare minimum is to select an SSID (WiFi network name) and a WiFi password.
 
 Note that the device requests an IP address via DHCP, unless you entered valid data in the fields for static IP addresses (IP, gateway, netmask, DNS). 
 
@@ -155,7 +155,7 @@ If the device is inaccessible as a result of incorrect static IPs,
 
 This procedure causes static IP data to be deleted; the device will return to DHCP after a reboot.
 
-If you have your Plutonium Gauges, along with a Time Circuits Display, mounted in a car, see also [here](#car-setup).
+If you have your Dash Gauges, along with a Time Circuits Display, mounted in a car, see also [here](#car-setup).
 
 ### The Config Portal
 
@@ -167,8 +167,8 @@ If that fails, the way to enter the Config Portal depends on whether the device 
 - If it is in access point mode (and your handheld/computer is connected to the WiFi network "PG-AP"), navigate your browser to http://192.168.4.1 
 - Otherwise .... FIXME TODO....  and listen, the IP address will be spoken out loud.
 
-In the main menu, click on "Setup" to configure your Plutonium Gauges.
-| ![The Config Portal](https://github.com/realA10001986/Plutonium-Gauges/assets/76924199/ccf3512c-fe11-4c9d-994a-0cbb5af7a8bd) |
+In the main menu, click on "Setup" to configure your Dash Gauges.
+| ![The Config Portal](https://github.com/realA10001986/Dash-Gauges/assets/76924199/ccf3512c-fe11-4c9d-994a-0cbb5af7a8bd) |
 |:--:| 
 | *The Config Portal's Setup page* |
 
@@ -176,13 +176,13 @@ A full reference of the Config Portal is [here](#appendix-a-the-config-portal).
 
 ## Basic Operation
 
-As mentioned, the Plutonium Gauges are an add-on for a Time Circuits Display. Their basic function is to show some values on its gauges, and to play an "empty" alarm after a time travel.
+As mentioned, the Dash Gauges are an add-on for a Time Circuits Display. Their basic function is to show some values on its gauges, and to play an "empty" alarm after a time travel.
 
-There is little to play with when the Plutonium Gauges aren't connected to a TCD:
-- To quickly trigger the "empty" sequence, flip the side switch of your Plutonium Gauges. To "refill", flip that switch again.
+There is little to play with when the Dash Gauges aren't connected to a TCD:
+- To quickly trigger the "empty" sequence, flip the side switch of your Dash Gauges. To "refill", flip that switch again.
 - Press to the time travel button to trigger a simple "surge" sequence.
 
-The Plutonium Gauges are way more fun when other props (TCD, FC, SID) are present as well. The TCD is of special importance: When connected through BTTFN, the TCD can act as a remote control for the Plutonium Gauges.
+The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as well. The TCD is of special importance: When connected through BTTFN, the TCD can act as a remote control for the Dash Gauges.
 
 ## TCD remote command reference
 
@@ -285,7 +285,7 @@ The Plutonium Gauges are way more fun when other props (TCD, FC, SID) are presen
 
 ## Time travel
 
-For "time travel", you need to install a "Time Travel" button. This button shortens "3_3V" and "IN" on the Switch Board's "TIME_TRAVEL" connector. Pressing that button briefly will let the Plutonium Gauges play their time travel sequence.
+For "time travel", you need to install a "Time Travel" button. This button shortens "3_3V" and "IN" on the Switch Board's "TIME_TRAVEL" connector. Pressing that button briefly will let the Dash Gauges play their time travel sequence.
 
 Other ways of triggering a time travel are available if a [Time Circuits Display](#connecting-a-time-circuits-display) is connected.
 
@@ -295,7 +295,7 @@ Preface note on SD cards: For unknown reasons, some SD cards simply do not work 
 
 The SD card, apart from being used to [install](#audio-file-installation) the default audio files, can be used for substituting default sounds and for music played back by the [Music player](#the-music-player).
 
-Note that the SD card must be inserted before powering up the device. It is not recognized if inserted while the Plutonium Gauges are running. Furthermore, do not remove the SD card while the device is powered.
+Note that the SD card must be inserted before powering up the device. It is not recognized if inserted while the Dash Gauges are running. Furthermore, do not remove the SD card while the device is powered.
 
 ### Sound file substitution
 
@@ -304,7 +304,7 @@ The provided audio files ("sound-pack") are, after [proper installation](#audio-
 These sounds can be substituted by your own sound files on a FAT32-formatted SD card. These files will be played back directly from the SD card during operation, so the SD card has to remain in the slot. The built-in [Audio file installer](#audio-file-installation) cannot be used to replace default sounds in the device's flash memory with custom sounds.
 
 Your replacements need to be put in the root (top-most) directory of the SD card, be in mp3 format (128kbps max) and named as follows:
-- "startup.mp3". Played when the Plutonium Gauges are connected to power and finished booting;
+- "startup.mp3". Played when the Dash Gauges are connected to power and finished booting;
 - "alarm.mp3". Played when the alarm sounds (triggered by a Time Circuits Display via BTTFN or MQTT);
 - "0.mp3" through "9.mp3", "dot.mp3": Numbers for IP address read-out.
 - "dooropen.mp3"/"doorclose.mp3": Played when the state of the door switch changes.
@@ -341,11 +341,11 @@ While the music player is playing music, other sound effects are disabled/muted.
 
 ### Connecting a TCD by wire
 
-As mentioned, I am currently using a left-over TCD control board to run the Plutonium Gauges. The time travel function works through IO13 of that board.
+As mentioned, I am currently using a left-over TCD control board to run the Dash Gauges. The time travel function works through IO13 of that board.
 
 <table>
     <tr>
-     <td align="center">Plutonium Gauges:<br>"IO13" connector</td>
+     <td align="center">Dash Gauges:<br>"IO13" connector</td>
      <td align="center">TCD control board 1.2</td>
      <td align="center">TCD control board 1.3</td>
     </tr>
@@ -367,29 +367,29 @@ Note that a wired connection only allows for synchronized time travel sequences,
 
 ### BTTF-Network ("BTTFN")
 
-The TCD can communicate with the Plutonium Gauges wirelessly, via WiFi. It can send out information about a time travel and an alarm. Furthermore, the TCD's keypad can be used to remote-control the Plutonium Gauges.
+The TCD can communicate with the Dash Gauges wirelessly, via WiFi. It can send out information about a time travel and an alarm. Furthermore, the TCD's keypad can be used to remote-control the Dash Gauges.
 
 Note that the TCD's firmware must be up to date for BTTFN. You can use [this](http://tcd.backtothefutu.re) one or CircuitSetup's release 2.9 or later.
 
-![BTTFN connection](https://github.com/realA10001986/Plutonium-Gauges/assets/76924199/3a74968c-efdc-4493-a1a0-c1622bce636d)
+![BTTFN connection](https://github.com/realA10001986/Dash-Gauges/assets/76924199/3a74968c-efdc-4493-a1a0-c1622bce636d)
 
-In order to connect your Plutonium Gauges to the TCD using BTTFN, just enter the TCD's IP address or hostname in the **_IP address or hostname of TCD_** field in the Plutonium Gauges's Config Portal. On the TCD, no special configuration is required. Note that you need TCD firmware 2.9.99 or later for using a hostname; previous versions only work with an IP address.
+In order to connect your Dash Gauges to the TCD using BTTFN, just enter the TCD's IP address or hostname in the **_IP address or hostname of TCD_** field in the Dash Gauges's Config Portal. On the TCD, no special configuration is required. Note that you need TCD firmware 2.9.99 or later for using a hostname; previous versions only work with an IP address.
   
-Afterwards, the Plutonium Gauges and the TCD can communicate wirelessly and 
+Afterwards, the Dash Gauges and the TCD can communicate wirelessly and 
 - play time travel sequences in sync,
 - both play an alarm-sequence when the TCD's alarm occurs,
-- the Plutonium Gauges can be remote controlled through the TCD's keypad (command codes 9xxx),
-- the Plutonium Gauges queries the TCD for fake power and night mode, in order to react accordingly if so configured.
+- the Dash Gauges can be remote controlled through the TCD's keypad (command codes 9xxx),
+- the Dash Gauges queries the TCD for fake power and night mode, in order to react accordingly if so configured.
 
 You can use BTTF-Network and MQTT at the same time, see immediately below.
 
 ## Home Assistant / MQTT
 
-The Plutonium Gauges support the MQTT protocol version 3.1.1 for the following features:
+The Dash Gauges support the MQTT protocol version 3.1.1 for the following features:
 
-### Control the Plutonium Gauges via MQTT
+### Control the Dash Gauges via MQTT
 
-The Plutonium Gauges can - to some extent - be controlled through messages sent to topic **bttf/pg/cmd**. Support commands are
+The Dash Gauges can - to some extent - be controlled through messages sent to topic **bttf/dg/cmd**. Support commands are
 - TIMETRAVEL: Start a [time travel](#time-travel)
 - MP_PLAY: Starts the [Music Player](#the-music-player)
 - MP_STOP: Stops the [Music Player](#the-music-player)
@@ -400,9 +400,9 @@ The Plutonium Gauges can - to some extent - be controlled through messages sent 
 
 ### Receive commands from Time Circuits Display
 
-If both TCD and Plutonium Gauges are connected to the same broker, and the option **_Send event notifications_** is checked on the TCD's side, the Plutonium Gauges will receive information on time travel and alarm and play their sequences in sync with the TCD. Unlike BTTFN, however, no other communication takes place.
+If both TCD and Dash Gauges are connected to the same broker, and the option **_Send event notifications_** is checked on the TCD's side, the Dash Gauges will receive information on time travel and alarm and play their sequences in sync with the TCD. Unlike BTTFN, however, no other communication takes place.
 
-![MQTT connection](https://github.com/realA10001986/Plutonium-Gauges/assets/76924199/9d4aac23-d6ce-4dc6-8b49-42d7cd80717b)
+![MQTT connection](https://github.com/realA10001986/Dash-Gauges/assets/76924199/9d4aac23-d6ce-4dc6-8b49-42d7cd80717b)
 
 MQTT and BTTFN can co-exist. However, the TCD only sends out time travel and alarm notifications through either MQTT or BTTFN, never both. If you have other MQTT-aware devices listening to the TCD's public topic (bttf/tcd/pub) in order to react to time travel or alarm messages, use MQTT (ie check **_Send event notifications_**). If only BTTFN-aware devices are to be used, uncheck this option to use BTTFN as it has less latency.
 
@@ -416,34 +416,34 @@ Limitations: MQTT Protocol version 3.1.1; TLS/SSL not supported; ".local" domain
 
 ## Car setup
 
-If your Plutonium Gauges, along with a [Time Circuits Display](https://tcd.backtothefutu.re/), is mounted in a car, the following network configuration is recommended:
+If your Dash Gauges, along with a [Time Circuits Display](https://tcd.backtothefutu.re/), is mounted in a car, the following network configuration is recommended:
 
 #### TCD
 
 - Run your TCD in [*car mode*](https://tcd.backtothefutu.re/#car-mode);
 - disable WiFi power-saving on the TCD by setting **_WiFi power save timer (AP-mode)_** to 0 (zero).
 
-#### Plutonium Gauges
+#### Dash Gauges
 
-Enter the Config Portal on the Plutonium Gauges (as described above), click on *Setup* and
+Enter the Config Portal on the Dash Gauges (as described above), click on *Setup* and
   - enter *192.168.4.1* into the field **_IP address or hostname of TCD_**
   - check the option **_Follow TCD fake power_** if you have a fake power switch for the TCD (like eg a TFC switch)
   - click on *Save*.
 
-After the Plutonium Gauges have restarted, re-enter the Plutonium Gauges's Config Portal (while the TCD is powered and in *car mode*) and
+After the Dash Gauges have restarted, re-enter the Dash Gauges's Config Portal (while the TCD is powered and in *car mode*) and
   - click on *Configure WiFi*,
   - select the TCD's access point name in the list at the top or enter *TCD-AP* into the *SSID* field; if you password-protected your TCD's AP, enter this password in the *password* field. Leave all other fields empty,
   - click on *Save*.
 
-Using this setup enables the Plutonium Gauges to receive notifications about time travel and alarm wirelessly, and to query the TCD for data. Also, the TCD keypad can be used to remote-control the Plutonium Gauges.
+Using this setup enables the Dash Gauges to receive notifications about time travel and alarm wirelessly, and to query the TCD for data. Also, the TCD keypad can be used to remote-control the Dash Gauges.
 
-In order to access the Plutonium Gauges's Config Portal in your car, connect your hand held or computer to the TCD's WiFi access point ("TCD-AP"), and direct your browser to http://gauges.local ; if that does not work, go to the TCD's keypad menu, press ENTER until "BTTFN CLIENTS" is shown, hold ENTER, and look for the Plutonium Gauges's IP address there; then direct your browser to that IP by using the URL http://a.b.c.d (a-d being the IP address displayed on the TCD display).
+In order to access the Dash Gauges's Config Portal in your car, connect your hand held or computer to the TCD's WiFi access point ("TCD-AP"), and direct your browser to http://gauges.local ; if that does not work, go to the TCD's keypad menu, press ENTER until "BTTFN CLIENTS" is shown, hold ENTER, and look for the Dash Gauges's IP address there; then direct your browser to that IP by using the URL http://a.b.c.d (a-d being the IP address displayed on the TCD display).
 
 ## Flash Wear
 
 Flash memory has a somewhat limited life-time. It can be written to only between 10.000 and 100.000 times before becoming unreliable. The firmware writes to the internal flash memory when saving settings and other data. Every time you change settings, data is written to flash memory.
 
-In order to reduce the number of write operations and thereby prolong the life of your Plutonium Gauges, it is recommended to use a good-quality SD card and to check **_[Save secondary settings on SD](#-save-secondary-settings-on-sd)_** in the Config Portal; secondary settings (eg current volume) are then stored on the SD card (which also suffers from wear but is easy to replace). If you want to swap the SD card but preserve your secondary settings, go to the Config Portal while the old SD card is still in place, uncheck the **_Save secondary settings on SD_** option, click on Save and wait until the device has rebooted. You can then power down, swap the SD card and power-up again. Then go to the Config Portal, change the option back on and click on Save. Your settings are now on the new SD card.
+In order to reduce the number of write operations and thereby prolong the life of your Dash Gauges, it is recommended to use a good-quality SD card and to check **_[Save secondary settings on SD](#-save-secondary-settings-on-sd)_** in the Config Portal; secondary settings (eg current volume) are then stored on the SD card (which also suffers from wear but is easy to replace). If you want to swap the SD card but preserve your secondary settings, go to the Config Portal while the old SD card is still in place, uncheck the **_Save secondary settings on SD_** option, click on Save and wait until the device has rebooted. You can then power down, swap the SD card and power-up again. Then go to the Config Portal, change the option back on and click on Save. Your settings are now on the new SD card.
 
 ## Appendix A: The Config Portal
 
@@ -451,9 +451,9 @@ In order to reduce the number of write operations and thereby prolong the life o
 
 ##### &#9654; Configure WiFi
 
-Clicking this leads to the WiFi configuration page. On that page, you can connect your Plutonium Gauges to your WiFi network by selecting/entering the SSID (WiFi network name) as well as a password (WPA2). By default, the Plutonium Gauges requests an IP address via DHCP. However, you can also configure a static IP by entering the IP, netmask, gateway and DNS server. All four fields must be filled for a valid static IP configuration. If you want to stick to DHCP, leave those four fields empty.
+Clicking this leads to the WiFi configuration page. On that page, you can connect your Dash Gauges to your WiFi network by selecting/entering the SSID (WiFi network name) as well as a password (WPA2). By default, the Dash Gauges requests an IP address via DHCP. However, you can also configure a static IP by entering the IP, netmask, gateway and DNS server. All four fields must be filled for a valid static IP configuration. If you want to stick to DHCP, leave those four fields empty.
 
-Note that this page has nothing to do with Access Point mode; it is strictly for connecting your Plutonium Gauges to an existing WiFi network as a client.
+Note that this page has nothing to do with Access Point mode; it is strictly for connecting your Dash Gauges to an existing WiFi network as a client.
 
 ##### &#9654; Setup
 
@@ -461,7 +461,7 @@ This leads to the [Setup page](#setup-page).
 
 ##### &#9654; Restart
 
-This reboots the Plutonium Gauges. No confirmation dialog is displayed.
+This reboots the Dash Gauges. No confirmation dialog is displayed.
 
 ##### &#9654; Update
 
@@ -487,7 +487,7 @@ The "empty" alarm's sound can be annoying if played for longer periods. This tim
 
 ##### &#9654; Screen saver timer
 
-Enter the number of minutes until the Screen Saver should become active when the Plutonium Gauges are idle.
+Enter the number of minutes until the Screen Saver should become active when the Dash Gauges are idle.
 
 The Screen Saver, when active, stops the "empty" alarm sound and disables all LEDs, until 
 - the time travel button is briefly pressed (the first press when the screen saver is active will not trigger a time travel),
@@ -513,17 +513,17 @@ If the option _Use fixed volume_ above is checked, enter a value between 0 (mute
 
 The device's hostname in the WiFi network. Defaults to 'gauges'. This also is the domain name at which the Config Portal is accessible from a browser in the same local network. The URL of the Config Portal then is http://<i>hostname</i>.local (the default is http://gauges.local)
 
-If you have several Plutonium Gauges in your local network, please give them unique hostnames.
+If you have several Dash Gauges in your local network, please give them unique hostnames.
 
 ##### &#9654; AP Mode: Network name appendix
 
-By default, if the Plutonium Gauges create a WiFi network of its own ("AP-mode"), this network is named "PG-AP". In case you have multiple Plutonium Gauges in your vicinity, you can have a string appended to create a unique network name. If you, for instance, enter "-ABC" here, the WiFi network name will be "PG-AP-ABC". Characters A-Z, a-z, 0-9 and - are allowed.
+By default, if the Dash Gauges create a WiFi network of its own ("AP-mode"), this network is named "PG-AP". In case you have multiple Dash Gauges in your vicinity, you can have a string appended to create a unique network name. If you, for instance, enter "-ABC" here, the WiFi network name will be "PG-AP-ABC". Characters A-Z, a-z, 0-9 and - are allowed.
 
 ##### &#9654; AP Mode: WiFi password
 
-By default, and if this field is empty, the Plutonium Gauges's own WiFi network ("AP-mode") will be unprotected. If you want to protect your access point, enter your password here. It needs to be 8 characters in length and only characters A-Z, a-z, 0-9 and - are allowed.
+By default, and if this field is empty, the Dash Gauges's own WiFi network ("AP-mode") will be unprotected. If you want to protect your access point, enter your password here. It needs to be 8 characters in length and only characters A-Z, a-z, 0-9 and - are allowed.
 
-If you forget this password and are thereby locked out of your Plutonium Gauges, .. TODO FIXME ...; this deletes the WiFi password. Then power-down and power-up your Plutonium Gauges and the access point will start unprotected.
+If you forget this password and are thereby locked out of your Dash Gauges, .. TODO FIXME ...; this deletes the WiFi password. Then power-down and power-up your Dash Gauges and the access point will start unprotected.
 
 ##### &#9654; WiFi connection attempts
 
@@ -537,7 +537,7 @@ Number of seconds before a timeout occurs when connecting to a WiFi network. Whe
 
 ##### &#9654; TCD connected by wire
 
-Check this if you have a Time Circuits Display connected by wire. You can only connect *either* a button *or* the TCD to the "time travel" connector on the Plutonium Gauges, but not both.
+Check this if you have a Time Circuits Display connected by wire. You can only connect *either* a button *or* the TCD to the "time travel" connector on the Dash Gauges, but not both.
 
 Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place.
 
@@ -545,23 +545,23 @@ Do NOT check this option if your TCD is connected wirelessly (BTTFN, MQTT).
 
 ##### &#9654; TCD signals Time Travel without 5s lead
 
-Usually, the TCD signals a time travel with a 5 seconds lead, in order to give a prop a chance to play an acceletation sequence before the actual time travel takes place. Since this 5 second lead is unique to CircuitSetup props, and people sometimes want to connect third party props to the TCD, the TCD has the option of skipping this 5 seconds lead. That that is the case, and your Plutonium Gauges are connected by wire, you need to set this option.
+Usually, the TCD signals a time travel with a 5 seconds lead, in order to give a prop a chance to play an acceletation sequence before the actual time travel takes place. Since this 5 second lead is unique to CircuitSetup props, and people sometimes want to connect third party props to the TCD, the TCD has the option of skipping this 5 seconds lead. That that is the case, and your Dash Gauges are connected by wire, you need to set this option.
 
-If your Plutonium Gauges are connected wirelessly, this option has no effect.
+If your Dash Gauges are connected wirelessly, this option has no effect.
 
 ##### &#9654; IP address or hostname of TCD
 
-If you want to have your Plutonium Gauges to communicate with a Time Circuits Display wirelessly ("BTTF-Network"), enter the IP address of the TCD here. If your TCD is running firmware version 2.9.99 or later, you can also enter the TCD's hostname here instead (eg. 'timecircuits').
+If you want to have your Dash Gauges to communicate with a Time Circuits Display wirelessly ("BTTF-Network"), enter the IP address of the TCD here. If your TCD is running firmware version 2.9.99 or later, you can also enter the TCD's hostname here instead (eg. 'timecircuits').
 
-If you connect your Plutonium Gauges to the TCD's access point ("TCD-AP"), the TCD's IP address is 192.168.4.1.
+If you connect your Dash Gauges to the TCD's access point ("TCD-AP"), the TCD's IP address is 192.168.4.1.
 
 ##### &#9654; Follow TCD night-mode
 
-If this option is checked, and your TCD goes into night mode, the Plutonium Gauges will activate the Screen Saver with a very short timeout, and reduce its audio volume.
+If this option is checked, and your TCD goes into night mode, the Dash Gauges will activate the Screen Saver with a very short timeout, and reduce its audio volume.
 
 ##### &#9654; Follow TCD fake power
 
-If this option is checked, and your TCD is equipped with a fake power switch, the Plutonium Gauges will also fake-power up/down. If fake power is off, no LED is active and the Plutonium Gauges will ignore all input.
+If this option is checked, and your TCD is equipped with a fake power switch, the Dash Gauges will also fake-power up/down. If fake power is off, no LED is active and the Dash Gauges will ignore all input.
 
 #### Audio-visual options
 
@@ -593,7 +593,7 @@ Same as [this](#-primary-empty-percentage), but for the 'Roentgens' gauge
 
 ##### &#9654; Play TCD-alarm sounds
 
-If a TCD is connected via BTTFN or MQTT, the Plutonium Gauges visually signals when the TCD's alarm sounds. If you want to play an alarm sound, check this option.
+If a TCD is connected via BTTFN or MQTT, the Dash Gauges visually signals when the TCD's alarm sounds. If you want to play an alarm sound, check this option.
 
 ##### &#9654; Play door sounds
 
@@ -611,7 +611,7 @@ Depending on the position of the switch and its reaction point, a delay for soun
 
 ##### &#9654; Use Home Assistant (MQTT 3.1.1)
 
-If checked, the Plutonium Gauges will connect to the broker (if configured) and send and receive messages via [MQTT](#home-assistant--mqtt)
+If checked, the Dash Gauges will connect to the broker (if configured) and send and receive messages via [MQTT](#home-assistant--mqtt)
 
 ##### &#9654; Broker IP[:port] or domain[:port]
 
@@ -631,7 +631,7 @@ When checked, songs are shuffled when the device is booted. When unchecked, song
 
 ##### &#9654; Save secondary settings on SD
 
-If this is checked, some settings (volume, etc) are stored on the SD card (if one is present). This helps to minimize write operations to the internal flash memory and to prolong the lifetime of your Plutonium Gauges. See [Flash Wear](#flash-wear).
+If this is checked, some settings (volume, etc) are stored on the SD card (if one is present). This helps to minimize write operations to the internal flash memory and to prolong the lifetime of your Dash Gauges. See [Flash Wear](#flash-wear).
 
 #### Gauge Hardware settings
 
