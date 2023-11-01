@@ -2,7 +2,7 @@
 
 This repository holds some DIY instructions for building a Dash Gauge panel, as seen in the Back To The Future movies, and a suitable firmware for that panel. This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](https://tcd.backtothefutu.re) as it relies on the TCD's keypad to control many of its functions.
 
-![my_pg](https://github.com/realA10001986/Dash-Gauges/assets/76924199/ef3f93a9-6b5a-4fb9-8c58-12dc777d61da)
+![my_dg](https://github.com/realA10001986/Dash-Gauges/assets/76924199/ef3f93a9-6b5a-4fb9-8c58-12dc777d61da)
 
 The Panel consists of several parts:
 - Aluminum (Aluminium for non-Americans) enclosure; the measurements are in the ["enclosure"](enclosure) folder of this repository.
@@ -132,10 +132,10 @@ After installation, the SD card can be re-used for [other purposes](#sd-card).
 
 A good first step would be to establish access to the Config Portal in order to configure your Dash Gauges.
 
-As long as the device is unconfigured, as is the case with a brand new one, or later if it for some reason fails to connect to a configured WiFi network, it starts in "access point" mode, i.e. it creates a WiFi network of its own named "PG-AP". This is called "Access point mode", or "AP-mode".
+As long as the device is unconfigured, as is the case with a brand new one, or later if it for some reason fails to connect to a configured WiFi network, it starts in "access point" mode, i.e. it creates a WiFi network of its own named "DG-AP". This is called "Access point mode", or "AP-mode".
 
 - Power up the device and wait until the startup sequence has completed.
-- Connect your computer or handheld device to the WiFi network "PG-AP".
+- Connect your computer or handheld device to the WiFi network "DG-AP".
 - Navigate your browser to http://gauges.local or http://192.168.4.1 to enter the Config Portal.
  
 If you want your Dash Gauges to connect to another access point, such as your WiFi network, click on "Configure WiFi". The bare minimum is to select an SSID (WiFi network name) and a WiFi password.
@@ -159,12 +159,12 @@ If you have your Dash Gauges, along with a Time Circuits Display, mounted in a c
 
 ### The Config Portal
 
-The Config Portal is accessible exclusively through WiFi. As outlined above, if the device is not connected to a WiFi network, it creates its own WiFi network (named "PG-AP"), to which your WiFi-enabled hand held device or computer first needs to connect in order to access the Config Portal.
+The Config Portal is accessible exclusively through WiFi. As outlined above, if the device is not connected to a WiFi network, it creates its own WiFi network (named "DG-AP"), to which your WiFi-enabled hand held device or computer first needs to connect in order to access the Config Portal.
 
 If the operating system on your handheld or computer supports Bonjour (a.k.a. "mDNS"), you can enter the Config Portal by directing your browser to http://gauges.local . (mDNS is supported on Windows 10 version TH2 (1511) [other sources say 1703] and later, Android 13 and later, MacOS, iOS)
 
 If that fails, the way to enter the Config Portal depends on whether the device is in access point mode or not. 
-- If it is in access point mode (and your handheld/computer is connected to the WiFi network "PG-AP"), navigate your browser to http://192.168.4.1 
+- If it is in access point mode (and your handheld/computer is connected to the WiFi network "DG-AP"), navigate your browser to http://192.168.4.1 
 - Otherwise .... FIXME TODO....  and listen, the IP address will be spoken out loud.
 
 In the main menu, click on "Setup" to configure your Dash Gauges.
@@ -517,7 +517,7 @@ If you have several Dash Gauges in your local network, please give them unique h
 
 ##### &#9654; AP Mode: Network name appendix
 
-By default, if the Dash Gauges create a WiFi network of its own ("AP-mode"), this network is named "PG-AP". In case you have multiple Dash Gauges in your vicinity, you can have a string appended to create a unique network name. If you, for instance, enter "-ABC" here, the WiFi network name will be "PG-AP-ABC". Characters A-Z, a-z, 0-9 and - are allowed.
+By default, if the Dash Gauges create a WiFi network of its own ("AP-mode"), this network is named "DG-AP". In case you have multiple Dash Gauges in your vicinity, you can have a string appended to create a unique network name. If you, for instance, enter "-ABC" here, the WiFi network name will be "DG-AP-ABC". Characters A-Z, a-z, 0-9 and - are allowed.
 
 ##### &#9654; AP Mode: WiFi password
 
