@@ -2,7 +2,7 @@
 
 This repository holds some DIY instructions for building a Dash Gauge panel, as seen in the Back To The Future movies, and a suitable firmware for that panel. This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](https://tcd.backtothefutu.re) as it relies on the TCD's keypad to control many of its functions.
 
-![my_dg](https://github.com/realA10001986/Dash-Gauges/assets/76924199/ef3f93a9-6b5a-4fb9-8c58-12dc777d61da)
+![Dash Gauges](https://github.com/realA10001986/Dash-Gauges/assets/76924199/e01aeb44-ea61-4685-95ee-d673b1e654ff)
 
 The Panel consists of several parts:
 - Aluminum (Aluminium for non-Americans) enclosure; the measurements are in the ["enclosure"](enclosure) folder of this repository.
