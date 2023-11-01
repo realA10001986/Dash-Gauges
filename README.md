@@ -39,9 +39,9 @@ The control board is a modified TCD control board from CircuitSetup:
 
 ### Switch board
 
-In order to reduce cable chaos I designed a simple "switch board" which mounts on the smaller gauges. It carries the MCP4728 break out board, a single channel relay board, all resistors for the gauges and LEDs, the LEDs for the smaller gauges and connectors for cables to the control board and to the "Roentgens" gauge. Also, it has connectors for an external Time Travel button and the door switches. An early version is depicted below:
+In order to reduce cable chaos I designed a simple "switch board" which mounts on the smaller gauges. It carries the MCP4728 break out board, a single channel relay board, all resistors for the gauges and LEDs, the LEDs for the smaller gauges and connectors for cables to the control board and to the "Roentgens" gauge. Also, it has connectors for an external Time Travel button and the door switches.
 
-![sb1](https://github.com/realA10001986/Dash-Gauges/assets/76924199/27d6e492-9447-42bb-bfdc-15e2d20b4e66)
+![SwitchBoard1.7](https://github.com/realA10001986/Dash-Gauges/assets/76924199/1adf1639-6e81-44df-b56d-0eba04ba26b8)
 
 It carries this relay module for the lights (desolder the screw terminals, put in pin socket, pitch 5mm, 3 positions, for example Samtec HPF-03-01-T-S):
 
