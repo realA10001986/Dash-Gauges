@@ -39,6 +39,10 @@ The control board is a modified TCD control board from CircuitSetup:
 
 ![ControlBoard](https://github.com/realA10001986/Dash-Gauges/assets/76924199/82f25c22-d60b-493c-a785-5c8b78f2ca32)
 
+As regards the cabling, two remarks:
+- I used each 2 wires for GND and 5V, since the wires are quite thin.
+- I put each a wire of GND between and beside the SDA/SCL wires to avoid crosstalk.
+
 ### Switch board
 
 In order to reduce cable chaos I designed a simple "switch board" which mounts on the smaller gauges. It carries the MCP4728 break out board, a single channel relay board, all resistors for the gauges and LEDs, the LEDs for the smaller gauges and connectors for cables to the control board and to the "Roentgens" gauge. Also, it has connectors for an external Time Travel button and the door switches.
