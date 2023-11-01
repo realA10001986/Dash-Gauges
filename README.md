@@ -13,7 +13,7 @@ The Panel consists of several parts:
 Firmware features include
 - selectable "full" percentages per gauge (besides for fun, useful for adjusting inaccurate readings)
 - [Time Travel](#time-travel) function, triggered by button, [Time Circuits Display](https://tcd.backtothefutu.re) (TCD) or via [MQTT](#home-assistant--mqtt)
-- Side switch to play "empty" and "refill" sequences
+- support for Side Switch to play "empty" and "refill" sequences
 - Automatic refill timer, automatic alarm mute timer (both optional)
 - easy expandability to support different gauges hardware
 - Support for door switch for playing sounds when opening/closing the car doors
