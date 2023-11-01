@@ -651,6 +651,10 @@ bool loadCurVolume()
 
     // Do not write a default file, use pre-set value
 
+    #ifdef DG_DBG
+    Serial.printf("%s: Loaded volume %d\n", funcName, curSoftVol);
+    #endif
+
     prevSavedVol = curSoftVol;
 
     return true;

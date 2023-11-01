@@ -87,15 +87,19 @@
 /*  Changelog
  *   
  *  TODO: Way to make device say IP address stand-alone
+ *  2023/11/1 (A10001986)
+ *    - Change default volume to fixed, level 6; fix saving from CP.
  *  2023/10/31 (A10001986)
  *    - BTTFN: User can now enter TCD's hostname instead of IP address. If hostname
  *      is given, TCD must be on same local network. Uses multicast, not DNS.
- *    - Add "binary" gauges type; "binary" means the gauges only know "empty" and "full".
- *      Two types added, one where gauges have separate pins, one where gauges are interconnected.
+ *    - Add "binary" gauges types; "binary" means the gauges only know "empty" and "full".
+ *      Two types added: One for when gauges have separate pins, one when gauges are 
+ *      interconnected. This is meant for gauge types with higher voltages that are 
+ *      driven through relays.
  *  2023/10/29 (A10001986)
  *    - Fixes for saving volume (cp value not copied; copy sec.settings)
  *  2023/10/26 (A10001986)
- *    - New startup sound - needs delay TODO
+ *    - New startup sound, played with delay
  *  2023/10/17 (A10001986)
  *    - Add Plutonium-unrelated "door switch" facility. Connect a door switch to 
  *      IO27 (active low; wires to door switch need to be GND and IO27), and the Panel 
@@ -133,14 +137,12 @@
  *      options on TCD and external props must be set identically.
  *  2023/09/23 (A10001986)
  *    - Add remote control facility through TCD keypad (requires BTTFN connection 
- *      with TCD). Commands for PCG are 9000-9999.
+ *      with TCD). Commands for Dash Gauges are 9000-9999.
  *  2023/09/22 (A10001986)
  *    - Read DAC EEPROM data and reset if not properly set
  *    - lots of other additions
  *  2023/09/21 (A10001986)
  *    - Initial version
- *      TODO:
- *      - What does the side switch do?
  */
 
 #include "dg_global.h"
