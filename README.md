@@ -114,7 +114,7 @@ The enclosure consists of three parts: The front and two side pieces. Measuremen
 
 There are different alternative ways to install this firmware:
 
-1) If a previous version of the Dash Gauges firmware was installed on your device, you can upload the provided pre-compiled binary to update to the current version: Enter the [Config Portal](#the-config-portal), click on "Update" and select the pre-compiled binary file provided in this repository ("install/dashgauges-A10001986.ino.nodemcu-32s.bin").
+1) If a previous version of the Dash Gauges firmware, or any other firmware of the BTTF family (TCD, FC, SID), was installed on your device, you can upload the provided pre-compiled binary to update to the current version: Enter the [Config Portal](#the-config-portal), click on "Update" and select the pre-compiled binary file provided in this repository ("install/dashgauges-A10001986.ino.nodemcu-32s.bin").
 
 If you, like me, use a TCD control board to drive your Dash Gauges, installation in this way is also possible if the TCD firmware are installed on your ESP32 before.
 
