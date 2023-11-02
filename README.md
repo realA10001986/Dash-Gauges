@@ -8,7 +8,7 @@ The Panel consists of several parts:
 - Aluminum (Aluminium for non-Americans) enclosure; the measurements are in the ["enclosure"](enclosure) folder of this repository.
 - The gauges: The smaller gauges are H&P 631-14672 (built by Phaostron) and the "Plutonium chamber" gauge is a Simpson 49L VU Meter, all driven by a MCP4728 quad-DAC (on an Adafruit break-out board). Movie-accurate faces for these gauges are in the ["faces-labels"](faces-labels) folder of this repository.
 - A Switch Board, which is mounted on the smaller gauges' back side; it carries the interface for the gauges, the lights and switches, as well as some connectors for external switches/buttons. This Switch Board is easy to assemble, it only carries some resistors and connectors. The gerbers as well as an EasyEDA file are in the ["electronics"](electronics) folder of this repository, JLCPCB can make this board for you. A BOM is available as well.
-- A Control Board: In lack of a dedicated control board (which to design unfortunately is beyond my abilities) is a slightly modified TCD control board from [CircuitSetup](https://circuitsetup.us/product/time-circuits-display-control-board-with-keypad-trw-style-lenses/).
+- A Control Board: In lack of a dedicated control board (which to design unfortunately is beyond my abilities), the heart of the device is a slightly modified TCD control board from [CircuitSetup](https://circuitsetup.us/product/time-circuits-display-control-board-with-keypad-trw-style-lenses/).
 
 Firmware features include
 - selectable "full" percentages per gauge (besides for fun, useful for adjusting inaccurate readings)
@@ -34,7 +34,7 @@ The control board is a modified TCD control board from CircuitSetup:
 
 - The ENTER button is removed from the PCB and its pins serve as the "Side Switch".
 - The white LED serves as the "Empty" LED in the "Roentgens" meter; it needs to desoldered.
-- The other LEDS need to be removed from the PCB as they stick out and are not needed.
+- The other LEDS are removed from the PCB as they stick out and are not needed.
 - The volume pot can be removed; this is, of course, optional, but since this board is assumingly hidden somewhere, the pot would be inaccessible anyway.
 - The i2c, audio and IO connectors were relocated to the front side of the PCB (they are normally on the back)
 
@@ -46,7 +46,7 @@ As regards the cabling, two remarks:
 
 ### Switch board
 
-In order to reduce cable chaos I designed a simple "switch board" which mounts on the smaller gauges. It carries the MCP4728 break out board, a single channel relay board, all resistors for the gauges and LEDs, the LEDs for the smaller gauges and connectors for cables to the control board and to the "Roentgens" gauge. Also, it has connectors for an external Time Travel button and the door switches.
+In order to reduce cable chaos I designed a simple "switch board" which mounts on the smaller gauges. It carries the MCP4728 breakout board, a single channel relay board, all resistors for the gauges and LEDs, the LEDs for the smaller gauges and connectors for cables to the control board and to the "Roentgens" gauge. Also, it has connectors for an external Time Travel button and the door switches.
 
 ![SwitchBoard1.7](https://github.com/realA10001986/Dash-Gauges/assets/76924199/1adf1639-6e81-44df-b56d-0eba04ba26b8)
 
@@ -76,7 +76,7 @@ A connection diagram is [here](electronics/connection%20diagram.png).
 
 ### Gauges
 
-The gauges are connected through an Adafruit MCP4728 break out board, which is an i2c-driven quad-DAC and mounted on the switch board. This DAC allows arbitrary voltages up to 5V, but the gauges used here use much lower voltages. If you use different gauges, you need to add your configuration to the firmware. More on this below.
+The gauges are connected through an Adafruit MCP4728 breakout board, which is an i2c-driven quad-DAC and mounted on the switch board. This DAC allows arbitrary voltages up to 5V, but the gauges used here use much lower voltages. If you use different gauges, you need to add your configuration to the firmware. More on this below.
 
 *Important*: When using the MCP4728 in your project, do not connect the actual gauges until you selected the right hardware type in the Config Portal and have powered-down and powered-up the device once afterwards. This power-cycle is needed to reset the MCP4728's EEPROM to the correct settings and to avoid a power output too high at boot.
 
@@ -88,7 +88,7 @@ Those two gauges are driven by channels A and B of the MCP4728. They show nearly
 
 The movie-accurate faces of those gauges are available in this repository.
 
-For the backlight, I drilled a hole in the rear of the metal enclosure, center bottom, and put a yellow LED (590nm) on the Switch Board (LED1, LED2, with suitable resistors (R8/R9; somewhere between 470R and 560R). Most replicas use white LEDs, but I think on the A-Car as shown in the Petersen Museum, there are yellow ones used, and I found white ones too bright.
+For the backlight, I drilled a hole in the rear of the metal enclosure, center bottom, and put a yellow LED (590nm) on the Switch Board (LED1, LED2, with suitable resistors (R8/R9; depending on LED, probably around 150R). Most replicas use white LEDs, but I think on the A-Car as shown in the Petersen Museum, there are yellow ones used, and I found white ones too bright.
 
 #### "Roentgens"
 
