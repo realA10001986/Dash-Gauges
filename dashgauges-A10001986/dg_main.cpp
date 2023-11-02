@@ -387,11 +387,7 @@ void main_setup()
     else if(temp > 360) temp = 360;
     autoMute = temp * 1000;
     
-    // Start the Config Portal. A WiFiScan does not
-    // disturb anything at this point.
-    if(WiFi.status() == WL_CONNECTED) {
-        wifiStartCP();
-    }
+    // [Formerly started CP here]
 
     // Determine if Time Circuits Display is connected
     // via wire, and is source of GPIO tt trigger
@@ -444,6 +440,7 @@ void main_setup()
 
     // Initialize BTTF network
     bttfn_setup();
+    bttfn_loop();
 
     // Init side and door switch position
     // Do not trigger event until NEXT change
