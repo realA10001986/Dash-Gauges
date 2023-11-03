@@ -6,16 +6,16 @@ This repository holds some DIY instructions for building a Dash Gauge panel, as 
 
 The Panel consists of several parts:
 - Aluminum (Aluminium for non-Americans) enclosure; the measurements are in the ["enclosure"](enclosure) folder of this repository.
-- The gauges: The smaller gauges are H&P 631-14672 (built by Phaostron) and the "Plutonium chamber" gauge is a Simpson 49L VU Meter, all driven by a MCP4728 quad-DAC (on an Adafruit break-out board). Movie-accurate faces for these gauges are in the ["faces-labels"](faces-labels) folder of this repository.
+- The gauges: The smaller gauges are H&P 631-14672 (built by Phaostron) and the "Plutonium chamber" gauge is a Simpson 49L VU Meter, all driven by a MCP4728 quad-DAC (on an Adafruit breakout board). Movie-accurate faces for these gauges are in the ["faces-labels"](faces-labels) folder of this repository.
 - A Switch Board, which is mounted on the smaller gauges' back side; it carries the interface for the gauges, the lights and switches, as well as some connectors for external switches/buttons. This Switch Board is easy to assemble, it only carries some resistors and connectors. The gerbers as well as an EasyEDA file are in the ["electronics"](electronics) folder of this repository, JLCPCB can make this board for you. A BOM is available as well.
 - A Control Board: In lack of a dedicated control board (which to design unfortunately is beyond my abilities), the heart of the device is a slightly modified TCD control board from [CircuitSetup](https://circuitsetup.us/product/time-circuits-display-control-board-with-keypad-trw-style-lenses/).
 
 Firmware features include
-- selectable "full" percentages per gauge (besides for fun, useful for adjusting inaccurate readings)
+- for hardware configurations that support it: Selectable "full" percentages per gauge (besides for fun, useful for adjusting inaccurate readings)
 - [Time Travel](#time-travel) function, triggered by button, [Time Circuits Display](https://tcd.backtothefutu.re) (TCD) or via [MQTT](#home-assistant--mqtt)
 - support for Side Switch to play "empty" and "refill" sequences
 - Automatic refill timer, automatic alarm mute timer (both optional)
-- easy expandability to support different gauges hardware
+- easy expandability to support different gauges hardware (currently implemented: via MCP4728; binary [on/off])
 - Support for door switch for playing sounds when opening/closing the car doors
 - Wireless communication ("[BTTF-Network](#bttf-network-bttfn)") with [Time Circuits Display](https://tcd.backtothefutu.re); used for synchonized time travels, alarm, night mode, fake power and remote control through TCD keypad
 - [Music player](#the-music-player): Play mp3 files located on an SD card [requires TCD connected wirelessly for control]
@@ -46,7 +46,7 @@ As regards the cabling, two remarks:
 
 ### Switch board
 
-In order to reduce cable chaos I designed a simple "switch board" which mounts on the smaller gauges. It carries the MCP4728 breakout board, a single channel relay board, all resistors for the gauges and LEDs, the LEDs for the smaller gauges and connectors for cables to the control board and to the "Roentgens" gauge. Also, it has connectors for an external Time Travel button and the door switches.
+For the very gauges hardware I used, I designed a simple "switch board" which mounts on the smaller gauges. It carries the MCP4728 breakout board, a single channel relay board, all resistors for the gauges and LEDs, the LEDs for the smaller gauges and connectors for cables to the control board and to the "Roentgens" gauge. Also, it has connectors for an external Time Travel button and the door switches.
 
 ![SwitchBoard1.7](https://github.com/realA10001986/Dash-Gauges/assets/76924199/1adf1639-6e81-44df-b56d-0eba04ba26b8)
 
