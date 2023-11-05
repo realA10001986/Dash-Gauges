@@ -451,6 +451,10 @@ void main_setup()
     doorSwitch.scan();
     isSSwitchChange = isDSwitchChange = false;
 
+    #ifdef DG_DBG
+    Serial.println(F("main_setup() done"));
+    #endif
+
     // If "Follow TCD fake power" is set,
     // stay silent and dark
 
@@ -474,10 +478,6 @@ void main_setup()
         ssRestartTimer();
 
     }
-    
-    #ifdef DG_DBG
-    Serial.println(F("main_setup() done"));
-    #endif
 }
 
 void main_loop()
@@ -1215,7 +1215,8 @@ static void execute_remote_command()
             allOff();
             mp_stop();
             stopAudio();
-            delay(50);
+            unmount_fs();
+            delay(500);
             esp_restart();
             break;
         case 123456:
