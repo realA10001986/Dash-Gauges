@@ -33,7 +33,6 @@
 #include "dg_global.h"
 
 #include <Arduino.h>
-#include <ArduinoJson.h>
 
 #ifdef DG_MDNS
 #include <ESPmDNS.h>
@@ -322,6 +321,11 @@ void wifi_setup()
 
     wm.setCleanConnect(true);
     //wm.setRemoveDuplicateAPs(false);
+
+    #ifdef WIFIMANAGER_2_0_17
+    wm._preloadwifiscan = false;
+    wm._asyncScan = true;
+    #endif
 
     wm.setMenu(wifiMenu, TC_MENUSIZE);
     
@@ -723,11 +727,15 @@ void wifi_loop()
         allOff();
         delay(10);
 
+        unmount_fs();
+
         #ifdef DG_DBG
         Serial.println(F("Config Portal: Restarting ESP...."));
         #endif
 
         Serial.flush();
+
+        delay(500);
 
         esp_restart();
     }
@@ -1312,7 +1320,7 @@ static void setCBVal(WiFiManagerParameter *el, char *sv)
 static void strcpyutf8(char *dst, const char *src, unsigned int len)
 {
     strncpy(dst, src, len - 1);
-    dst[len] = 0;
+    dst[len - 1] = 0;
 }
 
 static int16_t filterOutUTF8(char *src, char *dst)
