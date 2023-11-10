@@ -12,11 +12,11 @@ This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](ht
 For the DIY solution, please see [here](/README-DIY.md).
 
 Firmware features include
-- for hardware configurations that support it: Selectable "full" percentages per gauge (besides for fun, useful for adjusting inaccurate readings)
+- Selectable "full" percentages per gauge (besides for fun, useful for adjusting inaccurate readings) (feature depending on hardware configuration)
 - [Time Travel](#time-travel) function, triggered by button, [Time Circuits Display](https://tcd.backtothefutu.re) (TCD) or via [MQTT](#home-assistant--mqtt)
 - support for Side Switch to play "empty" and "refill" sequences
 - Automatic refill timer, automatic alarm mute timer (both optional)
-- easy expandability to support different gauges hardware (currently implemented: via MCP4728; binary [on/off])
+- easy expandability to support different gauges hardware (currently implemented: binary [on/off|; variable voltage via MCP4728)
 - Support for door switch for playing sounds when opening/closing the car doors
 - Wireless communication ("[BTTF-Network](#bttf-network-bttfn)") with [Time Circuits Display](https://tcd.backtothefutu.re); used for synchonized time travels, alarm, night mode, fake power and remote control through TCD keypad
 - [Music player](#the-music-player): Play mp3 files located on an SD card [requires TCD connected wirelessly for control]
@@ -30,8 +30,6 @@ Firmware features include
 There are different alternative ways to install this firmware:
 
 1) If a previous version of the Dash Gauges firmware, or any other firmware of the BTTF family (TCD, FC, SID), was installed on your device, you can upload the provided pre-compiled binary to update to the current version: Enter the [Config Portal](#the-config-portal), click on "Update" and select the pre-compiled binary file provided in this repository ("install/dashgauges-A10001986.ino.nodemcu-32s.bin").
-
-If you, like me, use a TCD control board to drive your Dash Gauges, installation in this way is also possible if the TCD firmware are installed on your ESP32 before.
 
 2) Using the Arduino IDE or PlatformIO: Download the sketch source code, all required libraries, compile and upload it. This method is the one for fresh ESP32 boards and/or folks familiar with the programming tool chain. Detailed build information is in [dashgauges-A10001986.ino](https://github.com/realA10001986/Dash-Gauges/blob/main/dashgauges-A10001986/dashgauges-A10001986.ino).
 
