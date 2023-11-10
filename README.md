@@ -9,7 +9,7 @@ This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](ht
 
 ![Dash Gauges](https://github.com/realA10001986/Dash-Gauges/assets/76924199/e01aeb44-ea61-4685-95ee-d673b1e654ff)
 
-For the DIY solution, please see [here](/README-DIY.md).
+For DIY instructions, please see [here](/README-DIY.md).
 
 Firmware features include
 - Selectable "full" percentages per gauge (besides for fun, useful for adjusting inaccurate readings) (feature depending on hardware configuration)
