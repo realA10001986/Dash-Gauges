@@ -3,13 +3,13 @@
 This repository holds 
 - some DIY instructions for building a Dash Gauge panel, as seen in the Back To The Future movies,
 - (in the future) information on a CircuitSetup solution for said Dash Gauges,
-- and a suitable unified firmware for the DYI panel and the CircuitSetup solution.
+- and a suitable unified firmware for the DIY panel and the CircuitSetup solution.
 
 This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](https://tcd.backtothefutu.re) as it relies on the TCD's keypad to control many of its functions.
 
 ![Dash Gauges](https://github.com/realA10001986/Dash-Gauges/assets/76924199/e01aeb44-ea61-4685-95ee-d673b1e654ff)
 
-For the DYI solution, please see [here](/README-DIY.md).
+For the DIY solution, please see [here](/README-DIY.md).
 
 Firmware features include
 - for hardware configurations that support it: Selectable "full" percentages per gauge (besides for fun, useful for adjusting inaccurate readings)
