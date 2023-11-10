@@ -5,9 +5,9 @@ Note that this is a custom built prop; there is no kit available.
 ![Dash Gauges](https://github.com/realA10001986/Dash-Gauges/assets/76924199/e01aeb44-ea61-4685-95ee-d673b1e654ff)
 
 The Panel consists of several parts:
-- Aluminum (Aluminium for non-Americans) enclosure; the measurements are in the ["enclosure"](enclosure) folder of this repository.
-- The gauges: The smaller gauges are H&P 631-14672 (built by Phaostron) and the "Plutonium chamber" gauge is a Simpson 49L VU Meter, all driven by a MCP4728 quad-DAC (on an Adafruit breakout board). Movie-accurate faces for these gauges are in the ["faces-labels"](faces-labels) folder of this repository.
-- A Switch Board, which is mounted on the smaller gauges' back side; it carries the interface for the gauges, the lights and switches, as well as some connectors for external switches/buttons. This Switch Board is easy to assemble, it only carries some resistors and connectors. The gerbers as well as an EasyEDA file are in the ["electronics"](electronics) folder of this repository, JLCPCB can make this board for you. A BOM is available as well.
+- Aluminum (Aluminium for non-Americans) enclosure; the measurements are in the ["enclosure"](DIY/enclosure) folder of this repository.
+- The gauges: The smaller gauges are H&P 631-14672 (built by Phaostron) and the "Plutonium chamber" gauge is a Simpson 49L VU Meter, all driven by a MCP4728 quad-DAC (on an Adafruit breakout board). Movie-accurate faces for these gauges are in the ["faces-labels"](DIY/faces-labels) folder of this repository.
+- A Switch Board, which is mounted on the smaller gauges' back side; it carries the interface for the gauges, the lights and switches, as well as some connectors for external switches/buttons. This Switch Board is easy to assemble, it only carries some resistors and connectors. The gerbers as well as an EasyEDA file are in the ["electronics"](DIY/electronics) folder of this repository, JLCPCB can make this board for you. A BOM is available as well.
 - A Control Board: In lack of a dedicated control board (which to design unfortunately is beyond my abilities), the heart of the device is a slightly modified TCD control board from [CircuitSetup](https://circuitsetup.us/product/time-circuits-display-control-board-with-keypad-trw-style-lenses/).
 
 ### Control board
