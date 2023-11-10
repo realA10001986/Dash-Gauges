@@ -2,6 +2,8 @@
 
 Note that this is a custom built prop; there is no kit available.
 
+![Dash Gauges](https://github.com/realA10001986/Dash-Gauges/assets/76924199/e01aeb44-ea61-4685-95ee-d673b1e654ff)
+
 The Panel consists of several parts:
 - Aluminum (Aluminium for non-Americans) enclosure; the measurements are in the ["enclosure"](enclosure) folder of this repository.
 - The gauges: The smaller gauges are H&P 631-14672 (built by Phaostron) and the "Plutonium chamber" gauge is a Simpson 49L VU Meter, all driven by a MCP4728 quad-DAC (on an Adafruit breakout board). Movie-accurate faces for these gauges are in the ["faces-labels"](faces-labels) folder of this repository.
