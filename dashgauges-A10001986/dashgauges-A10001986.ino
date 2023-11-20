@@ -92,9 +92,13 @@
 /*  Changelog
  *   
  *  TODO: Way to make device say IP address stand-alone
+ *  2023/11/20 (A10001986)
+ *    - Wake up on GPS speed/RotEnc changes
+ *  2023/11/06 (A10001986)
+ *    - Abort audio file installer on first error
  *  2023/11/05 (A10001986)
  *    - Settings: (De)serialize JSON from/to buffer instead of file
- *    - Fix corrupt Shuffle setting
+ *    - Fix corrupted Shuffle setting
  *  2023/11/04 (A10001986)
  *    - Unmount filesystems before reboot
  *  2023/11/02 (A10001986)

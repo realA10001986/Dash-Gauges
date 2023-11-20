@@ -995,6 +995,7 @@ bool copy_audio_files()
 
     for(i = 0; i < NUM_AUDIOFILES - 1; i++) {
         open_and_copy(audioFiles[i], haveErr);
+        if(haveErr) break;
     }
 
     return (haveErr == 0);

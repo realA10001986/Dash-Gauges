@@ -43,9 +43,9 @@ extern uint8_t musFolderNum;
 #define XMS(s) #s
 
 // Default settings
-#define DEF_L_GAUGE_IDLE    40    // Default "full" percentages of gauges
-#define DEF_C_GAUGE_IDLE    25
-#define DEF_R_GAUGE_IDLE    45
+#define DEF_L_GAUGE_IDLE    28    // Default "full" percentages of gauges
+#define DEF_C_GAUGE_IDLE    28
+#define DEF_R_GAUGE_IDLE    58
 #define DEF_L_GAUGE_EMPTY   0     // Default "empty" percentages of gauges
 #define DEF_C_GAUGE_EMPTY   0
 #define DEF_R_GAUGE_EMPTY   0
