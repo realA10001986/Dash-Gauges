@@ -166,6 +166,9 @@ bool networkAlarm      = false;
 uint16_t networkLead   = ETTO_LEAD;
 uint16_t networkP1     = 6600;
 
+static int16_t gpsSpeed = -1;
+static int16_t oldGpsSpeed = -1;
+
 static bool useNM = false;
 static bool tcdNM = false;
 bool        dgNM = false;
@@ -860,6 +863,14 @@ void main_loop()
 
     now = millis();
 
+    // Wake up on GPS/RotEnc speed changes
+    if(gpsSpeed != oldGpsSpeed) {
+        if(FPBUnitIsOn && !TTrunning && gpsSpeed >= 0) {
+            wakeup();
+        }
+        oldGpsSpeed = gpsSpeed;
+    }
+    
     // "Screen saver"
     if(FPBUnitIsOn) {
         if(!ssActive && !TTrunning && !startup && !startAlarm && !refill && !refillWA && 
@@ -998,6 +1009,7 @@ void prepareTT()
 // Wakeup: Sent by TCD upon entering dest date,
 // return from tt, triggering delayed tt via ETT
 // For audio-visually synchronized behavior
+// Also called when GPS/RotEnc speed is changed
 void wakeup()
 {
 
@@ -1696,6 +1708,10 @@ static void BTTFNCheckPacket()
         }
         #endif
 
+        if(BTTFUDPBuf[5] & 0x02) {
+            gpsSpeed = (int16_t)(BTTFUDPBuf[18] | (BTTFUDPBuf[19] << 8));
+            if(gpsSpeed > 88) gpsSpeed = 88;
+        }
         if(BTTFUDPBuf[5] & 0x10) {
             tcdNM  = (BTTFUDPBuf[26] & 0x01) ? true : false;
             tcdFPO = (BTTFUDPBuf[26] & 0x02) ? true : false;   // 1 means fake power off
@@ -1748,7 +1764,7 @@ static void BTTFNSendPacket()
     BTTFUDPBuf[10+13] = BTTFN_TYPE_PCG;
 
     BTTFUDPBuf[4] = BTTFN_VERSION;  // Version
-    BTTFUDPBuf[5] = 0x10;           // Request status
+    BTTFUDPBuf[5] = 0x12;           // Request status and GPS speed
 
     #ifdef BTTFN_MC
     if(!haveTCDIP) {

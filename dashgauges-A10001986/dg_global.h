@@ -12,10 +12,10 @@
 #define _DG_GLOBAL_H
 
 // Version strings.
-#define DG_VERSION       "V0.14"
-#define DG_VERSION_EXTRA "NOV052023"
+#define DG_VERSION       "V0.15"
+#define DG_VERSION_EXTRA "NOV202023"
 
-#define DG_DBG              // debug output on Serial
+//#define DG_DBG              // debug output on Serial
 
 /*************************************************************************
  ***                     mDNS (Bonjour) support                        ***
