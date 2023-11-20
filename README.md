@@ -289,6 +289,10 @@ Note that a wired connection only allows for synchronized time travel sequences,
 
 The TCD can communicate with the Dash Gauges wirelessly, via WiFi. It can send out information about a time travel and an alarm. Furthermore, the TCD's keypad can be used to remote-control the Dash Gauges.
 
+| [![Watch the video](https://img.youtube.com/vi/u9oTVXUIOXA/0.jpg)](https://youtu.be/u9oTVXUIOXA) |
+|:--:|
+| Click to watch the video |
+
 Note that the TCD's firmware must be up to date for BTTFN. You can use [this](http://tcd.backtothefutu.re) one or CircuitSetup's release 2.9 or later.
 
 ![BTTFN connection](https://github.com/realA10001986/Dash-Gauges/assets/76924199/9342b658-b772-4106-9c57-56d135f6962b)
