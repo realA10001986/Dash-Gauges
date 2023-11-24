@@ -205,7 +205,7 @@ The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as 
 
 ## Time travel
 
-For "time travel", you need to install a "Time Travel" button. This button shortens "3_3V" and "IN" on the Switch Board's "TIME_TRAVEL" connector. Pressing that button briefly will let the Dash Gauges play their time travel sequence.
+For "time travel", you need to install a "Time Travel" button. Pressing that button briefly will let the Dash Gauges play their time travel sequence. For my DIY solution, please see [here](https://github.com/realA10001986/Dash-Gauges/blob/main/README-DIY.md#connecting-a-tcd-to-the-dash-gauges-by-wire) for how to wire that button.
 
 Other ways of triggering a time travel are available if a [Time Circuits Display](#connecting-a-time-circuits-display) is connected.
 
@@ -263,11 +263,11 @@ While the music player is playing music, other sound effects are disabled/muted.
 
 Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place. Therefore I strongly recommend a wireless BTTFN connection, see immediately below.
 
-INSERT LINK
+For wiring information of my DIY solution, please see [here](https://github.com/realA10001986/Dash-Gauges/blob/main/README-DIY.md#connecting-a-tcd-to-the-dash-gauges-by-wire).
 
 Next, head to the Config Portal and set the option **_TCD connected by wire_**. On the TCD, the option "Control props connected by wire" must be set.
 
-You can connect both the TCD and a button to Dash Gauges. But the button should not be pressed when the option **_TCD connected by wire_** is set, as it might yield unwanted results. Also, note that the button connects to 3_3V instead of GND.
+You can connect both the TCD and a Time Travel button to Dash Gauges. But the button should not be pressed when the option **_TCD connected by wire_** is set, as it might yield unwanted results.
 
 ### BTTF-Network ("BTTFN")
 
