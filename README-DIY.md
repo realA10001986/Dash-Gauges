@@ -117,7 +117,7 @@ If you want to connect a TCD to the Dash Gauges by wire (such as mentioned [here
     </tr>
     <tr>
      <td align="center">IO13 of "IO13" connector</td>
-     <td align="center">IO13 of "IO13" connector</td>
+     <td align="center">IO14 of "IO14" connector</td>
      <td align="center">TT OUT on "Time Travel" connector</td>
     </tr>
 </table>
@@ -130,12 +130,12 @@ If you want to connect a TCD to the Dash Gauges by wire (such as mentioned [here
     </tr>
    <tr>
      <td align="center">GND of "TIME TRAVEL" connector</td>
-     <td align="center">GND of "IO13" connector</td>
+     <td align="center">GND of "IO14" connector</td>
      <td align="center">GND on "Time Travel" connector</td>
     </tr>
     <tr>
      <td align="center">IN of "TIME TRAVEL" connector</td>
-     <td align="center">IO13 of "IO13" connector</td>
+     <td align="center">IO14 of "IO14" connector</td>
      <td align="center">TT OUT on "Time Travel" connector</td>
     </tr>
 </table>
