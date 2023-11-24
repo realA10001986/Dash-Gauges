@@ -261,21 +261,23 @@ While the music player is playing music, other sound effects are disabled/muted.
 
 ### Connecting a TCD by wire
 
-As mentioned, I am currently using a left-over TCD control board to run the Dash Gauges. The time travel function works through IO13 of that board.
+Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place. Therefore I strongly recommend a wireless BTTFN connection, see immediately below.
+
+For my DIY solution, you can connect the TCD to either the (left-over TCD-)control board, or the Switch Board:
 
 <table>
     <tr>
-     <td align="center">Dash Gauges:<br>"IO13" connector</td>
+     <td align="center">Dash Gauges:<br>"IO13" connector on TCD control board<br>or<br>"TIME TRAVEL" connector on Switch Board</td>
      <td align="center">TCD control board 1.2</td>
      <td align="center">TCD control board 1.3</td>
     </tr>
    <tr>
-     <td align="center">GND of "IO13" connector</td>
+     <td align="center">GND of "IO13" connector<br>or<br>GND of "TIME TRAVEL" connector</td>
      <td align="center">GND of "IO13" connector</td>
      <td align="center">GND on "Time Travel" connector</td>
     </tr>
     <tr>
-     <td align="center">IO13 of "IO13" connector</td>
+     <td align="center">IO13 of "IO13" connector<br>or<br>IN of "TIME TRAVEL" connector</td>
      <td align="center">IO13 of "IO13" connector</td>
      <td align="center">TT OUT on "Time Travel" connector</td>
     </tr>
@@ -283,7 +285,7 @@ As mentioned, I am currently using a left-over TCD control board to run the Dash
 
 Next, head to the Config Portal and set the option **_TCD connected by wire_**. On the TCD, the option "Control props connected by wire" must be set.
 
-Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place. Therefore I strongly recommend a wireless BTTFN connection, see immediately below.
+You can connect both the TCD and a button to Dash Gauges. But the button should not be pressed when the option **_TCD connected by wire_** is set, as it might yield unwanted results. Also, note that the button connects to 3_3V instead of GND.
 
 ### BTTF-Network ("BTTFN")
 
