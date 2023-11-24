@@ -54,7 +54,7 @@ Connectors on the Switch Board:
 
 - SCL/SDA: The i2c signal from he Control Board.
 
-A connection diagram is [here](electronics/connection%20diagram.png).
+A connection diagram is [here](electronics/connection%20diagram.png). Please note that when using a Control Board version 1.3, the IO connectors are at different locations, but still carry their "IOxx" name in all cases on the PCB. IO13 is on the "Fake PWR" connector, IO14 and IO27 are on the "Time Travel" connector.
 
 ### Gauges
 
@@ -96,7 +96,7 @@ The enclosure consists of three parts: The front and two side pieces. Measuremen
 
 The Time Travel button can be connected to the Control Board or the Switch Board:
 
-On the Control Board, connect the button to "IO13" and "5V" of the "IO13" connector.
+On the Control Board, connect the button to "IO13" and "5V" of the "IO13" connector. In case of a Control Board 1.3, connect the button to "PWR Trigger (IO13)" and "GND" of the "Fake PWR" connector.
 
 On the Switch Board, connect the button to "IN" and "3_3V" of the "TIME TRAVEL" connector.
 
@@ -104,27 +104,34 @@ On the Switch Board, connect the button to "IN" and "3_3V" of the "TIME TRAVEL" 
 
 If you want to connect a TCD to the Dash Gauges by wire (such as mentioned [here](https://github.com/realA10001986/Dash-Gauges/tree/main#connecting-a-tcd-by-wire)), you have two options on the Dash Gauges' side: Either the Control Board, or the Switch Board. 
 
+When connecting to the Dash Gauges' Control Board, there are four possible configurations, depending which version of the TCD control board you are using the both the Dash Gauges as well as the TCD itself:
+
 <table>
     <tr>
-     <td align="center">Dash Gauges:<br>"IO13" connector on DG's TCD control board</td>
+     <td align="center">Dash Gauges:<br>Control board 1.2</td>
+     <td align="center">Dash Gauges:<br>Control board 1.3</td>
      <td align="center">TCD with control board 1.2</td>
      <td align="center">TCD with control board 1.3</td>
     </tr>
    <tr>
      <td align="center">GND of "IO13" connector</td>
-     <td align="center">GND of "IO13" connector</td>
+     <td align="center">GND of "Fake PWR" connector</td>
+     <td align="center">GND of "IO14" connector</td>
      <td align="center">GND on "Time Travel" connector</td>
     </tr>
     <tr>
      <td align="center">IO13 of "IO13" connector</td>
+     <td align="center">"PWR Trigger (IO13)" of "Fake PWR" connector</td>
      <td align="center">IO14 of "IO14" connector</td>
      <td align="center">TT OUT on "Time Travel" connector</td>
     </tr>
 </table>
 
+For when connecting to the Switch Board, here are only two ways, depending on which Control Board you are using in your TCD:
+
 <table>
     <tr>
-     <td align="center">Dash Gauges:<br>"TIME TRAVEL" connector on Switch Board</td>
+     <td align="center">Dash Gauges:<br>Switch Board</td>
      <td align="center">TCD with control board 1.2</td>
      <td align="center">TCD with control board 1.3</td>
     </tr>
