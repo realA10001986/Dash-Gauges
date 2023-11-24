@@ -461,9 +461,9 @@ Number of seconds before a timeout occurs when connecting to a WiFi network. Whe
 
 ##### &#9654; TCD connected by wire
 
-Check this if you have a Time Circuits Display connected by wire. You can only connect *either* a button *or* the TCD to the "time travel" connector on the Dash Gauges, but not both.
+Check this if you have a Time Circuits Display connected by wire. Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place.
 
-Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place.
+While you can connect both a button and the TCD to the "time travel" connector on the Dash Gauges, the button should not be pressed when this option is set, as it might yield unwanted effects.
 
 Do NOT check this option if your TCD is connected wirelessly (BTTFN, MQTT).
 
