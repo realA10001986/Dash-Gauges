@@ -91,3 +91,46 @@ About the hole for the "Empty" light: Above button requires a 16mm hole. I start
 ### Enclosure
 
 The enclosure consists of three parts: The front and two side pieces. Measurements are in the "enclosure" folder of this repository. The gauges are not marked completely in the drawing, but the distance is. The distance is important if you want to fit the Switch Board.
+
+
+### Connecting a TCD to the Dash Gauges by wire
+
+If you want to connect a TCD to the Dash Gauges by wire (such as mentioned [here](https://github.com/realA10001986/Dash-Gauges/tree/main#connecting-a-tcd-by-wire)), you have two options on the Dash Gauges' side: Either the control board, or the switch board. 
+
+<table>
+    <tr>
+     <td align="center">Dash Gauges:<br>"IO13" connector on DG's TCD control board</td>
+     <td align="center">TCD control board 1.2</td>
+     <td align="center">TCD control board 1.3</td>
+    </tr>
+   <tr>
+     <td align="center">GND of "IO13" connector</td>
+     <td align="center">GND of "IO13" connector</td>
+     <td align="center">GND on "Time Travel" connector</td>
+    </tr>
+    <tr>
+     <td align="center">IO13 of "IO13" connector</td>
+     <td align="center">IO13 of "IO13" connector</td>
+     <td align="center">TT OUT on "Time Travel" connector</td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+     <td align="center">Dash Gauges:<br>"TIME TRAVEL" connector on Switch Board</td>
+     <td align="center">TCD control board 1.2</td>
+     <td align="center">TCD control board 1.3</td>
+    </tr>
+   <tr>
+     <td align="center">GND of "TIME TRAVEL" connector</td>
+     <td align="center">GND of "IO13" connector</td>
+     <td align="center">GND on "Time Travel" connector</td>
+    </tr>
+    <tr>
+     <td align="center">IN of "TIME TRAVEL" connector</td>
+     <td align="center">IO13 of "IO13" connector</td>
+     <td align="center">TT OUT on "Time Travel" connector</td>
+    </tr>
+</table>
+
+The same goes for the Time Travel button: It connects the same way, but with one distint difference: Instead of GND, it connects to 5V (on the DG' control board) or 3_3V on the DG's Switch Board.
