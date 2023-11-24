@@ -263,25 +263,7 @@ While the music player is playing music, other sound effects are disabled/muted.
 
 Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place. Therefore I strongly recommend a wireless BTTFN connection, see immediately below.
 
-For my DIY solution, you can connect the TCD to either the (left-over TCD-)control board, or the Switch Board:
-
-<table>
-    <tr>
-     <td align="center">Dash Gauges:<br>"IO13" connector on TCD control board<br>or<br>"TIME TRAVEL" connector on Switch Board</td>
-     <td align="center">TCD control board 1.2</td>
-     <td align="center">TCD control board 1.3</td>
-    </tr>
-   <tr>
-     <td align="center">GND of "IO13" connector<br>or<br>GND of "TIME TRAVEL" connector</td>
-     <td align="center">GND of "IO13" connector</td>
-     <td align="center">GND on "Time Travel" connector</td>
-    </tr>
-    <tr>
-     <td align="center">IO13 of "IO13" connector<br>or<br>IN of "TIME TRAVEL" connector</td>
-     <td align="center">IO13 of "IO13" connector</td>
-     <td align="center">TT OUT on "Time Travel" connector</td>
-    </tr>
-</table>
+INSERT LINK
 
 Next, head to the Config Portal and set the option **_TCD connected by wire_**. On the TCD, the option "Control props connected by wire" must be set.
 
