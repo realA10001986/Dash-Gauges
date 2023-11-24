@@ -54,7 +54,7 @@ Connectors on the Switch Board:
 
 - SCL/SDA: The i2c signal from he Control Board.
 
-A connection diagram is [here](electronics/connection%20diagram.png). Please note that when using a Control Board version 1.3, the IO connectors are at different locations, but still carry their "IOxx" name in all cases on the PCB. IO13 is on the "Fake PWR" connector, IO14 and IO27 are on the "Time Travel" connector.
+A connection diagram is [here](DIY/electronics/connection%20diagram.png). Please note that when using a Control Board version 1.3, the IO connectors are at different locations, but still carry their "IOxx" name in all cases on the PCB. IO13 is on the "Fake PWR" connector, IO14 and IO27 are on the "Time Travel" connector.
 
 ### Gauges
 
