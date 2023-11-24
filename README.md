@@ -205,7 +205,7 @@ The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as 
 
 ## Time travel
 
-For "time travel", you need to install a "Time Travel" button. Pressing that button briefly will let the Dash Gauges play their time travel sequence. For my DIY solution, please see [here](https://github.com/realA10001986/Dash-Gauges/blob/main/README-DIY.md#connecting-a-tcd-to-the-dash-gauges-by-wire) for how to wire that button.
+To trigger a "time travel" stand-alone, you need to install a "Time Travel" button. Pressing that button briefly will let the Dash Gauges play their time travel sequence. For my DIY solution, please see [here](https://github.com/realA10001986/Dash-Gauges/blob/main/README-DIY.md#connecting-a-time-travel-button) for how to wire that button.
 
 Other ways of triggering a time travel are available if a [Time Circuits Display](#connecting-a-time-circuits-display) is connected.
 
