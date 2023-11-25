@@ -16,7 +16,7 @@ Firmware features include
 - [Time Travel](#time-travel) function, triggered by button, [Time Circuits Display](https://tcd.backtothefutu.re) (TCD) or via [MQTT](#home-assistant--mqtt)
 - support for Side Switch to play "empty" and "refill" sequences
 - Automatic refill timer, automatic alarm mute timer (both optional)
-- easy expandability to support different gauges hardware (currently implemented: binary [on/off|; variable voltage via MCP4728)
+- easy expandability to support different gauges hardware (currently implemented: binary [on/off, all or separate]; variable voltage (0-5V) via MCP4728)
 - Support for door switch for playing sounds when opening/closing the car doors
 - Wireless communication ("[BTTF-Network](#bttf-network-bttfn)") with [Time Circuits Display](https://tcd.backtothefutu.re); used for synchonized time travels, alarm, night mode, fake power and remote control through TCD keypad
 - [Music player](#the-music-player): Play mp3 files located on an SD card [requires TCD connected wirelessly for control]
