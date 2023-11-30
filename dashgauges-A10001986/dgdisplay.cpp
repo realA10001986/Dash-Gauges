@@ -59,6 +59,7 @@ static volatile uint16_t _blinkDelay = 0;
 #define SS_LOOP    0
 #define SS_END     0xff
 static volatile bool     _specialsig = false;
+static volatile bool     _wasSpecial = false;
 static volatile bool     _specialOS = false;
 static volatile uint8_t  _specialsignum = 0;
 static volatile uint8_t  _specialidx = 0;
@@ -110,14 +111,14 @@ static void IRAM_ATTR ISR_DG_Empty()
     if(_specialsig) {
       
         // Special sequence for signalling
+        _wasSpecial = true;
         if(_specialticks == 0) {
             if(_specialArray[_specialsignum][_specialidx] == SS_END) {
                  if(_specialOS) {
-                    _specialsig = false; 
-                    _ticks = 0;
+                    _specialsig = _wasSpecial = false; 
                     _el_off();
                  } else {
-                    _specialidx = 1; 
+                    _specialidx = 1;
                  }
             }
             if(_specialsig) {
@@ -132,6 +133,11 @@ static void IRAM_ATTR ISR_DG_Empty()
             }
         }
 
+    } else if(_wasSpecial) {
+      
+        _el_off();
+        _wasSpecial = false;
+        
     }
 
     // We need to continue our blink pace even
@@ -249,9 +255,13 @@ bool Gauges::begin(uint16_t *parmArray)
         // (max val for DAC A), (max val for DAC B), (max val for DAC C),           [0-4095]
         // (Vref|Gain for DAC A), (Vref|Gain for DAC B), (Vref|Gain for DAC C) .    [VRef = 0x80, Gain = 0x10]
 
-        setMax(0, parmArray[3]); // (0 - 4095 = 0 - 2.048V)
-        setMax(1, parmArray[4]); // (0 - 4095 = 0 - 2.048V)
-        setMax(2, parmArray[5]); // (0 - 4095 = 0 - 2.048V)
+        // Max voltage limiter:
+        // - 0 - 4095 = 0 - 2.048V if Vref Int, Gain low,
+        // - 0 - 4095 = 0 - 4.096V if Vref Int, Gain high,
+        // - 0 - 4095 = 0 - 5V if Vref Ext [gain irrelevant])
+        setMax(0, parmArray[3]); 
+        setMax(1, parmArray[4]);
+        setMax(2, parmArray[5]);
     
         // Reset: Clear values, set up Vref/Gain
         for(int i = 0; i < 3; i++) {
@@ -265,6 +275,7 @@ bool Gauges::begin(uint16_t *parmArray)
         if(Wire.endTransmission(true)) {
             Wire.beginTransmission((uint8_t)parmArray[2]);
             if(Wire.endTransmission(true)) {
+                Serial.println("MCP4728 not found");
                 return false;
             }
             _address = parmArray[2];
@@ -275,7 +286,7 @@ bool Gauges::begin(uint16_t *parmArray)
         // Read EEPROM and set it up to our values if not already so
         i2clen = Wire.requestFrom(_address, (uint8_t)24);
         if(i2clen < 24) {
-            Serial.printf("Error: Can only read back %d bytes from DAC\n", i2clen);
+            Serial.printf("Error: Can only read back %d bytes from MCP4728 DAC\n", i2clen);
         }
         for(int i = 0; i < min(24, i2clen); i++) {
             readBack[i] = Wire.read();
@@ -292,7 +303,7 @@ bool Gauges::begin(uint16_t *parmArray)
             (readBack[(2*6)+4] & MCP4728_VREF_GAIN_MASK != _vrefGain[2]) ||
             (readBack[(3*6)+4] & 0xe0 != 0xe0) ) {
             #ifdef DG_DBG
-            Serial.println("Resetting EEPROM");
+            Serial.println("Resetting MCP4728 EEPROM");
             #endif
             Wire.beginTransmission(_address);
             Wire.write(0b01010000);   // Sequ write with EEPROM

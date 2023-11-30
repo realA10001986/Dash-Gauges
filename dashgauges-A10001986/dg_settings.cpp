@@ -894,17 +894,20 @@ static bool check_if_default_audio_present()
     size_t ts;
     int i, idx = 0;
     size_t sizes[NUM_AUDIOFILES] = {
-      9404, 7523, 5642, 6582, 6582,         // 0-4
-      7836, 8463, 8463, 5015, 8777,         // 5-9
-      5955,                                 // dot
+      //9404, 7523, 5642, 6582, 6582,         // 0-4
+      //7836, 8463, 8463, 5015, 8777,         // 5-9
+      //5955,                                 // dot
+      7313, 8045, 7313, 7679, 7679,         // 0-4
+      8045, 8045, 8045, 7679, 8045,         // 5-9
+      7679,                                 // dot
       24658,        // startup
       30510,        // refill
       SND_KEY_LEN,  // empty
       65230,        // alarm
       20479,        // door open
       24658,        // door close
-      43153,        // renaming
-      42212         // installing (not copied)
+      40593, // 43153,                      // renaming
+      32548  // 42212                       // installing (not copied)
     };
 
     if(!haveSD)

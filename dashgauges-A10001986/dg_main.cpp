@@ -59,36 +59,61 @@ static Gauges gauges = Gauges();
  * differ in meaning depending on the Type).
  * Types can be reused in the array, with different parameters.
  * 
+ * DGD_TYPE_MCP4728:
+ * The first two paramaters after the Type are the i2c addresses
+ * under which the MCP4728 is searched for.
+ * The following three parameters are the maximum voltage ever sent
+ * to the gauges, given in 1/4095s. Full voltage = 4095 (=100% of
+ * reference voltage).
+ * The last three parameters define the reference voltage: This is either
+ * - MCP4728_VREF_INT|MCP4728_GAIN_LOW  for 2048V, or
+ * - MCP4728_VREF_INT|MCP4728_GAIN_HIGH for 4096V, or
+ * - MCP4728_VREF_EXT                   for 5V.
+ * 
  */
 static int8_t gaugeType = 0;
 static const uint16_t gaugesParmArray[GA_NUM_TYPES][16] = {
     { 0 },
 
-    // Config 1: MCP4728 + 2 x 0-0.5V + VUMeter
+    // Config 1: MCP4728 (searched for at two i2c addresses) + 2 x 0-0.5V + VUMeter
     // 1+2: Phaostron/H&P 631-14672 with 8.6K resistors in series (DAC channels A and B). 
     //      Using MCP4728's built-in Vref (2.048V), limited by "max" parameter to 0.5V (1000/4095*2.048).
     // 3:   Simpson 49L VU meter with 3k6 resistor in series (DAC channel C)
     //      Using MCP4728's built-in Vref (2.048V), limited by "max" parameter to 1.6V (3200/4095*2.048)
-    { DGD_TYPE_MCP4728, 0x64, 0x60, 1000, 1000, 3200, MCP4728_VREF_INT, MCP4728_VREF_INT, MCP4728_VREF_INT },
+    // Parameters:      i2c-1 i2c-2 maxA  maxB  maxC  Voltage ref A     Voltage ref B     Voltage ref C
+    { DGD_TYPE_MCP4728, 0x64, 0x60, 
+            1000, 1000, 3200, 
+            MCP4728_VREF_INT|MCP4728_GAIN_LOW, 
+            MCP4728_VREF_INT|MCP4728_GAIN_LOW, 
+            MCP4728_VREF_INT|MCP4728_GAIN_LOW },
 
     // Example 1:
     // Config 2: Same as above, but 1+2 are driven with 0-2V output (which naturally means
-    // either a different voltmeter (0-2V), or the Phaostrons with a higher resistor value.
-    //{ DGD_TYPE_MCP4728, 0x64, 0x60, 4000, 4000, 3200, MCP4728_VREF_INT, MCP4728_VREF_INT, MCP4728_VREF_INT },
+    // either a different voltmeter (0-2V), or the Phaostrons with a higher resistor value).
+    //{ DGD_TYPE_MCP4728, 0x64, 0x60, 
+    //        4000, 4000, 3200, 
+    //        MCP4728_VREF_INT|MCP4728_GAIN_LOW, 
+    //        MCP4728_VREF_INT|MCP4728_GAIN_LOW, 
+    //        MCP4728_VREF_INT|MCP4728_GAIN_LOW },
 
     // Example 2:
     // Config 3: Same as 1), but 1+2 are driven with 0-5V output (using Vcc as VRef on DAC)
-    //{ DGD_TYPE_MCP4728, 0x64, 0x60, 4095, 4095, 3330, MCP4728_VREF_EXT, MCP4728_VREF_EXT, MCP4728_VREF_INT }
+    //{ DGD_TYPE_MCP4728, 0x64, 0x60, 
+    //        4095, 4095, 3200, 
+    //        MCP4728_VREF_EXT, 
+    //        MCP4728_VREF_EXT, 
+    //        MCP4728_VREF_INT|MCP4728_GAIN_LOW }
 
-    // Binary gauges (with separate pins)
-    // Type, pin left, pin center, pin right, threshold for "empty" for each gauge
+    // Binary gauges (with separate pins for each gauge; pins defined in dg_global.h)
+    // Type,               pin left,    pin center,  pin right,   thresholds for "empty" for each gauge
     { DGD_TYPE_BINARY_SEP, L_G_BIN_PIN, C_G_BIN_PIN, R_G_BIN_PIN, 0, 0, 0 },
 
-    // Binary gauges (with one pin for all)
-    // Type, pin, threshold for empty
+    // Binary gauges (with one pin for all gauges; pin defined in dg_global.h)
+    // Type,               pin,           threshold for empty
     { DGD_TYPE_BINARY_ALL, ALL_G_BIN_PIN, 0 }
 
-    // Add yours here and in dgdisplay (hardware access) and dgwifi (name for selection menu in CP)
+    // Add yours here and in dgdisplay (hardware access, if new type is required) and 
+    // in dgwifi (name for selection menu in CP; must be in same order as this array)
 };
 
 static uint8_t left_gauge_idle = 30;

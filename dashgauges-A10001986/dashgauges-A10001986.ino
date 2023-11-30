@@ -93,6 +93,8 @@
  *   
  *  TODO: Way to make device say IP address stand-alone
  *  2023/11/22 (A10001986)
+ *   - Some better sounds
+ *  2023/11/22 (A10001986)
  *    - Wake up only if "speed" is from RotEnc, not when from GPS
  *  2023/11/20 (A10001986)
  *    - Wake up on GPS speed/RotEnc changes
