@@ -74,11 +74,19 @@ For the backlight, I drilled a hole in the rear of the metal enclosure, center b
 
 #### "Roentgens"
 
-The big "Roentgens" gauge is more of a problem. I was lucky to score a Simpson 49L VU-meter, which is operated with a 3k6 resistor in series (R5+R6 on the Switch Board). Its lighting is through two 6V lamps which need no resistor; R11 on the Switch Board therefore needs to be bridged with a wire. If you prefer LEDs, put a suitable resistor in place instead.
+The big "Roentgens" gauge is more of a problem. The original in the movie was a real Roentgens meter from a CP95 radiac. Such devices are hard to find, let alone one with the correct meter. The CP95 was built over a long period of time and they used meters from different manufacturers.
 
-Properly looking Simpson meters are obtainable, even on ebay, but there are many different ones. In the movie, they used one with lights (BA9S, 6V), which means that the enclosure is much thicker than on those without. That thickness, however, is needed for the "Empty" light. The second problem is that the meters mostly are for voltages beyond what we have available. Since I am more of a software guy, I can't give any further advice here; maybe the voltmeters can be modified somehow (I assume they have big resistors which can be removed or bridged), or a level shifter can be used. In the worst case, the meter can only show two values - 0 and "full" via a level shifter or a relay, using external power. For the purpose of the Dash Gauges that is not perfect, but enough for re-creating the movie scenes.
+Since I could not find a properly equipped CP95, I searched for an alternative ... and came across a lot of Simpson meters that looked good (while not identical). However: One - quite important - issue is that most Simpson meters are not illuminated. Because of this, their front is thinner, the glass is closer to the gauge face, and that is a problem because the "Empty" light won't fit.
 
-The "Empty" light: That was the easy part; I used a button like this one:
+The only Simpson meters that came with lights - apart from the Roentgens meters - were apparently their VU meters, models 49 (3460, 3510, 3540) and 142 (10470, 10540). These all have the correct front dimensions; depending on their build date, they have either the three bands of "stripes" (like in the movie), or one thicker band of "stripes" in the center.
+
+I was lucky to score a Simpson model 49L VU-meter with the movie-accurate front, which is operated with a 3k6 resistor in series (R5+R6 on the Switch Board). Its lighting is through two 6V lamps which need no resistor; R11 on the Switch Board therefore needs to be bridged with a wire. If you prefer install LEDs, put a suitable resistor in place instead.
+
+The model 142 VU-meters, while perfectly usable electronically, look a bit different on the back; their barrel is thicker, and the screws are not at the outer corners but closer to the barrel. (Note that the drawing in the DIY/enclose folder does not reflect the model 142 dimensions.)
+
+If you can't find a VU-meter, you could try going with a Simpson voltmeter or ampmeter; however: These meters mostly are for voltages/currents beyond what we have available directly. Since I am more of a software guy, I can't give any further advice here; maybe the voltmeters can be modified somehow (I assume they have big resistors which can be removed or bridged), or a level shifter can be used. In the worst case, the meter can only show two values - 0 and "full" via a level shifter or a relay, using external power. For the purpose of the Dash Gauges that is not perfect, but enough for re-creating the movie scenes. But again: You also need to compromise on the "Empty" light, since non-illuminated Simpson meters are too thin.
+
+Speaking of the "Empty" light: That was the easy part; I used a button like this one:
 
 ![emptybutton](https://github.com/realA10001986/Dash-Gauges/assets/76924199/53187b70-9399-44a4-bd78-090f055a3423)
 
