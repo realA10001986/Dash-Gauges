@@ -82,7 +82,7 @@ A word on Simpson model numbers: Their main model number means "case style", not
 
 <img width="985" alt="Simpson meters" src="https://github.com/realA10001986/Dash-Gauges/assets/76924199/24336a00-b8af-431c-b720-0a833c483d11">
 
-The only Simpson meters that came with lights - apart from the Roentgens meters - were apparently their VU meters, models 49 (3460, 3510, 3540) and 142 (10470, 10540). Model 49 has the correct front dimensions, model 142 is a bit smaller (4.5x4.2" vs 4.25x3.9"); depending on their build date, they have either the three bands of "stripes" (like in the movie), or one thicker band of "stripes" in the center. (Later models, unfortunately using the same model numbers, look entirely different.)
+The only Simpson meters that came with lights - apart from the Roentgens meters - were apparently their VU meters, models 49L ("L" for "light") and 142 (10470, 10540). Model 49(L) has the correct front dimensions, model 142 is a bit smaller (4.5x4.2" vs 4.25x3.9"); depending on their build date, they have either the three bands of "stripes" (like in the movie), or one thicker band of "stripes" in the center. (Later models, unfortunately using the same model numbers, look entirely different.)
 
 I was lucky to score a Simpson model 49L VU-meter with the movie-accurate front, which is operated with a 3k6 resistor in series (R5+R6 on the Switch Board). Its lighting is through two 6V lamps (run at 5V) which need no resistor; R11 on the Switch Board therefore needs to be bridged with a wire. If you prefer install LEDs, put a suitable resistor in place instead. The additional red pointer was added by drilling a hole into the front and putting a pointer from another meter inside. This red pointer is not moving, so it is reasonably easy to add.
 
