@@ -1,7 +1,7 @@
 # Dash Gauges
 
 This repository holds 
-- some DIY instructions for building a Dash Gauge panel, as seen in the Back To The Future movies,
+- some [DIY instructions](/README-DIY.md) for building a Dash Gauge panel, as seen in the Back To The Future movies,
 - (in the future) information on a CircuitSetup solution for said Dash Gauges,
 - and a suitable unified firmware for the DIY panel and the CircuitSetup solution.
 
