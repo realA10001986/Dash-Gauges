@@ -29,7 +29,7 @@ Firmware features include
 
 There are different alternative ways to install this firmware:
 
-1) If a previous version of the Dash Gauges firmware, or any other firmware of the BTTF family ([TCD](https://tcd.backtothefutu.re), [FC](https://fc.backtothefutu.re), [SID](https://sid.backtothefutu.re)), is installed on your device' ESP32, you can update easily using the pre-compiled binary. Enter the [Config Portal](#the-config-portal), click on "Update" and select the pre-compiled binary file provided in this repository ([install/dashgauges-A10001986.ino.nodemcu-32s.bin](https://github.com/realA10001986/Dash-Gauges/blob/main/install/dashgauges-A10001986.ino.nodemcu-32s.bin)).
+1) If a previous version of the Dash Gauges firmware, or any other firmware of the BTTF family ([TCD](https://tcd.backtothefutu.re), [FC](https://fc.backtothefutu.re), [SID](https://sid.backtothefutu.re)), is installed on your device's ESP32, you can update easily using the pre-compiled binary. Enter the [Config Portal](#the-config-portal), click on "Update" and select the pre-compiled binary file provided in this repository ([install/dashgauges-A10001986.ino.nodemcu-32s.bin](https://github.com/realA10001986/Dash-Gauges/blob/main/install/dashgauges-A10001986.ino.nodemcu-32s.bin)).
 
 2) Using the Arduino IDE or PlatformIO: Download the sketch source code, all required libraries, compile and upload it. This method is the one for fresh ESP32 boards and/or folks familiar with the programming tool chain. Detailed build information is in [dashgauges-A10001986.ino](https://github.com/realA10001986/Dash-Gauges/blob/main/dashgauges-A10001986/dashgauges-A10001986.ino).
 
