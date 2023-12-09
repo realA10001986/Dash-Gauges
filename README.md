@@ -471,6 +471,10 @@ If this option is checked, and your TCD goes into night mode, the Dash Gauges wi
 
 If this option is checked, and your TCD is equipped with a fake power switch, the Dash Gauges will also fake-power up/down. If fake power is off, no LED is active and the Dash Gauges will ignore all input.
 
+##### &#9654; TT button trigger BTTFN-wide TT
+
+If the dash gauges are connected to a TCD through BTTFN, this option allows to trigger a synchronized time travel on all BTTFN-connected devices when pressing the Time Travel button, just as if the Time Travel was triggered by the TCD. If this option is unchecked, pressing the Time Travel button only triggers a Time Travel sequence on the dash gauges.
+
 #### Audio-visual options
 
 ##### &#9654; 'Primary' full percentage
