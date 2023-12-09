@@ -65,7 +65,8 @@ extern uint8_t musFolderNum;
 #define DEF_USE_GPSS        0     // 0: Ignore GPS speed; 1: Use it for chase speed
 #define DEF_USE_NM          0     // 0: Ignore TCD night mode; 1: Follow TCD night mode
 #define DEF_USE_FPO         0     // 0: Ignore TCD fake power; 1: Follow TCD fake power
-#define DEF_WAIT_FPO        1     // 0: Don't wait for fake power on during boot, 1: Do
+
+#define DEF_BTTFN_TT        1     // 0: '0' on IR remove and TT button trigger stand-alone TT; 1: They trigger BTTFN-wide TT
 
 #define DEF_DS_PLAY         1     // 0: don't play door sounds, 1: do
 #define DEF_DS_NC           0     // 0: door switch is NO, 1: door switch is NC
@@ -104,6 +105,7 @@ struct Settings {
     //char useGPSS[4]         = MS(DEF_USE_GPSS);
     char useNM[4]           = MS(DEF_USE_NM);
     char useFPO[4]          = MS(DEF_USE_FPO);
+    char bttfnTT[4]         = MS(DEF_BTTFN_TT);
 
     char playALsnd[4]       = MS(DEF_PLAY_ALM_SND);
 

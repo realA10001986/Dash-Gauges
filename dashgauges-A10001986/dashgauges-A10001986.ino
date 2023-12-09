@@ -92,8 +92,14 @@
 /*  Changelog
  *   
  *  TODO: Way to make device say IP address stand-alone
- *  2023/11/22 (A10001986)
+ *  
+ *  2023/12/08 (A10001986)
+ *    - Add option to trigger a BTTFN-wide TT when pressing the TT button (instead
+ *      of a stand-alone TT).
+ *    - Fix wakeup vs. SS logic
+ *  2023/11/30 (A10001986)
  *   - Some better sounds
+ *   - Fix end of "special" LED signal
  *  2023/11/22 (A10001986)
  *    - Wake up only if "speed" is from RotEnc, not when from GPS
  *  2023/11/20 (A10001986)
