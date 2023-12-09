@@ -287,7 +287,8 @@ Afterwards, the Dash Gauges and the TCD can communicate wirelessly and
 - play time travel sequences in sync,
 - both play an alarm-sequence when the TCD's alarm occurs,
 - the Dash Gauges can be remote controlled through the TCD's keypad (command codes 9xxx),
-- the Dash Gauges queries the TCD for fake power and night mode, in order to react accordingly if so configured.
+- the Dash Gauges queries the TCD for fake power and night mode, in order to react accordingly if so configured,
+- pressing the dash gauges' Time Travel button can trigger a synchronized Time Travel on all BTTFN-connected devices, just like if that Time Travel was triggered through the TCD.
 
 You can use BTTF-Network and MQTT at the same time, see immediately below.
 
