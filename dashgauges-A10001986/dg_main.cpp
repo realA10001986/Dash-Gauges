@@ -201,6 +201,8 @@ bool        dgNM = false;
 static bool useFPO = false;
 static bool tcdFPO = false;
 
+static bool bttfnTT = true;
+
 // Time travel status flags etc.
 bool                 TTrunning = false;  // TT sequence is running
 static bool          extTT = false;      // TT was triggered by TCD
@@ -327,7 +329,7 @@ static void bttfn_setup();
 static void BTTFNCheckPacket();
 static bool BTTFNTriggerUpdate();
 static void BTTFNSendPacket();
-static void addCmdQueue(uint32_t command);
+static bool BTTFNTriggerTT();
 
 // Boot
 
@@ -399,6 +401,7 @@ void main_setup()
     ssDelay = ssOrigDelay = atoi(settings.ssTimer) * 60 * 1000;    
     useNM = (atoi(settings.useNM) > 0);
     useFPO = (atoi(settings.useFPO) > 0);
+    bttfnTT = (atoi(settings.bttfnTT) > 0);
 
     dsPlay = (atoi(settings.dsPlay) > 0);
     dsCloseOnClose = (atoi(settings.dsCOnC) > 0);
@@ -575,6 +578,8 @@ void main_loop()
         fpoOld = tcdFPO;
     }
 
+    now = millis();
+
     // Timers
     if(FPBUnitIsOn) {
         // Turn display on after startup delay
@@ -683,7 +688,9 @@ void main_loop()
                 if(TCDconnected) {
                     ssEnd();
                 }
-                timeTravel(TCDconnected, noETTOLead ? 0 : ETTO_LEAD);
+                if(!bttfnTT || !BTTFNTriggerTT()) {
+                    timeTravel(TCDconnected, noETTOLead ? 0 : ETTO_LEAD);
+                }
             }
         }
     
@@ -887,8 +894,6 @@ void main_loop()
         execute_remote_command();
     }
 
-    now = millis();
-
     // Wake up on GPS/RotEnc speed changes
     if(gpsSpeed != oldGpsSpeed) {
         if(FPBUnitIsOn && !TTrunning && spdIsRotEnc && gpsSpeed >= 0) {
@@ -896,6 +901,8 @@ void main_loop()
         }
         oldGpsSpeed = gpsSpeed;
     }
+
+    now = millis();
     
     // "Screen saver"
     if(FPBUnitIsOn) {
@@ -1820,4 +1827,50 @@ static void BTTFNSendPacket()
     #endif
     dgUDP->write(BTTFUDPBuf, BTTF_PACKET_SIZE);
     dgUDP->endPacket();
+}
+
+static bool BTTFNTriggerTT()
+{
+    if(!useBTTFN)
+        return false;
+
+    #ifdef BTTFN_MC
+    if(!haveTCDIP)
+        return false;
+    #endif
+
+    if(WiFi.status() != WL_CONNECTED)
+        return false;
+
+    if(!lastBTTFNpacket)
+        return false;
+
+    if(TCDconnected || TTrunning)
+        return false;
+
+    memset(BTTFUDPBuf, 0, BTTF_PACKET_SIZE);
+
+    // ID
+    memcpy(BTTFUDPBuf, BTTFUDPHD, 4);
+
+    // Tell the TCD about our hostname (0-term., 13 bytes total)
+    strncpy((char *)BTTFUDPBuf + 10, settings.hostName, 12);
+    BTTFUDPBuf[10+12] = 0;
+
+    BTTFUDPBuf[10+13] = BTTFN_TYPE_PCG;
+
+    BTTFUDPBuf[4] = BTTFN_VERSION;  // Version
+    BTTFUDPBuf[5] = 0x80;           // Trigger BTTFN-wide TT
+
+    uint8_t a = 0;
+    for(int i = 4; i < BTTF_PACKET_SIZE - 1; i++) {
+        a += BTTFUDPBuf[i] ^ 0x55;
+    }
+    BTTFUDPBuf[BTTF_PACKET_SIZE - 1] = a;
+        
+    dgUDP->beginPacket(bttfnTcdIP, BTTF_DEFAULT_LOCAL_PORT);
+    dgUDP->write(BTTFUDPBuf, BTTF_PACKET_SIZE);
+    dgUDP->endPacket();
+
+    return true;
 }

@@ -129,6 +129,11 @@ WiFiManagerParameter custom_uFPO("uFPO", "Follow TCD fake power (0=no, 1=yes)", 
 #else // -------------------- Checkbox hack: --------------
 WiFiManagerParameter custom_uFPO("uFPO", "Follow TCD fake power", settings.useFPO, 1, "autocomplete='off' type='checkbox' style='margin-bottom:0px;'", WFM_LABEL_AFTER);
 #endif // -------------------------------------------------
+#ifdef TC_NOCHECKBOXES  // --- Standard text boxes: -------
+WiFiManagerParameter custom_bttfnTT("bttfnTT", "TT button triggers BTTFN-wide TT (0=no, 1=yes)<br><span style='font-size:80%'>If enabled, pressing the Time Travel button triggers a BTTFN-wide TT</span>", settings.bttfnTT, 1, "autocomplete='off'");
+#else // -------------------- Checkbox hack: --------------
+WiFiManagerParameter custom_bttfnTT("bttfnTT", "TT button triggers BTTFN-wide TT<br><span style='font-size:80%'>If checked, pressing the Time Travel button triggers a BTTFN-wide TT</span>", settings.bttfnTT, 1, "autocomplete='off' type='checkbox' style='margin-bottom:0px;'", WFM_LABEL_AFTER);
+#endif // -------------------------------------------------
 
 WiFiManagerParameter custom_lIdle("lIdle", "'Primary' full percentage (0-100; 0=use default)", settings.lIdle, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
 WiFiManagerParameter custom_cIdle("cIdle", "'Percent Power' full percentage (0-100; 0=use default)", settings.cIdle, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
@@ -345,11 +350,12 @@ void wifi_setup()
     wm.addParameter(&custom_TCDpresent);
     wm.addParameter(&custom_noETTOL);
 
-    wm.addParameter(&custom_sectstart);     // 7
+    wm.addParameter(&custom_sectstart);     // 6
     wm.addParameter(&custom_bttfnHint);
     wm.addParameter(&custom_tcdIP);
     wm.addParameter(&custom_uNM);
     wm.addParameter(&custom_uFPO);
+    wm.addParameter(&custom_bttfnTT);
 
     wm.addParameter(&custom_sectstart);     // 7
     wm.addParameter(&custom_lIdle);
@@ -664,6 +670,7 @@ void wifi_loop()
 
             mystrcpy(settings.useNM, &custom_uNM);
             mystrcpy(settings.useFPO, &custom_uFPO);
+            mystrcpy(settings.bttfnTT, &custom_bttfnTT);
 
             mystrcpy(settings.playALsnd, &custom_playALSnd);
 
@@ -687,6 +694,7 @@ void wifi_loop()
 
             strcpyCB(settings.useNM, &custom_uNM);
             strcpyCB(settings.useFPO, &custom_uFPO);
+            strcpyCB(settings.bttfnTT, &custom_bttfnTT);
 
             strcpyCB(settings.playALsnd, &custom_playALSnd);
 
@@ -1104,6 +1112,7 @@ void updateConfigPortalValues()
 
     custom_uNM.setValue(settings.useNM, 1);
     custom_uFPO.setValue(settings.useFPO, 1);
+    custom_bttfnTT.setValue(settings.bttfnTT, 1);
 
     custom_playALSnd.setValue(settings.playALsnd, 1);
 
@@ -1126,6 +1135,7 @@ void updateConfigPortalValues()
     
     setCBVal(&custom_uNM, settings.useNM);
     setCBVal(&custom_uFPO, settings.useFPO);
+    setCBVal(&custom_bttfnTT, settings.bttfnTT);
 
     setCBVal(&custom_playALSnd, settings.playALsnd);
 
