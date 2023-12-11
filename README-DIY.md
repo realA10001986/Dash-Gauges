@@ -76,25 +76,29 @@ For the backlight, I drilled a hole in the rear of the metal enclosure, center b
 
 The big "Roentgens" gauge is more of a problem. The original in the movie was a real Roentgens meter from a CP95 radiac. Such devices are hard to find, let alone one with the correct meter. The CP95 was built over a long period of time and they used meters from different manufacturers.
 
-Since I could not find a properly equipped CP95, I searched for an alternative ... and came across a lot of Simpson meters that looked good (while not identical). However: One - quite important - issue is that most Simpson meters are not illuminated. Because of this, their front is thinner, the glass is closer to the gauge face, and that is a problem because the "Empty" light won't fit.
+Since I could not find a properly equipped CP95, I searched for an alternative ... and came across a lot of Simpson meters that looked good (while not identical). However: One - quite important - issue is that most Simpson meters are not illuminated. Because of this, their front is thinner, the glass is closer to the gauge dial, and that is a problem because the movie-accurate "Empty" light won't fit.
 
-A word on Simpson model numbers: Their main model number means "case style", not "type of meter". "Model 49" therefore only means "4.5" inch case", but not whether this is a VU meter, a voltmeter, or what not:
+A word on Simpson model numbers: Their main model number means "case style", not "type of meter". "Model 49" therefore only means "4.5 inch case", but not whether this is a VU meter, a voltmeter, or what not:
 
 <img width="985" alt="Simpson meters" src="https://github.com/realA10001986/Dash-Gauges/assets/76924199/24336a00-b8af-431c-b720-0a833c483d11">
 
-The only Simpson meters that came with lights - apart from the Roentgens meters - were apparently their VU meters, models 49L ("L" for "light") and 142 (10470, 10540). Model 49(L) has the correct front dimensions, model 142 is a bit smaller (4.66x4.2" vs 4.25x3.9"); depending on their build date, they have either the three bands of "stripes" (like in the movie), or one thicker band of "stripes" in the center. (Later models, unfortunately using the same model numbers, look entirely different.)
+The only Simpson meters that came with lights - apart from the Roentgens meters - were apparently their VU meters, models 49L ("L" for "light") and 142 (10470, 10540). Model 49L has the correct front dimensions, model 142 is a bit smaller (4.66x4.2" vs 4.25x3.9"); depending on their build date, they have either the three bands of "stripes" (like in the movie), or one thicker band of "stripes" in the center. (Later models, unfortunately using the same model numbers, look entirely different.)
 
 I was lucky to score a Simpson model 49L VU-meter with the movie-accurate front, which is operated with a 3k6 resistor in series (R5+R6 on the Switch Board). Its lighting is through two 6V lamps (run at 5V) which need no resistor; R11 on the Switch Board therefore needs to be bridged with a wire. If you prefer install LEDs, put a suitable resistor in place instead. The additional red pointer was added by drilling a hole into the front and putting a pointer from another meter inside. This red pointer is not moving, so it is reasonably easy to add.
 
 The model 142 VU-meters, while perfectly usable electronically, are a bit smaller and look a bit different on the back; their barrel is thicker, and the screws are not at the outer corners but closer to the barrel. (Note that the drawing in the DIY/enclose folder does not reflect the model 142 dimensions.)
 
-If you can't find a VU-meter, you could try going with a Simpson voltmeter or ammeter; however: These meters mostly are for voltages/currents beyond what we have available directly. Since I am more of a software guy, I can't give any further advice here; maybe the voltmeters can be modified somehow (I assume they have big resistors which can be removed or bridged), or a level shifter can be used. In the worst case, the meter can only show two values - 0 and "full" via a level shifter or a relay, using external power. For the purpose of the Dash Gauges that is not perfect, but enough for re-creating the movie scenes. But again: You also need to compromise on the "Empty" light, since non-illuminated Simpson meters are too thin.
+If you can't find a VU-meter or consider the 142 too far off, you could try going with a Simpson voltmeter or ammeter (models 29, 39, 49, 59, or 79 fit size-wise); however: These meters mostly are for voltages/currents beyond what we have available directly. Since I am more of a software guy, I can't give any further advice here; maybe at least the voltmeters can be modified somehow (they have big resistors inside which can be removed or bridged), or a level shifter can be used. In the worst case, the meter can only show two values - 0 and "full" via a level shifter or a relay, using external power. For the purpose of the Dash Gauges that is not perfect, but enough for re-creating the movie scenes. But again: You also need to compromise on the "Empty" light, since non-illuminated Simpson meters are too thin.
 
-Speaking of the "Empty" light: That was the easy part; I used a button like this one:
+Speaking of the "Empty" light: That was the easy part; I used a light like this one, available from aliexpress:
+
+![emptylight](https://github.com/realA10001986/Dash-Gauges/assets/76924199/46731b85-ddb7-45f9-8091-a70262e9968f)
+
+There are also buttons that look identical:
 
 ![emptybutton](https://github.com/realA10001986/Dash-Gauges/assets/76924199/53187b70-9399-44a4-bd78-090f055a3423)
 
-The LED in those buttons is driven with 12V using a resistor; this resistor needs to be removed. No need to take out the blue part for this modification; just remove the red cover and pull out the LED; then desolder the LED and bridge the resistor.
+The LED in those lights/buttons is driven with 12V using a resistor; this resistor needs to be removed. No need to take out the blue part for this modification; just remove the red cover and pull out the LED; then desolder the LED and bridge the resistor.
 
 Most Simpson meters have a drop-shaped pointer top which I was not able to remove (in fact, I didn't even try; I don't think the pointer top would have ended up properly straight); although I mounted the "Empty" light as high on the scale as possible, the pointer was still too long and collided with the light. My solution was to change the bends of the pointer where it leaves the driving mechanism more into an "S" shape, and I could thereby make it ever so short enough to pass the light. Another way would be to cut off the drop part, but that would make the pointer a tad too short in my opinion.
 
