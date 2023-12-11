@@ -34,7 +34,7 @@ For the very gauges hardware I used, I designed a simple "switch board" which mo
 
 The Switch Board is mounted on the smaller gauges like this:
 
-![Mounted](https://github.com/realA10001986/Dash-Gauges/assets/76924199/34f4d706-d085-4418-9a1f-6ca3668a7ffd)
+![Mounted](https://github.com/realA10001986/Dash-Gauges/assets/76924199/33c10828-7aa2-4724-a9f2-575e57dd31e3)
 
 It carries this relay module for the lights (desolder the screw terminals, put in pin socket, pitch 5mm, 3 positions, for example Samtec HPF-03-01-T-S):
 
