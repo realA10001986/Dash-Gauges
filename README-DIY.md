@@ -106,7 +106,7 @@ About the hole for the "Empty" light: Above button requires a 16mm hole. I start
 
 ### Enclosure
 
-The enclosure consists of three parts: The front and two side pieces. Measurements are in the "enclosure" folder of this repository. The gauges are not marked completely in the drawing, but the distance is. The distance is important if you want to fit the Switch Board.
+The enclosure consists of three parts: The front and two side pieces. Measurements are in the [DIY/enclosure](DIY/enclosure) folder of this repository.
 
 ### Connecting a Time Travel button
 
