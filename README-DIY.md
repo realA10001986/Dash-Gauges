@@ -81,7 +81,7 @@ Those two gauges are driven by channels A and B of the MCP4728. They show nearly
 
 The movie-accurate dials of those gauges are available in the [DIY/faces-labels](DIY/faces-labels) folder in this repository.
 
-For the backlight, I drilled a hole in the rear of the metal enclosure, center bottom, and put a 5mm yellow LED (590nm) on the Switch Board (LED1, LED2, with suitable resistors (R8/R9; depending on LED, probably around 150R). Most replicas use white LEDs, but I think on the A-Car as shown in the Petersen Museum, there are yellow ones used, and I found white ones too bright. The LEDs are mounted on the Switch Board so that they stick out 12mm from PCB to the LED's top.
+For the backlight, I drilled a hole in the rear of the metal enclosure, center bottom, and put a 5mm yellow LED (590nm) on the Switch Board (LED1, LED2, with suitable resistors (R7/R8; depending on LED, probably around 150R). Most replicas use white LEDs, but I think on the A-Car as shown in the Petersen Museum, there are yellow ones used, and I found white ones too bright. The LEDs are mounted on the Switch Board so that they stick out 12mm from PCB to the LED's top.
 
 #### "Roentgens"
 
