@@ -88,7 +88,7 @@ If that fails, the way to enter the Config Portal depends on whether the device 
 - Otherwise .... FIXME TODO....  and listen, the IP address will be spoken out loud.
 
 In the main menu, click on "Setup" to configure your Dash Gauges.
-| ![The Config Portal](https://github.com/realA10001986/Dash-Gauges/assets/76924199/40fef271-bfd7-45b2-a7ba-9b00a7178409) |
+| ![The Config Portal](https://github.com/realA10001986/Dash-Gauges/assets/76924199/5dbd0300-98e7-4c95-989c-2835c8f2e910) |
 |:--:| 
 | *The Config Portal's Setup page* |
 
