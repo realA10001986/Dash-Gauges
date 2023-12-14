@@ -45,9 +45,9 @@ This module is not the most elegant solution but the easiest one if you, like me
 The Switch Board also carries the Adafruit MCP4728 break-out board; just solder pin sockets to both lines of pads on the PCB (pitch 2.54mm, 6 positions, for example Samtec SSW-106-01-F-S).
 
 Parts on Switch Board:
-- R1, R2: Resistors for center gauge. Depend on gauge; for H&P 631-14672 470R, 8k2
-- R3, R4: Resistors for left gauge. Depend on gauge; for H&P 631-14672 470R, 8k2
-- R5, R6: Resistors for Roentgens gauge. Depend on gauge; for Simpson 49L VU meter total 3k6 (3k3+270R, for instance)
+- R1, R2: Resistors for center gauge. Depend on gauge and supply voltage; for H&P 631-14672 470R, 8k2
+- R3, R4: Resistors for left gauge. Depend on gauge and supply voltage; for H&P 631-14672 470R, 8k2
+- R5, R6: Resistors for Roentgens gauge. Depend on gauge and supply voltage; for Simpson 49L VU meter total 3k6 (3k3+330R, for instance)
 - R7, R8: Resistors for LEDs of left and center gauge. Voltage is 5V, depends on LED type and desired brightness (eg 150R)
 - R11: Resistor for Roentgens backlight. If using lamps, just bridge. Voltage is 5V.
 
@@ -85,9 +85,9 @@ For the backlight, I drilled a hole in the rear of the metal enclosure, center b
 
 #### "Roentgens"
 
-The big "Roentgens" gauge is more of a problem. The original in the movie was a real Roentgens meter from a CP95 radiac. Such devices are hard to find, let alone one with the correct meter. The CP95 was built over a long period of time and they used meters from different manufacturers.
+The big "Roentgens" gauge is more of a problem. The original in the movie was a real Roentgens meter from a CP95 radiac. Such devices are hard to find, let alone one with the correct Simpson meter. The CP95 was built over a long period of time and they used meters from different manufacturers.
 
-Since I could not find a properly equipped CP95, I searched for an alternative ... and came across a lot of Simpson meters that looked good (while not identical). However: One - quite important - issue is that most Simpson meters are not illuminated. Because of this, their front is thinner, the glass is closer to the gauge dial, and that is a problem because the movie-accurate "Empty" light won't fit.
+Since I could not find a properly equipped CP95, I searched for an alternative ... and came across a lot of Simpson meters that looked good (while not identical). However: One - quite important - issue is that most Simpson meters are not illuminated. Because of this, their front is thinner, the glass is closer to the dial, and that is a problem because the movie-accurate "Empty" light won't fit.
 
 A word on Simpson model numbers: Their main model number means "case style", not "type of meter". "Model 49" therefore only means "4.5 inch case", but not whether this is a VU meter, a voltmeter, or what not:
 
@@ -126,6 +126,10 @@ The Time Travel button can be connected to the Control Board or the Switch Board
 On the Control Board, connect the button to "IO13" and "5V" of the "IO13" connector. In case of a Control Board 1.3, connect the button to "PWR Trigger (IO13)" and "GND" of the "Fake PWR" connector.
 
 On the Switch Board, connect the button to "IN" and "3_3V" of the "TIME TRAVEL" connector.
+
+### Adapting the firmware to your gauges
+
+The MCP4728 can deliver up to 5V. Since your gauges probably will not cover exactly this voltage spread, the firmware can be adapted to limit the maximum voltage put out. This is done in dg_main.c, and there are some examples listed there. You can, of course, contact me if you need assistance with the firmware.
 
 ### Connecting a TCD to the Dash Gauges by wire
 
