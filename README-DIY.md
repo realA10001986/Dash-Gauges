@@ -42,7 +42,14 @@ It carries this relay module for the lights (desolder the screw terminals, put i
 
 This module is not the most elegant solution but the easiest one if you, like me, are using real lamps instead of LEDs: also, it allows for an external power source for the lights.
 
-The Switch Board also carries the Adafruit MCP4728 break-out board; just solder pin sockets to both lines of pads on the PCB (pitch 2.54mm, 6 positions, for example Samtec SSW-106-01-F-S). 
+The Switch Board also carries the Adafruit MCP4728 break-out board; just solder pin sockets to both lines of pads on the PCB (pitch 2.54mm, 6 positions, for example Samtec SSW-106-01-F-S).
+
+Parts on Switch Board:
+- R1, R2: Resistors for center gauge. Depend on gauge; for H&P 631-14672 470R, 8k2
+- R3, R4: Resistors for left gauge. Depend on gauge; for H&P 631-14672 470R, 8k2
+- R5, R6: Resistors for Roentgens gauge. Depend on gauge; for Simpson 49L VU meter total 3k6 (3k3+270R, for instance)
+- R7, R8: Resistors for LEDs of left and center gauge. Voltage is 5V, depends on LED type and desired brightness (eg 150R)
+- R11: Resistor for Roentgens backlight. If using lamps, just bridge. Voltage is 5V.
 
 Connectors on the Switch Board:
 - Audio: This allows connecting the audio from the Control Board; the signal is directed to the top-left audio connector, where a speaker is to be attached.
