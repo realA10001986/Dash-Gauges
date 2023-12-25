@@ -93,15 +93,15 @@ A word on Simpson model numbers: Their main model number means "case style", not
 
 <img width="985" alt="Simpson meters" src="https://github.com/realA10001986/Dash-Gauges/assets/76924199/24336a00-b8af-431c-b720-0a833c483d11">
 
-The only Simpson meters that came with lights - apart from the Roentgens meters - were apparently their VU meters, models 49L ("L" for "light"; not listed above) and 142 (10470, 10540). Model 49L has the correct front dimensions, model 142 is a bit smaller (4.66x4.2" vs 4.25x3.9"); depending on their build date, they have either the three bands of "stripes" (like in the movie), or one thicker band of "stripes" in the center. (Later models, unfortunately using the same model numbers, look entirely different.)
+The only Simpson meters that came with illumination - apart from the Roentgens meters - were apparently their VU meters, models 49L ("L" for "light"; not listed above) and 142 (10470, 10540). Model 49L has the correct front dimensions; depending on their build date, they have either the three bands of "stripes" (like in the movie), or one thicker band of "stripes" in the center. (Later models, unfortunately using the same model number, look entirely different.)
 
-I was lucky to score a Simpson model 49L VU-meter with the movie-accurate front, which is operated with a 3k6 resistor in series (R5+R6 on the Switch Board). Its lighting is through two 6V lamps (run at 5V) which need no resistor; R11 on the Switch Board therefore needs to be bridged with a wire. If you prefer install LEDs, put a suitable resistor in place instead. The additional red pointer was added by drilling a hole into the front and putting a pointer from another meter inside. This red pointer is not moving, so it is reasonably easy to add.
+I was lucky to score a **Simpson model 49L VU-meter** with the movie-accurate front, which is operated with a 3k6 resistor in series (R5+R6 on the Switch Board). Its lighting is through two 6V lamps (run at 5V) which need no resistor; R11 on the Switch Board is therefore bridged with a wire. If you prefer install LEDs, put a suitable resistor in place instead. The additional red pointer was added by drilling a hole into the front and putting a pointer from another meter inside. This red pointer is not moving, so it is reasonably easy to add.
 
-The model 142 VU-meters, while perfectly usable electronically, are a bit smaller and look a bit different on the back; their barrel is thicker, and the screws are not at the outer corners but closer to the barrel. Unfortunately, the barrel is so big that it does not allow for a hole for the empty light; this must be done another way. (Note that the drawing in the DIY/enclose folder does not reflect the model 142 dimensions.)
+The **model 142 VU-meters**, while perfectly usable electronically, are a bit smaller (4.25x3.9" vs 4.66x4.2") and look a bit different on the back; their barrel is thicker, and the screws are not at the outer corners but closer to the barrel. Unfortunately, the barrel is so big that it does not allow for a hole for the "Empty" light; this must be done another way. (Note that the drawing in the DIY/enclose folder does not reflect the model 142 dimensions.)
 
-If you can't find a VU-meter or consider the 142 too far off, you could try going with a Simpson voltmeter or ammeter (models 29, 39, 49, 59, or 79 fit size-wise); however: These meters mostly are for voltages/currents beyond what we have available directly, but: Most of those meters have big resistors inside: For instance, the Simpson model 49 50V DC voltmeter, SK 525-447, has a 50K resistor inside; if this resistor is bridged, the meter shows full scale at 0.0375V. With a 5K6 or so resistor is shows full scale at 5,7V, which is perfectly usable for our purposes. But again: You also need to compromise on the "Empty" light, since non-illuminated Simpson meters are too thin.
+If you can't find a VU-meter or consider the 142 too far off, you could try going with a Simpson voltmeter or ammeter (models 29, 39, 49, 59, or 79 fit size-wise). These meters mostly are for voltages/currents beyond what we have available directly, but: Most of those meters have built-in resistors that reduce the voltage for the coil to something far lower: For instance, the **Simpson model 49 voltmeter 0-50V DC (SK 525-447)** has a 50K resistor inside; if this resistor is bridged, the meter shows full scale at 0.0375V. With a 5K6 or so resistor is shows full scale at approx 5V, which is perfectly usable for our purposes. But again: You also need to compromise on the "Empty" light, since non-illuminated Simpson meters are too thin.
 
-Speaking of the "Empty" light: That was the easy part; I used a light like this one, available from aliexpress:
+Speaking of the "Empty" light: I used a light like this one, available from aliexpress:
 
 ![emptylight](https://github.com/realA10001986/Dash-Gauges/assets/76924199/46731b85-ddb7-45f9-8091-a70262e9968f)
 
@@ -129,7 +129,7 @@ On the Switch Board, connect the button to "IN" and "3_3V" of the "TIME TRAVEL" 
 
 ### Adapting the firmware to your gauges
 
-The MCP4728 can deliver up to 5V. Since your gauges probably will not cover exactly this voltage spread, the firmware can be adapted to limit the maximum voltage put out. This is done in dg_main.c, and there are some examples listed there. You can, of course, contact me if you need assistance with the firmware.
+The MCP4728 can deliver up to 5V. Since your gauges probably will not cover exactly this voltage spread, the firmware can be adapted to limit the maximum voltage put out. This is done in dg_main.c, and there are some examples listed there. You can, of course, contact me if you need assistance with the firmware. *In fact, I would like to know about your hardware and include your specific type to the list, so that you don't have to patch stuff on firmware updates.*
 
 ### Connecting a TCD to the Dash Gauges by wire
 
