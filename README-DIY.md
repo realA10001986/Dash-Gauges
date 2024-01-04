@@ -119,6 +119,8 @@ About the hole for the "Empty" light: Above light/button requires a 16mm hole. I
 
 The enclosure consists of three parts: The front and two side pieces. Measurements are in the [DIY/enclosure](DIY/enclosure) folder of this repository.
 
+https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/
+
 ### Connecting a Time Travel button
 
 The Time Travel button can be connected to the Control Board or the Switch Board:
