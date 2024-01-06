@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------------------
  * Dash Gauges Panel
- * (C) 2023 Thomas Winischhofer (A10001986)
+ * (C) 2023-2024 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.backtothefutu.re
  *
@@ -11,9 +11,9 @@
 #ifndef _DG_GLOBAL_H
 #define _DG_GLOBAL_H
 
-// Version strings.
-#define DG_VERSION       "V0.18"
-#define DG_VERSION_EXTRA "DEC082023"
+// Version strings
+#define DG_VERSION       "V0.21"
+#define DG_VERSION_EXTRA "JAN042023"
 
 //#define DG_DBG              // debug output on Serial
 
@@ -38,7 +38,11 @@
  *************************************************************************/
 
 // Number of gauge type configurations (including NONE)
-#define GA_NUM_TYPES 4
+#define GA_NUM_TYPES 5
+
+// Uncomment for support of door switches/door sounds
+// Comment if using DOOR_SWITCH_PIN for something else
+#define DG_HAVEDOORSWITCH
 
 // Uncomment for HomeAssistant MQTT protocol support
 #define DG_HAVEMQTT
@@ -80,7 +84,7 @@
 
 #define STATUS_LED_PIN     2  // Status LED (on ESP)
 
-#define ALL_G_BIN_PIN     15  // Placeholder for "binary" gauge Panel (all gauges only full and empty at same time)
+#define ALL_G_BIN_PIN     12  // Placeholder for "binary" gauge Panel (all gauges only full and empty at same time)
 
 #define L_G_BIN_PIN       15  // Placeholder for "binary" gauge Panel (left gauge, only full and empty)
 #define C_G_BIN_PIN       12  // Placeholder for "binary" gauge Panel (center gauge, only full and empty)

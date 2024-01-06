@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------------------
  * Dash Gauges Panel
- * (C) 2023 Thomas Winischhofer (A10001986)
+ * (C) 2023-2024 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.backtothefutu.re
  *
@@ -391,6 +391,8 @@ void Gauges::setValuePercent(uint8_t index, uint8_t perc)
     uint16_t newVal;
 
     index &= 0x03;
+
+    if(perc > 100) perc = 100;
 
     _perc[index] = perc;
 

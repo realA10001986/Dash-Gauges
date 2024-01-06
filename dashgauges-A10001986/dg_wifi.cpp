@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------------------
  * Dash Gauges Panel
- * (C) 2023 Thomas Winischhofer (A10001986)
+ * (C) 2023-2024 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.backtothefutu.re
  *
@@ -79,9 +79,10 @@ static const char gaTyLockedHintHTML[] = "<div style='margin:0;padding:0;font-si
 static const char *gaugeTypeNames[GA_NUM_TYPES] = {
   "None",
   "MCP4728 / 0-0.5V / 0-1.6V\0",
-  //"MCP4728 / 0-2V / 0-1.6V\0"   // Example in main.c
+  "MCP4728 / 0-0.5V / 0-0.4V\0",
   "Binary (3 pins)",
   "Binary (1 pin)"
+  //"MCP4728 / 0-2V / 0-1.6V\0"   // Example in main.c
   // Add yours here
 };
 
@@ -153,6 +154,8 @@ WiFiManagerParameter custom_playALSnd("plyALS", "Play TCD-alarm sounds (0=no, 1=
 #else // -------------------- Checkbox hack: --------------
 WiFiManagerParameter custom_playALSnd("plyALS", "Play TCD-alarm sound", settings.playALsnd, 1, "autocomplete='off' title='Check to have the device play a sound when the TCD alarm sounds.' type='checkbox' style='margin-top:5px;'", WFM_LABEL_AFTER);
 #endif // -------------------------------------------------
+
+#ifdef DG_HAVEDOORSWITCH
 #ifdef TC_NOCHECKBOXES  // --- Standard text boxes: -------
 WiFiManagerParameter custom_dsPlay("dsPlay", "Play door sounds (0=no, 1=yes)", settings.dsPlay, 1, "autocomplete='off' title='Enable to have the device play a sound when door switch changes state'");
 #else // -------------------- Checkbox hack: --------------
@@ -164,6 +167,7 @@ WiFiManagerParameter custom_dsCOnC("dsCOnC", "Switch closes when door is closed 
 WiFiManagerParameter custom_dsCOnC("dsCOnC", "Switch closes when door is closed", settings.dsCOnC, 1, "autocomplete='off' title='Check to play the door open sound when switch closes' type='checkbox' style='margin-top:5px;'", WFM_LABEL_AFTER);
 #endif // -------------------------------------------------
 WiFiManagerParameter custom_dsDelay("dsDelay", "<br>Door sound delay (0-5000[milliseconds])", settings.dsDelay, 4, "type='number' min='0' max='5000'");
+#endif
 
 #ifdef DG_HAVEMQTT
 #ifdef DG_NOCHECKBOXES  // --- Standard text boxes: -------
@@ -369,9 +373,11 @@ void wifi_setup()
     wm.addParameter(&custom_FixV);
     wm.addParameter(&custom_Vol);
     wm.addParameter(&custom_playALSnd);
+    #ifdef DG_HAVEDOORSWITCH
     wm.addParameter(&custom_dsPlay);
     wm.addParameter(&custom_dsCOnC);
     wm.addParameter(&custom_dsDelay);
+    #endif
 
     #ifdef DG_HAVEMQTT
     wm.addParameter(&custom_sectstart);     // 4
@@ -649,7 +655,9 @@ void wifi_loop()
                 for ( ; *s; ++s) *s = tolower(*s);
             }
 
+            #ifdef DG_HAVEDOORSWITCH
             mystrcpy(settings.dsDelay, &custom_dsDelay);
+            #endif
 
             #ifdef DG_HAVEMQTT
             strcpytrim(settings.mqttServer, custom_mqttServer.getValue());
@@ -674,8 +682,10 @@ void wifi_loop()
 
             mystrcpy(settings.playALsnd, &custom_playALSnd);
 
+            #ifdef DG_HAVEDOORSWITCH
             mystrcpy(settings.dsPlay, &custom_dsPlay);
             mystrcpy(settings.dsCOnC, &custom_dsCOnC);
+            #endif
 
             #ifdef DG_HAVEMQTT
             mystrcpy(settings.useMQTT, &custom_useMQTT);
@@ -698,8 +708,10 @@ void wifi_loop()
 
             strcpyCB(settings.playALsnd, &custom_playALSnd);
 
+            #ifdef DG_HAVEDOORSWITCH
             strcpyCB(settings.dsPlay, &custom_dsPlay);
             strcpyCB(settings.dsCOnC, &custom_dsCOnC);
+            #endif
 
             #ifdef DG_HAVEMQTT
             strcpyCB(settings.useMQTT, &custom_useMQTT);
@@ -1098,7 +1110,9 @@ void updateConfigPortalValues()
 
     custom_tcdIP.setValue(settings.tcdIP, 63);
 
+    #ifdef DG_HAVEDOORSWITCH
     custom_dsDelay.setValue(settings.dsDelay, 4);
+    #endif
 
     #ifdef DG_HAVEMQTT
     custom_mqttServer.setValue(settings.mqttServer, 79);
@@ -1116,8 +1130,10 @@ void updateConfigPortalValues()
 
     custom_playALSnd.setValue(settings.playALsnd, 1);
 
+    #ifdef DG_HAVEDOORSWITCH
     custom_dsPlay.setValue(settings.dsPlay, 1);
     custom_dsCOnC.setValue(settings.dsCOnC, 1);
+    #endif
     
     #ifdef DG_HAVEMQTT
     custom_useMQTT.setValue(settings.useMQTT, 1);
@@ -1139,8 +1155,10 @@ void updateConfigPortalValues()
 
     setCBVal(&custom_playALSnd, settings.playALsnd);
 
+    #ifdef DG_HAVEDOORSWITCH
     setCBVal(&custom_dsPlay, settings.dsPlay);
     setCBVal(&custom_dsCOnC, settings.dsCOnC);
+    #endif
 
     #ifdef DG_HAVEMQTT
     setCBVal(&custom_useMQTT, settings.useMQTT);

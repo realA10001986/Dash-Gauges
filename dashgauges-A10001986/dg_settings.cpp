@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------------------
  * Dash Gauges Panel
- * (C) 2023 Thomas Winischhofer (A10001986)
+ * (C) 2023-2024 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.backtothefutu.re
  *
@@ -409,10 +409,12 @@ static bool read_settings(File configFile)
 
         wd |= CopyCheckValidNumParm(json["playALsnd"], settings.playALsnd, sizeof(settings.playALsnd), 0, 1, DEF_PLAY_ALM_SND);
 
+        #ifdef DG_HAVEDOORSWITCH
         wd |= CopyCheckValidNumParm(json["dsPlay"], settings.dsPlay, sizeof(settings.dsPlay), 0, 1, DEF_DS_PLAY);
         wd |= CopyCheckValidNumParm(json["dsCOnC"], settings.dsCOnC, sizeof(settings.dsCOnC), 0, 1, DEF_DS_NC);
         wd |= CopyCheckValidNumParm(json["dsDelay"], settings.dsDelay, sizeof(settings.dsDelay), 0, 5000, DEF_DS_DELAY);
-
+        #endif
+        
         #ifdef DG_HAVEMQTT
         wd |= CopyCheckValidNumParm(json["useMQTT"], settings.useMQTT, sizeof(settings.useMQTT), 0, 1, 0);
         if(json["mqttServer"]) {
@@ -483,10 +485,12 @@ void write_settings()
 
     json["playALsnd"] = (const char *)settings.playALsnd;
 
+    #ifdef DG_HAVEDOORSWITCH
     json["dsPlay"] = (const char *)settings.dsPlay;
     json["dsCOnC"] = (const char *)settings.dsCOnC;
     json["dsDelay"] = (const char *)settings.dsDelay;
-
+    #endif
+    
     #ifdef DG_HAVEMQTT
     json["useMQTT"] = (const char *)settings.useMQTT;
     json["mqttServer"] = (const char *)settings.mqttServer;

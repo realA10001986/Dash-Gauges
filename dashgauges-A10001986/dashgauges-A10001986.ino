@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------------------
  * Dash Gauges Panel
- * (C) 2023 Thomas Winischhofer (A10001986)
+ * (C) 2023-2024 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.backtothefutu.re
  *
@@ -59,7 +59,16 @@
  *   The CH340 is supported out-of-the-box since Mojave. The port is named 
  *   /dev/cu.usbserial-XXXX (XXXX being some random number), and the maximum upload 
  *   speed is 460800.
- *   Windows: No idea. Not been using Windows since 1999.
+ *   Windows:
+ *   For the SLAB CP210x (which is used by NodeMCU-boards distributed by CircuitSetup)
+ *   installing a driver is required:
+ *   https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers?tab=downloads
+ *   After installing this driver, connect your ESP32, start the Device Manager, 
+ *   expand the "Ports (COM & LPT)" list and look for the port with the ESP32 name.
+ *   Choose this port under "Tools" -> "Port" in Arduino IDE.
+ *   For the CH340, another driver is needed. Try connecting the ESP32 and have
+ *   Windows install a driver automatically; otherwise search google for a suitable
+ *   driver. Note that the maximum upload speed is either 115200, or perhaps 460800.
  *
  * - Install required libraries. In the Arduino IDE, go to "Tools" -> "Manage Libraries" 
  *   and install the following libraries:
@@ -93,6 +102,17 @@
  *   
  *  TODO: Way to make device say IP address stand-alone
  *  
+ *  2023/01/04 (A10001986)
+ *    - Read millis() instead of using static variable in main loop (too many subs 
+ *      to keep track)
+ *  2023/12/21 (A10001986)
+ *    - Correct voltage for Simpson Roentgens meter to 14mV. TODO: Find a suitable
+ *      resistor value for driving it with a reasonable voltage. 140mV is ridiculous.
+ *  2023/12/21 (A10001986)
+ *    - Add hardware config for original Simpson Roentgen meter (0-0.14V)
+ *  2023/12/16 (A10001986)
+ *    - Make DoorSwitch support a compile time option in order to allow using GPIO
+ *      for other purposes
  *  2023/12/08 (A10001986)
  *    - Add option to trigger a BTTFN-wide TT when pressing the TT button (instead
  *      of a stand-alone TT).
