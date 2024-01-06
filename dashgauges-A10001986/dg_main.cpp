@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------------------
  * Dash Gauges Panel
- * (C) 2023 Thomas Winischhofer (A10001986)
+ * (C) 2023-2024 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.backtothefutu.re
  *
@@ -43,6 +43,9 @@
 #include "dg_wifi.h"
 
 unsigned long powerupMillis = 0;
+#ifdef DG_DBG
+unsigned long debugTimer = 0;
+#endif
 
 // Gauges
 
@@ -86,31 +89,46 @@ static const uint16_t gaugesParmArray[GA_NUM_TYPES][16] = {
             MCP4728_VREF_INT|MCP4728_GAIN_LOW, 
             MCP4728_VREF_INT|MCP4728_GAIN_LOW, 
             MCP4728_VREF_INT|MCP4728_GAIN_LOW },
+            
+    // Config 2: MCP4728 (searched for at two i2c addresses) + 2 x 0-0.5V + original Roentgens meter
+    // 1+2: Phaostron/H&P 631-14672 with 8.6K resistors in series (DAC channels A and B). 
+    //      Using MCP4728's built-in Vref (2.048V), limited by "max" parameter to 0.5V (1000/4095*2.048).
+    // 3:   Simpson Roentgens meter (with no resistor) (DAC channel C)
+    //      Using MCP4728's built-in Vref (2.048V), limited by "max" parameter to 0.014V (28/4095*2.048)
+    // Parameters:      i2c-1 i2c-2 maxA  maxB  maxC  Voltage ref A     Voltage ref B     Voltage ref C    
+    { DGD_TYPE_MCP4728, 0x64, 0x60, 
+            1000, 1000, 28, 
+            MCP4728_VREF_INT|MCP4728_GAIN_LOW, 
+            MCP4728_VREF_INT|MCP4728_GAIN_LOW, 
+            MCP4728_VREF_INT|MCP4728_GAIN_LOW },
 
-    // Example 1:
-    // Config 2: Same as above, but 1+2 are driven with 0-2V output (which naturally means
-    // either a different voltmeter (0-2V), or the Phaostrons with a higher resistor value).
+    // Config 3: Binary gauges (with separate pins for each gauge; pins defined in dg_global.h)
+    // Type,               pin left,    pin center,  pin right,   thresholds for "empty" for each gauge
+    { DGD_TYPE_BINARY_SEP, L_G_BIN_PIN, C_G_BIN_PIN, R_G_BIN_PIN, 0, 0, 0 },
+
+    // Config 4: Binary gauges (with one pin for all gauges; pin defined in dg_global.h)
+    // Type,               pin,           threshold for empty
+    { DGD_TYPE_BINARY_ALL, ALL_G_BIN_PIN, 0 }
+
+    // Example 1: Meters 1+2 are driven with 0-2V output (which naturally means either a different
+    // voltmeter (0-2V), or the Phaostrons with a higher resistor value).
+    // Meter 3 is a modified 50V DC Simpson voltmeter with the internal resistor bridged, and a 
+    // 5k6 resistor added externally so that full scale is at about 5V. We use Vcc (which is 5V) as 
+    // reference in that case, and can go to max (4095).
     //{ DGD_TYPE_MCP4728, 0x64, 0x60, 
-    //        4000, 4000, 3200, 
+    //        4000, 4000, 4095, 
     //        MCP4728_VREF_INT|MCP4728_GAIN_LOW, 
     //        MCP4728_VREF_INT|MCP4728_GAIN_LOW, 
-    //        MCP4728_VREF_INT|MCP4728_GAIN_LOW },
+    //        MCP4728_VREF_EXT },
 
-    // Example 2:
-    // Config 3: Same as 1), but 1+2 are driven with 0-5V output (using Vcc as VRef on DAC)
+    // Example 2: Like config 1, but 1+2 are driven with 0-5V output (using Vcc as VRef on DAC)
     //{ DGD_TYPE_MCP4728, 0x64, 0x60, 
     //        4095, 4095, 3200, 
     //        MCP4728_VREF_EXT, 
     //        MCP4728_VREF_EXT, 
     //        MCP4728_VREF_INT|MCP4728_GAIN_LOW }
 
-    // Binary gauges (with separate pins for each gauge; pins defined in dg_global.h)
-    // Type,               pin left,    pin center,  pin right,   thresholds for "empty" for each gauge
-    { DGD_TYPE_BINARY_SEP, L_G_BIN_PIN, C_G_BIN_PIN, R_G_BIN_PIN, 0, 0, 0 },
-
-    // Binary gauges (with one pin for all gauges; pin defined in dg_global.h)
-    // Type,               pin,           threshold for empty
-    { DGD_TYPE_BINARY_ALL, ALL_G_BIN_PIN, 0 }
+    
 
     // Add yours here and in dgdisplay (hardware access, if new type is required) and 
     // in dgwifi (name for selection menu in CP; must be in same order as this array)
@@ -149,10 +167,12 @@ static bool isTTKeyPressed = false;
 static bool isTTKeyHeld = false;
 
 // The door switch
+#ifdef DG_HAVEDOORSWITCH
 static DGButton doorSwitch = DGButton(DOOR_SWITCH_PIN,
     true,    // Switch is active LOW
     true     // Enable internal pull-up resistor
 );
+#endif
 
 static bool isDSwitchPressed = false;
 static bool isDSwitchChange = false;
@@ -176,12 +196,14 @@ static unsigned long autoMute = 0;
 static bool          startAlarm = false;
 static unsigned long startAlarmNow = 0;
 
+#ifdef DG_HAVEDOORSWITCH
 static bool          dsPlay = false;
 static unsigned long dsNow = 0;
 static bool          dsTimer = false;
 static unsigned long dsDelay = 0;
 static unsigned long dsADelay = 0;
 static bool          dsOpen = false;
+#endif
 
 bool networkTimeTravel = false;
 bool networkTCDTT      = false;
@@ -309,9 +331,11 @@ static void start_blink_empty();
 
 static void sideSwitchLongPress();
 static void sideSwitchLongPressStop();
+#ifdef DG_HAVEDOORSWITCH
 static void dsScan();
 static void doorSwitchLongPress();
 static void doorSwitchLongPressStop();
+#endif
 static void ttkeyScan();
 static void TTKeyPressed();
 static void TTKeyHeld();
@@ -351,12 +375,14 @@ void main_boot()
     sideSwitch.scan();
 
     // Init door switch
+    #ifdef DG_HAVEDOORSWITCH
     doorSwitch.setPressTicks(10);     // ms after short press is assumed
     doorSwitch.setLongPressTicks(50); // ms after long press is assumed
     doorSwitch.setDebounceTicks(50);
     doorSwitch.attachLongPressStart(doorSwitchLongPress);
     doorSwitch.attachLongPressStop(doorSwitchLongPressStop);
     doorSwitch.scan();
+    #endif
 
     swInitNow = millis();
 }
@@ -403,13 +429,15 @@ void main_setup()
     useFPO = (atoi(settings.useFPO) > 0);
     bttfnTT = (atoi(settings.bttfnTT) > 0);
 
+    #ifdef DG_HAVEDOORSWITCH
     dsPlay = (atoi(settings.dsPlay) > 0);
     dsCloseOnClose = (atoi(settings.dsCOnC) > 0);
     temp = atoi(settings.dsDelay);
     if(temp < 0) temp = 0;
     else if(temp > 5000) temp = 5000;
     dsDelay = temp;
-
+    #endif
+    
     temp = atoi(settings.autoRefill);
     if(temp < 0) temp = 0;
     else if(temp > 360) temp = 360;
@@ -480,8 +508,11 @@ void main_setup()
         delay(60 - tempu);
     }
     sideSwitch.scan();
+    isSSwitchChange = false;
+    #ifdef DG_HAVEDOORSWITCH
     doorSwitch.scan();
-    isSSwitchChange = isDSwitchChange = false;
+    isDSwitchChange = false;
+    #endif
 
     #ifdef DG_DBG
     Serial.println(F("main_setup() done"));
@@ -517,7 +548,9 @@ void main_loop()
     unsigned long now = millis();
 
     // Scan door switch
+    #ifdef DG_HAVEDOORSWITCH
     dsScan();
+    #endif
 
     // Follow TCD fake power
     if(useFPO && (tcdFPO != fpoOld)) {
@@ -551,7 +584,7 @@ void main_loop()
             FPBUnitIsOn = true;
 
             // Check if autoRefill timer ran out during our "off" period
-            if(autoRefill && FPOffemptyAlarm && (now - FPOffemptyAlarmNow >= autoRefill)) {
+            if(autoRefill && FPOffemptyAlarm && (millis() - FPOffemptyAlarmNow >= autoRefill)) {
                 // If so, refill
                 gauges.setValuePercent(0, left_gauge_idle);
                 gauges.setValuePercent(1, center_gauge_idle);
@@ -570,7 +603,7 @@ void main_loop()
             gauge_lights_on();            
             
             startup = true;
-            startupNow = now;
+            startupNow = millis();
             
             // FIXME - anything else?
  
@@ -578,12 +611,10 @@ void main_loop()
         fpoOld = tcdFPO;
     }
 
-    now = millis();
-
     // Timers
     if(FPBUnitIsOn) {
         // Turn display on after startup delay
-        if(startup && (now - startupNow >= STARTUP_DELAY)) {
+        if(startup && (millis() - startupNow >= STARTUP_DELAY)) {
             gauges.on();
             if(checkGauges()) {    // Check if empty, and trigger alarm if so
                 play_file("/startup.mp3", PA_INTRMUS|PA_ALLOWSD, 1.0);
@@ -591,10 +622,9 @@ void main_loop()
             startup = false;
         }
         // Start alarm (after delay to give gauges time to go to 0)
-        if(startAlarm && (now - startAlarmNow >= ALARM_DELAY)) {
+        if(startAlarm && (millis() - startAlarmNow >= ALARM_DELAY)) {
             startEmptyAlarm();
             startAlarm = false;
-            now = millis();     // sic!
         }
         // Initiate refill after audio has finished
         if(refillWA && (!playingEmpty || checkAudioDone())) {
@@ -602,19 +632,19 @@ void main_loop()
             refillWA = false;
             if(!ssActive) {
                 refill = true;
-                refillNow = now;
+                refillNow = millis();
             }
         }
         // Update gauges after refill (sound-sync'd)
-        if(refill && (now - refillNow >= REFILL_DELAY)) {
+        if(refill && (millis() - refillNow >= REFILL_DELAY)) {
             gauges.UpdateAll();
             refill = false;
         }
         if(!TTrunning && !startup && !startAlarm && !refill && !refillWA) {
-            if(autoRefill && emptyAlarm && (now - emptyAlarmNow >= autoRefill)) {
+            if(autoRefill && emptyAlarm && (millis() - emptyAlarmNow >= autoRefill)) {
                 refill_plutonium();
             }
-            if(autoMute && playingEmpty && (now - emptyAlarmNow >= autoMute)) {
+            if(autoMute && playingEmpty && (millis() - emptyAlarmNow >= autoMute)) {
                 stopAudioAtLoopEnd();
             }
         }
@@ -633,9 +663,12 @@ void main_loop()
                 gauges.setValuePercent(2, right_gauge_empty);
                 gauges.UpdateAll();
                 startAlarm = true;
-                startAlarmNow = now;
+                startAlarmNow = millis();
                 emptyAlarm = true;  // Set this here already for checks elsewhere
-                refill = refillWA = dsTimer = false;
+                refill = refillWA = false;
+                #ifdef DG_HAVEDOORSWITCH
+                dsTimer = false;
+                #endif
             }
             isSSwitchChange = false;
             ssRestartTimer();
@@ -643,6 +676,8 @@ void main_loop()
     }
 
     // Door switch/sound handling
+    #ifdef DG_HAVEDOORSWITCH
+    now = millis();
     if(dsTimer && now - dsNow >= dsADelay) {
         // delay door sound by max 500ms, otherwise effect is lost and we skip it
         if(now - dsNow <= dsADelay + 500) {
@@ -667,7 +702,8 @@ void main_loop()
         }
         isDSwitchChange = false;
     }
-
+    #endif
+    
     // TT button evaluation
     if(FPBUnitIsOn && !TTrunning && !startup && !startAlarm && !refill && !refillWA) {
         ttkeyScan();
@@ -901,16 +937,16 @@ void main_loop()
         }
         oldGpsSpeed = gpsSpeed;
     }
-
-    now = millis();
     
     // "Screen saver"
     if(FPBUnitIsOn) {
         if(!ssActive && !TTrunning && !startup && !startAlarm && !refill && !refillWA && 
-           ssDelay && (now - ssLastActivity > ssDelay)) {
+           ssDelay && (millis() - ssLastActivity > ssDelay)) {
             ssStart();
         }
     }
+
+    now = millis();
 
     // If network is interrupted, return to stand-alone
     if(useBTTFN) {
@@ -942,6 +978,16 @@ void main_loop()
             saveCurVolume();
         }
     }
+
+    #ifdef DG_DBG
+    if(millis() - debugTimer > 10*1000) {
+        debugTimer = millis();
+        Serial.printf("WiFi status %d (Connected = %d)\n", WiFi.status(), WL_CONNECTED);
+        Serial.printf("ssActive %d\n", ssActive);
+        Serial.printf("FPBUnitIsOn %d\n", FPBUnitIsOn);
+        Serial.printf("now %d, lastBTTFNpacket %d, ssLastActivity %d\n", millis(), lastBTTFNpacket, ssLastActivity);
+    }
+    #endif
 }
 
 /*
@@ -989,7 +1035,7 @@ static void timeTravel(bool TCDtriggered, uint16_t P0Dur, uint16_t P1Dur)
     if(!P1Dur) {
         P1Dur = TCDtriggered ? 6600 : P1_DUR;
     }
-    TTStepL = TTStepC = TTStepR = 1;          // How to determine stepping? TODO
+    TTStepL = TTStepC = TTStepR = 1;          // Stepping is 1
     TTFIntL = gauges.getValuePercent(0);
     if(TTFIntL < left_gauge_empty + (TTStepL * 2)) TTFIntL = 0;
     else {
@@ -1049,8 +1095,7 @@ void wakeup()
     // End screen saver
     ssEnd();
     
-    // ...?
-    // TODO FIXME
+    // Anything else?
 }
 
 void refill_plutonium()
@@ -1328,16 +1373,16 @@ static void say_ip_address()
  */
 
 static bool checkGauges()
-{ 
+{
     if( (gauges.getValuePercent(0) == left_gauge_empty) ||
         (gauges.getValuePercent(1) == center_gauge_empty) ||
         (gauges.getValuePercent(2) == right_gauge_empty) ) {
-          
+
         gauges.setValuePercent(0, left_gauge_empty);
         gauges.setValuePercent(1, center_gauge_empty);
         gauges.setValuePercent(2, right_gauge_empty);
         gauges.UpdateAll();
-        
+
         startEmptyAlarm();
         return false;
     }
@@ -1386,6 +1431,7 @@ static void sideSwitchLongPressStop()
     isSSwitchChange = true;
 }
 
+#ifdef DG_HAVEDOORSWITCH
 static void doorSwitchLongPress()
 {
     isDSwitchPressed = true;
@@ -1399,6 +1445,7 @@ static void doorSwitchLongPressStop()
     isDSwitchChange = true;
     isDSwitchChangeNow = millis();
 }
+#endif
 
 static void ttkeyScan()
 {
@@ -1406,10 +1453,12 @@ static void ttkeyScan()
     sideSwitch.scan();
 }
 
+#ifdef DG_HAVEDOORSWITCH
 static void dsScan()
 {
     if(dsPlay) doorSwitch.scan();
 }
+#endif
 
 static void TTKeyPressed()
 {
@@ -1439,10 +1488,10 @@ static void ssStart()
     if(emptyAlarm && playingEmpty) {
         stopAudioAtLoopEnd();
     }
-    
+
     gauge_lights_off();
     gauges.off();
-    
+
     ssActive = true;
 }
 
@@ -1455,9 +1504,9 @@ static void ssEnd()
 {
     if(!FPBUnitIsOn)
         return;
-        
+
     ssRestartTimer();
-    
+
     if(!ssActive)
         return;
 
@@ -1517,7 +1566,9 @@ static void myloop()
 {
     wifi_loop();
     audio_loop();
+    #ifdef DG_HAVEDOORSWITCH
     dsScan();
+    #endif
     bttfn_loop();
 }
 
