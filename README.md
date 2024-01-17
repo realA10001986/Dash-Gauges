@@ -5,7 +5,7 @@ This repository holds
 - (in the future) information on a CircuitSetup solution for said Dash Gauges,
 - and a suitable unified firmware for the DIY panel and the CircuitSetup solution.
 
-This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](https://tcd.backtothefutu.re) as it relies on the TCD's keypad to control many of its functions.
+This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](https://tcd.out-a-ti.me) as it relies on the TCD's keypad to control many of its functions.
 
 ![Dash Gauges](https://github.com/realA10001986/Dash-Gauges/assets/76924199/c996f77c-9b9e-43cc-a89a-a1c61146cca4)
 
@@ -13,12 +13,12 @@ For DIY instructions, please see [here](/README-DIY.md).
 
 Firmware features include
 - Selectable "full" percentages per gauge (besides for fun, useful for adjusting inaccurate readings) (feature depending on hardware configuration)
-- [Time Travel](#time-travel) function, triggered by button, [Time Circuits Display](https://tcd.backtothefutu.re) (TCD) or via [MQTT](#home-assistant--mqtt)
+- [Time Travel](#time-travel) function, triggered by button, [Time Circuits Display](https://tcd.out-a-ti.me) (TCD) or via [MQTT](#home-assistant--mqtt)
 - support for Side Switch to play "empty" and "refill" sequences
 - Automatic refill timer, automatic alarm mute timer (both optional)
 - easy expandability to support different gauges hardware (currently implemented: binary [on/off, all or separate]; variable voltage (0-5V) via MCP4728)
 - Support for door switch for playing sounds when opening/closing the car doors
-- Wireless communication ("[BTTF-Network](#bttf-network-bttfn)") with [Time Circuits Display](https://tcd.backtothefutu.re); used for synchonized time travels, alarm, night mode, fake power and remote control through TCD keypad
+- Wireless communication ("[BTTF-Network](#bttf-network-bttfn)") with [Time Circuits Display](https://tcd.out-a-ti.me); used for synchonized time travels, alarm, night mode, fake power and remote control through TCD keypad
 - [Music player](#the-music-player): Play mp3 files located on an SD card [requires TCD connected wirelessly for control]
 - [SD card](#sd-card) support for custom audio files for effects, and music for the Music Player
 - Advanced network-accessible [Config Portal](#the-config-portal) for setup with mDNS support for easy access (http://gauges.local, hostname configurable)
@@ -29,7 +29,7 @@ Firmware features include
 
 There are different alternative ways to install this firmware:
 
-1) If a previous version of the Dash Gauges firmware, or any other firmware of the BTTF family ([TCD](https://tcd.backtothefutu.re), [FC](https://fc.backtothefutu.re), [SID](https://sid.backtothefutu.re)), is installed on your device's ESP32, you can update easily using the pre-compiled binary. Enter the [Config Portal](#the-config-portal), click on "Update" and select the pre-compiled binary file provided in this repository ([install/dashgauges-A10001986.ino.nodemcu-32s.bin](https://github.com/realA10001986/Dash-Gauges/blob/main/install/dashgauges-A10001986.ino.nodemcu-32s.bin)).
+1) If a previous version of the Dash Gauges firmware, or any other firmware of the BTTF family ([TCD](https://tcd.out-a-ti.me), [FC](https://fc.out-a-ti.me), [SID](https://sid.out-a-ti.me)), is installed on your device's ESP32, you can update easily using the pre-compiled binary. Enter the [Config Portal](#the-config-portal), click on "Update" and select the pre-compiled binary file provided in this repository ([install/dashgauges-A10001986.ino.nodemcu-32s.bin](https://github.com/realA10001986/Dash-Gauges/blob/main/install/dashgauges-A10001986.ino.nodemcu-32s.bin)).
 
 2) Using the Arduino IDE or PlatformIO: Download the sketch source code, all required libraries, compile and upload it. This method is the one for fresh ESP32 boards and/or folks familiar with the programming tool chain. Detailed build information is in [dashgauges-A10001986.ino](https://github.com/realA10001986/Dash-Gauges/blob/main/dashgauges-A10001986/dashgauges-A10001986.ino).
 
@@ -277,7 +277,7 @@ The TCD can communicate with the Dash Gauges wirelessly, via WiFi. It can send o
 |:--:|
 | Click to watch the video |
 
-Note that the TCD's firmware must be up to date for BTTFN. You can use [this](http://tcd.backtothefutu.re) one or CircuitSetup's release 2.9 or later.
+Note that the TCD's firmware must be up to date for BTTFN. You can use [this](http://tcd.out-a-ti.me) one or CircuitSetup's release 2.9 or later.
 
 ![BTTFN connection](https://github.com/realA10001986/Dash-Gauges/assets/76924199/9342b658-b772-4106-9c57-56d135f6962b)
 
@@ -325,11 +325,11 @@ Limitations: MQTT Protocol version 3.1.1; TLS/SSL not supported; ".local" domain
 
 ## Car setup
 
-If your Dash Gauges, along with a [Time Circuits Display](https://tcd.backtothefutu.re/), is mounted in a car, the following network configuration is recommended:
+If your Dash Gauges, along with a [Time Circuits Display](https://tcd.out-a-ti.me/), is mounted in a car, the following network configuration is recommended:
 
 #### TCD
 
-- Run your TCD in [*car mode*](https://tcd.backtothefutu.re/#car-mode);
+- Run your TCD in [*car mode*](https://tcd.out-a-ti.me/#car-mode);
 - disable WiFi power-saving on the TCD by setting **_WiFi power save timer (AP-mode)_** to 0 (zero).
 
 #### Dash Gauges
