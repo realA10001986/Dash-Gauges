@@ -3,7 +3,7 @@
  * Dash Gauges Panel
  * (C) 2023-2024 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
- * https://dg.backtothefutu.re
+ * https://dg.out-a-ti.me
  *
  * Settings handling
  *

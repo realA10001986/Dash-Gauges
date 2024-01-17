@@ -3,7 +3,7 @@
  * Dash Gauges Panel
  * (C) 2023-2024 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
- * https://dg.backtothefutu.re
+ * https://dg.out-a-ti.me
  *
  * License: MIT
  * 
@@ -102,12 +102,16 @@
  *   
  *  TODO: Way to make device say IP address stand-alone
  *  
+ *  2024/01/15 (A10001986)
+ *    - Flush outstanding delayed saves before rebooting and on fake-power-off
+ *    - Remove "Restart" menu item from CP, can't let WifiManager reboot behind
+ *      our back.
  *  2023/01/04 (A10001986)
  *    - Read millis() instead of using static variable in main loop (too many subs 
  *      to keep track)
  *  2023/12/21 (A10001986)
  *    - Correct voltage for Simpson Roentgens meter to 14mV. TODO: Find a suitable
- *      resistor value for driving it with a reasonable voltage. 140mV is ridiculous.
+ *      resistor value for driving it with a reasonable voltage. 14mV is ridiculous.
  *  2023/12/21 (A10001986)
  *    - Add hardware config for original Simpson Roentgen meter (0-0.14V)
  *  2023/12/16 (A10001986)

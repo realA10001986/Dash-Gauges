@@ -3,7 +3,7 @@
  * Dash Gauges Panel
  * (C) 2023-2024 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
- * https://dg.backtothefutu.re
+ * https://dg.out-a-ti.me
  *
  * Main controller
  *
@@ -95,6 +95,7 @@ static const uint16_t gaugesParmArray[GA_NUM_TYPES][16] = {
     //      Using MCP4728's built-in Vref (2.048V), limited by "max" parameter to 0.5V (1000/4095*2.048).
     // 3:   Simpson Roentgens meter (with no resistor) (DAC channel C)
     //      Using MCP4728's built-in Vref (2.048V), limited by "max" parameter to 0.014V (28/4095*2.048)
+    //      FIXME - need a resistor value to keep this within reasonable limits - 14mV is too low
     // Parameters:      i2c-1 i2c-2 maxA  maxB  maxC  Voltage ref A     Voltage ref B     Voltage ref C    
     { DGD_TYPE_MCP4728, 0x64, 0x60, 
             1000, 1000, 28, 
@@ -575,6 +576,8 @@ void main_loop()
 
             mp_stop();
             stopAudio();
+
+            flushDelayedSave();
             
             // FIXME - anything else?
             
@@ -990,6 +993,14 @@ void main_loop()
     #endif
 }
 
+void flushDelayedSave()
+{
+    if(volchanged) {
+        volchanged = false;
+        saveCurVolume();
+    }
+}
+
 /*
  * Time travel
  */
@@ -1000,6 +1011,8 @@ static void timeTravel(bool TCDtriggered, uint16_t P0Dur, uint16_t P1Dur)
     
     if(TTrunning)
         return;
+
+    flushDelayedSave();
     
     if(!TCDtriggered) {
         // If "empty", button-triggered TT is refused (?)
@@ -1193,6 +1206,7 @@ static void execute_remote_command()
 
         if(command == 90) {
 
+            flushDelayedSave();
             say_ip_address();
           
         } else if(command >= 50 && command <= 59) {
@@ -1209,6 +1223,7 @@ static void execute_remote_command()
                 }
                 stopAudio();
                 if(mp_checkForFolder(musFolderNum) == -1) {
+                    flushDelayedSave();
                     showWaitSequence();
                     waitShown = true;
                     play_file("/renaming.mp3", PA_INTRMUS|PA_ALLOWSD);
@@ -1305,11 +1320,13 @@ static void execute_remote_command()
             allOff();
             mp_stop();
             stopAudio();
+            flushDelayedSave();
             unmount_fs();
             delay(500);
             esp_restart();
             break;
         case 123456:
+            flushDelayedSave();
             deleteIpSettings();                   // 123456: deletes IP settings
             settings.appw[0] = 0;                 // and clears AP mode WiFi password
             write_settings();
@@ -1601,7 +1618,7 @@ static uint8_t restrict_gauge_empty(int val, int minimum, int maximum, uint8_t d
 }
 
 /*
- * BTTF network communication
+ * Basic Telematics Transmission Framework (BTTFN)
  */
 
 static void addCmdQueue(uint32_t command)

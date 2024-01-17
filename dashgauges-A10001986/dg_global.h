@@ -3,7 +3,7 @@
  * Dash Gauges Panel
  * (C) 2023-2024 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
- * https://dg.backtothefutu.re
+ * https://dg.out-a-ti.me
  *
  * Global definitions
  */
@@ -12,10 +12,10 @@
 #define _DG_GLOBAL_H
 
 // Version strings
-#define DG_VERSION       "V0.21"
-#define DG_VERSION_EXTRA "JAN042023"
+#define DG_VERSION       "V0.22"
+#define DG_VERSION_EXTRA "JAN152024"
 
-//#define DG_DBG              // debug output on Serial
+#define DG_DBG              // debug output on Serial
 
 /*************************************************************************
  ***                     mDNS (Bonjour) support                        ***
