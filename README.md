@@ -18,7 +18,7 @@ Firmware features include
 - Automatic refill timer, automatic alarm mute timer (both optional)
 - easy expandability to support different gauges hardware (currently implemented: binary [on/off, all or separate]; variable voltage (0-5V) via MCP4728)
 - Support for door switch for playing sounds when opening/closing the car doors
-- Wireless communication ("[BTTF-Network](#bttf-network-bttfn)") with [Time Circuits Display](https://tcd.out-a-ti.me); used for synchonized time travels, alarm, night mode, fake power and remote control through TCD keypad
+- [Wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://tcd.out-a-ti.me); used for synchonized time travels, alarm, night mode, fake power and remote control through TCD keypad
 - [Music player](#the-music-player): Play mp3 files located on an SD card [requires TCD connected wirelessly for control]
 - [SD card](#sd-card) support for custom audio files for effects, and music for the Music Player
 - Advanced network-accessible [Config Portal](#the-config-portal) for setup with mDNS support for easy access (http://gauges.local, hostname configurable)
@@ -271,7 +271,7 @@ You can connect both the TCD and a Time Travel button to Dash Gauges. But the bu
 
 ### BTTF-Network ("BTTFN")
 
-The TCD can communicate with the Dash Gauges wirelessly, via WiFi. It can send out information about a time travel and an alarm. Furthermore, the TCD's keypad can be used to remote-control the Dash Gauges.
+The TCD can communicate with the Dash Gauges wirelessly, via the built-in "**B**asic-**T**elematics-**T**ransmission-**F**ramework" over WiFi. It can send out information about a time travel and an alarm. Furthermore, the TCD's keypad can be used to remote-control the Dash Gauges.
 
 | [![Watch the video](https://img.youtube.com/vi/u9oTVXUIOXA/0.jpg)](https://youtu.be/u9oTVXUIOXA) |
 |:--:|
