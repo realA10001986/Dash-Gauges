@@ -730,7 +730,7 @@ void main_loop()
                 if(TCDconnected) {
                     ssEnd();
                 }
-                if(!bttfnTT || !BTTFNTriggerTT()) {
+                if(TCDconnected || !bttfnTT || !BTTFNTriggerTT()) {
                     timeTravel(TCDconnected, noETTOLead ? 0 : ETTO_LEAD);
                 }
             }
@@ -1916,7 +1916,7 @@ static bool BTTFNTriggerTT()
     if(!lastBTTFNpacket)
         return false;
 
-    if(TCDconnected || TTrunning)
+    if(TTrunning)
         return false;
 
     memset(BTTFUDPBuf, 0, BTTF_PACKET_SIZE);
@@ -1942,6 +1942,10 @@ static bool BTTFNTriggerTT()
     dgUDP->beginPacket(bttfnTcdIP, BTTF_DEFAULT_LOCAL_PORT);
     dgUDP->write(BTTFUDPBuf, BTTF_PACKET_SIZE);
     dgUDP->endPacket();
+
+    #ifdef DG_DBG
+    Serial.println("Triggered BTTFN-wide TT");
+    #endif
 
     return true;
 }

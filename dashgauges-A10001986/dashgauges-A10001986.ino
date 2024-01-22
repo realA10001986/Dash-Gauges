@@ -102,6 +102,8 @@
  *   
  *  TODO: Way to make device say IP address stand-alone
  *  
+ *  2024/01/22 (A10001986)
+ *    - Fix for BTTFN-wide TT vs. TCD connected by wire
  *  2024/01/21 (A10001986)
  *    - Major cleanup (no functional changes)
  *  2024/01/18 (A10001986)
