@@ -102,6 +102,8 @@
  *   
  *  TODO: Way to make device say IP address stand-alone
  *  
+ *  2024/01/21 (A10001986)
+ *    - Major cleanup (no functional changes)
  *  2024/01/18 (A10001986)
  *    - Fix WiFi menu size
  *  2024/01/15 (A10001986)

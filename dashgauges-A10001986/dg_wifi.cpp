@@ -507,7 +507,7 @@ void wifi_setup2()
             
     } else {
 
-        #ifdef TC_DBG
+        #ifdef DG_DBG
         Serial.println("MQTT: Disabled");
         #endif
 

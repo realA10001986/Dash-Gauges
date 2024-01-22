@@ -29,3 +29,54 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+#ifndef _DG_AUDIO_H
+#define _DG_AUDIO_H
+
+// Default volume (index or 255 for knob)
+#define DEFAULT_VOLUME 6
+
+#define PA_LOOP    0x0001
+#define PA_INTRMUS 0x0002
+#define PA_ALLOWSD 0x0004
+#define PA_DYNVOL  0x0008
+#define PA_ISEMPTY 0x0010
+#define PA_WAV     0x0020
+#define PA_MASKA   (PA_LOOP|PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL|PA_ISEMPTY)
+
+void audio_setup();
+void audio_loop();
+
+void play_file(const char *audio_file, uint16_t flags, float volumeFactor = 1.0);
+void append_file(const char *audio_file, uint16_t flags, float volumeFactor = 1.0);
+bool checkAudioDone();
+void stopAudio();
+void stopAudioAtLoopEnd();
+bool append_pending();
+
+void play_empty();
+//void append_empty();
+void remove_appended_empty();
+
+void     mp_init(bool isSetup);
+void     mp_play(bool forcePlay = true);
+bool     mp_stop();
+void     mp_next(bool forcePlay = false);
+void     mp_prev(bool forcePlay = false);
+int      mp_gotonum(int num, bool force = false);
+void     mp_makeShuffle(bool enable);
+int      mp_checkForFolder(int num);
+uint8_t* m(uint8_t *a, uint32_t s, int e);
+
+extern bool audioInitDone;
+extern bool audioMute;
+
+extern bool haveMusic;
+extern bool mpActive;
+
+extern bool playingEmpty;
+extern bool playingEmptyEnds;
+
+extern uint8_t curSoftVol;
+
+#endif
