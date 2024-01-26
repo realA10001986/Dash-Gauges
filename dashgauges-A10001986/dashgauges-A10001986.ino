@@ -104,6 +104,8 @@
  *  
  *  2024/01/26 (A10001986)
  *    - Reformat FlashFS only if audio file installation fails due to a write error
+ *    - Add sound-pack versioning; re-installation required with this FW update
+ *    - Allow sound installation in Flash-RO-mode
  *  2024/01/22 (A10001986)
  *    - Fix for BTTFN-wide TT vs. TCD connected by wire
  *  2024/01/21 (A10001986)
