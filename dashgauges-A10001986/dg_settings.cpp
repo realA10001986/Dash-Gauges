@@ -59,21 +59,8 @@
 #define JSON_SIZE 1600
 
 #define NUM_AUDIOFILES 11+8
-#define SND_KEY_IDX 11+2
-static const char *audioFiles[NUM_AUDIOFILES] = {
-      "/0.mp3", "/1.mp3", "/2.mp3", "/3.mp3", "/4.mp3", 
-      "/5.mp3", "/6.mp3", "/7.mp3", "/8.mp3", "/9.mp3", 
-      "/dot.mp3", 
-      "/startup.mp3",
-      "/refill.mp3",
-      "/empty.wav",   // key
-      "/alarm.mp3",
-      "/dooropen.mp3",
-      "/doorclose.mp3",
-      "/renaming.mp3",
-      "/_installing.mp3"
-};
-static const char *IDFN   = "/DG_def_snd.txt";
+#define SND_REQ_VERSION "DG01"
+
 static const char *CONFN  = "/DGA.bin";
 static const char *CONFND = "/DGA.old";
 static const char *CONID  = "DGAA";
@@ -120,10 +107,11 @@ static bool CopyCheckValidNumParmF(const char *json, char *text, uint8_t psize, 
 static bool checkValidNumParm(char *text, int lowerLim, int upperLim, int setDefault);
 static bool checkValidNumParmF(char *text, float lowerLim, float upperLim, float setDefault);
 
-static void open_and_copy(const char *fn, int& haveErr);
-static bool filecopy(File source, File dest);
+static bool copy_audio_files(bool& delIDfile);
+static void open_and_copy(const char *fn, int& haveErr, int& haveWriteErr);
+static bool filecopy(File source, File dest, int& haveWriteErr);
 static bool check_if_default_audio_present();
-static void cfc(File& sfile, bool doCopy, int& haveErr);
+static void cfc(File& sfile, bool doCopy, int& haveErr, int& haveWriteErr);
 
 static void formatFlashFS();
 
@@ -280,7 +268,7 @@ void settings_setup()
     configOnSD = ((r = m) && haveSD && ((settings.CfgOnSD[0] != '0') || FlashROMode));
     
     // Check if SD contains our default sound files
-    if(haveFS && haveSD && !FlashROMode) {
+    if(haveSD && (haveFS || FlashROMode)) {
         allowCPA = check_if_default_audio_present();
     }
 
@@ -888,8 +876,6 @@ static uint32_t getuint32(uint8_t *buf)
     return t;
 }
 
-#define SND_KEY_LEN 73386
-
 static bool check_if_default_audio_present()
 {
     File file;
@@ -902,7 +888,7 @@ static bool check_if_default_audio_present()
       7679,                                 // dot
       24658,                                // startup
       30510,                                // refill
-      SND_KEY_LEN,                          // empty
+      73386,                                // empty
       65230,                                // alarm
       20479,                                // door open
       24658,                                // door close
@@ -919,55 +905,20 @@ static bool check_if_default_audio_present()
 
     if(SD.exists(CONFN)) {
         if(file = SD.open(CONFN, FILE_READ)) {
-            file.read(dbuf, 10);
+            file.read(dbuf, 14);
             file.close();
-            if((!memcmp(dbuf, CONID, 4)) && 
-               ((*(dbuf+4) & 0x7f) == 1) &&
-               (*(dbuf+5) == NUM_AUDIOFILES) &&
-               (getuint32(dbuf+6) == soa)) {
+            if((!memcmp(dbuf, CONID, 4))             && 
+               ((*(dbuf+4) & 0x7f) == 2)             &&
+               (!memcmp(dbuf+5, SND_REQ_VERSION, 4)) &&
+               (*(dbuf+9) == (NUM_AUDIOFILES+1))     &&
+               (getuint32(dbuf+10) == soa)) {
                 ic = true;
                 if(!(*(dbuf+4) & 0x80)) r  = f;
-                return true;
             }
         }
-        return false;
     }
 
-    // If identifier missing, quit now
-    if(!(SD.exists(IDFN))) {
-        #ifdef DG_DBG
-        Serial.println("SD: ID file not present");
-        #endif
-        return false;
-    }
-
-    for(i = 0; i < NUM_AUDIOFILES; i++) {
-        if(!SD.exists(audioFiles[i])) {
-            #ifdef DG_DBG
-            Serial.printf("missing: %s\n", audioFiles[i]);
-            #endif
-            return false;
-        }
-        if(!(file = SD.open(audioFiles[i])))
-            return false;
-        ts = file.size();
-        file.close();
-        #ifdef DG_DBG
-        sizes[idx++] = ts;
-        #else
-        if(sizes[idx++] != ts)
-            return false;
-        #endif
-    }
-
-    #ifdef DG_DBG
-    for(i = 0; i < (NUM_AUDIOFILES); i++) {
-        Serial.printf("%d, ", sizes[i]);
-    }
-    Serial.println("");
-    #endif
-
-    return true;
+    return ic;
 }
 
 /*
@@ -976,16 +927,16 @@ static bool check_if_default_audio_present()
 
 bool prepareCopyAudioFiles()
 {
-    int i, haveErr = 0;
+    int i, haveErr = 0, haveWriteErr = 0;
     
     if(!ic)
         return true;
 
     File sfile;
     if(sfile = SD.open(CONFN, FILE_READ)) {
-        sfile.seek(10);
-        for(i = 0; i < NUM_AUDIOFILES; i++) {
-           cfc(sfile, false, haveErr);
+        sfile.seek(14);
+        for(i = 0; i < NUM_AUDIOFILES+1; i++) {
+           cfc(sfile, false, haveErr, haveWriteErr);
            if(haveErr) break;
         }
         sfile.close();
@@ -1000,26 +951,23 @@ void doCopyAudioFiles()
 {
     bool delIDfile = false;
 
-    if(!copy_audio_files()) {
-        // If copy fails, re-format flash FS
+    if((!copy_audio_files(delIDfile)) && !FlashROMode) {
+        // If copy fails because of a write error, re-format flash FS
         formatFlashFS();            // Format
         rewriteSecondarySettings(); // Re-write secondary settings
         #ifdef DG_DBG 
         Serial.println("Re-writing general settings");
         #endif
         write_settings();           // Re-write general settings
-        if(!copy_audio_files()) {   // Retry copy
-            showCopyError();
-            mydelay(5000);
-        } else {
-            delIDfile = true;
-        }
-    } else {
-        delIDfile = true;
+        copy_audio_files(delIDfile);// Retry copy
     }
 
-    if(delIDfile)
+    if(delIDfile) {
         delete_ID_file();
+    } else {
+        showCopyError();
+        mydelay(5000);
+    }
     
     mydelay(500);
 
@@ -1031,42 +979,41 @@ void doCopyAudioFiles()
     esp_restart();
 }
 
-
-bool copy_audio_files()
+// Returns false if copy failed because of a write error (which 
+//    might be cured by a reformat of the FlashFS)
+// Returns true if ok or source error (file missing, read error)
+// Sets delIDfile to true if copy fully succeeded
+static bool copy_audio_files(bool& delIDfile)
 {
-    int i, haveErr = 0;
+    int i, haveErr = 0, haveWriteErr = 0;
 
     if(!allowCPA) {
-        return false;
+        delIDfile = false;
+        return true;
     }
 
     if(ic) {
         File sfile;
         if(sfile = SD.open(CONFN, FILE_READ)) {
-            sfile.seek(10);
-            for(i = 0; i < NUM_AUDIOFILES; i++) {
-               cfc(sfile, true, haveErr);
+            sfile.seek(14);
+            for(i = 0; i < NUM_AUDIOFILES+1; i++) {
+               cfc(sfile, true, haveErr, haveWriteErr);
                if(haveErr) break;
             }
             sfile.close();
         } else {
             haveErr++;
         }
-        
     } else {
-    
-
-        for(i = 0; i < NUM_AUDIOFILES - 1; i++) {
-            open_and_copy(audioFiles[i], haveErr);
-            if(haveErr) break;
-        }
-
+        haveErr++;
     }
 
-    return (haveErr == 0);
+    delIDfile = (haveErr == 0);
+
+    return (haveWriteErr == 0);
 }
 
-static void cfc(File& sfile, bool doCopy, int& haveErr)
+static void cfc(File& sfile, bool doCopy, int& haveErr, int& haveWriteErr)
 {
     const char *funcName = "cfc";
     uint8_t buf1[1+32+4];
@@ -1085,7 +1032,7 @@ static void cfc(File& sfile, bool doCopy, int& haveErr)
         skip = !doCopy;
     }
     if(!skip) {
-        if((dfile = (tSD ? SD.open((const char *)buf1, FILE_WRITE) : SPIFFS.open((const char *)buf1, FILE_WRITE)))) {
+        if((dfile = (tSD || FlashROMode) ? SD.open((const char *)buf1, FILE_WRITE) : SPIFFS.open((const char *)buf1, FILE_WRITE))) {
             uint32_t t = 1024;
             #ifdef DG_DBG
             Serial.printf("%s: Opened destination file: %s, length %d\n", funcName, (const char *)buf1, s);
@@ -1098,12 +1045,14 @@ static void cfc(File& sfile, bool doCopy, int& haveErr)
                 }
                 if(dfile.write((*r)(buf2, soa, t), t) != t) {
                     haveErr++;
+                    haveWriteErr++;
                     break;
                 }
                 s -= t;
             }
         } else {
             haveErr++;
+            haveWriteErr++;
             Serial.printf("%s: Error opening destination file: %s\n", funcName, buf1);
         }
     } else {
@@ -1114,85 +1063,30 @@ static void cfc(File& sfile, bool doCopy, int& haveErr)
     }
 }
 
-static void open_and_copy(const char *fn, int& haveErr)
-{
-    const char *funcName = "copy_audio_files";
-    File sFile, dFile;
-
-    if((sFile = SD.open(fn, FILE_READ))) {
-        #ifdef DG_DBG
-        Serial.printf("%s: Opened source file: %s\n", funcName, fn);
-        #endif
-        if((dFile = SPIFFS.open(fn, FILE_WRITE))) {
-            #ifdef DG_DBG
-            Serial.printf("%s: Opened destination file: %s\n", funcName, fn);
-            #endif
-            if(!filecopy(sFile, dFile)) {
-                haveErr++;
-            }
-            dFile.close();
-        } else {
-            Serial.printf("%s: Error opening destination file: %s\n", funcName, fn);
-            haveErr++;
-        }
-        sFile.close();
-    } else {
-        Serial.printf("%s: Error opening source file: %s\n", funcName, fn);
-        haveErr++;
-    }
-}
-
-static bool filecopy(File source, File dest)
-{
-    uint8_t buffer[1024];
-    size_t bytesr, bytesw;
-
-    while((bytesr = source.read(buffer, 1024))) {
-        if((bytesw = dest.write(buffer, bytesr)) != bytesr) {
-            Serial.println(F("filecopy: Error writing data"));
-            return false;
-        }
-    }
-
-    return true;
-}
-
 bool audio_files_present()
 {
     File file;
-    size_t ts;
+    uint8_t buf[4];
+    const char *fn = "/VER";
     
     if(FlashROMode || !haveFS)
         return true;
 
-    if(!SPIFFS.exists(audioFiles[SND_KEY_IDX]))
+    if(!SPIFFS.exists(fn))
         return false;
-      
-    if(!(file = SPIFFS.open(audioFiles[SND_KEY_IDX])))
+    if(!(file = SPIFFS.open(fn, FILE_READ)))
         return false;
-      
-    ts = file.size();
+    file.read(buf, 4);
     file.close();
 
-    if(ts != SND_KEY_LEN)
-        return false;
-
-    return true;
+    return (!memcmp(buf, SND_REQ_VERSION, 4));
 }
 
 void delete_ID_file()
 {
-    if(!haveSD)
-        return;
-        
-    if(ic) {
+    if(haveSD && ic) {
         SD.remove(CONFND);
         SD.rename(CONFN, CONFND);
-    } else if(SD.exists(IDFN)) {
-        #ifdef DG_DBG
-        Serial.printf("Deleting ID file %s\n", IDFN);
-        #endif
-        SD.remove(IDFN);
     }
 }
 
