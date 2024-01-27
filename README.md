@@ -140,14 +140,14 @@ The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as 
     <tr>
      <td align="left">Reset "full" percentage of "Roentgens" gauge</td>
      <td align="left">9700&#9166;</td>
+    </tr>    
+    <tr>
+     <td align="left">Set fixed volume level</td>
+     <td align="left">9300&#9166; - 9319&#9166;</td>
     </tr>
     <tr>
      <td align="left">Use volume knob (instead of fixed volume)</td>
      <td align="left">9399&#9166;</td>
-    </tr>
-    <tr>
-     <td align="left">Set fixed volume level</td>
-     <td align="left">9300&#9166; - 9319&#9166;</td>
     </tr>
     <tr>
      <td align="left"><a href="#the-music-player">Music Player</a>: Play/Stop</td>
