@@ -182,11 +182,11 @@ The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as 
      <td align="left">9888xxx&#9166;</td>
     </tr>
     <tr>
-     <td align="left">Play "key3.mp3"</td>
+     <td align="left">Play "<a href="#additional-custom-sounds">key3.mp3</a>"</td>
      <td align="left">9003&#9166;</td>
     </tr>
     <tr>
-     <td align="left">Play "key6.mp3"</td>
+     <td align="left">Play "<a href="#additional-custom-sounds">key6.mp3</a>"</td>
      <td align="left">9006&#9166;</td>
     </tr>
     <tr>
