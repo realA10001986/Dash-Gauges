@@ -37,14 +37,14 @@ There are different alternative ways to install this firmware:
 
 ### Audio file installation
 
-The firmware comes with a number of sound files which need to be installed separately. These sound files are not updated as often as the firmware itself. If you have previously installed the latest version of the sound-pack, you normally don't have to re-install the audio files when you update the firmware. Only if either a new version of the sound-pack is released, or your device is quiet after a firmware update, a re-installation is needed.
+The firmware comes with audio data ("sound-pack") which needs to be installed separately. The audio data is not updated as often as the firmware itself. If you have previously installed the latest version of the sound-pack, you normally don't have to re-install the audio data when you update the firmware. Only if either a new version of the sound-pack is released, or your device is quiet after a firmware update, a re-installation is needed.
 
-- Download "install/sound-pack-xxxxxxxx.zip" and extract it to the root directory of of a FAT32 formatted SD card; the mp3 files need to be in the top-most folder on the SD, I stress this because some unzip tools create a directory in which they put the files.
+- Download "install/sound-pack-xxxxxxxx.zip" and extract it to the root directory of of a FAT32 formatted SD card; this ZIP contains a "bin" file that needs to be in the top-most folder on the SD, I stress this because some unzip tools create a directory in which they put the files from the archive.
 - power down the Dash Gauges,
 - insert this SD card into the device's slot and 
 - power up the Dash Gauges.
  
-If (and only if) the **exact and complete contents of sound-pack archive** is found on the SD card, the device will install the audio files (automatically).
+If the contents of sound-pack archive is found on the SD card, the device will install the audio data (automatically).
 
 After installation, the SD card can be re-used for [other purposes](#sd-card).
 
