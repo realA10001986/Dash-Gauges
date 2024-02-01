@@ -219,7 +219,7 @@ Note that the SD card must be inserted before powering up the device. It is not 
 
 ### Sound file substitution
 
-The provided audio files ("sound-pack") are, after [proper installation](#audio-file-installation), integral part of the firmware and stored in the device's flash memory. 
+The provided audio clips ("sound-pack") are, after [proper installation](#audio-file-installation), integral part of the firmware and stored in the device's flash memory. 
 
 These sounds can be substituted by your own sound files on a FAT32-formatted SD card. These files will be played back directly from the SD card during operation, so the SD card has to remain in the slot.
 
@@ -234,7 +234,7 @@ Your replacements need to be put in the root (top-most) directory of the SD card
 
 The firmware supports some additional user-provided sound effects, which it will load from the SD card. If the respective file is present, it will be used. If that file is absent, no sound will be played.
 
-- "key3.mp3" and/or "key6.mp3": Will be played when you type 9003 / 9006 on the TCD (connected through BTTFN).
+- "key3.mp3"/"key6.mp3": Will be played when you type 9003 / 9006 on the TCD (connected through BTTFN).
 
 Those files are not provided here. You can use any mp3, with a bitrate of 128kpbs or less.
 
