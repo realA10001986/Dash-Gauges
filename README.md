@@ -221,10 +221,11 @@ Note that the SD card must be inserted before powering up the device. It is not 
 
 The provided audio files ("sound-pack") are, after [proper installation](#audio-file-installation), integral part of the firmware and stored in the device's flash memory. 
 
-These sounds can be substituted by your own sound files on a FAT32-formatted SD card. These files will be played back directly from the SD card during operation, so the SD card has to remain in the slot. The built-in [Audio file installer](#audio-file-installation) cannot be used to replace default sounds in the device's flash memory with custom sounds.
+These sounds can be substituted by your own sound files on a FAT32-formatted SD card. These files will be played back directly from the SD card during operation, so the SD card has to remain in the slot.
 
 Your replacements need to be put in the root (top-most) directory of the SD card, be in mp3 format (128kbps max) and named as follows:
 - "startup.mp3". Played when the Dash Gauges are connected to power and finished booting;
+- "refill.mp3". Played during the "refill"-sequence;
 - "alarm.mp3". Played when the alarm sounds (triggered by a Time Circuits Display via BTTFN or MQTT);
 - "0.mp3" through "9.mp3", "dot.mp3": Numbers for IP address read-out.
 - "dooropen.mp3"/"doorclose.mp3": Played when the state of the door switch changes.
