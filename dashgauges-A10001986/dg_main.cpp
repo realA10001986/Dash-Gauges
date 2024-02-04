@@ -369,18 +369,14 @@ void main_boot()
     emptyLED.begin();
 
     // Init side switch
-    sideSwitch.setPressTicks(10);     // ms after short press is assumed
-    sideSwitch.setLongPressTicks(50); // ms after long press is assumed
-    sideSwitch.setDebounceTicks(50);
+    sideSwitch.setTicks(50, 10, 50);
     sideSwitch.attachLongPressStart(sideSwitchLongPress);
     sideSwitch.attachLongPressStop(sideSwitchLongPressStop);
     sideSwitch.scan();
 
     // Init door switch
     #ifdef DG_HAVEDOORSWITCH
-    doorSwitch.setPressTicks(10);     // ms after short press is assumed
-    doorSwitch.setLongPressTicks(50); // ms after long press is assumed
-    doorSwitch.setDebounceTicks(50);
+    doorSwitch.setTicks(50, 10, 50);
     doorSwitch.attachLongPressStart(doorSwitchLongPress);
     doorSwitch.attachLongPressStop(doorSwitchLongPressStop);
     doorSwitch.scan();
@@ -461,15 +457,11 @@ void main_setup()
     if(!TCDconnected) {
         // If we have a physical button, we need
         // reasonable values for debounce and press
-        TTKey.setDebounceTicks(TT_DEBOUNCE);
-        TTKey.setPressTicks(TT_PRESS_TIME);
-        TTKey.setLongPressTicks(TT_HOLD_TIME);
+        TTKey.setTicks(TT_DEBOUNCE, TT_PRESS_TIME, TT_HOLD_TIME);
         TTKey.attachLongPressStart(TTKeyHeld);
     } else {
         // If the TCD is connected, we can go more to the edge
-        TTKey.setDebounceTicks(5);
-        TTKey.setPressTicks(50);
-        TTKey.setLongPressTicks(100000);
+        TTKey.setTicks(5, 50, 100000);
         // Long press ignored when TCD is connected
     }
 
@@ -487,9 +479,9 @@ void main_setup()
         // We never return here. The ESP is rebooted.
     }
 
-    if(!audio_files_present()) {
+    if(!haveAudioFiles) {
         #ifdef DG_DBG
-        Serial.println(F("Audio files not installed"));
+        Serial.println(F("Current audio data not installed"));
         #endif
         emptyLED.specialSignal(DGSEQ_NOAUDIO);
         while(emptyLED.specialDone()) {
@@ -1287,17 +1279,18 @@ static void execute_remote_command()
 
         } else if(command >= 300 && command <= 399) {
 
-            command -= 300;                       // 300-319/399: Set fixed volume level
+            command -= 300;                       // 300-319/399: Set fixed volume level / enable knob
             if(command == 99) {
                 curSoftVol = 255;
                 volchanged = true;
+                volchgnow = millis();
                 updateConfigPortalVolValues();
             } else if(command <= 19) {
                 curSoftVol = command;
                 volchanged = true;
+                volchgnow = millis();
                 updateConfigPortalVolValues();
             }
-            volchgnow = millis();
 
         } else {
 

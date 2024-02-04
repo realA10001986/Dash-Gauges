@@ -59,24 +59,15 @@ DGButton::DGButton(const int pin, const boolean activeLow, const bool pullupActi
 }
 
 
-// Number of millisec that have to pass by before a click is assumed stable.
-void DGButton::setDebounceTicks(const int ticks)
+// Setup buttom timin:
+// dticks: Number of millisec for a stable click to be assumed
+// pticks: Number of millisec to pass for a short press 
+// lticks: Number of millisec to pass for a long press
+void DGButton::setTicks(const int dticks, const int pticks, const int lticks)
 {
-    _debounceTicks = ticks;
-}
-
-
-// Number of millisec that have to pass by before a short press is detected.
-void DGButton::setPressTicks(const int ticks)
-{
-    _pressTicks = ticks;
-}
-
-
-// Number of millisec that have to pass by before a long press is detected.
-void DGButton::setLongPressTicks(const int ticks)
-{
-    _longPressTicks = ticks;
+    _debounceTicks = dticks;
+    _pressTicks = pticks;
+    _longPressTicks = lticks;
 }
 
 // Register function for short press event

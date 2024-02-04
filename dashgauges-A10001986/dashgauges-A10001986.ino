@@ -72,13 +72,6 @@
  *
  * - Install required libraries. In the Arduino IDE, go to "Tools" -> "Manage Libraries" 
  *   and install the following libraries:
- *   - WifiManager (tablatronix, tzapu) https://github.com/tzapu/WiFiManager
- *     (Tested with 2.0.13beta, 2.0.15-rc1, 2.0.16-rc2)
- *     For versions 2.0.16-rc2 and below, in order to avoid a delay when powering up
- *     several BTTFN-connected props, change _preloadwifiscan to false in WiFiManager.h 
- *     before compiling:
- *     -boolean       _preloadwifiscan        = true;
- *     +boolean       _preloadwifiscan        = false;
  *   - ArduinoJSON >= 6.19: https://arduinojson.org/v6/doc/installation/
  *
  * - Download the complete firmware source code:
@@ -89,19 +82,30 @@
  *
  * - Go to "Sketch" -> "Upload" to compile and upload the firmware to your ESP32 board.
  *
- * - Install the audio files: 
- *   - Copy the contents of install/sound-pack-xxxxxxxx.zip in the top folder of a FAT32 
- *     (not ExFAT!) formatted SD card (max 32GB) and put this card into the slot while
- *     the device is powered down. Now power-up the device.
- *   - The audio files will be installed automatically, SD no longer needed afterwards.
- *     (but is recommended to be left in slot for saving settings and avoiding flash
- *     wear on the ESP32.)
+ * - Install the audio data: 
+ *   Method 1:
+ *   - Go to Config Portal, click "Update" and upload the audio data (DGA.bin, extracted
+ *     from install/sound-pack-xxxxxxxx.zip) through the bottom file selector.
+ *     An SD card must be present in the slot during this operation.
+ *   Method 2:
+ *   - Copy DGA.bin to the top folder of a FAT32 (not ExFAT!) formatted SD card (max 
+ *     32GB) and put this card into the slot while the Gauges are powered down. 
+ *   - Now power-up. The audio files will now be installed. When finished, the Gauges 
+ *     will reboot.
  */
 
 /*  Changelog
  *   
  *  TODO: Way to make device say IP address stand-alone
  *  
+ *  2024/02/04 (A10001986)
+ *    - Include fork of WiFiManager (2.0.16rc2 with minor patches) in order to cut 
+ *      down bin size
+ *  2024/02/03 (A10001986)
+ *    - Audio data (DGA.bin) can now be uploaded through Config Portal ("UPDATE" page). 
+ *      Requires an SD card present.
+ *    - Check for audio data present also in FlashROMode; better container validity
+ *      check; display hint in CP if current audio not installed
  *  2024/01/26 (A10001986)
  *    - Reformat FlashFS only if audio file installation fails due to a write error
  *    - Add sound-pack versioning; re-installation required with this FW update

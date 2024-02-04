@@ -60,11 +60,14 @@
 
 #define NUM_AUDIOFILES 11+8
 #define SND_REQ_VERSION "DG01"
+#define AC_FMTV 2
+#define AC_OHSZ (14 + ((NUM_AUDIOFILES+1)*(32+4)))
+#define AC_TS   397629
 
 static const char *CONFN  = "/DGA.bin";
 static const char *CONFND = "/DGA.old";
 static const char *CONID  = "DGAA";
-static uint32_t   soa = 0;
+static uint32_t   soa = AC_TS;
 static bool       ic = false;
 static uint8_t*   f(uint8_t *d, uint32_t m, int y) { return d; }
 
@@ -92,6 +95,9 @@ bool FlashROMode = false;
 /* If SD contains default audio files */
 static bool allowCPA = false;
 
+/* If current audio data is installed */
+bool haveAudioFiles = false;
+
 /* Music Folder Number */
 uint8_t musFolderNum = 0;
 
@@ -110,10 +116,12 @@ static bool checkValidNumParmF(char *text, float lowerLim, float upperLim, float
 static bool copy_audio_files(bool& delIDfile);
 static void open_and_copy(const char *fn, int& haveErr, int& haveWriteErr);
 static bool filecopy(File source, File dest, int& haveWriteErr);
-static bool check_if_default_audio_present();
 static void cfc(File& sfile, bool doCopy, int& haveErr, int& haveWriteErr);
 
+static bool audio_files_present();
+
 static void formatFlashFS();
+static void rewriteSecondarySettings();
 
 static bool CopyIPParm(const char *json, char *text, uint8_t psize);
 
@@ -266,6 +274,9 @@ void settings_setup()
 
     // Determine if secondary settings are to be stored on SD
     configOnSD = ((r = m) && haveSD && ((settings.CfgOnSD[0] != '0') || FlashROMode));
+
+    // Check if (current) audio data is installed
+    haveAudioFiles = audio_files_present();
     
     // Check if SD contains our default sound files
     if(haveSD && (haveFS || FlashROMode)) {
@@ -639,9 +650,8 @@ bool loadCurVolume()
 
     if(openCfgFileRead(volCfgName, configFile)) {
         StaticJsonDocument<512> json;
-        //if(!deserializeJson(json, configFile)) {
         if(!readJSONCfgFile(json, configFile, funcName)) {
-            if(!CopyCheckValidNumParm(json["volume"], temp, sizeof(temp), 0, 255, 255)) {
+            if(!CopyCheckValidNumParm(json["volume"], temp, sizeof(temp), 0, 255, DEFAULT_VOLUME)) {
                 uint8_t ncv = atoi(temp);
                 if((ncv >= 0 && ncv <= 19) || ncv == 255) {
                     curSoftVol = ncv;
@@ -876,42 +886,29 @@ static uint32_t getuint32(uint8_t *buf)
     return t;
 }
 
-static bool check_if_default_audio_present()
+bool check_if_default_audio_present()
 {
+    uint8_t dbuf[16];
     File file;
     size_t ts;
-    int i, idx = 0;
-    uint8_t dbuf[16];
-    size_t sizes[NUM_AUDIOFILES] = {
-      7313, 8045, 7313, 7679, 7679,         // 0-4
-      8045, 8045, 8045, 7679, 8045,         // 5-9
-      7679,                                 // dot
-      24658,                                // startup
-      30510,                                // refill
-      73386,                                // empty
-      65230,                                // alarm
-      20479,                                // door open
-      24658,                                // door close
-      40593,                                // renaming
-      32548                                 // _installing (not copied)
-    };
+    int i;
+
+    ic = false;
 
     if(!haveSD)
         return false;
 
-    for(i = 0; i < NUM_AUDIOFILES; i++) {
-        soa += sizes[i];
-    }
-
     if(SD.exists(CONFN)) {
         if(file = SD.open(CONFN, FILE_READ)) {
+            ts = file.size();
             file.read(dbuf, 14);
             file.close();
             if((!memcmp(dbuf, CONID, 4))             && 
-               ((*(dbuf+4) & 0x7f) == 2)             &&
+               ((*(dbuf+4) & 0x7f) == AC_FMTV)       &&
                (!memcmp(dbuf+5, SND_REQ_VERSION, 4)) &&
                (*(dbuf+9) == (NUM_AUDIOFILES+1))     &&
-               (getuint32(dbuf+10) == soa)) {
+               (getuint32(dbuf+10) == soa)           &&
+               (ts > soa + AC_OHSZ)) {
                 ic = true;
                 if(!(*(dbuf+4) & 0x80)) r  = f;
             }
@@ -1063,7 +1060,7 @@ static void cfc(File& sfile, bool doCopy, int& haveErr, int& haveWriteErr)
     }
 }
 
-bool audio_files_present()
+static bool audio_files_present()
 {
     File file;
     uint8_t buf[4];
@@ -1126,7 +1123,7 @@ void copySettings()
 // Re-write secondary settings
 // Used during audio file installation when flash FS needs
 // to be re-formatted.
-void rewriteSecondarySettings()
+static void rewriteSecondarySettings()
 {
     bool oldconfigOnSD = configOnSD;
     
@@ -1235,4 +1232,32 @@ static bool writeFileToFS(const char *fn, uint8_t *buf, int len)
         return (bytesw == len);
     } else
         return false;
+}
+
+bool openACFile(File& file)
+{
+    if(haveSD) {
+        if(file = SD.open(CONFN, FILE_WRITE)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+size_t writeACFile(File& file, uint8_t *buf, size_t len)
+{
+    return file.write(buf, len);
+}
+
+void closeACFile(File& file)
+{
+    file.close();
+}
+
+void removeACFile()
+{
+    if(haveSD) {
+        SD.remove(CONFN);
+    }
 }

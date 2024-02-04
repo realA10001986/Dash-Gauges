@@ -37,6 +37,8 @@ extern bool haveFS;
 extern bool haveSD;
 extern bool FlashROMode;
 
+extern bool haveAudioFiles;
+
 extern uint8_t musFolderNum;
 
 #define MS(s) XMS(s)
@@ -159,14 +161,17 @@ bool loadIpSettings();
 void writeIpSettings();
 void deleteIpSettings();
 
+bool check_if_default_audio_present();
 bool prepareCopyAudioFiles();
 void doCopyAudioFiles();
 
 bool check_allow_CPA();
 void delete_ID_file();
 
-bool audio_files_present();
-
-void rewriteSecondarySettings();
+#include <FS.h>
+bool openACFile(File& file);
+size_t writeACFile(File& file, uint8_t *buf, size_t len);
+void closeACFile(File& file);
+void removeACFile();
 
 #endif

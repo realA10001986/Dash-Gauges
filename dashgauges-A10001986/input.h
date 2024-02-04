@@ -50,9 +50,7 @@ class DGButton {
     public:
         DGButton(const int pin, const boolean activeLow = true, const bool pullupActive = true);
       
-        void setDebounceTicks(const int ticks);
-        void setPressTicks(const int ticks);
-        void setLongPressTicks(const int ticks);
+        void setTicks(const int dticks, const int pticks, const int lticks);
       
         void attachPress(void (*newFunction)(void));
         void attachLongPressStart(void (*newFunction)(void));
