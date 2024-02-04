@@ -364,7 +364,7 @@ In order to reduce the number of write operations and thereby prolong the life o
 
 ##### &#9654; Configure WiFi
 
-Clicking this leads to the WiFi configuration page. On that page, you can connect your Dash Gauges to your WiFi network by selecting/entering the SSID (WiFi network name) as well as a password (WPA2). By default, the Dash Gauges requests an IP address via DHCP. However, you can also configure a static IP by entering the IP, netmask, gateway and DNS server. All four fields must be filled for a valid static IP configuration. If you want to stick to DHCP, leave those four fields empty.
+Clicking this leads to the WiFi configuration page. On that page, you can connect your Dash Gauges to your WiFi network by selecting/entering the SSID (WiFi network name) as well as a password (WPA2). By default, the Dash Gauges request an IP address via DHCP. However, you can also configure a static IP by entering the IP, netmask, gateway and DNS server. All four fields must be filled for a valid static IP configuration. If you want to stick to DHCP, leave those four fields empty.
 
 Note that this page has nothing to do with Access Point mode; it is strictly for connecting your Dash Gauges to an existing WiFi network as a client.
 
