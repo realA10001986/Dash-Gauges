@@ -39,12 +39,17 @@ There are different alternative ways to install this firmware:
 
 The firmware comes with audio data ("sound-pack") which needs to be installed separately. The audio data is not updated as often as the firmware itself. If you have previously installed the latest version of the sound-pack, you normally don't have to re-install the audio data when you update the firmware. Only if either a new version of the sound-pack is released, or your device is quiet after a firmware update, a re-installation is needed.
 
-- Download "install/sound-pack-xxxxxxxx.zip" and extract it to the root directory of of a FAT32 formatted SD card; this ZIP contains a "bin" file that needs to be in the top-most folder on the SD, I stress this because some unzip tools create a directory in which they put the files from the archive.
+The first step is to download "install/sound-pack-xxxxxxxx.zip" and extract it. It contains one file named "DGA.bin".
+
+Then there are two alternative ways to proceed. Note that both methods *require an SD card*.
+
+1) Through the [Config Portal](#the-config-portal). Click on *Update*, select the "DGA.bin" file in the bottom file selector and click on *Upload*. Note that an SD card must be in the FC's slot during this operation.
+
+2) Via SD card:
+- Copy "DGA.bin" to the root directory of of a FAT32 formatted SD card;
 - power down the Dash Gauges,
-- insert this SD card into the device's slot and 
-- power up the Dash Gauges.
- 
-If the contents of sound-pack archive is found on the SD card, the device will install the audio data (automatically).
+- insert this SD card into the slot and 
+- power up the Dash Gauges; the audio data will be installed automatically.
 
 After installation, the SD card can be re-used for [other purposes](#sd-card).
 
@@ -217,11 +222,9 @@ The SD card, apart from being used to [install](#audio-file-installation) the de
 
 Note that the SD card must be inserted before powering up the device. It is not recognized if inserted while the Dash Gauges are running. Furthermore, do not remove the SD card while the device is powered.
 
-### Sound file substitution
+### Sound substitution
 
-The provided audio clips ("sound-pack") are, after [proper installation](#audio-file-installation), integral part of the firmware and stored in the device's flash memory. 
-
-These sounds can be substituted by your own sound files on a FAT32-formatted SD card. These files will be played back directly from the SD card during operation, so the SD card has to remain in the slot.
+The Dash Gauges' built-in sounds can be substituted by your own sound files on a FAT32-formatted SD card. These files will be played back directly from the SD card during operation, so the SD card has to remain in the slot.
 
 Your replacements need to be put in the root (top-most) directory of the SD card, be in mp3 format (128kbps max) and named as follows:
 - "startup.mp3". Played when the Dash Gauges are connected to power and finished booting;
@@ -371,7 +374,11 @@ This leads to the [Setup page](#setup-page).
 
 ##### &#9654; Update
 
-This leads to the firmware update page. You can select a locally stored firmware image file to upload (such as the ones published here in the install/ folder).
+This leads to the firmware update page. 
+
+In order to upload a new firmware binary (such as the ones published here in the install/ folder), select that image file in the top file selector and click "Update".
+
+You can also install the Dash Gauges' audio data on this page; download the current sound-pack, extract it and select the resulting DGA.bin file in the bottom file selector. Finally, click "Upload". Note that an SD card is required for this operation.
 
 ##### &#9654; Erase WiFi Config
 
