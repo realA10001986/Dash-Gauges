@@ -98,6 +98,8 @@
  *   
  *  TODO: Way to make device say IP address stand-alone
  *  
+ *  2024/02/05 (A10001986)
+ *    - Tweaks for audio upload
  *  2024/02/04 (A10001986)
  *    - Include fork of WiFiManager (2.0.16rc2 with minor patches) in order to cut 
  *      down bin size
