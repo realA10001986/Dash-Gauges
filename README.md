@@ -218,7 +218,7 @@ Other ways of triggering a time travel are available if a [Time Circuits Display
 
 Preface note on SD cards: For unknown reasons, some SD cards simply do not work with this device. For instance, I had no luck with Sandisk Ultra 32GB and  "Intenso" cards. If your SD card is not recognized, check if it is formatted in FAT32 format (not exFAT!). Also, the size must not exceed 32GB (as larger cards cannot be formatted with FAT32). I am currently using Transcend SDHC 4GB cards and those work fine.
 
-The SD card, apart from being used to [install](#audio-file-installation) the built-in audio data, can be used for substituting default sounds and for music played back by the [Music player](#the-music-player). Also, it is recommended to store [secondary settings](#-save-secondary-settings-on-sd) on the SD card to minimize [Flash Wear](#flash-wear).
+The SD card, apart from being required for [installing](#audio-file-installation) of the built-in audio data, can be used for substituting default sounds and for music played back by the [Music player](#the-music-player). Also, it is _strongly recommended_ to store [secondary settings](#-save-secondary-settings-on-sd) on the SD card to minimize [Flash Wear](#flash-wear).
 
 Note that the SD card must be inserted before powering up the device. It is not recognized if inserted while the Dash Gauges are running. Furthermore, do not remove the SD card while the device is powered.
 
@@ -356,7 +356,7 @@ In order to access the Dash Gauges's Config Portal in your car, connect your han
 
 Flash memory has a somewhat limited life-time. It can be written to only between 10.000 and 100.000 times before becoming unreliable. The firmware writes to the internal flash memory when saving settings and other data. Every time you change settings, data is written to flash memory.
 
-In order to reduce the number of write operations and thereby prolong the life of your Dash Gauges, it is recommended to use a good-quality SD card and to check **_[Save secondary settings on SD](#-save-secondary-settings-on-sd)_** in the Config Portal; secondary settings (eg current volume) are then stored on the SD card (which also suffers from wear but is easy to replace). If you want to swap the SD card but preserve your secondary settings, go to the Config Portal while the old SD card is still in place, uncheck the **_Save secondary settings on SD_** option, click on Save and wait until the device has rebooted. You can then power down, swap the SD card and power-up again. Then go to the Config Portal, change the option back on and click on Save. Your settings are now on the new SD card.
+In order to reduce the number of write operations and thereby prolong the life of your Dash Gauges, it is recommended to use a good-quality SD card and to check **_[Save secondary settings on SD](#-save-secondary-settings-on-sd)_** in the Config Portal; secondary settings (eg current volume) are then stored on the SD card (which also suffers from wear but is easy to replace). See [here](#-save-secondary-settings-on-sd) for more information.
 
 ## Appendix A: The Config Portal
 
@@ -550,6 +550,17 @@ When checked, songs are shuffled when the device is booted. When unchecked, song
 
 If this is checked, some settings (volume, etc) are stored on the SD card (if one is present). This helps to minimize write operations to the internal flash memory and to prolong the lifetime of your Dash Gauges. See [Flash Wear](#flash-wear).
 
+Apart from Flash Wear, there is another reason for using an SD card for settings: Writing data to internal flash memory can cause delays of up to 1.5 seconds, which interrupt sound playback and have other undesired effects. The Dash Gauges need to save data from time to time, so in order for a smooth experience without unexpected and unwanted delays, please use an SD card and check this option.
+
+It is safe to have this option checked even with no SD card present.
+
+If you want copy settings from one SD card to another, do as follows:
+- With the old SD card still in the slot, enter the Config Portal, turn off _Save secondary settings on SD_, and click "SAVE".
+- After the Dash Gauges have rebooted, power them down, and swap the SD card for your new one.
+- Power-up the Dash Gauges, enter the Config Portal, re-enable _Save secondary settings on SD_, and click "SAVE".
+
+This procedure ensures that all your settings are copied from the old to the new SD card.
+
 #### Gauge Hardware settings
 
 ##### &#9654; Gauges hardware type
@@ -560,12 +571,6 @@ This selects the type of gauge hardware and the way of connection. In order to p
 - enter 9317931 on a wirelessly connected TCD,
 
 then reload the page in your browser.
-
-## Appendix B: "Empty" LED signals
-
-TODO
-
-
 
 
 
