@@ -56,13 +56,21 @@
 
 // Size of main config JSON
 // Needs to be adapted when config grows
-#define JSON_SIZE 1600
+#define JSON_SIZE 2000
+#if ARDUINOJSON_VERSION_MAJOR >= 7
+#error "ArduinoJSON v7 not supported"
+#define DECLARE_S_JSON(x,n) JsonDocument n;
+#define DECLARE_D_JSON(x,n) JsonDocument n;
+#else
+#define DECLARE_S_JSON(x,n) StaticJsonDocument<x> n;
+#define DECLARE_D_JSON(x,n) DynamicJsonDocument n(x);
+#endif 
 
 #define NUM_AUDIOFILES 11+8
 #define SND_REQ_VERSION "DG01"
 #define AC_FMTV 2
-#define AC_OHSZ (14 + ((NUM_AUDIOFILES+1)*(32+4)))
 #define AC_TS   397629
+#define AC_OHSZ (14 + ((NUM_AUDIOFILES+1)*(32+4)))
 
 static const char *CONFN  = "/DGA.bin";
 static const char *CONFND = "/DGA.old";
@@ -354,11 +362,15 @@ static bool read_settings(File configFile)
     const char *funcName = "read_settings";
     bool wd = false;
     size_t jsonSize = 0;
+    DECLARE_D_JSON(JSON_SIZE,json);
+    /*
     //StaticJsonDocument<JSON_SIZE> json;
     DynamicJsonDocument json(JSON_SIZE);
+    */
     
     DeserializationError error = readJSONCfgFile(json, configFile, funcName);
 
+    #if ARDUINOJSON_VERSION_MAJOR < 7
     jsonSize = json.memoryUsage();
     if(jsonSize > JSON_SIZE) {
         Serial.printf("%s: ERROR: Config file too large (%d vs %d), memory corrupted, awaiting doom.\n", funcName, jsonSize, JSON_SIZE);
@@ -371,6 +383,7 @@ static bool read_settings(File configFile)
     Serial.printf("%s: Size of document: %d (JSON_SIZE %d)\n", funcName, jsonSize, JSON_SIZE);
     serializeJson(json, Serial);
     Serial.println(F(" "));
+    #endif
     #endif
 
     if(!error) {
@@ -453,8 +466,11 @@ static bool read_settings(File configFile)
 void write_settings()
 {
     const char *funcName = "write_settings";
+    DECLARE_D_JSON(JSON_SIZE,json);
+    /*
     DynamicJsonDocument json(JSON_SIZE);
     //StaticJsonDocument<JSON_SIZE> json;
+    */
 
     if(!haveFS && !FlashROMode) {
         Serial.printf("%s: %s\n", funcName, fsNoAvail);
@@ -649,7 +665,8 @@ bool loadCurVolume()
     #endif
 
     if(openCfgFileRead(volCfgName, configFile)) {
-        StaticJsonDocument<512> json;
+        DECLARE_S_JSON(512,json);
+        //StaticJsonDocument<512> json;
         if(!readJSONCfgFile(json, configFile, funcName)) {
             if(!CopyCheckValidNumParm(json["volume"], temp, sizeof(temp), 0, 255, DEFAULT_VOLUME)) {
                 uint8_t ncv = atoi(temp);
@@ -677,7 +694,8 @@ void saveCurVolume(bool useCache)
     const char *funcName = "saveCurVolume";
     char buf[6];
     File configFile;
-    StaticJsonDocument<512> json;
+    DECLARE_S_JSON(512,json);
+    //StaticJsonDocument<512> json;
 
     if(useCache && (prevSavedVol == curSoftVol)) {
         #ifdef DG_DBG
@@ -715,8 +733,8 @@ bool loadMusFoldNum()
 
         File configFile = SD.open(musCfgName, "r");
         if(configFile) {
-            StaticJsonDocument<512> json;
-            //if(!deserializeJson(json, configFile)) {
+            DECLARE_S_JSON(512,json);
+            //StaticJsonDocument<512> json;
             if(!readJSONCfgFile(json, configFile, "loadMusFoldNum")) {
                 if(!CopyCheckValidNumParm(json["folder"], temp, sizeof(temp), 0, 9, 0)) {
                     musFolderNum = atoi(temp);
@@ -739,7 +757,8 @@ bool loadMusFoldNum()
 void saveMusFoldNum()
 {
     const char *funcName = "saveMusFoldNum";
-    StaticJsonDocument<512> json;
+    DECLARE_S_JSON(512,json);
+    //StaticJsonDocument<512> json;
     char buf[4];
 
     if(!haveSD)
@@ -770,8 +789,9 @@ bool loadIpSettings()
 
         if(configFile) {
 
-            StaticJsonDocument<512> json;
-            //DeserializationError error = deserializeJson(json, configFile);
+            DECLARE_S_JSON(512,json);
+            //StaticJsonDocument<512> json;
+            
             DeserializationError error = readJSONCfgFile(json, configFile, "loadIpSettings");
 
             #ifdef DG_DBG
@@ -832,7 +852,8 @@ static bool CopyIPParm(const char *json, char *text, uint8_t psize)
 
 void writeIpSettings()
 {
-    StaticJsonDocument<512> json;
+    DECLARE_S_JSON(512,json);
+    //StaticJsonDocument<512> json;
 
     if(!haveFS && !FlashROMode)
         return;
