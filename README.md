@@ -458,7 +458,7 @@ Do NOT check this option if your TCD is connected wirelessly (BTTFN, MQTT).
 
 ##### &#9654; TCD signals Time Travel without 5s lead
 
-Usually, the TCD signals a time travel with a 5 seconds lead, in order to give a prop a chance to play an acceletation sequence before the actual time travel takes place. Since this 5 second lead is unique to CircuitSetup props, and people sometimes want to connect third party props to the TCD, the TCD has the option of skipping this 5 seconds lead. If that is the case, and your Dash Gauges are connected by wire, you need to set this option.
+Usually, the TCD signals a time travel with a 5 seconds lead, in order to give a prop a chance to play an acceleration sequence before the actual time travel takes place. Since this 5 second lead is unique to CircuitSetup props, and people sometimes want to connect third party props to the TCD, the TCD has the option of skipping this 5 seconds lead. If that is the case, and your Dash Gauges are connected by wire, you need to set this option.
 
 If your Dash Gauges are connected wirelessly, this option has no effect.
 
