@@ -224,7 +224,7 @@ Note that the SD card must be inserted before powering up the device. It is not 
 
 ### Sound substitution
 
-The Dash Gauges' built-in sounds can be substituted by your own sound files on a FAT32-formatted SD card. These files will be played back directly from the SD card during operation, so the SD card has to remain in the slot.
+The Dash Gauges' built-in sound effects can be substituted by your own sound files on a FAT32-formatted SD card. These files will be played back directly from the SD card during operation, so the SD card has to remain in the slot.
 
 Your replacements need to be put in the root (top-most) directory of the SD card, be in mp3 format (128kbps max) and named as follows:
 - "startup.mp3". Played when the Dash Gauges are connected to power and finished booting;
