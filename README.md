@@ -62,7 +62,9 @@ As long as the device is unconfigured, as is the case with a brand new one, or l
 - Power up the device and wait until the startup sequence has completed.
 - Connect your computer or handheld device to the WiFi network "DG-AP".
 - Navigate your browser to http://gauges.local or http://192.168.4.1 to enter the Config Portal.
- 
+
+#### Connecting to a WiFi network
+
 If you want your Dash Gauges to connect to another access point, such as your WiFi network, click on "Configure WiFi". The bare minimum is to select an SSID (WiFi network name) and a WiFi password.
 
 Note that the device requests an IP address via DHCP, unless you entered valid data in the fields for static IP addresses (IP, gateway, netmask, DNS). 
@@ -82,7 +84,7 @@ This procedure causes static IP data to be deleted; the device will return to DH
 
 If you have your Dash Gauges, along with a Time Circuits Display, mounted in a car, see also [here](#car-setup).
 
-### The Config Portal
+## The Config Portal
 
 The Config Portal is accessible exclusively through WiFi. As outlined above, if the device is not connected to a WiFi network, it creates its own WiFi network (named "DG-AP"), to which your WiFi-enabled hand held device or computer first needs to connect in order to access the Config Portal.
 
