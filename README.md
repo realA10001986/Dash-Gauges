@@ -27,15 +27,13 @@ Firmware features include
 
 ## Firmware Installation
 
-There are different alternative ways to install this firmware:
+If a previous version of the Dash Gauges firmware, or any other firmware of the BTTF family ([TCD](https://tcd.out-a-ti.me), [FC](https://fc.out-a-ti.me), [SID](https://sid.out-a-ti.me)), is installed on your device's ESP32, you can update easily using the pre-compiled binary. Enter the [Config Portal](#the-config-portal), click on "Update" and select the pre-compiled binary file provided in this repository ([install/dashgauges-A10001986.ino.nodemcu-32s.bin](https://github.com/realA10001986/Dash-Gauges/blob/main/install/dashgauges-A10001986.ino.nodemcu-32s.bin)).
 
-1) If a previous version of the Dash Gauges firmware, or any other firmware of the BTTF family ([TCD](https://tcd.out-a-ti.me), [FC](https://fc.out-a-ti.me), [SID](https://sid.out-a-ti.me)), is installed on your device's ESP32, you can update easily using the pre-compiled binary. Enter the [Config Portal](#the-config-portal), click on "Update" and select the pre-compiled binary file provided in this repository ([install/dashgauges-A10001986.ino.nodemcu-32s.bin](https://github.com/realA10001986/Dash-Gauges/blob/main/install/dashgauges-A10001986.ino.nodemcu-32s.bin)).
+If you are using a fresh ESP32 board, please see [dashgauges-A10001986.ino](https://github.com/realA10001986/Dash-Gauges/blob/main/dashgauges-A10001986/dashgauges-A10001986.ino) for detailed build information.
 
-2) Using the Arduino IDE or PlatformIO: Download the sketch source code, all required libraries, compile and upload it. This method is the one for fresh ESP32 boards and/or folks familiar with the programming tool chain. Detailed build information is in [dashgauges-A10001986.ino](https://github.com/realA10001986/Dash-Gauges/blob/main/dashgauges-A10001986/dashgauges-A10001986.ino).
+ *Important: After a firmware update, the "empty" LED might blink for short while after reboot. Do NOT unplug the device during this time.*
 
- *Important: After a firmware update, the "empty" LED might blink for up to a minute after reboot. Do NOT unplug the device during this time.*
-
-### Audio file installation
+### Audio data installation
 
 The firmware comes with audio data ("sound-pack") which needs to be installed separately. The audio data is not updated as often as the firmware itself. If you have previously installed the latest version of the sound-pack, you normally don't have to re-install the audio data when you update the firmware. Only if either a new version of the sound-pack is released, or your device is quiet after a firmware update, a re-installation is needed.
 
@@ -53,11 +51,9 @@ Then there are two alternative ways to proceed. Note that both methods *require 
 
 After installation, the SD card can be re-used for [other purposes](#sd-card).
 
-## Short summary of first steps
+## Initial Configuration
 
-A good first step would be to establish access to the Config Portal in order to configure your Dash Gauges.
-
-As long as the device is unconfigured, as is the case with a brand new one, or later if it for some reason fails to connect to a configured WiFi network, it creates a WiFi network of its own named "DG-AP". This is called "Access point mode", or "AP-mode".
+The first step is to establish access to the configuration web site ("Config Portal") in order to configure your Dash Gauges:
 
 - Power up the device and wait until the startup sequence has completed.
 - Connect your computer or handheld device to the WiFi network "DG-AP".
@@ -65,13 +61,13 @@ As long as the device is unconfigured, as is the case with a brand new one, or l
 
 #### Connecting to a WiFi network
 
-If you want to connect your Dash Gauges to your WiFi network, click on "Configure WiFi". The bare minimum is to select an SSID (WiFi network name) and a WiFi password.
+As long as the device is unconfigured, it creates a WiFi network of its own named "DG-AP". This is called "Access point mode", or "AP-mode". 
 
-Note that the device requests an IP address via DHCP, unless you entered valid data in the fields for static IP addresses (IP, gateway, netmask, DNS). 
+It is ok to leave the Dash Gauges in this mode, especially if it run stand-alone. In a typical home setup and/or if you also have a [Time Circuits Display](https://tcd.out-a-ti.me), however, you might want to connect the Dash Gauges to a WiFi network (in case of using it together with a TCD: to the same WiFi network the TCD is connected to). If you have your Dash Gauges, along with a Time Circuits Display, mounted in a car, you might want to connect the Dash Gauges to the TCD's very own WiFi network "TCD-AP"; see [here](#car-setup).
 
-After saving the WiFi network settings, the device reboots and tries to connect to your configured WiFi network. If that fails, it will again start in access point mode. 
+In order to connect your Dash Gauges to a WiFi network, click on "Configure WiFi". The bare minimum is to select an SSID (WiFi network name) and a WiFi password.
 
-If the device is inaccessible as a result of incorrect static IPs, 
+    (Note that the device requests an IP address via DHCP, unless you entered valid data in the fields for static IP addresses (IP, gateway, netmask, DNS). If the device is inaccessible as a result of incorrect static IPs, 
 - power-down the device,
 - hold the Time Travel button,
 - power-up the device (while still holding the Time Travel button)
@@ -80,9 +76,11 @@ If the device is inaccessible as a result of incorrect static IPs,
 - wait until the "Empty" LED lights up,
 - then release the Time Travel button.
 
-This procedure causes static IP data to be deleted; the device will return to DHCP after a reboot.
+    This procedure causes static IP data to be deleted; the device will return to DHCP after a reboot.)
 
-If you have your Dash Gauges, along with a Time Circuits Display, mounted in a car, see also [here](#car-setup).
+After saving the WiFi network settings, the FC reboots and tries to connect to your configured WiFi network. If that fails, it will again start in access point mode.
+
+After completing this step, your Dash Gauges are basically ready for use; you can also continue configuring them to your personal preferences through the Config Portal.
 
 ## The Config Portal
 
@@ -220,7 +218,7 @@ Other ways of triggering a time travel are available if a [Time Circuits Display
 
 Preface note on SD cards: For unknown reasons, some SD cards simply do not work with this device. For instance, I had no luck with Sandisk Ultra 32GB and  "Intenso" cards. If your SD card is not recognized, check if it is formatted in FAT32 format (not exFAT!). Also, the size must not exceed 32GB (as larger cards cannot be formatted with FAT32). Transcend SDHC cards and those work fine in my experience.
 
-The SD card, apart from being required for [installing](#audio-file-installation) of the built-in audio data, can be used for substituting built-in sound effects and for music played back by the [Music player](#the-music-player). Also, it is _strongly recommended_ to store [secondary settings](#-save-secondary-settings-on-sd) on the SD card to minimize [Flash Wear](#flash-wear).
+The SD card, apart from being required for [installing](#audio-data-installation) of the built-in audio data, can be used for substituting built-in sound effects and for music played back by the [Music player](#the-music-player). Also, it is _strongly recommended_ to store [secondary settings](#-save-secondary-settings-on-sd) on the SD card to minimize [Flash Wear](#flash-wear).
 
 Note that the SD card must be inserted before powering up the device. It is not recognized if inserted while the Dash Gauges are running. Furthermore, do not remove the SD card while the device is powered.
 
