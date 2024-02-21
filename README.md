@@ -84,15 +84,26 @@ After completing this step, your Dash Gauges are basically ready for use; you ca
 
 ## The Config Portal
 
-The Config Portal is accessible exclusively through WiFi. As outlined above, if the device is not connected to a WiFi network, it creates its own WiFi network (named "DG-AP"), to which your WiFi-enabled hand held device or computer first needs to connect in order to access the Config Portal.
+The "Config Portal" is the Dash Gauges' configuration web site. 
 
-If the operating system on your handheld or computer supports Bonjour (a.k.a. "mDNS"), you can enter the Config Portal by directing your browser to http://gauges.local . (mDNS is supported on Windows 10 version TH2 (1511) [other sources say 1703] and later, Android 13 and later, MacOS, iOS)
+It can be accessed as follows:
 
-If that fails, the way to enter the Config Portal depends on whether the device is in access point mode or not. 
-- If it is in access point mode (and your handheld/computer is connected to the WiFi network "DG-AP"), navigate your browser to http://192.168.4.1 
-- Otherwise .... FIXME TODO....  and listen, the IP address will be spoken out loud.
+#### If Gauges are in AP mode
 
-In the main menu, click on "Setup" to configure your Dash Gauges.
+- Connect your computer or handheld device to the WiFi network "DG-AP".
+- Navigate your browser to http://gauges.local or http://192.168.4.1 to enter the Config Portal.
+
+#### If Gauges are connected to WiFi network
+
+- Connect your hand-held/computer to the same WiFi network to which the Dash Gauges are connected, and
+- navigate your browser to http://gauges.local
+
+  Accessing the Config Portal through this address requires the operating system of your hand-held/computer to support Bonjour/mDNS: Windows 10 version TH2     (1511) [other sources say 1703] and later, Android 13 and later; MacOS and iOS since the dawn of time.
+
+  If connecting to http://gauges.local fails due to a name resultion error, you need to find out the Gauges' IP address: FIXME
+
+In the main menu, click on "Setup" to configure your Dash Gauges. 
+
 | ![The Config Portal](https://github.com/realA10001986/Dash-Gauges/assets/76924199/5dbd0300-98e7-4c95-989c-2835c8f2e910) |
 |:--:| 
 | *The Config Portal's Setup page* |
