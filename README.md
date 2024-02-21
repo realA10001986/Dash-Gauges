@@ -67,7 +67,7 @@ It is ok to leave the Dash Gauges in this mode, especially if it run stand-alone
 
 In order to connect your Dash Gauges to a WiFi network, click on "Configure WiFi". The bare minimum is to select an SSID (WiFi network name) and a WiFi password.
 
-    (Note that the device requests an IP address via DHCP, unless you entered valid data in the fields for static IP addresses (IP, gateway, netmask, DNS). If the device is inaccessible as a result of incorrect static IPs, 
+(Note that the device requests an IP address via DHCP, unless you entered valid data in the fields for static IP addresses (IP, gateway, netmask, DNS). If the device is inaccessible as a result of incorrect static IPs, 
 - power-down the device,
 - hold the Time Travel button,
 - power-up the device (while still holding the Time Travel button)
@@ -76,7 +76,7 @@ In order to connect your Dash Gauges to a WiFi network, click on "Configure WiFi
 - wait until the "Empty" LED lights up,
 - then release the Time Travel button.
 
-    This procedure causes static IP data to be deleted; the device will return to DHCP after a reboot.)
+This procedure causes static IP data to be deleted; the device will return to DHCP after a reboot.)
 
 After saving the WiFi network settings, the FC reboots and tries to connect to your configured WiFi network. If that fails, it will again start in access point mode.
 
