@@ -1,7 +1,7 @@
 # Dash Gauges
 
 This repository holds 
-- some [DIY instructions](/README-DIY.md) for building a Dash Gauge panel, as seen in the Delorean Time Machine,
+- some [DIY instructions](/DIY/README.md) for building a Dash Gauge panel, as seen in the Delorean Time Machine,
 - (in the future) information on a CircuitSetup solution for said Dash Gauges,
 - and a suitable unified firmware for the DIY panel and the CircuitSetup solution.
 
@@ -9,7 +9,7 @@ This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](ht
 
 ![Dash Gauges](https://github.com/realA10001986/Dash-Gauges/assets/76924199/c996f77c-9b9e-43cc-a89a-a1c61146cca4)
 
-For DIY instructions, please see [here](/README-DIY.md).
+For DIY instructions, please see [here](/DIY/README.md).
 
 Firmware features include
 - Selectable "full" percentages per gauge (besides for fun, useful for adjusting inaccurate readings) (feature depending on hardware configuration)
@@ -221,7 +221,7 @@ The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as 
 
 ## Time travel
 
-To trigger a "time travel" stand-alone, you need to install a "Time Travel" button. Pressing that button briefly will let the Dash Gauges play their time travel sequence. For my DIY solution, please see [here](https://github.com/realA10001986/Dash-Gauges/blob/main/README-DIY.md#connecting-a-time-travel-button) for how to wire that button.
+To trigger a "time travel" stand-alone, you need to install a "Time Travel" button. Pressing that button briefly will let the Dash Gauges play their time travel sequence. For my DIY solution, please see [here](https://github.com/realA10001986/Dash-Gauges/blob/main/DIY/README.md#connecting-a-time-travel-button) for how to wire that button.
 
 Other ways of triggering a time travel are available if a [Time Circuits Display](#connecting-a-time-circuits-display) is connected.
 
@@ -278,7 +278,7 @@ While the music player is playing music, other sound effects are disabled/muted.
 
 Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place. Therefore I strongly recommend a wireless BTTFN connection, see immediately below.
 
-For wiring information of my DIY solution, please see [here](https://github.com/realA10001986/Dash-Gauges/blob/main/README-DIY.md#connecting-a-tcd-to-the-dash-gauges-by-wire).
+For wiring information of my DIY solution, please see [here](https://github.com/realA10001986/Dash-Gauges/blob/main/DIY/README.md#connecting-a-tcd-to-the-dash-gauges-by-wire).
 
 Next, head to the Config Portal and set the option **_TCD connected by wire_**. On the TCD, the option "Control props connected by wire" must be set.
 
