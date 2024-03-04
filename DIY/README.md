@@ -65,7 +65,7 @@ Connectors on the Switch Board:
 
 - SCL/SDA: The i2c signal from he Control Board.
 
-A connection diagram is [here](DIY/electronics/connection%20diagram.png). Please note that when using a Control Board version 1.3, the IO connectors are at different locations, but still carry their "IOxx" name in all cases on the PCB. IO13 is on the "Fake PWR" connector, IO14 and IO27 are on the "Time Travel" connector.
+A connection diagram is [here](/DIY/electronics/connection%20diagram.png). Please note that when using a Control Board version 1.3, the IO connectors are at different locations, but still carry their "IOxx" name in all cases on the PCB. IO13 is on the "Fake PWR" connector, IO14 and IO27 are on the "Time Travel" connector.
 
 ### Gauges
 
@@ -79,7 +79,7 @@ For the smaller gauges I used two H&P 631-14672 (built by Phaostron), which are 
 
 Those two gauges are driven by channels A and B of the MCP4728. They show nearly identical readings at 10% and at 90%, in the middle they differ a bit, despite the voltage being identical. But since the idea here is not to actually measure voltage, that is still ok, the "full" percentage is configurable after all.
 
-The movie-accurate dials of those gauges are available in the [DIY/faces-labels](DIY/faces-labels) folder in this repository.
+The movie-accurate dials of those gauges are available in the [DIY/faces-labels](/DIY/faces-labels) folder in this repository.
 
 For the backlight, I drilled a hole in the rear of the metal enclosure, center bottom, and put a 5mm yellow LED (590nm) on the Switch Board (LED1, LED2, with suitable resistors (R7/R8; depending on LED, probably around 150R). Most replicas use white LEDs, but I think on the A-Car as shown in the Petersen Museum, there are yellow ones used, and I found white ones too bright. The LEDs are mounted on the Switch Board so that they stick out 12mm from PCB to the LED's top.
 
