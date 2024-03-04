@@ -117,7 +117,7 @@ About the hole for the "Empty" light: Above light/button requires a 16mm hole. I
 
 ### Enclosure
 
-The enclosure consists of three parts: The front and two side pieces. Measurements are in the [DIY/enclosure](DIY/enclosure) folder of this repository.
+The enclosure consists of three parts: The front and two side pieces. Measurements are in the [DIY/enclosure](/DIY/enclosure) folder of this repository.
 
 You can buy an enclosure at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/); note that it is for a model 49 panel meter ('Roentgens'); a model 142 won't fit.
 
