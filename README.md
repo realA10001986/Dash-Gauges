@@ -1,7 +1,7 @@
 # Dash Gauges
 
 This repository holds 
-- some [DIY instructions](/DIY/README.md) for building a Dash Gauge panel, as seen in the Delorean Time Machine,
+- some [DIY instructions](/DIY/) for building a Dash Gauge panel, as seen in the Delorean Time Machine,
 - (in the future) information on a CircuitSetup solution for said Dash Gauges,
 - and a suitable unified firmware for the DIY panel and the CircuitSetup solution.
 
@@ -9,7 +9,7 @@ This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](ht
 
 ![Dash Gauges](https://github.com/realA10001986/Dash-Gauges/assets/76924199/c996f77c-9b9e-43cc-a89a-a1c61146cca4)
 
-For DIY instructions, please see [here](/DIY/README.md).
+For DIY instructions, please see [here](/DIY/).
 
 Firmware features include
 - Selectable "full" percentages per gauge (besides for fun, useful for adjusting inaccurate readings) (feature depending on hardware configuration)
