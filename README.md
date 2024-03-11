@@ -84,7 +84,11 @@ After completing this step, your Dash Gauges are basically ready for use; you ca
 
 ## The Config Portal
 
-The "Config Portal" is the Dash Gauges' configuration web site. 
+The "Config Portal" is the Dash Gauges' configuration web site.
+
+| ![The Config Portal](https://github.com/realA10001986/Dash-Gauges/assets/76924199/aa8b8979-a05c-4712-ae77-8e1f67061147) |
+|:--:| 
+| *The Config Portal's main page* |
 
 It can be accessed as follows:
 
@@ -104,7 +108,7 @@ It can be accessed as follows:
 
 In the main menu, click on "Setup" to configure your Dash Gauges. 
 
-| ![The Config Portal](https://github.com/realA10001986/Dash-Gauges/assets/76924199/5dbd0300-98e7-4c95-989c-2835c8f2e910) |
+| ![The Config Portal](https://github.com/realA10001986/Dash-Gauges/assets/76924199/9539fad9-68b9-4c4c-914a-bae56ba3ee15) |
 |:--:| 
 | *The Config Portal's Setup page* |
 
