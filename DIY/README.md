@@ -48,7 +48,7 @@ Parts on Switch Board:
 - R1, R2: Resistors for center gauge. Depend on gauge and supply voltage; for H&P 631-14672 470R, 8k2
 - R3, R4: Resistors for left gauge. Depend on gauge and supply voltage; for H&P 631-14672 470R, 8k2
 - R5, R6: Resistors for Roentgens gauge. Depend on gauge and supply voltage; for Simpson 49L VU meter total 3k6 (3k3+330R, for instance)
-- R7, R8: Resistors for LEDs of left and center gauge. Voltage is 5V, depends on LED type and desired brightness (eg 150R)
+- R7, R8: Resistors for backlight LEDs of left and center gauge. Voltage is 5V, depends on LED type and desired brightness (eg 150R)
 - R11: Resistor for Roentgens backlight. If using lamps, just bridge. Voltage is 5V.
 
 Connectors on the Switch Board:
