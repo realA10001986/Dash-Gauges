@@ -32,6 +32,8 @@ For the very gauges hardware I used, I designed a simple "switch board" which mo
 
 ![SwitchBoard1.7](https://github.com/realA10001986/Dash-Gauges/assets/76924199/1adf1639-6e81-44df-b56d-0eba04ba26b8)
 
+![sb2](https://github.com/realA10001986/Dash-Gauges/assets/76924199/2aa7347c-1c04-4362-8416-b64b4ff5d2ee)
+
 The Switch Board is mounted on the smaller gauges like this:
 
 ![Mounted](https://github.com/realA10001986/Dash-Gauges/assets/76924199/33c10828-7aa2-4724-a9f2-575e57dd31e3)
