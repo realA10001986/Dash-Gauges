@@ -50,6 +50,8 @@ Parts on Switch Board:
 - R5, R6: Resistors for Roentgens gauge. Depend on gauge and supply voltage; for Simpson 49L VU meter total 3k6 (3k3+330R, for instance)
 - R7, R8: Resistors for backlight LEDs of left and center gauge. Voltage is 5V, depends on LED type and desired brightness (eg 150R)
 - R11: Resistor for Roentgens backlight. If using lamps, just bridge. Voltage is 5V.
+- Backlight LEDs for left and center gauge: These are soldered to the back of the Switch Board so they directly stick into the gauge's enclosure. R7 and R8 should match the LEDs used
+- Solder joint for internal or external backlight power: Connect either INT or EXT with COM.
 
 Connectors on the Switch Board:
 - Audio: This allows connecting the audio from the Control Board; the signal is directed to the top-left audio connector, where a speaker is to be attached.
