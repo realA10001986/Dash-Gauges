@@ -104,7 +104,7 @@ It can be accessed as follows:
 
   Accessing the Config Portal through this address requires the operating system of your hand-held/computer to support Bonjour/mDNS: Windows 10 version TH2     (1511) [other sources say 1703] and later, Android 13 and later; MacOS and iOS since the dawn of time.
 
-  If connecting to http://gauges.local fails due to a name resultion error, you need to find out the Gauges' IP address: FIXME
+  If connecting to http://gauges.local fails due to a name resolution error, you need to find out the Gauges' IP address: FIXME
 
 In the main menu, click on "Setup" to configure your Dash Gauges. 
 
@@ -286,7 +286,7 @@ For wiring information of my DIY solution, please see [here](https://github.com/
 
 Next, head to the Config Portal and set the option **_TCD connected by wire_**. On the TCD, the option "Control props connected by wire" must be set.
 
-You can connect both the TCD and a Time Travel button to Dash Gauges. But the button should not be pressed when the option **_TCD connected by wire_** is set, as it might yield unwanted results.
+>You can connect both the TCD and a Time Travel button to Dash Gauges. But the button should not be pressed when the option **_TCD connected by wire_** is set, as it might yield unwanted results.
 
 ### BTTF-Network ("BTTFN")
 
