@@ -53,6 +53,8 @@ After installation, the SD card can be re-used for [other purposes](#sd-card).
 
 ## Initial Configuration
 
+>The following instructions only need to be followed once, on fresh TCDs. They do not need to be repeated after a firmware update.
+
 The first step is to establish access to the configuration web site ("Config Portal") in order to configure your Dash Gauges:
 
 - Power up the device and wait until the startup sequence has completed.
