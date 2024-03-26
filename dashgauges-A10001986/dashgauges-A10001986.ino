@@ -98,6 +98,8 @@
  *   
  *  TODO: Way to make device say IP address stand-alone
  *  
+ *  2024/03/26 (A10001986)
+ *    - BTTFN device type update
  *  2024/02/08 (A10001986)
  *    - CP: Add header to "Saved" page so one can return to main menu
  *  2024/02/06 (A10001986)

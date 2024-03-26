@@ -285,11 +285,14 @@ static unsigned long FPOffemptyAlarmNow = 0;
 #define BTTFN_NOT_SID_CMD  8
 #define BTTFN_NOT_PCG_CMD  9
 #define BTTFN_NOT_WAKEUP   10
+#define BTTFN_NOT_AUX_CMD  11
+#define BTTFN_NOT_VSR_CMD  12
 #define BTTFN_TYPE_ANY     0    // Any, unknown or no device
 #define BTTFN_TYPE_FLUX    1    // Flux Capacitor
 #define BTTFN_TYPE_SID     2    // SID
 #define BTTFN_TYPE_PCG     3    // Plutonium chamber gauge panel
-#define BTTFN_TYPE_AUX     4    // Aux (user custom device)
+#define BTTFN_TYPE_VSR     4    // VSR
+#define BTTFN_TYPE_AUX     5    // Aux (user custom device)
 static const uint8_t BTTFUDPHD[4] = { 'B', 'T', 'T', 'F' };
 static bool          useBTTFN = false;
 static WiFiUDP       bttfUDP;

@@ -12,8 +12,8 @@
 #define _DG_GLOBAL_H
 
 // Version strings
-#define DG_VERSION       "V0.29"
-#define DG_VERSION_EXTRA "FEB082024"
+#define DG_VERSION       "V0.30"
+#define DG_VERSION_EXTRA "MAR262024"
 
 //#define DG_DBG              // debug output on Serial
 
@@ -26,12 +26,11 @@
 // <hostname> is configurable in the Config Portal
 // This needs to be commented if WiFiManager provides mDNS
 #define DG_MDNS
+// Uncomment this if WiFiManager has mDNS enabled
+//#define DG_WM_HAS_MDNS 
 
 // Uncomment when using WiFiManager 2.0.17 or later
 //#define WIFIMANAGER_2_0_17
-
-// Uncomment this if WiFiManager has mDNS enabled
-//#define DG_WM_HAS_MDNS          
 
 /*************************************************************************
  ***             Configuration for peripherals/features                ***
