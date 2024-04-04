@@ -215,9 +215,13 @@ The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as 
      <td align="left">Say current IP address</td>
      <td align="left">9090&#9166;</td>
     </tr>   
- <tr>
+    <tr>
      <td align="left">Reboot the device</td>
      <td align="left">9064738&#9166;</td>
+    </tr>
+    <tr>
+     <td align="left">Delete static IP address<br>and WiFi-AP password</td>
+     <td align="left">9123456&#9166;</td>
     </tr>
     <tr>
      <td align="left">Unlock "gauge type" selection in Config Portal</td>
