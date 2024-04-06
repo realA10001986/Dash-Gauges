@@ -431,15 +431,15 @@ The music player will continue to run.
  
 #### Hardware configuration settings
 
-##### Use fixed volume
+##### Disable volume knob
 
 Your control board might have a volume knob; if you want this knob to be your volume selector, uncheck this option. If you want to control volume remotely via the TCD keypad, check this, and select a volume level below. 
 
 Due to hardware restraints, the volume knob might cause distortions when the level is very low; a fixed value is a better choice in that case.
 
-##### Fixed volume level (0-19)
+##### Software volume level (0-19)
 
-If the option _Use fixed volume_ above is checked, enter a value between 0 (mute) or 19 (very loud) here. This is your starting point; you can change the volume via TCD (93xx) and that new volume will also be saved (and appear in this field when the page is reloaded in your browser).
+If the option _Disable volume knob_ above is checked, enter a value between 0 (mute) or 19 (very loud) here. This is your starting point; you can change the volume via TCD (93xx) and that new volume will also be saved (and appear in this field when the page is reloaded in your browser).
 
 #### Network settings
 
