@@ -110,9 +110,9 @@ It can be accessed as follows:
 
 In the main menu, click on "Setup" to configure your Dash Gauges. 
 
-| ![The Config Portal](https://github.com/realA10001986/Dash-Gauges/assets/76924199/9539fad9-68b9-4c4c-914a-bae56ba3ee15) |
+| [<img src="https://github.com/realA10001986/Dash-Gauges/assets/76924199/9539fad9-68b9-4c4c-914a-bae56ba3ee15">](img/cp_setup.png) |
 |:--:| 
-| *The Config Portal's Setup page* |
+| *Click for full screenshot* |
 
 A full reference of the Config Portal is [here](#appendix-a-the-config-portal).
 
