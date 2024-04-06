@@ -1327,8 +1327,10 @@ static void execute_remote_command()
         case 123456:
             flushDelayedSave();
             deleteIpSettings();                   // 123456: deletes IP settings
-            settings.appw[0] = 0;                 // and clears AP mode WiFi password
-            write_settings();
+            if(settings.appw[0]) {
+                settings.appw[0] = 0;             // and clears AP mode WiFi password
+                write_settings();
+            }
             ssRestartTimer();
             break;
         case 317931:                              // 317931: Unlock Gauge Type selection in Config Portal

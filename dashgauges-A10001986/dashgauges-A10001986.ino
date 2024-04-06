@@ -98,6 +98,10 @@
  *   
  *  TODO: Way to make device say IP address stand-alone
  *  
+ *  2024/04/06 (A10001986)
+ *    - Rewrite settings upon clearing AP-PW only if AP-PW was actually set.
+ *    - Re-phrase "shuffle" Config option
+ *    - Re-phrase "Fixed volume" settings in Config Portal
  *  2024/03/26 (A10001986)
  *    - BTTFN device type update
  *  2024/02/08 (A10001986)
