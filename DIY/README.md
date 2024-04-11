@@ -2,7 +2,7 @@
 
 Note that this is a custom built prop; there is no kit available. CircuitSetup at this point only offers the [bezel](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/). Electronically, this prop was made to be compatible with the CircuitSetup line of movie props ([Time Circuits Display](https://tcd.out-a-ti.me), [Flux Capacitor](https://fc.out-a-ti.me), [SID](https://sid.out-a-ti.me)).
 
-![Dash Gauges](https://github.com/realA10001986/Dash-Gauges/assets/76924199/d080b01a-4dae-457c-954c-932457bf7e2b)
+![Dash Gauges](img/thedg.jpg)
 
 The Panel consists of several parts:
 - Aluminum (Aluminium for non-Americans) enclosure; the measurements are in the ["enclosure"](/DIY/enclosure) folder of this repository. Can be bought at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/) (does not fit model 142 gauge, see [here](#roentgens)).
@@ -20,7 +20,7 @@ The control board is a modified TCD control board from CircuitSetup:
 - The volume pot can be removed; this is, of course, optional, but since this board is assumingly hidden somewhere, the pot would be inaccessible anyway.
 - The i2c, audio and IO connectors were relocated to the front side of the PCB (they are normally on the back)
 
-![ControlBoard](https://github.com/realA10001986/Dash-Gauges/assets/76924199/82f25c22-d60b-493c-a785-5c8b78f2ca32)
+![ControlBoard](img/cbv1.jpg)
 
 As regards the cabling, two remarks:
 - I used each 2 wires for GND and 5V (black/white, green/blue), since the wires I used are quite thin.
@@ -30,17 +30,17 @@ As regards the cabling, two remarks:
 
 For the very gauges hardware I used, I designed a simple "switch board" which mounts on the smaller gauges. It carries the MCP4728 breakout board, a single channel relay board, all resistors for the gauges and LEDs, the LEDs for the smaller gauges and connectors for cables to the control board and to the "Roentgens" gauge. Also, it has connectors for an external Time Travel button and the door switches.
 
-![SwitchBoard1.7](https://github.com/realA10001986/Dash-Gauges/assets/76924199/1adf1639-6e81-44df-b56d-0eba04ba26b8)
+![SwitchBoard1.7](img/sbv1_1.jpg)
 
-![sb2](https://github.com/realA10001986/Dash-Gauges/assets/76924199/2aa7347c-1c04-4362-8416-b64b4ff5d2ee)
+![sb2](img/sbv1_2.jpg)
 
 The Switch Board is mounted on the smaller gauges like this:
 
-![Mounted](https://github.com/realA10001986/Dash-Gauges/assets/76924199/33c10828-7aa2-4724-a9f2-575e57dd31e3)
+![Mounted](img/sbv1_3.jpg)
 
 It carries this relay module for the lights (desolder the screw terminals, put in pin socket, pitch 5mm, 3 positions, for example Samtec HPF-03-01-T-S):
 
-![relay](https://github.com/realA10001986/Dash-Gauges/assets/76924199/eef6cc62-21e1-4700-99df-499739c4ea61)
+![relay](img/relay.jpg)
 
 This module is not the most elegant solution but the easiest one if you, like me, are using real lamps instead of LEDs: also, it allows for an external power source for the lights.
 
@@ -95,7 +95,7 @@ Since I could not find a properly equipped CP95, I searched for an alternative .
 
 A word on Simpson model numbers: Their main model number means "case style", not "type of meter". "Model 49" therefore only means "4.5 inch case", but not whether this is a VU meter, a voltmeter, or what not:
 
-<img width="985" alt="Simpson meters" src="https://github.com/realA10001986/Dash-Gauges/assets/76924199/24336a00-b8af-431c-b720-0a833c483d11">
+<img width="985" alt="Simpson meters" src="img/simpson-catalog.png">
 
 The only Simpson meters that came with illumination - apart from the Roentgens meters - were apparently their VU meters, models 49L ("L" for "light"; not listed above) and 142 (10470, 10540). Model 49L has the correct front dimensions; depending on their build date, they have either the three bands of "stripes" (like in the movie), or one thicker band of "stripes" in the center. (Later models, unfortunately using the same model number, look entirely different.)
 
@@ -107,11 +107,11 @@ If you can't find a VU-meter or consider the 142 too far off, you could try goin
 
 Speaking of the "Empty" light: I used a light like this one, available from aliexpress:
 
-![emptylight](https://github.com/realA10001986/Dash-Gauges/assets/76924199/46731b85-ddb7-45f9-8091-a70262e9968f)
+![emptylight](img/emptylight.png)
 
-There are also buttons that look identical:
+There are also buttons that look identical and can be used instead:
 
-![emptybutton](https://github.com/realA10001986/Dash-Gauges/assets/76924199/53187b70-9399-44a4-bd78-090f055a3423)
+![emptybutton](img/emptybutton.png)
 
 The LED in those lights/buttons is driven with 12V using a resistor; this resistor needs to be removed. No need to take out the blue part for this modification; just remove the red cover and pull out the LED; then desolder the LED and bridge the resistor.
 
