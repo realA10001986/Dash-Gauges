@@ -95,7 +95,7 @@ Since I could not find a properly equipped CP95, I searched for an alternative .
 
 A word on Simpson model numbers: Their main model number means "case style", not "type of meter". "Model 49" therefore only means "4.5 inch case", but not whether this is a VU meter, a voltmeter, or what not:
 
-<img width="985" alt="Simpson meters" src="img/simpson-catalog.png">
+<img width="985" alt="Simpson meters" src="img/simpson_catalog.png">
 
 The only Simpson meters that came with illumination - apart from the Roentgens meters - were apparently their VU meters, models 49L ("L" for "light"; not listed above) and 142 (10470, 10540). Model 49L has the correct front dimensions; depending on their build date, they have either the three bands of "stripes" (like in the movie), or one thicker band of "stripes" in the center. (Later models, unfortunately using the same model number, look entirely different.)
 
