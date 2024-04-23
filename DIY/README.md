@@ -6,49 +6,49 @@ Note that this is a custom built prop; there is no kit available. CircuitSetup a
 
 The Panel consists of several parts:
 - Aluminum (Aluminium for non-Americans) enclosure; the measurements are in the ["enclosure"](/DIY/enclosure) folder of this repository. Can be bought at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/) (does not fit model 142 gauge, see [here](#roentgens)).
-- The gauges: The smaller gauges are H&P 631-14672 (built by Phaostron) and the "Plutonium chamber" gauge is a Simpson 49L VU Meter, all driven by a MCP4728 quad-DAC (on an Adafruit breakout board). Movie-accurate faces for these gauges are in the ["faces-labels"](/DIY/faces-labels) folder of this repository.
+- The gauges: The smaller gauges are H&P 631-14672 (built by Phaostron) and the "Plutonium chamber" gauge is a Simpson 49L VU Meter, all driven by a MCP4728 quad-DAC. Movie-accurate faces for these gauges are in the ["faces-labels"](/DIY/faces-labels) folder of this repository.
 - Upcoming: An all-in-one Control Board mounted on the smaller gauges.
 
-Until the Control Board is finished, and as visible in the pictures, I used:
+Until the Control Board is finished, and as visible in the pictures:
 - A Switch Board, which is mounted on the smaller gauges' back side; it carries the interface for the gauges, the lights and switches, as well as some connectors for external switches/buttons. This Switch Board is easy to assemble, it only carries some resistors and connectors. The gerbers as well as an EasyEDA file are in the ["electronics"](/DIY/electronics) folder of this repository, JLCPCB can make this board for you. A BOM is available as well.
-- A Control Board: In lack of a dedicated control board (which to design unfortunately is beyond my abilities; hopefully CircuitSetup will fill that gap sometime soon), the heart of the device is a slightly modified TCD control board from [CircuitSetup](https://circuitsetup.us/product/time-circuits-display-control-board-with-keypad-trw-style-lenses/).
+- A Control Board: In lack of a dedicated control board, the heart of the device is a slightly modified TCD control board from [CircuitSetup](https://circuitsetup.us/product/time-circuits-display-control-board-with-keypad-trw-style-lenses/).
 
 ### Control board (upcoming new version)
 
 The Control board is mounted on the smaller gauges. Its features include
+- 5V or 12V power supply
 - ESP32 dev board (NodeMCU ESP32S) socket
 - audio, with speaker connector
 - SD card slot
-- 5V or 12V power supply
-- a DAC for driving gauges with 0-5V seamlessly, or "binary" gauges with 0/12V; room for resistors to adjust voltage to gauge type
-- "legacy" connector with pins for 12V binary Roentgens gauge, 12V Roentgens backlight, 12V "Empty" LED,
-- Time Travel button, plus an additional button ("Button 1"); Time Travel connector for external button
+- a DAC for driving "analog" gauges with arbitrary voltage (0-5V), and support for "digital" gauges (0/12V); room for user-mountable resistors to adjust voltage to gauge type
+- "Legacy" connector with pins for 12V digital Roentgens gauge, 12V Roentgens backlight, 12V "Empty" LED,
+- Time Travel button, plus an additional multi-purpose button ("Button 1"); Time Travel connector for external button
 - Connector for Door Switches
 
-#### DAC-controlled gauges vs. "Binary" gauges
+#### "Analog" (DAC-controlled) vs. "Digital" gauges
 
-Voltmeters, like the ones I used, can be usually driven with voltages from 0-5V. It is mostly a matter of removing the internal resistor of the gauge (if present), and putting suitable resistors on the Control Board. The firmware can be extended to define custom gauge types as regards their maximum voltage.
+Voltmeters, like the ones I used, can be usually driven with voltages from 0-5V, even if their scale is far beyond that. It is mostly a matter of removing the internal resistor of the gauge, and putting suitable resistors on the Control Board. The firmware can be extended to define custom gauge types as regards their  voltage range.
 
-"Binary" gauges are ones that only know "full" and "empty" pointer positions. Binary gauges are supplied with 12V by the board.
+"Digital" gauges are ones that can only be controlled by power-on and power-off for "full" and "empty" pointer positions, respectively; this is useful if the gauge needs voltages beyond what the Control Board can provide through the DAC (5V), and is driven using external power and through a relay. One might also come up with the idea to create a gauge replica using a motor to move the pointer to a fixed position on power-on, and reset it to the "Empty" position on power-loss. Digital gauges are supplied with 12V by the Control board.
 
 #### Noteworthy parts on Control Board:
 
-- R7, R8: Resistors for backlight LEDs of left and center gauge. Voltage is 5V, depends on LED type and desired brightness (eg 150R)
-- Backlight LEDs for left and center gauge: These are soldered to the back of the Control Board so they directly stick into the gauge's enclosure. R7 and R8 should match the LEDs used
-- R11: Resistor for Roentgens backlight on "Roentgens Light" connector. If using lamps, just bridge. Voltage is 5V.
-- Solder joint for internal or external backlight power: Connect either INT or EXT with COM. For 5V lights, use INT.
+- "Light Power": Solder joints for internal or external backlight power: Connect either INT or EXT with COM. For 5V, close INT and COM. To use external power, connect the power supply to "Ext. Light Power", and close EXT and COM.
+- Backlight LEDs for left and center gauge: These are soldered to the back of the Control Board so they directly stick into the gauge's enclosure. 
+- R7, R8: Resistors for backlight LEDs of left and center gauge. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (EXT). Resistor depends on LED type and desired brightness (eg 150R for yellow LEDs).
+- R11: Resistor for Roentgens backlight on "Roentgens Light" connector. If using lamps, just bridge. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (EXT).
 
-Cofiguration for DAC-controlled gauges:
+Configuration for DAC-controlled ("analog") gauges:
 - Left gauge:
-  - R3, R4: Populate depending on gauge and supply voltage; for H&P 631-14672 470R, 8k2
-  - Close DEF4+COM4
+  - R3, R4: Populate depending on gauge and supply voltage; for H&P 631-14672: 470R, 8k2
+  - Close DEF4+COM4 solder joint
 - Center Gauge:
-  - R1, R2: Populate depending on gauge and supply voltage; for H&P 631-14672 470R, 8k2
+  - R1, R2: Populate depending on gauge and supply voltage; for H&P 631-14672: 470R, 8k2
   - Close DEF3+COM3
-- "Roentgens" gauge (connected to "Analog Roentgens" connector:
+- "Roentgens" gauge (connected to "Analog Roentgens" connector):
   - R5, R6: Populate depending on gauge and supply voltage; for Simpson 49L VU meter total 3k6 (3k3+330R, for instance)
 
-Configuration for binary gauges (requires 12V power):
+Configuration for digital gauges (requires 12V power):
 - Left gauge:
   - R3/R4: Leave unpopulated
   - Close LEG4+COM4 for left gauge
@@ -57,11 +57,11 @@ Configuration for binary gauges (requires 12V power):
   - R1/R2: Leave unpopulated
   - Close LEG3+COM3
   - Bridge LEG1 by wire (or resistor, depending on gauge type)
-- Roentgens gauge (connected to "Binary Roentgens" connector):
+- Roentgens gauge (connected to "Binary Roentgens" connector, pins 1 (+) and 2 (-)):
   - R5/R6: Leave unpopulated
   - Bridge LEG5 by wire (or resistor, depending on gauge type)
 
-You can mix DAC-controlled any binary gauges; the firmware provides a selection of gauge type for each single gauge.
+You can mix DAC-controlled any binary gauges; the firmware provides a type selection for each single gauge.
 
 ### Control board (old version)
 
@@ -122,23 +122,23 @@ Connectors on the Switch Board:
 
 - SCL/SDA: The i2c signal from he Control Board.
 
-A connection diagram is [here](/DIY/electronics/connection%20diagram.png). Please note that when using a Control Board version 1.3, the IO connectors are at different locations, but still carry their "IOxx" name in all cases on the PCB. IO13 is on the "Fake PWR" connector, IO14 and IO27 are on the "Time Travel" connector.
+A connection diagram is [here](/DIY/electronics/connection%20diagram.png). Please note that when using a TCD Control Board version 1.3, the IO connectors are at different locations, but still carry their "IOxx" name in all cases on the PCB. IO13 is on the "Fake PWR" connector, IO14 and IO27 are on the "Time Travel" connector.
 
 ### Gauges
 
-The gauges are connected through an Adafruit MCP4728 breakout board, which is an i2c-driven quad-DAC and mounted on the switch board. This DAC allows arbitrary voltages up to 5V, but the gauges used here use much lower voltages. If you use different gauges, you need to add your configuration to the firmware. More on this below.
+The gauges are connected through an MCP4728 DAC. This DAC allows arbitrary voltages up to 5V, but the gauges used here use much lower voltages. If you use different gauges, you need to add your configuration to the firmware. More on this below.
 
 *Important*: When using the MCP4728 in your project, do not connect the actual gauges until you selected the right hardware type in the Config Portal and have powered-down and powered-up the device once afterwards. This power-cycle is needed to reset the MCP4728's EEPROM to the correct settings and to avoid a power output too high at boot.
 
 #### "Primary", "Percent Power"
 
-For the smaller gauges I used two H&P 631-14672 (built by Phaostron), which are (were?) oddly available in volumes on ebay. The pointers on these are red, but an Edding permanent marker was quickly able to change them to black. These gauges have a scale from 0 to 0.5V, but can't cope with 0.5V, they need a resistor in series. I found 8k2 + 470R to be the best value (R1+R2, R3+R4 on the Switch Board).
+For the smaller gauges I used two H&P 631-14672 (built by Phaostron), which are (were?) oddly available in volumes on ebay. The pointers on these are red, but an Edding permanent marker was quickly able to change them to black. These gauges have a scale from 0 to 0.5V, but can't cope with 0.5V, they need a resistor in series. I found 8k2 + 470R to be the best value (R1+R2, R3+R4).
 
 Those two gauges are driven by channels A and B of the MCP4728. They show nearly identical readings at 10% and at 90%, in the middle they differ a bit, despite the voltage being identical. But since the idea here is not to actually measure voltage, that is still ok, the "full" percentage is configurable after all.
 
 The movie-accurate dials of those gauges are available in the [DIY/faces-labels](/DIY/faces-labels) folder in this repository.
 
-For the backlight, I drilled a hole in the rear of the metal enclosure, center bottom, and put a 5mm yellow LED (590nm) on the Switch Board (LED1, LED2, with suitable resistors (R7/R8; depending on LED, probably around 150R). Most replicas use white LEDs, but I think on the A-Car as shown in the Petersen Museum, there are yellow ones used, and I found white ones too bright. The LEDs are mounted on the Switch Board so that they stick out 12mm from PCB to the LED's top.
+For the backlight, I drilled a hole in the rear of the metal enclosure, center bottom, and put a 5mm yellow LED (590nm) on the Switch Board (LED1, LED2, with suitable resistors (R7/R8; depending on LED, probably around 150R). Most replicas use white LEDs, but I think on the A-Car as shown in the Petersen Museum, there are yellow ones used, and I found white ones too bright. The LEDs are mounted on the board so that they stick out 12mm from PCB to the LED's top.
 
 #### "Roentgens"
 
@@ -180,7 +180,7 @@ You can buy an enclosure at [CircuitSetup](https://circuitsetup.us/product/delor
 
 ### Connecting a Time Travel button
 
-The Time Travel button can be connected to the Control Board or the Switch Board:
+The Time Travel button can be connected to the TCD Control Board or the Switch Board:
 
 On the Control Board, connect the button to "IO13" and "5V" of the "IO13" connector. In case of a Control Board 1.3, connect the button to "PWR Trigger (IO13)" and "GND" of the "Fake PWR" connector.
 
