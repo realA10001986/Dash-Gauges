@@ -12,8 +12,8 @@
 #define _DG_GLOBAL_H
 
 // Version strings
-#define DG_VERSION       "V0.32"
-#define DG_VERSION_EXTRA "APR062024"
+#define DG_VERSION       "V0.40"
+#define DG_VERSION_EXTRA "APR222024"
 
 //#define DG_DBG              // debug output on Serial
 
@@ -36,12 +36,12 @@
  ***             Configuration for peripherals/features                ***
  *************************************************************************/
 
-// Number of gauge type configurations (including NONE)
-#define GA_NUM_TYPES 5
-
 // Uncomment for support of door switches/door sounds
 // Comment if using DOOR_SWITCH_PIN for something else
 #define DG_HAVEDOORSWITCH
+
+// Uncomment if hardware has a volume knob
+//#define DG_HAVEVOLKNOB
 
 // Uncomment for HomeAssistant MQTT protocol support
 #define DG_HAVEMQTT
@@ -83,20 +83,17 @@
 
 #define STATUS_LED_PIN     2  // Status LED (on ESP)
 
-#define ALL_G_BIN_PIN     12  // Placeholder for "binary" gauge Panel (all gauges only full and empty at same time)
-
-#define L_G_BIN_PIN       15  // Placeholder for "binary" gauge Panel (left gauge, only full and empty)
-#define C_G_BIN_PIN       12  // Placeholder for "binary" gauge Panel (center gauge, only full and empty)
-#define R_G_BIN_PIN        2  // Placeholder for "binary" gauge Panel (right gauge, only full and empty)
-
-#define SIDESWITCH_PIN    16  // Switch on side
-#define EMPTY_LED_PIN     17  // LED in "empty" button
+#define DIGITAL_GAUGE_PIN 12  // Placeholder for "digital" gauges
 
 #define TT_IN_PIN         13  // Time Travel button (or TCD tt trigger input)
+#define BUTTON1_PIN       36  // Button 1
 
-#define BACKLIGHTS_PIN    14  // Gauges' backlights (via relay)
+#define SIDESWITCH_PIN    16  // SBv1/CBv1: Toggle switch on side
+#define DOOR_SWITCH_PIN   27  // SBv1/CBv1: Door switch
+#define BACKLIGHTS_PIN    14  // SBv1/CBv1: Gauges' backlights (via relay)
 
-#define DOOR_SWITCH_PIN   27  // (optional) door switch
+#define EMPTY_LED_PIN     17  // SBv1/CBv1: "Empty" LED
+#define EMPTY_LED_PIN2    14  // SBv2:      "Empty" LED
 
 // I2S audio pins
 #define I2S_BCLK_PIN      26
@@ -109,7 +106,17 @@
 #define SPI_MISO_PIN      19
 #define SPI_SCK_PIN       18 
 
-// analog input for volume   
+// Analog input for volume (unused on OEM Control Board)
 #define VOLUME_PIN        32
+
+/* 
+ *  Switchboard v2: Bits on PCA8574 port expander
+ */
+#define SIDESWITCH_BIT     7    // input    Toggle switch on side
+#define DOORSWITCH_BIT     0    // input    Door switch
+#define BACKLIGHTS_BIT     6    // output   Gauges' backlights (via relay)
+
+#define PX_READ_MASK       ((1<<SIDESWITCH_BIT)|(1<<DOORSWITCH_BIT))
+#define PX_WRITE_MASK      ((1<<BACKLIGHTS_BIT))
 
 #endif

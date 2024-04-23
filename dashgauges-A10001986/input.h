@@ -49,7 +49,9 @@ class DGButton {
   
     public:
         DGButton(const int pin, const boolean activeLow = true, const bool pullupActive = true);
-      
+
+        void begin();
+        
         void setTicks(const int dticks, const int pticks, const int lticks);
       
         void attachPress(void (*newFunction)(void));
@@ -68,6 +70,7 @@ class DGButton {
         void (*_longPressStopFunc)(void) = NULL;
 
         int _pin;
+        bool _pullupActive;
         
         unsigned int _debounceTicks = 50;
         unsigned int _pressTicks = 400;

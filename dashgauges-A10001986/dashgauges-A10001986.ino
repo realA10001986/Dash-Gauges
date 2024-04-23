@@ -95,9 +95,32 @@
  */
 
 /*  Changelog
- *   
- *  TODO: Way to make device say IP address stand-alone
  *  
+ *  2024/04/22 (A10001986)
+ *    - Gauge types can now be selected separately, not only in "groups" any more. 
+ *      For each gauge (Primary, Percent Power, Roentgens), the hardware access method 
+ *      and type (voltage range) can be defined.
+ *      The complete definition table is now in dgdisplay.cpp.
+ *    - For binary gauges, the threshold is now configurable in the CP
+ *    - "Button 1" on Control Board v1 supported; HOLDing it makes the DG say the
+ *      IP address out loud
+ *  2024/04/10 (A10001986)
+ *    - Add support for SwitchBoard v2. There are now three versions of
+ *      the hardware:
+ *      - Switch Board v1: Requires TCD control board to operate.
+ *      - Switch Board v2: Requires TCD control board to operate, but needs
+ *                         less "butchering" and fewer wires.
+ *      - Control Board v1: Is a complete stand-alone solution, does not 
+ *                          require a TCD control board.
+ *      Switch Board v1 and Control Board v1 are 100% compatible with each
+ *      other, the firmware does not make a difference. Switch Board v2 needs
+ *      some special treatment.
+ *      The firmware auto-detects the hardware version.
+ *    - Add Music Folder to CP; Music-folder-change optimization
+ *    - Make hardware support for volume knob a compile time option
+ *      (knob support disabled by default, see global.h) 
+ *  2024/04/07 (A10001986)
+ *    - Re-locate volume setting in CP
  *  2024/04/06 (A10001986)
  *    - Rewrite settings upon clearing AP-PW only if AP-PW was actually set.
  *    - Re-phrase "shuffle" Config option

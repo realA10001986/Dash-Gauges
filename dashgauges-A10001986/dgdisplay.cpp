@@ -37,6 +37,122 @@
 
 #include "dgdisplay.h"
 
+/* 
+ * Gauges hardware definition table
+ * 
+ * The first three items are:
+ * - id: An ID that identifies the gauge type. Must be unique per table.
+ * - name: The name of the gauge type for display in the Config Portal   
+ * - connection type:
+ * 
+ * DGD_TYPE_MCP4728: 
+ * 
+ * For a gauge connected to the MCP4728 DAC. This identifies "analog" gauges, 
+ * which means that they can move their pointer by changing voltage. The DAC 
+ * has four channels: A, C, B, D. Channel D is unused.
+ * DAC channels A-C are allocated as follows: 
+ * left gauge = Channel A, center gauge = channel B, right gauge = channel C
+ * This allocation is fixed; even if, for instance, only the left and right
+ * gauges are analog ones, and the center gauge is, say, digital, channels
+ * A and C will be used.
+ * 
+ * Analog gauges have further config data in the first struct that follows:
+ * 
+ * i2caddresses: Two addresses for the MCP4728. These are only read and used
+ * for the first gauge that is configured as an analog gauge (order: left, center, right)
+ * 
+ * maxV: The "maxV" parameter defines the maximum voltage ever sent to the gauges, 
+ * given in 1/4095s of reference voltage. 
+ *    100% of reference voltage = 4095
+ *    50% of reference voltage = 2048
+ * 
+ * VRefGain: This parameter defines the reference voltage: This is either
+ * - (MCP4728_VREF_INT|MCP4728_GAIN_LOW)  for 2.048V, or
+ * - (MCP4728_VREF_INT|MCP4728_GAIN_HIGH) for 4.096V, or
+ * - MCP4728_VREF_EXT                     for 5V.
+ * 
+ * DGD_TYPE_DIGITAL:
+ * 
+ * This defines a digital gauge. Digital gauges only know "full" and "empty" states,
+ * they can't move their pointer arbitrarily by software. This type is used when, 
+ * for example, 
+ * - when the Control Board cannot supply a suitable voltage/amperage for the gauge, 
+ *   and it is driven with external power and switched through a relay;
+ * - for gauge replicas using a stepper motor to move the pointer to a fixed position
+ *   on power, and resetting the pointer position to "Empty" on power loss.
+ * 
+ * Digital gauges are configured in the second struct following the connection type:
+ * 
+ * gpioPin: GPIO pin to ge switched HIGH for "full" and LOW for "empty". On the OEM
+ * Control Board, only one GPIO pin is reserved for digital gauges, so they all use
+ * the same. Custom variations of that board could allow different ones.
+ * 
+ * For digital gauges, there is a "Threshold" setting in the Config Portal.
+ * This defines the "virtual percentage" (0% being the left end of the scale, 100% 
+ * being the right end of the scale) at which the gauge should switch from "full" 
+ * to "empty" in animations. This value depends on the speed of pointer movement: 
+ * In the time travel sequence, the pointers are slowly moved towards "Empty" in 
+ * sync with the length of the sequence. If your pointers "jump" to zero quickly, 
+ * a threshold of 0 is ok. If the pointers move more slowly, the threshold should 
+ * by adjusted so that the pointers are at "empty" at the end of the sequence, when 
+ * the "Empty" alarm goes off. Start with "50" and work your way from there.
+ * 
+ */
+ 
+static const struct ga_types gaugeTypesSmall[] = {
+    
+    // None
+    { 0, "None", DGD_TYPE_NONE, {}, {} },
+
+    // Type 1: Analog gauge: 0-0.5V through MCP4728 (searched for at two i2c addresses) 
+    //         Phaostron/H&P 631-14672 with 8.6K resistors in series
+    //         Using MCP4728's built-in Vref (2.048V), limited by "maxV" parameter to 0.5V (1000/4095*2.048).
+    { 1, "Phaostron/H&P 631-14672 (0-0.5V)", DGD_TYPE_MCP4728, 
+      { { 0x64, 0x60 },  1000, MCP4728_VREF_INT|MCP4728_GAIN_LOW }, {} },
+
+    // Type 2: Digital gauge: 0 or 12V, switched through DIGITAL_GAUGE_PIN. On the OEM Control
+    // Board, the output voltage is 12V, but can be adjusted by putting a resistor
+    // instead of a bridge at LEG1 (for "Percent Power") or LEG2 (for "Primary").
+    { 2, "Digital / Legacy (0/12V)", DGD_TYPE_DIGITAL, 
+      {}, { DIGITAL_GAUGE_PIN } }
+};
+
+static const struct ga_types gaugeTypesLarge[] = {
+    
+    // None
+    { 0, "None", DGD_TYPE_NONE, {}, {} },  
+
+    // Type 1: Analog gauge: 0-0.014V through MCP4728 (searched for at two i2c addresses) 
+    //         Simpson Roentgens meter (with no resistor) 
+    //         Using MCP4728's built-in Vref (2.048V), limited by "max" parameter to 0.014V (28/4095*2.048)
+    //         FIXME - need a resistor value to keep this within reasonable limits - 14mV is too low
+    { 1, "Simpson Roentgens (0-0.014V)", DGD_TYPE_MCP4728,
+      { { 0x64, 0x60 },   28, MCP4728_VREF_INT|MCP4728_GAIN_LOW }, {} },
+    
+    // Type 2: Analog gauge: 0-1.6V through MCP4728 (searched for at two i2c addresses) 
+    //         Simpson 49L VU meter with 3k6 resistor in series
+    //         Using MCP4728's built-in Vref (2.048V), limited by "maxV" parameter to 1.6V (3200/4095*2.048)
+    { 2, "Simpson 49L VU-Meter (0-1.6V)", DGD_TYPE_MCP4728,
+      { { 0x64, 0x60 }, 3200, MCP4728_VREF_INT|MCP4728_GAIN_LOW }, {} },
+
+    // Type 3: Digital gauge: 0 or 12V, switched through DIGITAL_GAUGE_PIN. On the OEM control
+    // board, the output voltage is 12V, but can be adjusted by putting a resistor
+    // instead of a bridge at LEG5. A digital "Roentgens" meter must be connected to the 
+    // "Digital/Legacy" connector, pins 1 (+) and 2 (-).
+    { 3, "Digital / Legacy (0/12V)", DGD_TYPE_DIGITAL,
+      {}, { DIGITAL_GAUGE_PIN } }
+
+    /*
+    // Example:
+    // 50V DC Simpson voltmeter with the internal resistor bridged/removed, and a 5k6
+    // resistor added on the Control Board (R5/R6) so that full scale is at about 5V. 
+    // We use Vcc (which is 5V) as reference, and can go to maximum (4095).
+    { 4, "Simpson DC 0-50V modified (0-5V)", DGD_TYPE_MCP4728,
+      { { 0x64, 0x60 }, 4095, MCP4728_VREF_EXT }, {} }
+    */
+};
+
+
 /*
  * Empty LED class
  */
@@ -47,6 +163,7 @@
 #define TMR_TICKS     (uint64_t)(((double)TMR_TIME * 80000000.0) / (double)TMR_PRESCALE)
 #define TME_TIMEUS    (TMR_TIME * 1000000)
 
+static volatile int      _pin = 0;
 static volatile int32_t  _ticks = 0;
 static volatile bool     _critical = false;
 static volatile bool     _blinkEnable = false;
@@ -95,12 +212,12 @@ static const DRAM_ATTR uint8_t _specialArray[DGSEQ_MAX][64] = {
 
 static void IRAM_ATTR _el_on()
 {
-    digitalWrite(EMPTY_LED_PIN, HIGH);
+    digitalWrite(_pin, HIGH);
 }
 
 static void IRAM_ATTR _el_off()
 {
-    digitalWrite(EMPTY_LED_PIN, LOW);
+    digitalWrite(_pin, LOW);
 }
 
 static void IRAM_ATTR ISR_DG_Empty()
@@ -176,12 +293,15 @@ static void IRAM_ATTR ISR_DG_Empty()
 
 EmptyLED::EmptyLED(uint8_t timer_no)
 {
+    
     _timer_no = timer_no;
 }
 
-void EmptyLED::begin()
+void EmptyLED::begin(uint8_t pin)
 {   
-    pinMode(EMPTY_LED_PIN, OUTPUT);
+    _pin = pin;
+    
+    pinMode(_pin, OUTPUT);
     
     // Switch off
     _el_off();
@@ -234,55 +354,75 @@ bool EmptyLED::specialDone()
 
 Gauges::Gauges()
 {
+    // Set up number of defined types
+    num_types_small = sizeof(gaugeTypesSmall) / sizeof(gaugeTypesSmall[0]);
+    num_types_large = sizeof(gaugeTypesLarge) / sizeof(gaugeTypesLarge[0]);
 }
 
-bool Gauges::begin(uint16_t *parmArray)
+bool Gauges::begin(uint8_t idA, uint8_t idB, uint8_t idC)
 {
-    uint8_t readBack[24];
-    int i2clen;
+    int numMCP4728 = 0;
+    uint8_t idArray[3] = { idA, idB, idC };
 
-     _type = parmArray[0];
-    
-    switch(_type) {
+    for(int i = 0; i < 3; i++) {
+     
+        const struct ga_types *gat = findGauge((i < 2), idArray[i]);
 
-    case DGD_TYPE_NONE:
-        break;
-      
-    case DGD_TYPE_MCP4728:
-
-        // Parms:
-        // i2c address1, i2c address2,                                              [0x64, 0x60]
-        // (max val for DAC A), (max val for DAC B), (max val for DAC C),           [0-4095]
-        // (Vref|Gain for DAC A), (Vref|Gain for DAC B), (Vref|Gain for DAC C) .    [VRef = 0x80, Gain = 0x10]
-
-        // Max voltage limiter:
-        // - 0 - 4095 = 0 - 2.048V if Vref Int, Gain low,
-        // - 0 - 4095 = 0 - 4.096V if Vref Int, Gain high,
-        // - 0 - 4095 = 0 - 5V if Vref Ext [gain irrelevant])
-        setMax(0, parmArray[3]); 
-        setMax(1, parmArray[4]);
-        setMax(2, parmArray[5]);
-    
-        // Reset: Clear values, set up Vref/Gain
-        for(int i = 0; i < 3; i++) {
-            _values[i] = _perc[i] = 0;
-            _vrefGain[i] = parmArray[6+i] & MCP4728_VREF_GAIN_MASK;
+        if(!gat) {
+            #ifdef DG_DBG
+            Serial.printf("Index %d: Bad gauge id %d, setting to NONE\n", i, idArray[i]);
+            #endif
+            gat = &gaugeTypesSmall[0];
         }
-        _vrefGain[3] = MCP4728_VREF_INT;    // DAC D unused, set to lowest
-    
-        // Check for DAC module on i2c bus
-        Wire.beginTransmission((uint8_t)parmArray[1]);
-        if(Wire.endTransmission(true)) {
-            Wire.beginTransmission((uint8_t)parmArray[2]);
-            if(Wire.endTransmission(true)) {
-                Serial.println("MCP4728 not found");
-                return false;
+
+        _type[i] = gat->connectionType;
+        _values[i] = _perc[i] = 0;
+        
+        switch(_type[i]) {
+        case DGD_TYPE_NONE:
+            break;
+        case DGD_TYPE_MCP4728:
+            if(_address == 255) {
+                // Check for DAC module on i2c bus
+                Wire.beginTransmission((uint8_t)gat->aga.i2cAddresses[0]);
+                if(Wire.endTransmission(true)) {
+                    Wire.beginTransmission((uint8_t)gat->aga.i2cAddresses[1]);
+                    if(Wire.endTransmission(true)) {
+                        Serial.println("MCP4728 not found");
+                        _type[i] = DGD_TYPE_NONE;
+                    } else {
+                        _address = gat->aga.i2cAddresses[1];
+                    }
+                } else {
+                    _address = gat->aga.i2cAddresses[0];
+                }
             }
-            _address = parmArray[2];
-        } else {
-            _address = parmArray[1];
+            if(_type[i] == DGD_TYPE_MCP4728) {
+                setMax(i, gat->aga.maxV);
+                _vrefGain[i] = gat->aga.VRefGain & MCP4728_VREF_GAIN_MASK;
+                _supportVarPerc[i] = true;
+                _haveMCP4728 = true;
+                numMCP4728++;
+            }
+            break;
+        case DGD_TYPE_DIGITAL:
+            _pins[i] = gat->dga.gpioPin;
+            pinMode(_pins[i], OUTPUT);
+            digitalWrite(_pins[i], LOW);
+            _supportVarPerc[i] = false;
+            break;
         }
+          
+    }
 
+    _allMCP4728 = (numMCP4728 == 3);
+
+    if(_haveMCP4728) {
+        uint8_t readBack[24];
+        int i2clen;
+
+        _vrefGain[3] = MCP4728_VREF_INT;    // DAC D unused, set to lowest
+        
         // Read EEPROM and set it up to our values if not already so
         i2clen = Wire.requestFrom(_address, (uint8_t)24);
         if(i2clen < 24) {
@@ -313,33 +453,16 @@ bool Gauges::begin(uint16_t *parmArray)
             }
             Wire.endTransmission(true);
         }
-    
-        UpdateAll();
-    
+
         // Disable channel D
         Wire.beginTransmission(_address);
         Wire.write(0b01000110);    // Multi-write
         Wire.write(0b11100000);
         Wire.write(0x00);
         Wire.endTransmission(true);
-        break;
-
-    case DGD_TYPE_BINARY_ALL:
-        _pins[0] = parmArray[2];
-        _thresholds[0] = parmArray[3];
-        pinMode(_pins[0], OUTPUT);
-        digitalWrite(_pins[0], LOW);
-        break;
-
-    case DGD_TYPE_BINARY_SEP:
-        for(int i = 0; i < 3; i++) {
-            _pins[i] = parmArray[1 + i];
-            _thresholds[i] = parmArray[4 + i];
-            pinMode(_pins[i], OUTPUT);
-            digitalWrite(_pins[i], LOW);
-        }
-        break;
     }
+
+    UpdateAll();
 
     return true;
 }
@@ -356,10 +479,7 @@ void Gauges::reset()
 // Display all 0, bypass buffer
 void Gauges::off()
 {
-    switch(_type) {
-    case DGD_TYPE_NONE:
-        break;
-    case DGD_TYPE_MCP4728:
+    if(_allMCP4728) {
         Wire.beginTransmission(_address);
         for(int i = 0; i < 3; i++) {
             Wire.write(0b01000000 | ((i << 1) & 0x06));    // Multi-write
@@ -367,15 +487,21 @@ void Gauges::off()
             Wire.write(0x00);
         }
         Wire.endTransmission(true);
-        break;
-    case DGD_TYPE_BINARY_ALL:
-        digitalWrite(_pins[0], LOW);
-        break;
-    case DGD_TYPE_BINARY_SEP:
+    } else {
         for(int i = 0; i < 3; i++) {
-            digitalWrite(_pins[i], LOW);
+            switch(_type[i]) {
+            case DGD_TYPE_MCP4728:
+                Wire.beginTransmission(_address);
+                Wire.write(0b01000000 | ((i << 1) & 0x06));    // Multi-write   FIXME ?
+                Wire.write(_vrefGain[i]);
+                Wire.write(0x00);
+                Wire.endTransmission(true);
+                break;
+            case DGD_TYPE_DIGITAL:
+                digitalWrite(_pins[0], LOW);
+                break;
+            }
         }
-        break;
     }
 }
 
@@ -383,6 +509,22 @@ void Gauges::off()
 void Gauges::on()
 {
     UpdateAll();
+}
+
+void Gauges::setBinGaugeThreshold(uint8_t index, uint8_t thres)
+{
+    index &= 0x03;
+
+    if(thres > 99) thres = 99;
+    
+    _thresholds[index] = thres;
+}
+
+bool Gauges::supportVariablePercentage(uint8_t index)
+{
+    index &= 0x03;
+    
+    return _supportVarPerc[index];
 }
 
 // Set percent value for gauge in buffer (do not update display)
@@ -393,12 +535,9 @@ void Gauges::setValuePercent(uint8_t index, uint8_t perc)
     index &= 0x03;
 
     if(perc > 100) perc = 100;
-
     _perc[index] = perc;
 
-    switch(_type) {
-    case DGD_TYPE_NONE:
-        break;
+    switch(_type[index]) {
     case DGD_TYPE_MCP4728:
         newVal = _max[index] * perc / 100;
         if(newVal > _max[index]) newVal = _max[index];
@@ -407,10 +546,7 @@ void Gauges::setValuePercent(uint8_t index, uint8_t perc)
         Serial.printf("Gauge %d: %d%%, val %x\n", index, perc, newVal);
         #endif
         break;
-    case DGD_TYPE_BINARY_ALL:
-        if(!index) _values[0] = _perc[0];
-        break;
-    case DGD_TYPE_BINARY_SEP:
+    case DGD_TYPE_DIGITAL:
         _values[index] = _perc[index];
         break;
     }
@@ -423,20 +559,10 @@ uint8_t Gauges::getValuePercent(uint8_t index)
     return _perc[index];
 }
 
-// Set percent value in buffer and update displays
-void Gauges::setValueDirectPercent(uint8_t index, uint8_t perc)
-{
-    setValuePercent(index, perc);
-    UpdateAll();
-}
-
 // Update the display
 void Gauges::UpdateAll()
 {
-    switch(_type) {
-    case DGD_TYPE_NONE:
-        break;
-    case DGD_TYPE_MCP4728:
+    if(_allMCP4728) {
         Wire.beginTransmission(_address);   // Send all values to DACs
         for(int i = 0; i < 3; i++) {
             Wire.write(0b01000000 | ((i << 1) & 0x06));    // Multi-write
@@ -444,34 +570,54 @@ void Gauges::UpdateAll()
             Wire.write(_values[i] & 0xff);
         }
         Wire.endTransmission(true);
-        break;
-    case DGD_TYPE_BINARY_ALL:
-        digitalWrite(_pins[0], (_values[0] > _thresholds[0]) ? HIGH : LOW);
-        break;
-    case DGD_TYPE_BINARY_SEP:
-        for(int i = 0; i < 3; i++) {       
-            digitalWrite(_pins[i], (_values[i] > _thresholds[i]) ? HIGH : LOW);
+    } else {
+        for(int i = 0; i < 3; i++) {
+            switch(_type[i]) {
+            case DGD_TYPE_MCP4728:
+                Wire.beginTransmission(_address);   // Send value to DAC
+                Wire.write(0b01000000 | ((i << 1) & 0x06));    // Multi-write   FIXME ?
+                Wire.write((_values[i] >> 8) | _vrefGain[i]);
+                Wire.write(_values[i] & 0xff);
+                Wire.endTransmission(true);
+                break;
+            case DGD_TYPE_DIGITAL:
+                digitalWrite(_pins[i], (_values[i] > _thresholds[i]) ? HIGH : LOW);
+                break;
+            }
         }
-        break;
     }
 }
 
+const struct ga_types *Gauges::getGTStruct(bool isSmall, int index)
+{
+    if(isSmall) {
+        if(index >= num_types_small) return NULL;
+        return &gaugeTypesSmall[index];
+    } else {
+        if(index >= num_types_large) return NULL;
+        return &gaugeTypesLarge[index];
+    }
+}
 
 // Private
 
 
 void Gauges::setMax(int8_t index, uint16_t maxVal)
 {
-    int s, e;
+    //int s, e;
 
-    switch(_type) {
+    switch(_type[index]) {
     case DGD_TYPE_NONE:
-    case DGD_TYPE_BINARY_ALL:
-    case DGD_TYPE_BINARY_SEP:
+    case DGD_TYPE_DIGITAL:
         break;
     case DGD_TYPE_MCP4728:    // Set max value written to DAC
         if(maxVal > 0xfff) maxVal = 0xfff;
+
+        index &= 0x03;
         
+        _max[index] = maxVal;
+
+        /*
         if(index >= 0) {
             s = e = index & 0x03;
         } else {
@@ -481,6 +627,26 @@ void Gauges::setMax(int8_t index, uint16_t maxVal)
         for(int i = s; i <= e; i++) {
             _max[i] = maxVal;
         }
+        */
         break;
     }
+}
+
+const struct ga_types *Gauges::findGauge(bool isSmall, int id)
+{
+    if(isSmall) {
+        for(int i = 0; i < num_types_small; i++) {
+            if(id == gaugeTypesSmall[i].id) {
+                return &gaugeTypesSmall[i];
+            }
+        }
+    } else {
+        for(int i = 0; i < num_types_large; i++) {
+            if(id == gaugeTypesLarge[i].id) {
+                return &gaugeTypesLarge[i];
+            }
+        }
+    }
+
+    return NULL;
 }

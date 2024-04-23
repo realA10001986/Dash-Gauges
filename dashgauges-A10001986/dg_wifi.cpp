@@ -48,6 +48,7 @@
 #include "mqtt.h"
 #endif
 
+
 // If undefined, use the checkbox/dropdown-hacks.
 // If defined, go back to standard text boxes
 //#define DG_NOCHECKBOXES
@@ -81,25 +82,24 @@ static const char acul_part71[] = " D'><strong>Upload failed.</strong><br>";
 static const char *acul_errs[]  = { "Can't open file on SD", "No SD card found", "Write error", "Aborted", "Bad file" };
 static const char acul_part8[]  = "</div></div></body></html>";
 
-static char gaTyCustHTML[1024] = "";
-static char gaTyLockedHTML[512] = "";
-static const char gaTyCustHTML1[] = "<div class='cmp0'><label for='spty'>Gauges hardware type</label><select class='sel0' value='";
-static const char gaTyCustHTML2[] = "' name='gaty' id='spty' autocomplete='off'";
+static char gaTyCustHTMLA[512] = "";
+static char gaTyCustHTMLB[512] = "";
+static char gaTyCustHTMLC[512] = "";
+
+static char gaTyLockedHTML[1024] = "";
+static const char gaTyCustHTML1[] = "<div class='cmp0'><label for='gaty";
+static const char gaTyCustHTML1a[] = "'>";
+static const char gaTyCustHTML1b[] = "</label><select class='sel0' value='";
+static const char gaTyCustHTML2[] = "' name='gaty";
+static const char gaTyCustHTML2a[] = "' id='gaty";
+static const char gaTyCustHTML2b[] = "' autocomplete='off'";
 static const char gaTyCustHTML3[] = ">";
 static const char gaTyCustHTMLE[] = "</select></div>";
 static const char gaTyOptP1[] = "<option value='";
 static const char gaTyOptP2[] = "'>";
 static const char gaTyOptP3[] = "</option>";
+
 static const char gaTyLockedHintHTML[] = "<div style='margin:0;padding:0;font-size:80%'>Hold time travel button for 5 seconds to unlock, then reload page.</div>";
-static const char *gaugeTypeNames[GA_NUM_TYPES] = {
-  "None",
-  "MCP4728 / 0-0.5V / 0-1.6V\0",
-  "MCP4728 / 0-0.5V / 0-0.014V\0",    // FIXME - need a resistor value to keep this within reasonable limits
-  "Binary (3 pins)",
-  "Binary (1 pin)"
-  //"MCP4728 / 0-2V / 0-1.6V\0"   // Example in main.c
-  // Add yours here
-};
 
 static const char *aco = "autocomplete='off'";
 
@@ -108,6 +108,17 @@ WiFiManagerParameter custom_aood("<div class='msg P'>Please <a href='/update'>in
 WiFiManagerParameter custom_aRef("aRef", "Auto-refill timer (seconds; 0=never)", settings.autoRefill, 3, "type='number' min='0' max='360' autocomplete='off'", WFM_LABEL_BEFORE);
 WiFiManagerParameter custom_aMut("aMut", "Mute 'empty' alarm timer (seconds; 0=never)", settings.autoMute, 3, "type='number' min='0' max='360' autocomplete='off'", WFM_LABEL_BEFORE);
 WiFiManagerParameter custom_ssDelay("ssDel", "Screen saver timer (minutes; 0=off)", settings.ssTimer, 3, "type='number' min='0' max='999' autocomplete='off'", WFM_LABEL_BEFORE);
+
+#ifdef DG_HAVEVOLKNOB
+#ifdef DG_NOCHECKBOXES  // --- Standard text boxes: -------
+WiFiManagerParameter custom_FixV("FixV", "Disable volume knob (0=no, 1=yes)", settings.FixV, 1, "autocomplete='off' title='Enable this if the audio volume should be set by software; if disabled, the volume knob is used' style='margin-top:5px;'");
+#else // -------------------- Checkbox hack: --------------
+WiFiManagerParameter custom_FixV("FixV", "Disable volume knob", settings.FixV, 1, "autocomplete='off' title='Check this if the audio volume should be set by software; if unchecked, the volume knob is used' type='checkbox' style='margin-top:5px;'", WFM_LABEL_AFTER);
+#endif // -------------------------------------------------
+WiFiManagerParameter custom_Vol("Vol", "<br>Software volume level (0-19)", settings.Vol, 2, "type='number' min='0' max='19' autocomplete='off'", WFM_LABEL_BEFORE);
+#else
+WiFiManagerParameter custom_Vol("Vol", "Volume level (0-19)", settings.Vol, 2, "type='number' min='0' max='19' autocomplete='off'", WFM_LABEL_BEFORE);
+#endif
 
 #if defined(DG_MDNS) || defined(DG_WM_HAS_MDNS)
 #define HNTEXT "Hostname<br><span style='font-size:80%'>The Config Portal is accessible at http://<i>hostname</i>.local<br>(Valid characters: a-z/0-9/-)</span>"
@@ -160,12 +171,10 @@ WiFiManagerParameter custom_lEmpty("lEmpty", "'Primary' empty percentage (0-100)
 WiFiManagerParameter custom_cEmpty("cEmpty", "'Percent Power' empty percentage (0-100)", settings.cEmpty, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
 WiFiManagerParameter custom_rEmpty("rEmpty", "'Roentgens' empty percentage (0-100)", settings.rEmpty, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
 
-#ifdef DG_NOCHECKBOXES  // --- Standard text boxes: -------
-WiFiManagerParameter custom_FixV("FixV", "Disable volume knob (0=no, 1=yes)", settings.FixV, 1, "autocomplete='off' title='Enable this if the audio volume should be set by software; if disabled, the volume knob is used' style='margin-top:5px;'");
-#else // -------------------- Checkbox hack: --------------
-WiFiManagerParameter custom_FixV("FixV", "Disable volume knob", settings.FixV, 1, "autocomplete='off' title='Check this if the audio volume should be set by software; if unchecked, the volume knob is used' type='checkbox' style='margin-top:5px;'", WFM_LABEL_AFTER);
-#endif // -------------------------------------------------
-WiFiManagerParameter custom_Vol("Vol", "<br>Software volume level (0-19)", settings.Vol, 2, "type='number' min='0' max='19' autocomplete='off'", WFM_LABEL_BEFORE);
+WiFiManagerParameter custom_lTh("lTh", "'Primary' empty threshold (0-99)", settings.lThreshold, 2, "type='number' min='0' max='99' autocomplete='off'", WFM_LABEL_BEFORE);
+WiFiManagerParameter custom_cTh("cTh", "'Percent Power' empty threshold (0-99)", settings.cThreshold, 2, "type='number' min='0' max='99' autocomplete='off'", WFM_LABEL_BEFORE);
+WiFiManagerParameter custom_rTh("rTh", "'Roentgens' empty threshold (0-99)", settings.rThreshold, 2, "type='number' min='0' max='99' autocomplete='off'", WFM_LABEL_BEFORE);
+
 #ifdef TC_NOCHECKBOXES  // --- Standard text boxes: -------
 WiFiManagerParameter custom_playALSnd("plyALS", "Play TCD-alarm sounds (0=no, 1=yes)", settings.playALsnd, 1, "autocomplete='off' title='Enable to have the device play a sound when the TCD alarm sounds.'");
 #else // -------------------- Checkbox hack: --------------
@@ -196,7 +205,7 @@ WiFiManagerParameter custom_mqttServer("ha_server", "<br>Broker IP[:port] or dom
 WiFiManagerParameter custom_mqttUser("ha_usr", "User[:Password]", settings.mqttUser, 63, "placeholder='Example: ronald:mySecret'");
 #endif // HAVEMQTT
 
-WiFiManagerParameter custom_musHint("<div style='margin:0px;padding:0px'>MusicPlayer</div>");
+WiFiManagerParameter custom_musicFolder("mfol", "Music folder (0-9)", settings.musicFolder, 2, "type='number' min='0' max='9'");
 #ifdef DG_NOCHECKBOXES  // --- Standard text boxes: -------
 WiFiManagerParameter custom_shuffle("musShu", "Shuffle mode enabled at startup (0=no, 1=yes)", settings.shuffle, 1, "autocomplete='off'");
 #else // -------------------- Checkbox hack: --------------
@@ -214,12 +223,21 @@ WiFiManagerParameter custom_CfgOnSD("CfgOnSD", "Save secondary settings on SD<br
 //WiFiManagerParameter custom_sdFrq("sdFrq", "4MHz SD clock speed<br><span style='font-size:80%'>Checking this might help in case of SD card problems</span>", settings.sdFreq, 1, "autocomplete='off' type='checkbox' style='margin-top:12px'", WFM_LABEL_AFTER);
 //#endif // -------------------------------------------------
 
-WiFiManagerParameter custom_gaugeType(gaTyCustHTML);
+WiFiManagerParameter custom_gaugeIDA(gaTyCustHTMLA);
+WiFiManagerParameter custom_gaugeIDB(gaTyCustHTMLB);
+WiFiManagerParameter custom_gaugeIDC(gaTyCustHTMLC);
 WiFiManagerParameter custom_gaugeTypeLocked(gaTyLockedHTML);
 
 WiFiManagerParameter custom_sectstart_head("<div class='sects'>");
 WiFiManagerParameter custom_sectstart("</div><div class='sects'>");
 WiFiManagerParameter custom_sectend("</div>");
+
+WiFiManagerParameter custom_sectstart_nw("</div><div class='sects'><div class='headl'>Wireless communication (BTTF-Network)</div>");
+
+WiFiManagerParameter custom_sectstart_ag("</div><div class='sects'><div class='headl'>Variable gauges setup</div>");
+WiFiManagerParameter custom_sectstart_dg("</div><div class='sects'><div class='headl'>Legacy/binary gauges setup</div>");
+
+WiFiManagerParameter custom_sectstart_mp("</div><div class='sects'><div class='headl'>MusicPlayer</div>");
 
 WiFiManagerParameter custom_sectend_foot("</div><p></p>");
 
@@ -374,6 +392,12 @@ void wifi_setup()
     wm.addParameter(&custom_aRef);
     wm.addParameter(&custom_aMut);
     wm.addParameter(&custom_ssDelay); 
+
+    wm.addParameter(&custom_sectstart);     // 3
+    #ifdef DG_HAVEVOLKNOB
+    wm.addParameter(&custom_FixV);
+    #endif
+    wm.addParameter(&custom_Vol);
     
     wm.addParameter(&custom_sectstart);     // 6
     wm.addParameter(&custom_hostName);
@@ -386,24 +410,26 @@ void wifi_setup()
     wm.addParameter(&custom_TCDpresent);
     wm.addParameter(&custom_noETTOL);
 
-    wm.addParameter(&custom_sectstart);     // 6
-    wm.addParameter(&custom_bttfnHint);
+    wm.addParameter(&custom_sectstart_nw);  // 6
     wm.addParameter(&custom_tcdIP);
     wm.addParameter(&custom_uNM);
     wm.addParameter(&custom_uFPO);
     wm.addParameter(&custom_bttfnTT);
 
-    wm.addParameter(&custom_sectstart);     // 7
+    wm.addParameter(&custom_sectstart_ag);  // 7
     wm.addParameter(&custom_lIdle);
     wm.addParameter(&custom_lEmpty);
     wm.addParameter(&custom_cIdle);
     wm.addParameter(&custom_cEmpty);
     wm.addParameter(&custom_rIdle);
     wm.addParameter(&custom_rEmpty);
+
+    wm.addParameter(&custom_sectstart_dg);  // 4
+    wm.addParameter(&custom_lTh);
+    wm.addParameter(&custom_lTh);
+    wm.addParameter(&custom_cTh);
     
-    wm.addParameter(&custom_sectstart);     // 4
-    wm.addParameter(&custom_FixV);
-    wm.addParameter(&custom_Vol);
+    wm.addParameter(&custom_sectstart);     // 5
     wm.addParameter(&custom_playALSnd);
     #ifdef DG_HAVEDOORSWITCH
     wm.addParameter(&custom_dsPlay);
@@ -418,16 +444,18 @@ void wifi_setup()
     wm.addParameter(&custom_mqttUser);
     #endif
 
-    wm.addParameter(&custom_sectstart);     // 3
-    wm.addParameter(&custom_musHint);
+    wm.addParameter(&custom_sectstart_mp);  // 3
+    wm.addParameter(&custom_musicFolder);
     wm.addParameter(&custom_shuffle);
     
     wm.addParameter(&custom_sectstart);     // 2 (3)
     wm.addParameter(&custom_CfgOnSD);
     //wm.addParameter(&custom_sdFrq);
 
-    wm.addParameter(&custom_sectstart);     // 3
-    wm.addParameter(&custom_gaugeType);
+    wm.addParameter(&custom_sectstart);     // 5
+    wm.addParameter(&custom_gaugeIDA);
+    wm.addParameter(&custom_gaugeIDB);
+    wm.addParameter(&custom_gaugeIDC);
     wm.addParameter(&custom_gaugeTypeLocked);
     
     wm.addParameter(&custom_sectend_foot);  // 1
@@ -633,18 +661,24 @@ void wifi_loop()
             int temp;
 
             // Save volume setting
+            #ifdef DG_HAVEVOLKNOB
             #ifdef DG_NOCHECKBOXES // --------- Plain text boxes:
             mystrcpy(settings.FixV, &custom_FixV);
             #else
             strcpyCB(settings.FixV, &custom_FixV);
             #endif
+            #endif
+            
             mystrcpy(settings.Vol, &custom_Vol);
+
+            #ifdef DG_HAVEVOLKNOB
             if(settings.FixV[0] == '0') {
                 if(curSoftVol != 255) {
                     curSoftVol = 255;
                     saveCurVolume();
                 }
             } else if(settings.FixV[0] == '1') {
+            #endif  // HAVEVOLKNOB
                 if(strlen(settings.Vol) > 0) {
                     int newV = atoi(settings.Vol);
                     if(newV >= 0 && newV <= 19) {
@@ -652,14 +686,22 @@ void wifi_loop()
                         saveCurVolume();
                     }
                 }
+            #ifdef DG_HAVEVOLKNOB
+            }
+            #endif
+
+            // Save music folder number
+            if(haveSD) {
+                mystrcpy(settings.musicFolder, &custom_musicFolder);
+                if(strlen(settings.musicFolder) > 0) {
+                    temp = atoi(settings.musicFolder);
+                    if(temp >= 0 && temp <= 9) {
+                        musFolderNum = temp;
+                        saveMusFoldNum();
+                    }
+                }
             }
             
-            mystrcpy(settings.lIdle, &custom_lIdle);
-            mystrcpy(settings.cIdle, &custom_cIdle);
-            mystrcpy(settings.rIdle, &custom_rIdle);
-            mystrcpy(settings.lEmpty, &custom_lEmpty);
-            mystrcpy(settings.cEmpty, &custom_cEmpty);
-            mystrcpy(settings.rEmpty, &custom_rEmpty);
             mystrcpy(settings.autoRefill, &custom_aRef);
             mystrcpy(settings.autoMute, &custom_aMut);
             mystrcpy(settings.ssTimer, &custom_ssDelay);
@@ -687,6 +729,17 @@ void wifi_loop()
                 for ( ; *s; ++s) *s = tolower(*s);
             }
 
+            mystrcpy(settings.lIdle, &custom_lIdle);
+            mystrcpy(settings.cIdle, &custom_cIdle);
+            mystrcpy(settings.rIdle, &custom_rIdle);
+            mystrcpy(settings.lEmpty, &custom_lEmpty);
+            mystrcpy(settings.cEmpty, &custom_cEmpty);
+            mystrcpy(settings.rEmpty, &custom_rEmpty);
+
+            mystrcpy(settings.lThreshold, &custom_lTh);
+            mystrcpy(settings.cThreshold, &custom_cTh);
+            mystrcpy(settings.rThreshold, &custom_rTh);
+
             #ifdef DG_HAVEDOORSWITCH
             mystrcpy(settings.dsDelay, &custom_dsDelay);
             #endif
@@ -697,9 +750,17 @@ void wifi_loop()
             #endif
 
             if(!gaugeTypeLocked) {
-                getParam("gaty", settings.gaugeType, 2);
-                if(strlen(settings.gaugeType) == 0) {
-                    sprintf(settings.gaugeType, "%d", DEF_GAUGE_TYPE);
+                getParam("gatyA", settings.gaugeIDA, 2);
+                if(strlen(settings.gaugeIDA) == 0) {
+                    sprintf(settings.gaugeIDA, "%d", DEF_GAUGE_TYPE);
+                }
+                getParam("gatyB", settings.gaugeIDB, 2);
+                if(strlen(settings.gaugeIDB) == 0) {
+                    sprintf(settings.gaugeIDB, "%d", DEF_GAUGE_TYPE);
+                }
+                getParam("gatyC", settings.gaugeIDC, 2);
+                if(strlen(settings.gaugeIDC) == 0) {
+                    sprintf(settings.gaugeIDC, "%d", DEF_GAUGE_TYPE);
                 }
             }
             
@@ -1120,20 +1181,48 @@ static void setupStaticIP()
     }
 }
 
-void updateConfigPortalValues()
+static void makeGaugeType(char *target, const char *label, char *setting, const char *nameExt, bool isSmall)
 {
-    int tt = atoi(settings.gaugeType);
+    int tt = atoi(setting);
+    int num = isSmall ? gauges.num_types_small : gauges.num_types_large;
+    const struct ga_types *gat;
     char gaTyBuf[8];
     const char custHTMLSel[] = " selected";
+    
+    strcpy(target, gaTyCustHTML1);
+    strcat(target, nameExt);
+    strcat(target, gaTyCustHTML1a);
+    strcat(target, label);
+    strcat(target, gaTyCustHTML1b);
+    strcat(target, setting);
+    strcat(target, gaTyCustHTML2);
+    strcat(target, nameExt);
+    strcat(target, gaTyCustHTML2a);
+    strcat(target, nameExt);
+    strcat(target, gaTyCustHTML2b);
+    if(gaugeTypeLocked) {
+        strcat(target, " disabled");
+    } 
+    strcat(target, gaTyCustHTML3);
+    for (int i = 0; i < num; i++) {
+        gat = gauges.getGTStruct(isSmall, i);
+        strcat(target, gaTyOptP1);
+        sprintf(gaTyBuf, "%d'", gat->id);
+        strcat(target, gaTyBuf);
+        if(tt == gat->id) strcat(target, custHTMLSel);
+        strcat(target, ">");
+        strcat(target, gat->name);
+        strcat(target, gaTyOptP3);
+    }
+    strcat(target, gaTyCustHTMLE);
+}
+    
+
+void updateConfigPortalValues()
+{
 
     // Make sure the settings form has the correct values
 
-    custom_lIdle.setValue(settings.lIdle, 3);
-    custom_cIdle.setValue(settings.cIdle, 3);
-    custom_rIdle.setValue(settings.rIdle, 3);
-    custom_lEmpty.setValue(settings.lEmpty, 3);
-    custom_cEmpty.setValue(settings.cEmpty, 3);
-    custom_rEmpty.setValue(settings.rEmpty, 3);
     custom_aRef.setValue(settings.autoRefill, 3);
     custom_aMut.setValue(settings.autoMute, 3);
     custom_ssDelay.setValue(settings.ssTimer, 3);
@@ -1145,6 +1234,17 @@ void updateConfigPortalValues()
     custom_wifiConRetries.setValue(settings.wifiConRetries, 2);
 
     custom_tcdIP.setValue(settings.tcdIP, 63);
+
+    custom_lIdle.setValue(settings.lIdle, 3);
+    custom_cIdle.setValue(settings.cIdle, 3);
+    custom_rIdle.setValue(settings.rIdle, 3);
+    custom_lEmpty.setValue(settings.lEmpty, 3);
+    custom_cEmpty.setValue(settings.cEmpty, 3);
+    custom_rEmpty.setValue(settings.rEmpty, 3);
+
+    custom_lTh.setValue(settings.lThreshold, 2);
+    custom_cTh.setValue(settings.cThreshold, 2);
+    custom_rTh.setValue(settings.rThreshold, 2);
 
     #ifdef DG_HAVEDOORSWITCH
     custom_dsDelay.setValue(settings.dsDelay, 4);
@@ -1207,32 +1307,22 @@ void updateConfigPortalValues()
 
     #endif // ---------------------------------------------
 
-    strcpy(gaTyCustHTML, gaTyCustHTML1);
-    strcat(gaTyCustHTML, settings.gaugeType);
-    strcat(gaTyCustHTML, gaTyCustHTML2);
+    makeGaugeType(gaTyCustHTMLA, "'Primary' gauge type", settings.gaugeIDA, "A", true);
+    makeGaugeType(gaTyCustHTMLB, "'Percent' gauge type", settings.gaugeIDB, "B", true);
+    makeGaugeType(gaTyCustHTMLC, "'Roentgens' gauge type", settings.gaugeIDC, "C", false);
+
     if(gaugeTypeLocked) {
-        strcat(gaTyCustHTML, " disabled");
         strcpy(gaTyLockedHTML, gaTyLockedHintHTML);
     } else {
         gaTyLockedHTML[0] = 0;
     }
-    strcat(gaTyCustHTML, gaTyCustHTML3);
-    for (int i = 0; i < GA_NUM_TYPES; i++) {
-        strcat(gaTyCustHTML, gaTyOptP1);
-        sprintf(gaTyBuf, "%d'", i);
-        strcat(gaTyCustHTML, gaTyBuf);
-        if(tt == i) strcat(gaTyCustHTML, custHTMLSel);
-        strcat(gaTyCustHTML, ">");
-        strcat(gaTyCustHTML, gaugeTypeNames[i]);
-        strcat(gaTyCustHTML, gaTyOptP3);
-    }
-    strcat(gaTyCustHTML, gaTyCustHTMLE);
 
     updateConfigPortalVolValues();
 }
 
 void updateConfigPortalVolValues()
 {
+    #ifdef DG_HAVEVOLKNOB
     if(curSoftVol == 255) {
         strcpy(settings.FixV, "0");
         strcpy(settings.Vol, "6");
@@ -1240,12 +1330,26 @@ void updateConfigPortalVolValues()
         strcpy(settings.FixV, "1");
         sprintf(settings.Vol, "%d", curSoftVol);
     }
+    #else
+    if(curSoftVol > 19) curSoftVol = DEFAULT_VOLUME;
+    sprintf(settings.Vol, "%d", curSoftVol);
+    #endif
+
+    #ifdef DG_HAVEVOLKNOB
     #ifdef DG_NOCHECKBOXES  // Standard text boxes: -------
     custom_FixV.setValue(settings.FixV, 1);
     #else   // For checkbox hack --------------------------
     setCBVal(&custom_FixV, settings.FixV);
     #endif // ---------------------------------------------
+    #endif
+    
     custom_Vol.setValue(settings.Vol, 2);
+}
+
+void updateConfigPortalMFValues()
+{
+    sprintf(settings.musicFolder, "%d", musFolderNum);
+    custom_musicFolder.setValue(settings.musicFolder, 2);
 }
 
 /*

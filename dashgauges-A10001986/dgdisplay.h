@@ -42,7 +42,7 @@ class EmptyLED {
     public:
 
         EmptyLED(uint8_t timer_no);
-        void begin();
+        void begin(uint8_t pin);
         
         void startBlink(uint16_t ticks, uint16_t delayTicks);
         void stopBlink();
@@ -66,52 +66,85 @@ class EmptyLED {
  * Gauges Class
  */
 
+struct dacGauge {               // DGD_TYPE_MCP4728:
+    uint8_t  i2cAddresses[2];   // i2c addresses: 0x64, 0x60
+    uint16_t maxV;              // max (0-4095) (VRef = 4095)                
+    uint8_t  VRefGain;          // Int/Ext VRef; Gain flags
+};
+
+struct binGauge {               // DGD_TYPE_DIGITAL:
+    uint8_t gpioPin;            // GPIO pin for digitial output
+};
+
+struct ga_types {
+    int  id;                    // Incremental ID
+    const char *name;           // Name to show
+    
+    uint8_t connectionType;     // Connection type
+
+    struct dacGauge aga;        // Data for analog gauges
+    struct binGauge dga;        // Data for digital gauges
+};
+
+// Connection type
+#define DGD_TYPE_NONE       0
+#define DGD_TYPE_MCP4728    1
+#define DGD_TYPE_DIGITAL     2
+
+// VRefGain
+#define MCP4728_VREF_INT    0x80    // Vref = 2.048V / 4.096V (depending on GAIN)
+#define MCP4728_VREF_EXT    0x00    // Vref = Vcc (GAIN ignored)
+#define MCP4728_GAIN_HIGH   0x10
+#define MCP4728_GAIN_LOW    0x00
+#define MCP4728_VREF_GAIN_MASK (MCP4728_VREF_INT|MCP4728_GAIN_HIGH)
+
 class Gauges {
 
     public:
 
         Gauges();
-        bool begin(uint16_t *parmArray);
+        bool begin(uint8_t idA, uint8_t idB, uint8_t idC);
 
         void reset();
 
         void on();
         void off();
 
+        void setBinGaugeThreshold(uint8_t index, uint8_t thres);
+
+        bool supportVariablePercentage(uint8_t index);
         void setValuePercent(uint8_t index, uint8_t perc);
         uint8_t getValuePercent(uint8_t index);
-        
-        void setValueDirectPercent(uint8_t index, uint8_t perc);
 
         void UpdateAll();
+
+        const struct ga_types *getGTStruct(bool isSmall, int index);
+
+        int num_types_small;
+        int num_types_large;
                
     private:
         void setMax(int8_t index, uint16_t maxVal);
+        const struct ga_types *findGauge(bool isSmall, int id);
         
-        uint8_t _type;
+        uint8_t _type[3];
 
+        bool _haveMCP4728 = false;
+        bool _allMCP4728 = false;
+
+        bool _supportVarPerc[4] = { false, false, false, false };
+        
         uint8_t _perc[4]     = { 0, 0, 0, 0 };
         uint16_t _values[4]  = { 0, 0, 0, 0 };
 
         // For DGD_TYPE_MCP4728:
-        uint8_t _address;
+        uint8_t _address     = 255;
         uint16_t _max[4]     = { 0, 0, 0, 0 };
-        uint8_t _vrefGain[4] = { 0, 0, 0, 0 };
+        uint8_t _vrefGain[4] = { MCP4728_VREF_INT, MCP4728_VREF_INT, MCP4728_VREF_INT, MCP4728_VREF_INT };
 
-        // for binary
-        uint8_t _pins[3]       = { 0, 0, 0 };
-        uint8_t _thresholds[3] = { 0, 0, 0 };
+        // For DGD_TYPE_DIGITAL
+        uint8_t _pins[4]       = { 255, 255, 255, 255 };
+        uint8_t _thresholds[4] = { 0, 0, 0, 0 };
 };
-
-#define DGD_TYPE_NONE       0
-#define DGD_TYPE_MCP4728    1
-#define DGD_TYPE_BINARY_ALL 2
-#define DGD_TYPE_BINARY_SEP 3
-
-#define MCP4728_VREF_INT    0x80    // Vref = 2.048V / 4.096V (depending on GAIN)
-#define MCP4728_VREF_EXT    0x00    // Vref = Vcc (GAIN ignored)
-#define MCP4728_GAIN_HIGH   0x10
-#define MCP4728_GAIN_LOW    0x00
-#define MCP4728_VREF_GAIN_MASK (MCP4728_VREF_INT|MCP4728_GAIN_HIGH)
 
 #endif

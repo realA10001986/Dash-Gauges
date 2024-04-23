@@ -141,6 +141,8 @@ void audio_setup()
     updateConfigPortalVolValues();
 
     loadMusFoldNum();
+    updateConfigPortalMFValues();
+    
     mpShuffle = (settings.shuffle[0] != '0');
 
     // MusicPlayer init
@@ -358,6 +360,7 @@ void remove_appended_empty()
 
 // Returns value for volume based on the position of the pot
 // Since the values vary we do some noise reduction
+#ifdef DG_HAVEVOLKNOB
 static float getRawVolume()
 {
     float vol_val;
@@ -418,16 +421,18 @@ static float getRawVolume()
 
     return vol_val;
 }
+#endif
 
 static float getVolume()
 {
     float vol_val;
 
+    #ifdef DG_HAVEVOLKNOB
     if(curSoftVol == 255) {
         vol_val = getRawVolume();
-    } else {
+    } else 
+    #endif
         vol_val = volTable[curSoftVol];
-    }
 
     // If user muted, return 0
     if(vol_val == 0.0) return vol_val;

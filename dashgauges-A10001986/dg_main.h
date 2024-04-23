@@ -33,7 +33,13 @@
 #ifndef _DG_MAIN_H
 #define _DG_MAIN_H
 
+#include "dgdisplay.h"
+
 extern unsigned long powerupMillis;
+
+extern Gauges gauges;
+
+extern bool sbv2;
 
 extern bool TCDconnected;
 
@@ -69,6 +75,12 @@ void mydelay(unsigned long mydel);
 void prepareTT();
 void refill_plutonium();
 void wakeup();
+
+void sideSwitch_scan();
+void doorSwitch_scan();
+
+uint8_t read_port();
+uint8_t read_port_debounce();
 
 void bttfn_loop();
 

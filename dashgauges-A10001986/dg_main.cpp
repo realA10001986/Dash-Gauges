@@ -34,6 +34,8 @@
 
 #include <Arduino.h>
 #include <WiFi.h>
+#include <Wire.h>
+
 #include "dgdisplay.h"
 #include "input.h"
 
@@ -50,90 +52,7 @@ unsigned long debugTimer = 0;
 // Gauges
 
 // The gauges object
-static Gauges gauges = Gauges();
-
-/* 
- * Gauges hardware definition 
- * 
- * The first value is the Type (#define in dgdisplay.h). This 
- * is not an index, but the top-most selector for hardware
- * access in dgdisplay.
- * All other values are parameters for the specific Type (which
- * differ in meaning depending on the Type).
- * Types can be reused in the array, with different parameters.
- * 
- * DGD_TYPE_MCP4728:
- * The first two paramaters after the Type are the i2c addresses
- * under which the MCP4728 is searched for.
- * The following three parameters are the maximum voltage ever sent
- * to the gauges, given in 1/4095s. Full voltage = 4095 (=100% of
- * reference voltage).
- * The last three parameters define the reference voltage: This is either
- * - MCP4728_VREF_INT|MCP4728_GAIN_LOW  for 2048V, or
- * - MCP4728_VREF_INT|MCP4728_GAIN_HIGH for 4096V, or
- * - MCP4728_VREF_EXT                   for 5V.
- * 
- */
-static int8_t gaugeType = 0;
-static const uint16_t gaugesParmArray[GA_NUM_TYPES][16] = {
-    { 0 },
-
-    // Config 1: MCP4728 (searched for at two i2c addresses) + 2 x 0-0.5V + VUMeter
-    // 1+2: Phaostron/H&P 631-14672 with 8.6K resistors in series (DAC channels A and B). 
-    //      Using MCP4728's built-in Vref (2.048V), limited by "max" parameter to 0.5V (1000/4095*2.048).
-    // 3:   Simpson 49L VU meter with 3k6 resistor in series (DAC channel C)
-    //      Using MCP4728's built-in Vref (2.048V), limited by "max" parameter to 1.6V (3200/4095*2.048)
-    // Parameters:      i2c-1 i2c-2 maxA  maxB  maxC  Voltage ref A     Voltage ref B     Voltage ref C
-    { DGD_TYPE_MCP4728, 0x64, 0x60, 
-            1000, 1000, 3200, 
-            MCP4728_VREF_INT|MCP4728_GAIN_LOW, 
-            MCP4728_VREF_INT|MCP4728_GAIN_LOW, 
-            MCP4728_VREF_INT|MCP4728_GAIN_LOW },
-            
-    // Config 2: MCP4728 (searched for at two i2c addresses) + 2 x 0-0.5V + original Roentgens meter
-    // 1+2: Phaostron/H&P 631-14672 with 8.6K resistors in series (DAC channels A and B). 
-    //      Using MCP4728's built-in Vref (2.048V), limited by "max" parameter to 0.5V (1000/4095*2.048).
-    // 3:   Simpson Roentgens meter (with no resistor) (DAC channel C)
-    //      Using MCP4728's built-in Vref (2.048V), limited by "max" parameter to 0.014V (28/4095*2.048)
-    //      FIXME - need a resistor value to keep this within reasonable limits - 14mV is too low
-    // Parameters:      i2c-1 i2c-2 maxA  maxB  maxC  Voltage ref A     Voltage ref B     Voltage ref C    
-    { DGD_TYPE_MCP4728, 0x64, 0x60, 
-            1000, 1000, 28, 
-            MCP4728_VREF_INT|MCP4728_GAIN_LOW, 
-            MCP4728_VREF_INT|MCP4728_GAIN_LOW, 
-            MCP4728_VREF_INT|MCP4728_GAIN_LOW },
-
-    // Config 3: Binary gauges (with separate pins for each gauge; pins defined in dg_global.h)
-    // Type,               pin left,    pin center,  pin right,   thresholds for "empty" for each gauge
-    { DGD_TYPE_BINARY_SEP, L_G_BIN_PIN, C_G_BIN_PIN, R_G_BIN_PIN, 0, 0, 0 },
-
-    // Config 4: Binary gauges (with one pin for all gauges; pin defined in dg_global.h)
-    // Type,               pin,           threshold for empty
-    { DGD_TYPE_BINARY_ALL, ALL_G_BIN_PIN, 0 }
-
-    // Example 1: Meters 1+2 are driven with 0-2V output (which naturally means either a different
-    // voltmeter (0-2V), or the Phaostrons with a higher resistor value).
-    // Meter 3 is a modified 50V DC Simpson voltmeter with the internal resistor bridged, and a 
-    // 5k6 resistor added externally so that full scale is at about 5V. We use Vcc (which is 5V) as 
-    // reference in that case, and can go to max (4095).
-    //{ DGD_TYPE_MCP4728, 0x64, 0x60, 
-    //        4000, 4000, 4095, 
-    //        MCP4728_VREF_INT|MCP4728_GAIN_LOW, 
-    //        MCP4728_VREF_INT|MCP4728_GAIN_LOW, 
-    //        MCP4728_VREF_EXT },
-
-    // Example 2: Like config 1, but 1+2 are driven with 0-5V output (using Vcc as VRef on DAC)
-    //{ DGD_TYPE_MCP4728, 0x64, 0x60, 
-    //        4095, 4095, 3200, 
-    //        MCP4728_VREF_EXT, 
-    //        MCP4728_VREF_EXT, 
-    //        MCP4728_VREF_INT|MCP4728_GAIN_LOW }
-
-    
-
-    // Add yours here and in dgdisplay (hardware access, if new type is required) and 
-    // in dgwifi (name for selection menu in CP; must be in same order as this array)
-};
+Gauges gauges = Gauges();
 
 static uint8_t left_gauge_idle = 30;
 static uint8_t center_gauge_idle = 30;
@@ -142,6 +61,13 @@ static uint8_t right_gauge_idle = 60;
 static uint8_t left_gauge_empty = 0;
 static uint8_t center_gauge_empty = 0;
 static uint8_t right_gauge_empty = 0;
+
+// SwitchBoard version 2
+#define PORT_EXPANDER_ADDR 0x21
+bool                 sbv2 = false;
+static uint8_t       portx_shadow = 0;
+static unsigned long portScannedNow = 0;
+static uint8_t       portScanResult = 0;
 
 // The emptyLED object
 static EmptyLED emptyLED = EmptyLED(0);
@@ -152,8 +78,10 @@ static DGButton sideSwitch = DGButton(SIDESWITCH_PIN,
     false     // Disable internal pull-up resistor
 );
 
-static bool isSSwitchPressed = false;
-static bool isSSwitchChange = false;
+static bool          isSSwitchPressed = false;
+static bool          isSSwitchChange = false;
+static unsigned long isSSwitchChangeNow = 0;
+static int           sideSwitchStatus = -1;
 
 // The tt button / TCD tt trigger
 static DGButton TTKey = DGButton(TT_IN_PIN,
@@ -167,18 +95,38 @@ static DGButton TTKey = DGButton(TT_IN_PIN,
 static bool isTTKeyPressed = false;
 static bool isTTKeyHeld = false;
 
+// "Button 1"
+#define B1_DEBOUNCE    50    // button debounce time in ms
+#define B1_PRESS_TIME 200    // button will register a short press
+#define B1_HOLD_TIME 2000    // time in ms holding the button will count as a long press
+static DGButton Button1 = DGButton(BUTTON1_PIN,
+    false,    // Button is active HIGH
+    false     // Disable internal pull-up resistor (non-existent on GPIO36 anyway)
+);
+
+static bool isB1Pressed = false;
+static bool isB1Held = false;
+
 // The door switch
 #ifdef DG_HAVEDOORSWITCH
 static DGButton doorSwitch = DGButton(DOOR_SWITCH_PIN,
     true,    // Switch is active LOW
     true     // Enable internal pull-up resistor
 );
+static bool          isDSwitchPressed = false;
+static bool          isDSwitchChange = false;
+static int           doorSwitchStatus = -1;
+static unsigned long isDSwitchChangeNow = 0;
+static bool          dsCloseOnClose = false;
+// Doorswitch sequence
+static bool          dsPlay = false;
+static unsigned long dsNow = 0;
+static bool          dsTimer = false;
+static unsigned long dsDelay = 0;
+static unsigned long dsADelay = 0;
+static bool          dsOpen = false;
 #endif
 
-static bool isDSwitchPressed = false;
-static bool isDSwitchChange = false;
-static unsigned long isDSwitchChangeNow = 0;
-static bool dsCloseOnClose = false;
 static unsigned long swInitNow = 0;
 
 #define STARTUP_DELAY 2300
@@ -197,15 +145,6 @@ static unsigned long autoMute = 0;
 static bool          startAlarm = false;
 static unsigned long startAlarmNow = 0;
 
-#ifdef DG_HAVEDOORSWITCH
-static bool          dsPlay = false;
-static unsigned long dsNow = 0;
-static bool          dsTimer = false;
-static unsigned long dsDelay = 0;
-static unsigned long dsADelay = 0;
-static bool          dsOpen = false;
-#endif
-
 bool networkTimeTravel = false;
 bool networkTCDTT      = false;
 bool networkReentry    = false;
@@ -220,7 +159,8 @@ static bool    spdIsRotEnc = false;
 
 static bool useNM = false;
 static bool tcdNM = false;
-bool        dgNM = false;
+bool        dgNM  = false;
+
 static bool useFPO = false;
 static bool tcdFPO = false;
 
@@ -345,6 +285,10 @@ static void ttkeyScan();
 static void TTKeyPressed();
 static void TTKeyHeld();
 
+static void Button1Scan();
+static void Button1Pressed();
+static void Button1Held();
+
 static void ssStart();
 static void ssEnd();
 static void ssRestartTimer();
@@ -353,6 +297,10 @@ static void waitAudioDone();
 
 static uint8_t restrict_gauge_idle(int val, int minimum, int maximum, uint8_t def);
 static uint8_t restrict_gauge_empty(int val, int minimum, int maximum, uint8_t def);
+
+static void write_port(uint8_t val);
+static void set_port_pin(uint8_t bitnum);
+static void clr_port_pin(uint8_t bitnum);
 
 static void bttfn_setup();
 static void BTTFNCheckPacket();
@@ -364,25 +312,51 @@ static bool BTTFNTriggerTT();
 
 void main_boot()
 {
-    // Setup pin for lights relay
-    pinMode(BACKLIGHTS_PIN, OUTPUT);
+    while(millis() - powerupMillis < 100) {
+        delay(10);
+    }
+    
+    // Check for port expander on i2c bus to identify sbv2
+    Wire.beginTransmission(PORT_EXPANDER_ADDR);
+    sbv2 = (Wire.endTransmission(true)) ? false : true;
+
+    #ifdef DG_DBG
+    Serial.printf("Switchboard v%d detected\n", sbv2 ? 2 : 1);
+    #endif
+        
+    // Some init
+    if(sbv2) {
+        // Write 0, set input pins to 1
+        write_port(0);
+        portx_shadow = 0;
+    } else {
+        // Setup pin for lights relay
+        pinMode(BACKLIGHTS_PIN, OUTPUT);
+    }
+    
     gauge_lights_off();
     
     // Set up "empty" LED
-    emptyLED.begin();
+    emptyLED.begin(sbv2 ? EMPTY_LED_PIN2 : EMPTY_LED_PIN);
 
     // Init side switch
-    sideSwitch.setTicks(50, 10, 50);
-    sideSwitch.attachLongPressStart(sideSwitchLongPress);
-    sideSwitch.attachLongPressStop(sideSwitchLongPressStop);
-    sideSwitch.scan();
+    if(!sbv2) {
+        sideSwitch.begin();
+        sideSwitch.setTicks(50, 10, 50);
+        sideSwitch.attachLongPressStart(sideSwitchLongPress);
+        sideSwitch.attachLongPressStop(sideSwitchLongPressStop);
+    }
+    sideSwitch_scan();
 
     // Init door switch
     #ifdef DG_HAVEDOORSWITCH
-    doorSwitch.setTicks(50, 10, 50);
-    doorSwitch.attachLongPressStart(doorSwitchLongPress);
-    doorSwitch.attachLongPressStop(doorSwitchLongPressStop);
-    doorSwitch.scan();
+    if(!sbv2) {
+        doorSwitch.begin();
+        doorSwitch.setTicks(50, 10, 50);
+        doorSwitch.attachLongPressStart(doorSwitchLongPress);
+        doorSwitch.attachLongPressStop(doorSwitchLongPressStop);
+    }
+    doorSwitch_scan();
     #endif
 
     swInitNow = millis();
@@ -390,13 +364,13 @@ void main_boot()
 
 void main_boot2()
 {
-    gaugeType = atoi(settings.gaugeType);
-    if(gaugeType < 0 || gaugeType >= GA_NUM_TYPES) {
-        Serial.printf("Invalid gauge type %d, resetting to NONE\n", gaugeType);
-        gaugeType = 0;
-    }
+    int8_t gaugeIDA = 0, gaugeIDB = 0, gaugeIDC = 0;
+    
+    gaugeIDA = atoi(settings.gaugeIDA);
+    gaugeIDB = atoi(settings.gaugeIDB);
+    gaugeIDC = atoi(settings.gaugeIDC);
       
-    gauges.begin((uint16_t *)&gaugesParmArray[gaugeType]);
+    gauges.begin(gaugeIDA, gaugeIDB, gaugeIDC);
     
     gauges.off();
 
@@ -412,17 +386,36 @@ void main_setup()
     
     Serial.println(F("Dash Gauges version " DG_VERSION " " DG_VERSION_EXTRA));
 
-    left_gauge_idle = restrict_gauge_idle(atoi(settings.lIdle), 0, 100, DEF_L_GAUGE_IDLE);
-    center_gauge_idle = restrict_gauge_idle(atoi(settings.cIdle), 0, 100, DEF_C_GAUGE_IDLE);
-    right_gauge_idle = restrict_gauge_idle(atoi(settings.rIdle), 0, 100, DEF_R_GAUGE_IDLE);
+    if(gauges.supportVariablePercentage(0)) {
+        left_gauge_idle = restrict_gauge_idle(atoi(settings.lIdle), 0, 100, DEF_L_GAUGE_IDLE);
+        left_gauge_empty = restrict_gauge_empty(atoi(settings.lEmpty), 0, left_gauge_idle, DEF_L_GAUGE_EMPTY);
+        if(left_gauge_empty >= left_gauge_idle) { left_gauge_idle = DEF_L_GAUGE_IDLE; left_gauge_empty = DEF_L_GAUGE_EMPTY; } 
+    } else {
+        left_gauge_idle = 100;
+        left_gauge_empty = 0;
+    }
 
-    left_gauge_empty = restrict_gauge_empty(atoi(settings.lEmpty), 0, left_gauge_idle, DEF_L_GAUGE_EMPTY);
-    center_gauge_empty = restrict_gauge_empty(atoi(settings.cEmpty), 0, center_gauge_idle, DEF_C_GAUGE_EMPTY);
-    right_gauge_empty = restrict_gauge_empty(atoi(settings.rEmpty), 0, right_gauge_idle, DEF_R_GAUGE_EMPTY);
+    if(gauges.supportVariablePercentage(1)) {
+        center_gauge_idle = restrict_gauge_idle(atoi(settings.cIdle), 0, 100, DEF_C_GAUGE_IDLE);
+        center_gauge_empty = restrict_gauge_empty(atoi(settings.cEmpty), 0, center_gauge_idle, DEF_C_GAUGE_EMPTY);
+        if(center_gauge_empty >= center_gauge_idle) { center_gauge_idle = DEF_C_GAUGE_IDLE; center_gauge_empty = DEF_C_GAUGE_EMPTY; } 
+    } else {
+        center_gauge_idle = 100;
+        left_gauge_empty = 0;
+    }
 
-    if(left_gauge_empty >= left_gauge_idle) { left_gauge_idle = DEF_L_GAUGE_IDLE; left_gauge_empty = DEF_L_GAUGE_EMPTY; } 
-    if(center_gauge_empty >= center_gauge_idle) { center_gauge_idle = DEF_C_GAUGE_IDLE; center_gauge_empty = DEF_C_GAUGE_EMPTY; } 
-    if(right_gauge_empty >= right_gauge_idle) { right_gauge_idle = DEF_R_GAUGE_IDLE; right_gauge_empty = DEF_R_GAUGE_EMPTY; } 
+    if(gauges.supportVariablePercentage(2)) {
+        right_gauge_idle = restrict_gauge_idle(atoi(settings.rIdle), 0, 100, DEF_R_GAUGE_IDLE);
+        right_gauge_empty = restrict_gauge_empty(atoi(settings.rEmpty), 0, right_gauge_idle, DEF_R_GAUGE_EMPTY);
+        if(right_gauge_empty >= right_gauge_idle) { right_gauge_idle = DEF_R_GAUGE_IDLE; right_gauge_empty = DEF_R_GAUGE_EMPTY; } 
+    } else {
+        right_gauge_idle = 100;
+        right_gauge_empty = 0;
+    }
+
+    gauges.setBinGaugeThreshold(0, atoi(settings.lThreshold));
+    gauges.setBinGaugeThreshold(1, atoi(settings.cThreshold));
+    gauges.setBinGaugeThreshold(2, atoi(settings.rThreshold));
 
     // Other options
     ssDelay = ssOrigDelay = atoi(settings.ssTimer) * 60 * 1000;    
@@ -456,6 +449,7 @@ void main_setup()
     noETTOLead = (atoi(settings.noETTOLead) > 0);
 
     // Set up TT button / TCD trigger
+    TTKey.begin();
     TTKey.attachPress(TTKeyPressed);
     if(!TCDconnected) {
         // If we have a physical button, we need
@@ -467,6 +461,12 @@ void main_setup()
         TTKey.setTicks(5, 50, 100000);
         // Long press ignored when TCD is connected
     }
+
+    // Set up Button 1
+    Button1.begin();
+    Button1.attachPress(Button1Pressed);
+    Button1.attachLongPressStart(Button1Held);
+    Button1.setTicks(B1_DEBOUNCE, B1_PRESS_TIME, B1_HOLD_TIME);
 
     // Invoke audio file installer if SD content qualifies
     #ifdef DG_DBG
@@ -506,10 +506,10 @@ void main_setup()
     if((tempu = millis() - swInitNow) < 60) {
         delay(60 - tempu);
     }
-    sideSwitch.scan();
+    sideSwitch_scan();
     isSSwitchChange = false;
     #ifdef DG_HAVEDOORSWITCH
-    doorSwitch.scan();
+    doorSwitch_scan();
     isDSwitchChange = false;
     #endif
 
@@ -545,6 +545,11 @@ void main_setup()
 void main_loop()
 {
     unsigned long now = millis();
+
+    if(sbv2) {
+        portScannedNow = now;
+        portScanResult = read_port_debounce();
+    }
 
     // Scan door switch
     #ifdef DG_HAVEDOORSWITCH
@@ -704,6 +709,19 @@ void main_loop()
         isDSwitchChange = false;
     }
     #endif
+
+    // Button 1 evaluation
+    if(!TTrunning && !startup && !startAlarm && !refill && !refillWA) {
+        Button1Scan();
+        if(isB1Held) {
+            isB1Held = isB1Pressed = false;
+            flushDelayedSave();
+            say_ip_address();
+        } else if(isB1Pressed) {
+            isB1Pressed = false;
+            // TODO ?
+        }
+    }
     
     // TT button evaluation
     if(FPBUnitIsOn && !TTrunning && !startup && !startAlarm && !refill && !refillWA) {
@@ -1211,28 +1229,31 @@ static void execute_remote_command()
             if(haveSD) {
                 bool wasActive = false;
                 bool waitShown = false;
-                musFolderNum = (int)command - 50;
-                // Initializing the MP can take a while;
-                // need to stop all audio before calling
-                // mp_init()
-                if(haveMusic && mpActive) {
-                    mp_stop();
-                    wasActive = true;
+                uint8_t nmf = (uint8_t)command - 50;
+                if(musFolderNum != nmf) {
+                    musFolderNum = nmf;
+                    // Initializing the MP can take a while;
+                    // need to stop all audio before calling
+                    // mp_init()
+                    if(haveMusic && mpActive) {
+                        mp_stop();
+                        wasActive = true;
+                    }
+                    stopAudio();
+                    if(mp_checkForFolder(musFolderNum) == -1) {
+                        flushDelayedSave();
+                        showWaitSequence();
+                        waitShown = true;
+                        play_file("/renaming.mp3", PA_INTRMUS|PA_ALLOWSD);
+                        waitAudioDone();
+                    }
+                    saveMusFoldNum();
+                    updateConfigPortalMFValues();
+                    mp_init(false);
+                    if(waitShown) {
+                        endWaitSequence();
+                    }
                 }
-                stopAudio();
-                if(mp_checkForFolder(musFolderNum) == -1) {
-                    flushDelayedSave();
-                    showWaitSequence();
-                    waitShown = true;
-                    play_file("/renaming.mp3", PA_INTRMUS|PA_ALLOWSD);
-                    waitAudioDone();
-                }
-                saveMusFoldNum();
-                mp_init(false);
-                if(waitShown) {
-                    endWaitSequence();
-                }
-                //if(pE) append_empty(); // would be async
             }
         }
         
@@ -1242,12 +1263,14 @@ static void execute_remote_command()
 
             ssEnd();
             command -= 100;                       // 100-199: Set "full" percentage of "Primary" gauge
-            if(!command) command = DEF_L_GAUGE_IDLE;
-            if(command > left_gauge_empty) {
-                left_gauge_idle = command;
-                if(!emptyAlarm) {
-                    gauges.setValuePercent(0, left_gauge_idle);
-                    gauges.UpdateAll();
+            if(gauges.supportVariablePercentage(0)) {
+                if(!command) command = DEF_L_GAUGE_IDLE;
+                if(command > left_gauge_empty) {
+                    left_gauge_idle = command;
+                    if(!emptyAlarm) {
+                        gauges.setValuePercent(0, left_gauge_idle);
+                        gauges.UpdateAll();
+                    }
                 }
             }
             ssRestartTimer();
@@ -1256,12 +1279,14 @@ static void execute_remote_command()
 
             ssEnd();
             command -= 400;                       // 400-499: Set "full" percentage of "Power percent" gauge
-            if(!command) command = DEF_C_GAUGE_IDLE;
-            if(command > center_gauge_empty) {
-                center_gauge_idle = command;
-                if(!emptyAlarm) {
-                    gauges.setValuePercent(1, center_gauge_idle);
-                    gauges.UpdateAll();
+            if(gauges.supportVariablePercentage(1)) {
+                if(!command) command = DEF_C_GAUGE_IDLE;
+                if(command > center_gauge_empty) {
+                    center_gauge_idle = command;
+                    if(!emptyAlarm) {
+                        gauges.setValuePercent(1, center_gauge_idle);
+                        gauges.UpdateAll();
+                    }
                 }
             }
             ssRestartTimer();
@@ -1270,12 +1295,14 @@ static void execute_remote_command()
 
             ssEnd();
             command -= 700;                       // 700-799: Set "full" percentage of "roentgens" gauge
-            if(!command) command = DEF_R_GAUGE_IDLE;
-            if(command > right_gauge_empty) {
-                right_gauge_idle = command;
-                if(!emptyAlarm) {
-                    gauges.setValuePercent(2, right_gauge_idle);
-                    gauges.UpdateAll();
+            if(gauges.supportVariablePercentage(2)) {
+                if(!command) command = DEF_R_GAUGE_IDLE;
+                if(command > right_gauge_empty) {
+                    right_gauge_idle = command;
+                    if(!emptyAlarm) {
+                        gauges.setValuePercent(2, right_gauge_idle);
+                        gauges.UpdateAll();
+                    }
                 }
             }
             ssRestartTimer();
@@ -1284,10 +1311,12 @@ static void execute_remote_command()
 
             command -= 300;                       // 300-319/399: Set fixed volume level / enable knob
             if(command == 99) {
+                #ifdef DG_HAVEVOLKNOB
                 curSoftVol = 255;
                 volchanged = true;
                 volchgnow = millis();
                 updateConfigPortalVolValues();
+                #endif
             } else if(command <= 19) {
                 curSoftVol = command;
                 volchanged = true;
@@ -1427,15 +1456,50 @@ static void stopEmptyAlarm()
 
 static void gauge_lights_on()
 {
-   digitalWrite(BACKLIGHTS_PIN, HIGH);
+    if(sbv2) {
+        set_port_pin(BACKLIGHTS_BIT);
+    } else {
+        digitalWrite(BACKLIGHTS_PIN, HIGH);
+    }
 }
 
 static void gauge_lights_off()
 {
-   digitalWrite(BACKLIGHTS_PIN, LOW);
+    if(sbv2) {
+        clr_port_pin(BACKLIGHTS_BIT);
+    } else {
+        digitalWrite(BACKLIGHTS_PIN, LOW);
+    }
 }
 
 /* Keys & buttons */
+
+void sideSwitch_scan()
+{
+    if(sbv2) {
+        uint8_t val;
+        if(millis() - portScannedNow >= 20) {
+            portScanResult = read_port_debounce();
+            portScannedNow = millis();
+        }
+        val = portScanResult;
+        if(val & (1 << SIDESWITCH_BIT)) {
+            // unpressed
+            if(sideSwitchStatus > 0) {
+                sideSwitchLongPressStop();
+                sideSwitchStatus = 0;
+            }
+        } else {
+            // pressed
+            if(!sideSwitchStatus) {
+                sideSwitchLongPress();
+                sideSwitchStatus = 1;
+            }
+        }
+    } else {
+        sideSwitch.scan();
+    }
+}
 
 static void sideSwitchLongPress()
 {
@@ -1450,6 +1514,32 @@ static void sideSwitchLongPressStop()
 }
 
 #ifdef DG_HAVEDOORSWITCH
+void doorSwitch_scan()
+{
+    if(sbv2) {
+        uint8_t val;
+        if(millis() - portScannedNow >= 20) {
+            portScanResult = read_port_debounce();
+            portScannedNow = millis();
+        }
+        val = portScanResult;
+        if(val & (1 << DOORSWITCH_BIT)) {
+            // unpressed
+            if(doorSwitchStatus > 0) {
+                doorSwitchLongPressStop();
+                doorSwitchStatus = 0;
+            }
+        } else {
+            // pressed
+            if(!doorSwitchStatus) {
+                doorSwitchLongPress();
+                doorSwitchStatus = 1;
+            }
+        }
+    } else {
+        doorSwitch.scan();
+    }
+}
 static void doorSwitchLongPress()
 {
     isDSwitchPressed = true;
@@ -1468,13 +1558,18 @@ static void doorSwitchLongPressStop()
 static void ttkeyScan()
 {
     TTKey.scan();
-    sideSwitch.scan();
+    sideSwitch_scan();
+}
+
+static void Button1Scan()
+{
+    Button1.scan();
 }
 
 #ifdef DG_HAVEDOORSWITCH
 static void dsScan()
 {
-    if(dsPlay) doorSwitch.scan();
+    if(dsPlay) doorSwitch_scan();
 }
 #endif
 
@@ -1486,6 +1581,16 @@ static void TTKeyPressed()
 static void TTKeyHeld()
 {
     isTTKeyHeld = true;
+}
+
+static void Button1Pressed()
+{
+    isB1Pressed = true;
+}
+
+static void Button1Held()
+{
+    isB1Held = true;
 }
 
 /* 
@@ -1616,6 +1721,67 @@ static uint8_t restrict_gauge_empty(int val, int minimum, int maximum, uint8_t d
     if(val < minimum)  return 0;
     if(val >= maximum) return def;
     return val;
+}
+
+/*
+ * Switchboard v2: Port expander
+ */
+
+static void write_port(uint8_t val)
+{
+    Wire.beginTransmission(PORT_EXPANDER_ADDR);
+    Wire.write((val & PX_WRITE_MASK)|PX_READ_MASK);
+    Wire.endTransmission();
+}
+
+uint8_t read_port()
+{
+    Wire.requestFrom(PORT_EXPANDER_ADDR, (int)1);
+    return Wire.read() & PX_READ_MASK;
+}
+
+uint8_t read_port_debounce()
+{
+    uint8_t val1, val2, val3;
+    int retry = 2;
+
+    do {
+        val1 = read_port();
+        delay(5);
+        val2 = read_port();
+        delay(5);
+        val3 = read_port();
+    
+        if(val1 == val2 && val2 == val3) {
+            #ifdef DG_DBG
+            if(retry != 2) {
+                Serial.println("Port read-out unstable (1)");
+            }
+            #endif
+            return val1;
+        }
+
+        audio_loop();
+
+    } while(--retry);
+
+    #ifdef DG_DBG
+    Serial.println("Port read-out unstable (2)");
+    #endif
+
+    return val3;
+}
+
+static void set_port_pin(uint8_t bitnum)
+{
+    portx_shadow |= (1 << bitnum);
+    write_port(portx_shadow);
+}
+
+static void clr_port_pin(uint8_t bitnum)
+{
+    portx_shadow &= ~(1 << bitnum);
+    write_port(portx_shadow);
 }
 
 /*

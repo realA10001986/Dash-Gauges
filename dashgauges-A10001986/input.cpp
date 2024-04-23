@@ -55,9 +55,13 @@ DGButton::DGButton(const int pin, const boolean activeLow, const bool pullupActi
 
     _buttonPressed = activeLow ? LOW : HIGH;
   
-    pinMode(pin, pullupActive ? INPUT_PULLUP : INPUT);
+    _pullupActive = pullupActive;
 }
 
+void DGButton::begin()
+{
+    pinMode(_pin, _pullupActive ? INPUT_PULLUP : INPUT);
+}
 
 // Setup buttom timin:
 // dticks: Number of millisec for a stable click to be assumed

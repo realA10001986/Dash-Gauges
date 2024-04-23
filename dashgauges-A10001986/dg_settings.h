@@ -84,12 +84,6 @@ extern uint8_t musFolderNum;
 #define DEF_GAUGE_TYPE      0     // Default gauge type; to protect the hardware, this is zero by default (=NONE)
 
 struct Settings {
-    char lIdle[6]           = MS(DEF_L_GAUGE_IDLE);
-    char cIdle[6]           = MS(DEF_C_GAUGE_IDLE);
-    char rIdle[6]           = MS(DEF_R_GAUGE_IDLE);
-    char lEmpty[6]          = MS(DEF_L_GAUGE_EMPTY);
-    char cEmpty[6]          = MS(DEF_C_GAUGE_EMPTY);
-    char rEmpty[6]          = MS(DEF_R_GAUGE_EMPTY);
     char autoRefill[6]      = MS(DEF_AUTO_REFILL);
     char autoMute[6]        = MS(DEF_AUTO_MUTE);
     char ssTimer[6]         = MS(DEF_SS_TIMER);
@@ -109,10 +103,21 @@ struct Settings {
     char useFPO[4]          = MS(DEF_USE_FPO);
     char bttfnTT[4]         = MS(DEF_BTTFN_TT);
 
+    char lIdle[6]           = MS(DEF_L_GAUGE_IDLE);
+    char cIdle[6]           = MS(DEF_C_GAUGE_IDLE);
+    char rIdle[6]           = MS(DEF_R_GAUGE_IDLE);
+    char lEmpty[6]          = MS(DEF_L_GAUGE_EMPTY);
+    char cEmpty[6]          = MS(DEF_C_GAUGE_EMPTY);
+    char rEmpty[6]          = MS(DEF_R_GAUGE_EMPTY);
+
+    char lThreshold[6]      = "0";
+    char cThreshold[6]      = "0";
+    char rThreshold[6]      = "0";
+
     char playALsnd[4]       = MS(DEF_PLAY_ALM_SND);
 
     char dsPlay[4]          = MS(DEF_DS_PLAY);
-    char dsCOnC[4]            = MS(DEF_DS_NC);
+    char dsCOnC[4]          = MS(DEF_DS_NC);
     char dsDelay[6]         = MS(DEF_DS_DELAY);
 
 #ifdef DG_HAVEMQTT  
@@ -126,10 +131,15 @@ struct Settings {
     char CfgOnSD[4]         = MS(DEF_CFG_ON_SD);
     char sdFreq[4]          = MS(DEF_SD_FREQ);
 
-    char gaugeType[4]       = MS(DEF_GAUGE_TYPE);
+    char gaugeIDA[4]      = MS(DEF_GAUGE_TYPE);
+    char gaugeIDB[4]      = MS(DEF_GAUGE_TYPE);
+    char gaugeIDC[4]      = MS(DEF_GAUGE_TYPE);
 
+#ifdef DG_HAVEVOLKNOB
     char FixV[4];   // Dynamically set for CP, not saved
+#endif
     char Vol[6];
+    char musicFolder[6];
 };
 
 struct IPSettings {

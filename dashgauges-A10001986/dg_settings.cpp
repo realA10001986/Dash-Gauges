@@ -53,6 +53,7 @@
 #include "dg_settings.h"
 #include "dg_audio.h"
 #include "dg_main.h"
+#include "dgdisplay.h"
 
 // Size of main config JSON
 // Needs to be adapted when config grows
@@ -154,7 +155,9 @@ void settings_setup()
 
     // Pre-maturely use TT button and side switch (initialized again later)
     pinMode(TT_IN_PIN, INPUT);
-    pinMode(SIDESWITCH_PIN, INPUT);
+    if(!sbv2) {
+        pinMode(SIDESWITCH_PIN, INPUT);
+    }
     delay(20);
 
     #ifdef DG_DBG
@@ -298,26 +301,49 @@ void settings_setup()
         if(digitalRead(TT_IN_PIN)) {
 
             unsigned long mnow = millis();
-            bool ssState = digitalRead(SIDESWITCH_PIN), newSSState;
+            bool ssState, newSSState;
             int ssCount = 0;
+            int ledpin = sbv2 ? EMPTY_LED_PIN2 : EMPTY_LED_PIN;
+
+            if(sbv2) {
+                ssState = (read_port() & (1 << SIDESWITCH_PIN)) ? false : true;
+            } else {
+                ssState = digitalRead(SIDESWITCH_PIN);
+            }
 
             // Pre-maturely use empty led
-            pinMode(EMPTY_LED_PIN, OUTPUT);
-            digitalWrite(EMPTY_LED_PIN, HIGH);
+            pinMode(ledpin, OUTPUT);
+            digitalWrite(ledpin, HIGH);
             delay(200);
-            digitalWrite(EMPTY_LED_PIN, LOW);
+            digitalWrite(ledpin, LOW);
 
             while(1) {
                 if((ssCount == 2) || (millis() - mnow > 10*1000)) break;
 
-                if(digitalRead(SIDESWITCH_PIN) != ssState) {
-                    delay(50);
-                    if((newSSState = digitalRead(SIDESWITCH_PIN)) != ssState) {
-                        ssCount++;
-                        ssState = newSSState;
+                if(sbv2) {
+
+                    if((!!(read_port() & (1 << SIDESWITCH_PIN))) != ssState) {
+                        delay(50);
+                        if((newSSState = (!!(read_port() & (1 << SIDESWITCH_PIN)))) != ssState) {
+                            ssCount++;
+                            ssState = newSSState;
+                        }
+                    } else {
+                        delay(50);
                     }
+
                 } else {
-                    delay(50);
+                  
+                    if(digitalRead(SIDESWITCH_PIN) != ssState) {
+                        delay(50);
+                        if((newSSState = digitalRead(SIDESWITCH_PIN)) != ssState) {
+                            ssCount++;
+                            ssState = newSSState;
+                        }
+                    } else {
+                        delay(50);
+                    }
+
                 }
                 
             }
@@ -331,9 +357,9 @@ void settings_setup()
                 // Set AP mode password to empty (not written, only until reboot!)
                 settings.appw[0] = 0;
     
-                digitalWrite(EMPTY_LED_PIN, HIGH);
+                digitalWrite(ledpin, HIGH);
                 while(digitalRead(TT_IN_PIN)) {  }
-                digitalWrite(EMPTY_LED_PIN, LOW);
+                digitalWrite(ledpin, LOW);
             }
         }
     }
@@ -387,15 +413,7 @@ static bool read_settings(File configFile)
     #endif
 
     if(!error) {
-
-        wd |= CopyCheckValidNumParm(json["lIdle"], settings.lIdle, sizeof(settings.lIdle), 0, 100, DEF_L_GAUGE_IDLE);
-        wd |= CopyCheckValidNumParm(json["cIdle"], settings.cIdle, sizeof(settings.cIdle), 0, 100, DEF_C_GAUGE_IDLE);
-        wd |= CopyCheckValidNumParm(json["rIdle"], settings.rIdle, sizeof(settings.rIdle), 0, 100, DEF_R_GAUGE_IDLE);
-        wd |= CopyCheckValidNumParm(json["lEmpty"], settings.lEmpty, sizeof(settings.lEmpty), 0, 100, DEF_L_GAUGE_EMPTY);
-        wd |= CopyCheckValidNumParm(json["cEmpty"], settings.cEmpty, sizeof(settings.cEmpty), 0, 100, DEF_C_GAUGE_EMPTY);
-        wd |= CopyCheckValidNumParm(json["rEmpty"], settings.rEmpty, sizeof(settings.rEmpty), 0, 100, DEF_R_GAUGE_EMPTY);
-        wd |= CopyCheckValidNumParm(json["aRef"], settings.autoRefill, sizeof(settings.autoRefill), 0, 360, DEF_AUTO_REFILL);
-        wd |= CopyCheckValidNumParm(json["aMut"], settings.autoMute, sizeof(settings.autoMute), 0, 360, DEF_AUTO_MUTE);
+        
         wd |= CopyCheckValidNumParm(json["ssTimer"], settings.ssTimer, sizeof(settings.ssTimer), 0, 999, DEF_SS_TIMER);
 
         if(json["hostName"]) {
@@ -427,6 +445,19 @@ static bool read_settings(File configFile)
         wd |= CopyCheckValidNumParm(json["useFPO"], settings.useFPO, sizeof(settings.useFPO), 0, 1, DEF_USE_FPO);
         wd |= CopyCheckValidNumParm(json["bttfnTT"], settings.bttfnTT, sizeof(settings.bttfnTT), 0, 1, DEF_BTTFN_TT);
 
+        wd |= CopyCheckValidNumParm(json["lIdle"], settings.lIdle, sizeof(settings.lIdle), 0, 100, DEF_L_GAUGE_IDLE);
+        wd |= CopyCheckValidNumParm(json["cIdle"], settings.cIdle, sizeof(settings.cIdle), 0, 100, DEF_C_GAUGE_IDLE);
+        wd |= CopyCheckValidNumParm(json["rIdle"], settings.rIdle, sizeof(settings.rIdle), 0, 100, DEF_R_GAUGE_IDLE);
+        wd |= CopyCheckValidNumParm(json["lEmpty"], settings.lEmpty, sizeof(settings.lEmpty), 0, 100, DEF_L_GAUGE_EMPTY);
+        wd |= CopyCheckValidNumParm(json["cEmpty"], settings.cEmpty, sizeof(settings.cEmpty), 0, 100, DEF_C_GAUGE_EMPTY);
+        wd |= CopyCheckValidNumParm(json["rEmpty"], settings.rEmpty, sizeof(settings.rEmpty), 0, 100, DEF_R_GAUGE_EMPTY);
+        wd |= CopyCheckValidNumParm(json["aRef"], settings.autoRefill, sizeof(settings.autoRefill), 0, 360, DEF_AUTO_REFILL);
+        wd |= CopyCheckValidNumParm(json["aMut"], settings.autoMute, sizeof(settings.autoMute), 0, 360, DEF_AUTO_MUTE);
+
+        wd |= CopyCheckValidNumParm(json["lTh"], settings.lThreshold, sizeof(settings.lThreshold), 0, 99, 0);
+        wd |= CopyCheckValidNumParm(json["cTh"], settings.cThreshold, sizeof(settings.cThreshold), 0, 99, 0);
+        wd |= CopyCheckValidNumParm(json["rTh"], settings.rThreshold, sizeof(settings.rThreshold), 0, 99, 0);
+
         wd |= CopyCheckValidNumParm(json["playALsnd"], settings.playALsnd, sizeof(settings.playALsnd), 0, 1, DEF_PLAY_ALM_SND);
 
         #ifdef DG_HAVEDOORSWITCH
@@ -452,7 +483,9 @@ static bool read_settings(File configFile)
         wd |= CopyCheckValidNumParm(json["CfgOnSD"], settings.CfgOnSD, sizeof(settings.CfgOnSD), 0, 1, DEF_CFG_ON_SD);
         //wd |= CopyCheckValidNumParm(json["sdFreq"], settings.sdFreq, sizeof(settings.sdFreq), 0, 1, DEF_SD_FREQ);
 
-        wd |= CopyCheckValidNumParm(json["gaugeType"], settings.gaugeType, sizeof(settings.gaugeType), 0, GA_NUM_TYPES-1, DEF_SHUFFLE);
+        wd |= CopyCheckValidNumParm(json["gaugeIDA"], settings.gaugeIDA, sizeof(settings.gaugeIDA), 0, gauges.num_types_small-1, DEF_GAUGE_TYPE);
+        wd |= CopyCheckValidNumParm(json["gaugeIDB"], settings.gaugeIDB, sizeof(settings.gaugeIDB), 0, gauges.num_types_small-1, DEF_GAUGE_TYPE);
+        wd |= CopyCheckValidNumParm(json["gaugeIDC"], settings.gaugeIDC, sizeof(settings.gaugeIDC), 0, gauges.num_types_large-1, DEF_GAUGE_TYPE);
 
     } else {
 
@@ -481,14 +514,6 @@ void write_settings()
     Serial.printf("%s: Writing config file\n", funcName);
     #endif
 
-    json["lIdle"] = (const char *)settings.lIdle;
-    json["cIdle"] = (const char *)settings.cIdle;
-    json["rIdle"] = (const char *)settings.rIdle;
-    json["lEmpty"] = (const char *)settings.lEmpty;
-    json["cEmpty"] = (const char *)settings.cEmpty;
-    json["rEmpty"] = (const char *)settings.rEmpty;
-    json["aRef"] = (const char *)settings.autoRefill;
-    json["aMut"] = (const char *)settings.autoMute;
     json["ssTimer"] = (const char *)settings.ssTimer;
 
     json["hostName"] = (const char *)settings.hostName;
@@ -505,6 +530,19 @@ void write_settings()
     json["useNM"] = (const char *)settings.useNM;
     json["useFPO"] = (const char *)settings.useFPO;
     json["bttfnTT"] = (const char *)settings.bttfnTT;
+
+    json["lIdle"] = (const char *)settings.lIdle;
+    json["cIdle"] = (const char *)settings.cIdle;
+    json["rIdle"] = (const char *)settings.rIdle;
+    json["lEmpty"] = (const char *)settings.lEmpty;
+    json["cEmpty"] = (const char *)settings.cEmpty;
+    json["rEmpty"] = (const char *)settings.rEmpty;
+    json["aRef"] = (const char *)settings.autoRefill;
+    json["aMut"] = (const char *)settings.autoMute;
+
+    json["lTh"] = (const char *)settings.lThreshold;
+    json["cTh"] = (const char *)settings.cThreshold;
+    json["rTh"] = (const char *)settings.rThreshold;
 
     json["playALsnd"] = (const char *)settings.playALsnd;
 
@@ -525,7 +563,9 @@ void write_settings()
     json["CfgOnSD"] = (const char *)settings.CfgOnSD;
     //json["sdFreq"] = (const char *)settings.sdFreq;
 
-    json["gaugeType"] = (const char *)settings.gaugeType;
+    json["gaugeIDA"] = (const char *)settings.gaugeIDA;
+    json["gaugeIDB"] = (const char *)settings.gaugeIDB;
+    json["gaugeIDC"] = (const char *)settings.gaugeIDC;
 
     writeJSONCfgFile(json, cfgName, FlashROMode, funcName);
 }
@@ -647,6 +687,12 @@ static bool openCfgFileRead(const char *fn, File& f, bool SDonly = false)
  *  Load/save the Volume
  */
 
+#ifdef DG_HAVEVOLKNOB
+#define T_V_MAX 255
+#else
+#define T_V_MAX 19
+#endif
+
 bool loadCurVolume()
 {
     const char *funcName = "loadCurVolume";
@@ -668,9 +714,9 @@ bool loadCurVolume()
         DECLARE_S_JSON(512,json);
         //StaticJsonDocument<512> json;
         if(!readJSONCfgFile(json, configFile, funcName)) {
-            if(!CopyCheckValidNumParm(json["volume"], temp, sizeof(temp), 0, 255, DEFAULT_VOLUME)) {
+            if(!CopyCheckValidNumParm(json["volume"], temp, sizeof(temp), 0, T_V_MAX, DEFAULT_VOLUME)) {
                 uint8_t ncv = atoi(temp);
-                if((ncv >= 0 && ncv <= 19) || ncv == 255) {
+                if((ncv >= 0 && ncv <= 19) || ncv == T_V_MAX) {
                     curSoftVol = ncv;
                 } 
             }
@@ -716,6 +762,8 @@ void saveCurVolume(bool useCache)
         prevSavedVol = curSoftVol;
     }
 }
+
+#undef T_V_MAX
 
 /*
  * Load/save Music Folder Number
