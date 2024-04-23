@@ -12,11 +12,13 @@ This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](ht
 For DIY instructions, please see [here](/DIY/).
 
 Firmware features include
-- Selectable "full" percentages per gauge (besides for fun, useful for adjusting inaccurate readings) (feature depending on hardware configuration)
+- support for analog gauges (with software-controlled pointer position) and digital gauges (Empty/Full, without arbitrary pointer position)
+- selectable "full" percentages per analog gauge (besides for fun, useful for adjusting inaccurate readings)
+- selectable threshold percentage for Empty/Full position for digital gauges
 - [Time Travel](#time-travel) function, triggered by button, [Time Circuits Display](https://tcd.out-a-ti.me) (TCD) or via [MQTT](#home-assistant--mqtt)
 - support for Side Switch to play "empty" and "refill" sequences
 - Automatic refill timer, automatic alarm mute timer (both optional)
-- easy expandability to support different gauges hardware (currently implemented: binary [on/off, all or separate]; variable voltage (0-5V) via MCP4728)
+- easy expandability to support different gauges hardware (currently implemented: variable voltage (0-5V) via MCP4728; digital [on/off, all or separate])
 - Support for door switch for playing sounds when opening/closing the car doors
 - [Wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://tcd.out-a-ti.me); used for synchonized time travels, alarm, night mode, fake power and remote control through TCD keypad
 - [Music player](#the-music-player): Play mp3 files located on an SD card [requires TCD connected wirelessly for control]
@@ -94,12 +96,12 @@ The "Config Portal" is the Dash Gauges' configuration web site.
 
 It can be accessed as follows:
 
-#### If Gauges are in AP mode
+#### If Dash Gauges are in AP mode
 
 - Connect your computer or handheld device to the WiFi network "DG-AP".
 - Navigate your browser to http://gauges.local or http://192.168.4.1 to enter the Config Portal.
 
-#### If Gauges are connected to WiFi network
+#### If Dash Gauges are connected to WiFi network
 
 - Connect your hand-held/computer to the same WiFi network to which the Dash Gauges are connected, and
 - navigate your browser to http://gauges.local
@@ -122,7 +124,7 @@ As mentioned, the Dash Gauges are an add-on for a Time Circuits Display. Their b
 
 There is little to play with when the Dash Gauges aren't connected to a TCD:
 - To quickly trigger the "empty" sequence, flip the side switch of your Dash Gauges. To "refill", flip that switch again.
-- Press to the time travel button to trigger a simple "surge" sequence.
+- Press the time travel button to trigger a simple "surge" sequence.
 
 The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as well. The TCD is of special importance: When connected through BTTFN, the TCD can act as a remote control for the Dash Gauges.
 
@@ -505,13 +507,13 @@ If the dash gauges are connected to a TCD through BTTFN, this option allows to t
 
 ##### &#9654; 'Primary' full percentage
 
-Here you can select the readiing the "Primary" meter should give when "full". You can enter a value between 0 and 100 here. 0 will reset the "full" percentage to a default; 1-100 select a specific percentage. Values below 10 don't really make sense, though.
+For analog gauges only: Here you can select the readiing the "Primary" meter should give when "full". You can enter a value between 0 and 100 here. 0 will reset the "full" percentage to a default; 1-100 select a specific percentage. Values below 10 don't really make sense, though.
 
 The "full" percentage can be changed through the TCD keypad (91xx for the "Primary" gauge, 93xx for the "Pecent Power" one, and 97xx for the "Roentgens"). 9x00 resets the "full" position the a default value. Note that changing the "full" percentage through the TCD keypad is not persistent. The boot-up value are only set through the Config Portal.
 
 ##### &#9654; 'Primary' empty percentage
 
-This allows to select the pointer position when the meter is supposed to show "empty". This should be 0 (zero), but if your hardware is either inaccurate or the pointer isn't exactly 0-adjusted, you can modify its "zero" position here. Values from 0-100 are allowed, but obviously only values < 20 make sense.
+For analog gauges only: This allows to select the pointer position when the meter is supposed to show "empty". This should be 0 (zero), but if your hardware is either inaccurate or the pointer isn't exactly 0-adjusted, you can modify its "zero" position here. Values from 0-100 are allowed, but obviously only values < 20 make sense.
 
 ##### &#9654; 'Percent Power' full percentage
 
@@ -528,6 +530,18 @@ Same as [this](#-primary-full-percentage), but for the 'Roentgens' gauge
 ##### &#9654; 'Roentgens' empty percentage
 
 Same as [this](#-primary-empty-percentage), but for the 'Roentgens' gauge
+
+##### &#9654; 'Primary' empty threshold
+
+For digital gauges only: This defines the "virtual percentage" (0% being the left end of the scale, 100% being the right end of the scale) at which the gauge should switch from "full" to "empty" in animations. This value depends on the speed of pointer movement: In the time travel sequence, the pointers are slowly moved towards "Empty" in sync with the length of the sequence. If your pointers "jump" to zero quickly, a threshold of 0 is ok. If the pointers move more slowly, the threshold should by adjusted so that the pointers are at "empty" at the end of the sequence, when the "Empty" alarm goes off. Start with "50" and work your way from there.
+
+##### &#9654; 'Percent Power' empty threshold
+
+Same as [this](#-primary-empty-threshold), but for the 'Percent Power' gauge
+
+##### &#9654; 'Roentgens' empty threshold
+
+Same as [this](#-primary-empty-threshold), but for the 'Roentgens' gauge
 
 ##### &#9654; Play TCD-alarm sounds
 
