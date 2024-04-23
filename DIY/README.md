@@ -7,10 +7,63 @@ Note that this is a custom built prop; there is no kit available. CircuitSetup a
 The Panel consists of several parts:
 - Aluminum (Aluminium for non-Americans) enclosure; the measurements are in the ["enclosure"](/DIY/enclosure) folder of this repository. Can be bought at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/) (does not fit model 142 gauge, see [here](#roentgens)).
 - The gauges: The smaller gauges are H&P 631-14672 (built by Phaostron) and the "Plutonium chamber" gauge is a Simpson 49L VU Meter, all driven by a MCP4728 quad-DAC (on an Adafruit breakout board). Movie-accurate faces for these gauges are in the ["faces-labels"](/DIY/faces-labels) folder of this repository.
+- Upcoming: An all-in-one Control Board mounted on the smaller gauges.
+
+Until the Control Board is finished, and as visible in the pictures, I used:
 - A Switch Board, which is mounted on the smaller gauges' back side; it carries the interface for the gauges, the lights and switches, as well as some connectors for external switches/buttons. This Switch Board is easy to assemble, it only carries some resistors and connectors. The gerbers as well as an EasyEDA file are in the ["electronics"](/DIY/electronics) folder of this repository, JLCPCB can make this board for you. A BOM is available as well.
 - A Control Board: In lack of a dedicated control board (which to design unfortunately is beyond my abilities; hopefully CircuitSetup will fill that gap sometime soon), the heart of the device is a slightly modified TCD control board from [CircuitSetup](https://circuitsetup.us/product/time-circuits-display-control-board-with-keypad-trw-style-lenses/).
 
-### Control board
+### Control board (upcoming new version)
+
+The Control board is mounted on the smaller gauges. Its features include
+- ESP32 dev board (NodeMCU ESP32S) socket
+- audio, with speaker connector
+- SD card slot
+- 5V or 12V power supply
+- a DAC for driving gauges with 0-5V seamlessly, or "binary" gauges with 0/12V; room for resistors to adjust voltage to gauge type
+- "legacy" connector with pins for 12V binary Roentgens gauge, 12V Roentgens backlight, 12V "Empty" LED,
+- Time Travel button, plus an additional button ("Button 1"); Time Travel connector for external button
+- Connector for Door Switches
+
+#### DAC-controlled gauges vs. "Binary" gauges
+
+Voltmeters, like the ones I used, can be usually driven with voltages from 0-5V. It is mostly a matter of removing the internal resistor of the gauge (if present), and putting suitable resistors on the Control Board. The firmware can be extended to define custom gauge types as regards their maximum voltage.
+
+"Binary" gauges are ones that only know "full" and "empty" pointer positions. Binary gauges are supplied with 12V by the board.
+
+#### Noteworthy parts on Control Board:
+
+- R7, R8: Resistors for backlight LEDs of left and center gauge. Voltage is 5V, depends on LED type and desired brightness (eg 150R)
+- Backlight LEDs for left and center gauge: These are soldered to the back of the Control Board so they directly stick into the gauge's enclosure. R7 and R8 should match the LEDs used
+- R11: Resistor for Roentgens backlight on "Roentgens Light" connector. If using lamps, just bridge. Voltage is 5V.
+- Solder joint for internal or external backlight power: Connect either INT or EXT with COM. For 5V lights, use INT.
+
+Cofiguration for DAC-controlled gauges:
+- Left gauge:
+  - R3, R4: Populate depending on gauge and supply voltage; for H&P 631-14672 470R, 8k2
+  - Close DEF4+COM4
+- Center Gauge:
+  - R1, R2: Populate depending on gauge and supply voltage; for H&P 631-14672 470R, 8k2
+  - Close DEF3+COM3
+- "Roentgens" gauge (connected to "Analog Roentgens" connector:
+  - R5, R6: Populate depending on gauge and supply voltage; for Simpson 49L VU meter total 3k6 (3k3+330R, for instance)
+
+Configuration for binary gauges (requires 12V power):
+- Left gauge:
+  - R3/R4: Leave unpopulated
+  - Close LEG4+COM4 for left gauge
+  - Bridge LEG2 by wire (or resistor, depending on gauge type)
+- Center gauge:    
+  - R1/R2: Leave unpopulated
+  - Close LEG3+COM3
+  - Bridge LEG1 by wire (or resistor, depending on gauge type)
+- Roentgens gauge (connected to "Binary Roentgens" connector):
+  - R5/R6: Leave unpopulated
+  - Bridge LEG5 by wire (or resistor, depending on gauge type)
+
+You can mix DAC-controlled any binary gauges; the firmware provides a selection of gauge type for each single gauge.
+
+### Control board (old version)
 
 The control board is a modified TCD control board from CircuitSetup:
 
