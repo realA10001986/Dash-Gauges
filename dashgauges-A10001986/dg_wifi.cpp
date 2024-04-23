@@ -82,11 +82,11 @@ static const char acul_part71[] = " D'><strong>Upload failed.</strong><br>";
 static const char *acul_errs[]  = { "Can't open file on SD", "No SD card found", "Write error", "Aborted", "Bad file" };
 static const char acul_part8[]  = "</div></div></body></html>";
 
-static char gaTyCustHTMLA[512] = "";
-static char gaTyCustHTMLB[512] = "";
-static char gaTyCustHTMLC[512] = "";
+static char gaTyCustHTMLA[1024] = "";
+static char gaTyCustHTMLB[1024] = "";
+static char gaTyCustHTMLC[1024] = "";
 
-static char gaTyLockedHTML[1024] = "";
+static char gaTyLockedHTML[512] = "";
 static const char gaTyCustHTML1[] = "<div class='cmp0'><label for='gaty";
 static const char gaTyCustHTML1a[] = "'>";
 static const char gaTyCustHTML1b[] = "</label><select class='sel0' value='";
@@ -234,8 +234,8 @@ WiFiManagerParameter custom_sectend("</div>");
 
 WiFiManagerParameter custom_sectstart_nw("</div><div class='sects'><div class='headl'>Wireless communication (BTTF-Network)</div>");
 
-WiFiManagerParameter custom_sectstart_ag("</div><div class='sects'><div class='headl'>Variable gauges setup</div>");
-WiFiManagerParameter custom_sectstart_dg("</div><div class='sects'><div class='headl'>Legacy/binary gauges setup</div>");
+WiFiManagerParameter custom_sectstart_ag("</div><div class='sects'><div class='headl'>Analog gauges setup</div>");
+WiFiManagerParameter custom_sectstart_dg("</div><div class='sects'><div class='headl'>Digital/Legacy gauges setup</div>");
 
 WiFiManagerParameter custom_sectstart_mp("</div><div class='sects'><div class='headl'>MusicPlayer</div>");
 
