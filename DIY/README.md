@@ -1,17 +1,21 @@
 # The DIY Dash Gauges
 
-Note that this is a custom built prop; there is no kit available. CircuitSetup at this point only offers the [bezel](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/). Electronically, this prop was made to be compatible with the CircuitSetup line of movie props ([Time Circuits Display](https://tcd.out-a-ti.me), [Flux Capacitor](https://fc.out-a-ti.me), [SID](https://sid.out-a-ti.me)).
+Note that this is a custom built prop; there is no complete kit available. 
+
+CircuitSetup at this point only offers the [bezel](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/); a Control Board which allows using a wide range of meters will be available soon. This prop was made to be compatible with the CircuitSetup line of movie props ([Time Circuits Display](https://tcd.out-a-ti.me), [Flux Capacitor](https://fc.out-a-ti.me), [SID](https://sid.out-a-ti.me)).
+
+This manual is in transition; the new Control Board makes the Switch Board obsolete. Below information has not been updated for the new Control Board yet.
 
 ![Dash Gauges](img/thedg.jpg)
 
 The Panel consists of several parts:
 - Aluminum (Aluminium for non-Americans) enclosure; the measurements are in the ["enclosure"](/DIY/enclosure) folder of this repository. Can be bought at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/) (does not fit model 142 gauge, see [here](#roentgens)).
-- The gauges: The smaller gauges are H&P 631-14672 (built by Phaostron) and the "Plutonium chamber" gauge is a Simpson 49L VU Meter, all driven by a MCP4728 quad-DAC. Movie-accurate faces for these gauges are in the ["faces-labels"](/DIY/faces-labels) folder of this repository.
-- Upcoming: An all-in-one Control Board mounted on the smaller gauges.
+- The gauges: The smaller gauges depicted are H&P 631-14672 (built by Phaostron) and the "Plutonium chamber" gauge is a Simpson 49L VU Meter, all driven by a MCP4728 quad-DAC. Movie-accurate faces for these gauges are in the ["faces-labels"](/DIY/faces-labels) folder of this repository.
+- Upcoming shortly: An all-in-one Control Board mounted on the smaller gauges.
 
 Until the Control Board is finished, and as visible in the pictures:
 - A Switch Board, which is mounted on the smaller gauges' back side; it carries the interface for the gauges, the lights and switches, as well as some connectors for external switches/buttons. This Switch Board is easy to assemble, it only carries some resistors and connectors. The gerbers as well as an EasyEDA file are in the ["electronics"](/DIY/electronics) folder of this repository, JLCPCB can make this board for you. A BOM is available as well.
-- A Control Board: In lack of a dedicated control board, the heart of the device is a slightly modified TCD control board from [CircuitSetup](https://circuitsetup.us/product/time-circuits-display-control-board-with-keypad-trw-style-lenses/).
+- A Control Board: In addition to the Switch Board, the heart of the device is a slightly modified TCD control board from [CircuitSetup](https://circuitsetup.us/product/time-circuits-display-control-board-with-keypad-trw-style-lenses/).
 
 ### Control board (upcoming new version)
 
@@ -27,18 +31,20 @@ The Control board is mounted on the smaller gauges. Its features include
 
 #### "Analog" (DAC-controlled) vs. "Digital" gauges
 
-Voltmeters, like the ones I used, can be usually driven with minimal voltages, even if their scale is far beyond that. It is mostly a matter of removing the internal resistor of the gauge, and putting suitable resistors on the Control Board. The DAC can provide up to 5V. The firmware can be extended to define custom gauge types as regards their voltage range.
+The terms "analog" and "digital" in connection with the Dash Gauges have the following meaning here:
 
-"Digital" gauges are ones that can only be controlled by power-on and power-off for "full" and "empty" pointer positions, respectively; this is useful if the gauge needs voltages beyond what the Control Board can provide through the DAC (5V), and is driven using external power and through a relay. One might also come up with the idea to create a gauge replica using a motor to move the pointer to a fixed position on power-on, and reset it to the "Empty" position on power-loss. Digital gauges are supplied with 12V by the Control board.
+"Analog" gauges are ones that can show arbitrary values, ie move their pointers to arbitrary positions by using variable voltages. Best suited are voltmeters or VU-meters, like the ones I used. Voltmeters can be usually driven with minimal voltages, even if their scale is far beyond that. It is mostly a matter of removing the meter's internal resistor, and putting suitable resistors on the Control Board. The DAC can provide up to 5V. The firmware can be extended to define custom analog gauge types as regards their voltage range.
+
+"Digital" gauges are ones that can only be controlled by power-on and power-off for "full" and "empty" pointer positions, respectively; this is useful if the gauge needs voltages beyond what the Control Board can provide through the DAC (which is, as said, 5V), and is driven using external power and through a relay. One might also come up with the idea to create a gauge replica using a motor to move the pointer to a fixed position on power-on, and reset it to the "Empty" position on power-loss. Digital gauges are supplied with 12V by the Control board.
 
 #### Noteworthy parts on Control Board:
 
-- "Light Power": Solder joints for internal or external backlight power: Connect either INT or EXT with COM. For 5V, close INT and COM. To use external power, connect the power supply to "Ext. Light Power", and close EXT and COM.
+- "Light Power": Solder jumpers for internal or external backlight power: Connect either INT and COM, or EXT and COM. For 5V lighting, close INT and COM. To use external power, connect the power supply to "Ext. Light Power", and close EXT and COM.
 - Backlight LEDs for left and center gauge: These are soldered to the back of the Control Board so they directly stick into the gauge's enclosure. 
-- R7, R8: Resistors for backlight LEDs of left and center gauge. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (EXT). Resistor depends on LED type and desired brightness (eg 150R for yellow LEDs).
+- R7, R8: Resistors for backlight LEDs of left and center gauge. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (EXT). The resistor value depends on LED type and desired brightness (eg 150R for yellow LEDs at 5V).
 - R11: Resistor for Roentgens backlight on "Roentgens Light" connector. If using lamps, just bridge. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (EXT).
 
-Configuration for DAC-controlled ("analog") gauges:
+Hardware configuration for "analog" gauges:
 - Left gauge:
   - R3, R4: Populate depending on gauge and supply voltage; for H&P 631-14672: 470R, 8k2
   - Close ANA4 solder jumper
@@ -46,7 +52,7 @@ Configuration for DAC-controlled ("analog") gauges:
   - R1, R2: Populate depending on gauge and supply voltage; for H&P 631-14672: 470R, 8k2
   - Close ANA2 solder jumper
 - "Roentgens" gauge (connected to "Analog Roentgens" connector):
-  - R5, R6: Populate depending on gauge and supply voltage; for Simpson 49L VU meter total 3k6 (3k3+330R, for instance)
+  - R5, R6: Populate depending on gauge and supply voltage; for Simpson 49L VU meter total 3k6 (3k3+330R, for instance). Since VU-Meters are standardized, that resistor value should apply to VU meters in gneral.
 
 Configuration for digital gauges (requires 12V power):
 - Left gauge:
@@ -61,7 +67,7 @@ Configuration for digital gauges (requires 12V power):
   - R5/R6: Leave unpopulated
   - Bridge LEG5 by wire (or resistor, depending on gauge type)
 
-You can mix DAC-controlled any binary gauges; the firmware provides a type selection for each single gauge.
+You can mix analog and digital gauges; the firmware provides a type selection for each single gauge.
 
 ### Control board (old version)
 
@@ -126,9 +132,9 @@ A connection diagram is [here](/DIY/electronics/connection%20diagram.png). Pleas
 
 ### Gauges
 
-The gauges are connected through an MCP4728 DAC. This DAC allows arbitrary voltages up to 5V, but the gauges used here use much lower voltages. If you use different gauges, you need to add your configuration to the firmware. More on this below.
+I used analog gauges only. 
 
-*Important*: When using the MCP4728 in your project, do not connect the actual gauges until you selected the right hardware type in the Config Portal and have powered-down and powered-up the device once afterwards. This power-cycle is needed to reset the MCP4728's EEPROM to the correct settings and to avoid a power output too high at boot.
+*Important*: When using analog gauges in your project, do not connect the actual gauges until you selected the right hardware type in the Config Portal and have powered-down and powered-up the device once afterwards. This power-cycle is needed to reset the DAC's EEPROM to the correct settings and to avoid a power output too high at boot.
 
 #### "Primary", "Percent Power"
 
@@ -198,8 +204,8 @@ When connecting to the Dash Gauges' Control Board, there are four possible confi
 
 <table>
     <tr>
-     <td align="center">Dash Gauges:<br>Control board 1.2</td>
-     <td align="center">Dash Gauges:<br>Control board 1.3</td>
+     <td align="center">Dash Gauges:<br>TCD Control board 1.2</td>
+     <td align="center">Dash Gauges:<br>TCD Control board 1.3</td>
      <td align="center">TCD with control board 1.2</td>
      <td align="center">TCD with control board 1.3</td>
     </tr>
