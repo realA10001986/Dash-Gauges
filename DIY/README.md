@@ -27,7 +27,7 @@ The Control board is mounted on the smaller gauges. Its features include
 
 #### "Analog" (DAC-controlled) vs. "Digital" gauges
 
-Voltmeters, like the ones I used, can be usually driven with voltages from 0-5V, even if their scale is far beyond that. It is mostly a matter of removing the internal resistor of the gauge, and putting suitable resistors on the Control Board. The firmware can be extended to define custom gauge types as regards their  voltage range.
+Voltmeters, like the ones I used, can be usually driven with minimal voltages, even if their scale is far beyond that. It is mostly a matter of removing the internal resistor of the gauge, and putting suitable resistors on the Control Board. The DAC can provide up to 5V. The firmware can be extended to define custom gauge types as regards their voltage range.
 
 "Digital" gauges are ones that can only be controlled by power-on and power-off for "full" and "empty" pointer positions, respectively; this is useful if the gauge needs voltages beyond what the Control Board can provide through the DAC (5V), and is driven using external power and through a relay. One might also come up with the idea to create a gauge replica using a motor to move the pointer to a fixed position on power-on, and reset it to the "Empty" position on power-loss. Digital gauges are supplied with 12V by the Control board.
 
@@ -41,23 +41,23 @@ Voltmeters, like the ones I used, can be usually driven with voltages from 0-5V,
 Configuration for DAC-controlled ("analog") gauges:
 - Left gauge:
   - R3, R4: Populate depending on gauge and supply voltage; for H&P 631-14672: 470R, 8k2
-  - Close DEF4+COM4 solder joint
+  - Close ANA4 solder jumper
 - Center Gauge:
   - R1, R2: Populate depending on gauge and supply voltage; for H&P 631-14672: 470R, 8k2
-  - Close DEF3+COM3
+  - Close ANA2 solder jumper
 - "Roentgens" gauge (connected to "Analog Roentgens" connector):
   - R5, R6: Populate depending on gauge and supply voltage; for Simpson 49L VU meter total 3k6 (3k3+330R, for instance)
 
 Configuration for digital gauges (requires 12V power):
 - Left gauge:
   - R3/R4: Leave unpopulated
-  - Close LEG4+COM4 for left gauge
-  - Bridge LEG2 by wire (or resistor, depending on gauge type)
+  - Close DIG4 solder jumper
+  - Bridge DIG3 by wire (or resistor, depending on gauge type)
 - Center gauge:    
   - R1/R2: Leave unpopulated
-  - Close LEG3+COM3
-  - Bridge LEG1 by wire (or resistor, depending on gauge type)
-- Roentgens gauge (connected to "Binary Roentgens" connector, pins 1 (+) and 2 (-)):
+  - Close DIG2 solder jumper
+  - Bridge DIG1 by wire (or resistor, depending on gauge type)
+- Roentgens gauge (connected to "Digital Roentgens" connector, pins 1 (+) and 2 (-)):
   - R5/R6: Leave unpopulated
   - Bridge LEG5 by wire (or resistor, depending on gauge type)
 
