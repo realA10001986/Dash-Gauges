@@ -1,6 +1,6 @@
 # The DIY Dash Gauges
 
-Note that this is a custom built prop; there is no complete kit available. 
+This is a custom built prop; there is no complete kit available. 
 
 CircuitSetup at this point only offers the [bezel](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/); a Control Board which allows using a wide range of meters will be available soon. This prop was made to be compatible with the CircuitSetup line of movie props ([Time Circuits Display](https://tcd.out-a-ti.me), [Flux Capacitor](https://fc.out-a-ti.me), [SID](https://sid.out-a-ti.me)).
 
