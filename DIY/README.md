@@ -4,7 +4,7 @@ Note that this is a custom built prop; there is no complete kit available.
 
 CircuitSetup at this point only offers the [bezel](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/); a Control Board which allows using a wide range of meters will be available soon. This prop was made to be compatible with the CircuitSetup line of movie props ([Time Circuits Display](https://tcd.out-a-ti.me), [Flux Capacitor](https://fc.out-a-ti.me), [SID](https://sid.out-a-ti.me)).
 
-This manual is in transition; the new Control Board makes the Switch Board obsolete. Below information has not been updated for the new Control Board yet.
+This manual is in transition; the new Control Board makes the Switch Board and abusing a TCD Control Board obsolete. Below information has not been fully updated for the new Control Board yet.
 
 ![Dash Gauges](img/thedg.jpg)
 
@@ -186,11 +186,7 @@ You can buy an enclosure at [CircuitSetup](https://circuitsetup.us/product/delor
 
 ### Connecting a Time Travel button
 
-The Time Travel button can be connected to the TCD Control Board or the Switch Board:
-
-On the Control Board, connect the button to "IO13" and "5V" of the "IO13" connector. In case of a Control Board 1.3, connect the button to "PWR Trigger (IO13)" and "GND" of the "Fake PWR" connector.
-
-On the Switch Board, connect the button to "IN" and "3_3V" of the "TIME TRAVEL" connector.
+The Control Board has a Time Travel button (marked "TT"). If you want to connect an external Time Travel button, connect it to the "TT" and "3V3" pins of the "Time Travel" connector.
 
 ### Adapting the firmware to your gauges
 
@@ -198,49 +194,25 @@ The MCP4728 can deliver up to 5V. Since your gauges probably will not cover exac
 
 ### Connecting a TCD to the Dash Gauges by wire
 
-If you want to connect a TCD to the Dash Gauges by wire (such as mentioned [here](https://github.com/realA10001986/Dash-Gauges/tree/main#connecting-a-tcd-by-wire)), you have two options on the Dash Gauges' side: Either the Control Board, or the Switch Board. 
-
-When connecting to the Dash Gauges' Control Board, there are four possible configurations, depending which version of the TCD control board you are using the both the Dash Gauges as well as the TCD itself:
+If you want to connect a TCD to the Dash Gauges by wire (such as mentioned [here](https://github.com/realA10001986/Dash-Gauges/tree/main#connecting-a-tcd-by-wire)), wire as follows:
 
 <table>
     <tr>
-     <td align="center">Dash Gauges:<br>TCD Control board 1.2</td>
-     <td align="center">Dash Gauges:<br>TCD Control board 1.3</td>
+     <td align="center">Dash Gauges</td>
      <td align="center">TCD with control board 1.2</td>
      <td align="center">TCD with control board 1.3</td>
     </tr>
    <tr>
-     <td align="center">GND of "IO13" connector</td>
-     <td align="center">GND of "Fake PWR" connector</td>
+     <td align="center">GND of "Time Travel" connector</td>
      <td align="center">GND of "IO14" connector</td>
      <td align="center">GND on "Time Travel" connector</td>
     </tr>
     <tr>
-     <td align="center">IO13 of "IO13" connector</td>
-     <td align="center">"PWR Trigger (IO13)" of "Fake PWR" connector</td>
+     <td align="center">TT of "Time Travel" connector</td>
      <td align="center">IO14 of "IO14" connector</td>
      <td align="center">TT OUT on "Time Travel" connector</td>
     </tr>
 </table>
 
-For when connecting to the Switch Board, here are only two ways, depending on which Control Board you are using in your TCD:
-
-<table>
-    <tr>
-     <td align="center">Dash Gauges:<br>Switch Board</td>
-     <td align="center">TCD with control board 1.2</td>
-     <td align="center">TCD with control board 1.3</td>
-    </tr>
-   <tr>
-     <td align="center">GND of "TIME TRAVEL" connector</td>
-     <td align="center">GND of "IO14" connector</td>
-     <td align="center">GND on "Time Travel" connector</td>
-    </tr>
-    <tr>
-     <td align="center">IN of "TIME TRAVEL" connector</td>
-     <td align="center">IO14 of "IO14" connector</td>
-     <td align="center">TT OUT on "Time Travel" connector</td>
-    </tr>
-</table>
 
 
