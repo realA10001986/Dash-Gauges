@@ -188,10 +188,6 @@ You can buy an enclosure at [CircuitSetup](https://circuitsetup.us/product/delor
 
 The Control Board has a Time Travel button (marked "TT"). If you want to connect an external Time Travel button, connect it to the "TT" and "3V3" pins of the "Time Travel" connector.
 
-### Adapting the firmware to your gauges
-
-The MCP4728 can deliver up to 5V. Since your gauges probably will not cover exactly this voltage spread, the firmware can be adapted to limit the maximum voltage put out. This is done in dg_main.c, and there are some examples listed there. You can, of course, contact me if you need assistance with the firmware. *In fact, I would like to know about your hardware and include your specific type to the list, so that you don't have to patch stuff on firmware updates.*
-
 ### Connecting a TCD to the Dash Gauges by wire
 
 If you want to connect a TCD to the Dash Gauges by wire (such as mentioned [here](https://github.com/realA10001986/Dash-Gauges/tree/main#connecting-a-tcd-by-wire)), wire as follows:
