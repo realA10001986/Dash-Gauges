@@ -6,7 +6,7 @@ CircuitSetup at this point only offers the [bezel](https://circuitsetup.us/produ
 
 This manual is in transition; the new Control Board is near the end of its design stage but below document is not fully updated yet.
 
-![Dash Gauges](img/thedg.jpg)
+![Dash Gauges](img/thedg_n.jpg)
 
 The Panel consists of several parts:
 - Aluminum (Aluminium for non-Americans) enclosure; the measurements are in the ["enclosure"](/DIY/enclosure) folder of this repository. Can be bought at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/) (does not fit model 142 gauge, see [here](#roentgens)).
