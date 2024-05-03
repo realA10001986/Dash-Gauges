@@ -166,12 +166,8 @@ The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as 
      <td align="left">9700&#9166;</td>
     </tr>    
     <tr>
-     <td align="left">Set fixed volume level</td>
+     <td align="left">Set volume level</td>
      <td align="left">9300&#9166; - 9319&#9166;</td>
-    </tr>
-    <tr>
-     <td align="left">Use volume knob (instead of fixed volume)</td>
-     <td align="left">9399&#9166;</td>
     </tr>
     <tr>
      <td align="left"><a href="#the-music-player">Music Player</a>: Play/Stop</td>
@@ -433,15 +429,9 @@ The music player will continue to run.
  
 #### Hardware configuration settings
 
-##### Disable volume knob
+##### Volume level (0-19)
 
-Your control board might have a volume knob; if you want this knob to be your volume selector, uncheck this option. If you want to control volume remotely via the TCD keypad, check this, and select a volume level below. 
-
-Due to hardware restraints, the volume knob might cause distortions when the level is very low; a fixed value is a better choice in that case.
-
-##### Software volume level (0-19)
-
-If the option _Disable volume knob_ above is checked, enter a value between 0 (mute) or 19 (very loud) here. This is your starting point; you can change the volume via TCD (93xx) and that new volume will also be saved (and appear in this field when the page is reloaded in your browser).
+Enter a value between 0 (mute) or 19 (very loud) here. This is your starting point; you can change the volume via TCD (93xx) and that new volume will also be saved (and appear in this field when the page is reloaded in your browser).
 
 #### Network settings
 
