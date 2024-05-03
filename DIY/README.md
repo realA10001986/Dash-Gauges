@@ -77,7 +77,7 @@ You can mix analog and digital gauges; the firmware provides a type selection fo
 For the smaller gauges I used two H&P 631-14672 (built by Phaostron). The pointers on these are red, but an Edding permanent marker was quickly able to change them to black. These gauges need 8k2 + 470R resistors (R1=470R, R2=8k2; R3=470R, R3=8k2) and the "H&P 631-14672" gauge type setting.
 
 Other proven-to-work options are 
-- the Phaostron 0-5KV voltmeter (300-07970). These need no internal modifications. They work fine with 4k7 + 470R resistors (R1=470R, R2=4k7; R3=470R, R3=4k7) and the "Generic (0-5V)" gauge type setting.
+- the Phaostron 0-5KV DC voltmeter (300-07970). These need no internal modifications. They work fine with 4k7 + 470R resistors (R1=470R, R2=4k7; R3=470R, R3=4k7) and the "Generic (0-5V)" gauge type setting.
 - the Paostron "Cyclic Trim" meters (631-15099) with a minor modification: The two resistors and the pot inside the meter need to be removed, and the wire (which lead to the pot) needs to attached to the input terminal. With that modification, the meters work fine with 4k7 + 470R resistors (R1=470R, R2=4k7; R3=470R, R3=4k7) and the "Generic (0-5V)" gauge type setting.
 
 Avoid Ammeters (Ampmeters) for high currents (>10A); those have high-current coils and cannot be used with small voltages. Otherwise, Ammeters can most likely be used after removing shunts, resistors or anything else that is between the two input terminals (apart from the coil, of course). 
