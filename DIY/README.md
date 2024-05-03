@@ -80,9 +80,9 @@ Other proven-to-work options are
 - the Phaostron 0-5KV DC voltmeter (300-07970). These need no internal modifications. They work fine with 4k7 + 470R resistors (R1=470R, R2=4k7; R3=470R, R3=4k7) and the "Generic (0-5V)" gauge type setting.
 - the Paostron "Cyclic Trim" meters (631-15099) with a minor modification: The two resistors and the pot inside the meter need to be removed, and the wire (which lead to the pot) needs to attached to the input terminal. With that modification, the meters work fine with 4k7 + 470R resistors (R1=470R, R2=4k7; R3=470R, R3=4k7) and the "Generic (0-5V)" gauge type setting.
 
-Avoid Ammeters (Ampmeters) for high currents (>10A); those have high-current coils and cannot be used with small voltages. Otherwise, Ammeters can most likely be used after removing shunts, resistors or anything else that is between the two input terminals (apart from the coil, of course). 
+Avoid Ammeters (Ampere meters) for high currents; those have high-current coils and cannot be used with small voltages. Otherwise, Ammeters can most likely be used after removing shunts, resistors or anything else that is between the two input terminals (apart from the coil, of course). 
 
-To find out a suitable resistors value, start out with 5V and a 8k2 resistor, and work your way from there, until the 5V plus the resistor make the pointer move to the right end of the scale. 
+To find out a suitable resistors value, use a common 5V power supply (eg one for Arduino), and start out with a 8k2 resistor between the + output of the power supply and the + of the gauge (usually the left terminal when looking at the back), and work your way from there, until the 5V plus the resistor make the pointer move to the right end of the scale (but not beyond!). 
 
 Movie-accurate dials for those gauges are available in the [DIY/faces-labels](/DIY/faces-labels) folder in this repository.
 
