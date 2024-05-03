@@ -1,7 +1,7 @@
 # Dash Gauges
 
 This repository holds 
-- some [DIY instructions](/DIY/) for building a Dash Gauge panel, as seen in the Delorean Time Machine,
+- some [DIY instructions](/DIY/) for building a Dash Gauge panel, as seen in the Delorean Time Machine, (currently being updated to the new Control Board)
 - (in the future) information on a CircuitSetup solution for said Dash Gauges,
 - and a suitable unified firmware for the DIY panel and the CircuitSetup solution.
 
@@ -12,7 +12,7 @@ This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](ht
 For DIY instructions, please see [here](/DIY/).
 
 Firmware features include
-- support for analog gauges (with software-controlled pointer position) and digital gauges (Empty/Full, without arbitrary pointer position)
+- support for analog gauges (with software-controlled arbitrary pointer position) and digital gauges (Empty/Full, without arbitrary pointer position)
 - selectable "full" percentages per analog gauge (besides for fun, useful for adjusting inaccurate readings)
 - selectable threshold percentage for Empty/Full position for digital gauges
 - [Time Travel](#time-travel) function, triggered by button, [Time Circuits Display](https://tcd.out-a-ti.me) (TCD) or via [MQTT](#home-assistant--mqtt)
