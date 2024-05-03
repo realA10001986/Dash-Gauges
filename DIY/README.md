@@ -80,7 +80,10 @@ Other proven-to-work options are
 - the Phaostron 0-5KV DC voltmeter (300-07970). These need no internal modifications. They work fine with 4k7 + 470R resistors (R1=470R, R2=4k7; R3=470R, R3=4k7) and the "Generic (0-5V)" gauge type setting.
 - the Paostron "Cyclic Trim" meters (631-15099) with a minor modification: The two resistors and the pot inside the meter need to be removed, and the wire (which lead to the pot) needs to attached to the input terminal. With that modification, the meters work fine with 4k7 + 470R resistors (R1=470R, R2=4k7; R3=470R, R3=4k7) and the "Generic (0-5V)" gauge type setting.
 
-Avoid Ammeters (Ampere meters) for high currents; those have high-current coils and cannot be used with small voltages. Otherwise, Ammeters can most likely be used after removing shunts, resistors or anything else that is between the two input terminals (apart from the coil, of course). 
+Unusable:
+- Phaostron 0-50/100/250/500A ammeter (639-16341).
+
+Avoid Ammeters (Ampere meters) for currents >1A, and voltmeters for high voltages (>50V); those have stronger coils that cannot be used with low voltages. Otherwise, Ammeters (especially if the scale is in the milliampere range) can most likely be used after removing shunts, resistors or anything else that is between the two input terminals (apart from the coil, of course). 
 
 To find out a suitable resistors value, use a common 5V power supply (eg one for Arduino), and start out with a 8k2 resistor between the + output of the power supply and the + of the gauge (usually the left terminal when looking at the back), and work your way from there, until the 5V plus the resistor make the pointer move to the right end of the scale (but not beyond!). 
 
@@ -108,7 +111,11 @@ If you can't find a VU-meter or consider the 142 too far off, you could try goin
 
 Tested meter options and configuration:
 - Standard VU meter (Simpson 49L, 142): Internally unmodified. R5=330R, R6=3k3; R11 bridged as the 6V incandescent light bulbs need to resistor. Gauge Type setting "Standard VU-Meter".
-- Simpson model 49 voltmeter 0-50V DC (SK 525-447): Internal resistor needs to be bridged. R5=bridged, R6=5k6; R11 depends on user's design of illumination. Gauge Type setting "Generic Analog (0-5V)".
+- Simpson model 49 voltmeter 0-50V DC: Internal resistor needs to be bridged. R5=bridged, R6=5k6; R11 depends on user's design of illumination. Gauge Type setting "Generic Analog (0-5V)".
+- Simpson model 49 ammeter 0-250mA DC: Internal coil in the rear needs to be removed (no need to take the meter apart; cut the two wires leading from the terminals towards the center, the coil will fall out then; be sure to bend down the remaining stubs so that they don't touch anything), the resistor can remain. R6=1k0. Gauge type setting "Generic Analog (0-5V)".
+
+Unusable:
+- Simpson model 49 voltmeter 0-250V AC.
 
 Most Simpson meters have a drop-shaped pointer top which I was not able to remove (in fact, I didn't even try; I don't think the pointer top would have ended up properly straight); although I mounted the "Empty" light as high on the scale as possible, the pointer was still too long and collided with the light. My solution was to change the bends of the pointer where it leaves the driving mechanism more into an "S" shape, and I could thereby make it ever so short enough to pass the light. Another way would be to cut off the drop part, but that would make the pointer a tad too short in my opinion.
 
