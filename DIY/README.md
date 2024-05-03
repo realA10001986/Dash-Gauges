@@ -112,7 +112,7 @@ If you can't find a VU-meter or consider the 142 too far off, you could try goin
 Tested meter options and configuration:
 - Standard VU meter (Simpson 49L, 142): Internally unmodified. R5=330R, R6=3k3; R11 bridged as the 6V incandescent light bulbs need to resistor. Gauge Type setting "Standard VU-Meter".
 - Simpson model 49 voltmeter 0-50V DC: Internal resistor needs to be bridged. R5=bridged, R6=5k6; R11 depends on user's design of illumination. Gauge Type setting "Generic Analog (0-5V)".
-- Simpson model 49 ammeter 0-250mA DC: Internal coil in the rear needs to be removed (no need to take the meter apart; cut the two wires leading from the terminals towards the center, the coil will fall out then; be sure to bend down the remaining stubs so that they don't touch anything), the resistor can remain. R6=1k0. Gauge type setting "Generic Analog (0-5V)".
+- Simpson model 49 ammeter 0-250mA DC: Internal coil in the rear, close to the bottom, needs to be removed: No need to take the meter apart; just cut the two blank wires leading from the terminals towards the center, the coil will fall out then; be sure to bend down the remaining stubs so that they don't touch anything), the resistor can remain. R6=1k0. Gauge type setting "Generic Analog (0-5V)".
 
 Unusable:
 - Simpson model 49 voltmeter 0-250V AC.
