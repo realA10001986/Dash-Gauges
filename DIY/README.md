@@ -133,6 +133,8 @@ The LED in those lights/buttons requires 12V. The Control Board has two connecto
 
 About the hole for the "Empty" light: Above light/button requires a 16mm hole. The center of this hole is, looking at the meter from the front, with the dial removed, 11mm above the edge of the barrel. When looking at the back, the center is 9mm above the barrel. Start with the hole in the enclosure, then mount the dial. mark the hole on the back of the dial, then remove the dial again and make the hole there.
 
+![Hole](img/Empty_hole_back.png)
+
 ### Enclosure
 
 The enclosure consists of three parts: The front and two side pieces. Measurements are in the [DIY/enclosure](/DIY/enclosure) folder of this repository.
