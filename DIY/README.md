@@ -131,7 +131,7 @@ The LED in those lights/buttons requires 12V. The Control Board has two connecto
 - When using the "Empty Light" [4] connector, the light/button's resistor needs to be removed: Pull up the red cover and pull out the LED; then desolder the LED and bridge the resistor.
 - When using the LED pins of the Digital Roetgens connector [6]: No modification of light/button needed, but the Control Board must be run with a 12V power supply. When using 5V, the LED will stay dark.
 
-About the hole for the "Empty" light: Above light/button requires a 16mm hole. I started off drilling that hole into the dial. Then I mounted the dial into the meter and marked the hole on the plastic enclosure with a pencil. The next step was to remove the dial again, wrap the mechanism in plastic to keep dust out, and drill a smaller hole (7mm) into the enclosure. Then I milled that hole into a bigger one, until the button fit. The plastic of the enclosure is quite brittle and breaks easily. Drilling a 16mm hole appeared too risky. Hence the drill/mill method.
+About the hole for the "Empty" light: Above light/button requires a 16mm hole. The center of this hole is, looking at the meter from the front, with the dial removed, 11mm above the edge of the barrel. When looking at the back, the center is 9mm above the barrel. Start with the hole in the enclosure, then mount the dial. mark the hole on the back of the dial, then remove the dial again and make the hole there.
 
 ### Enclosure
 
