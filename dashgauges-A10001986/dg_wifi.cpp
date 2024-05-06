@@ -1652,12 +1652,14 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
     char tempBuf[256];
     static const char *cmdList[] = {
       "TIMETRAVEL",       // 0
-      "MP_SHUFFLE_ON",    // 1
-      "MP_SHUFFLE_OFF",   // 2
-      "MP_PLAY",          // 3
-      "MP_STOP",          // 4
-      "MP_NEXT",          // 5
-      "MP_PREV",          // 6
+      "EMPTY",            // 1
+      "REFILL",           // 2
+      "MP_SHUFFLE_ON",    // 3
+      "MP_SHUFFLE_OFF",   // 4
+      "MP_PLAY",          // 5
+      "MP_STOP",          // 6
+      "MP_NEXT",          // 7
+      "MP_PREV",          // 8
       NULL
     };
     static const char *cmdList2[] = {
@@ -1772,21 +1774,27 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
             networkTCDTT = false;
             break;
         case 1:
-        case 2:
-            if(haveMusic) mp_makeShuffle((i == 1));
+            set_empty();
             break;
-        case 3:    
+        case 2:
+            refill_plutonium();
+            break;
+        case 3:
+        case 4:
+            if(haveMusic) mp_makeShuffle((i == 3));
+            break;
+        case 5:    
             if(haveMusic) mp_play();
             break;
-        case 4:
+        case 6:
             if(haveMusic && mpActive) {
                 mp_stop();
             }
             break;
-        case 5:
+        case 7:
             if(haveMusic) mp_next(mpActive);
             break;
-        case 6:
+        case 8:
             if(haveMusic) mp_prev(mpActive);
             break;
         }

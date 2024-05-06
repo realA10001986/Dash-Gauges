@@ -58,9 +58,6 @@
  * 
  * Analog gauges have further config data in the first struct that follows:
  * 
- * i2caddresses: Two addresses for the MCP4728. These are only read and used
- * for the first gauge that is configured as an analog gauge (order: left, center, right)
- * 
  * maxV: The "maxV" parameter defines the maximum voltage ever sent to the gauges, 
  * given in 1/4095s of reference voltage. 
  *    100% of reference voltage = 4095
@@ -104,17 +101,26 @@ static const struct ga_types gaugeTypesSmall[] = {
     // None
     { 0, "None", DGD_TYPE_NONE, {}, {} },
 
-    // Type 1: Analog gauge: 0-0.5V through MCP4728 (searched for at two i2c addresses) 
+    // Type 1: Analog gauge: 0-0.5V through MCP4728
     //         Phaostron/H&P 631-14672 with 8.6K resistors in series
     //         Using MCP4728's built-in Vref (2.048V), limited by "maxV" parameter to 0.5V (1000/4095*2.048).
     { 1, "Phaostron/H&P 631-14672 (0-0.5V)", DGD_TYPE_MCP4728, 
-      { { 0x64, 0x60 },  1000, MCP4728_VREF_INT|MCP4728_GAIN_LOW }, {} },
+      { 1000, MCP4728_VREF_INT|MCP4728_GAIN_LOW }, {} },
 
     // Type 2: Digital gauge: 0 or 12V, switched through DIGITAL_GAUGE_PIN. On the OEM Control
     // Board, the output voltage is 12V, but can be adjusted by putting a resistor
     // instead of a bridge at LEG1 (for "Percent Power") or LEG2 (for "Primary").
     { 2, "Digital / Legacy (0/12V)", DGD_TYPE_DIGITAL, 
-      {}, { DIGITAL_GAUGE_PIN } }
+      {}, { DIGITAL_GAUGE_PIN } },
+
+    { 3, "Generic Analog 0-5V)", DGD_TYPE_MCP4728, 
+      { 4095, MCP4728_VREF_EXT }, {} },
+
+    { 4, "Generic Analog 0-4.095V)", DGD_TYPE_MCP4728, 
+      { 4095, (MCP4728_VREF_INT|MCP4728_GAIN_HIGH) }, {} },
+
+    { 5, "Generic Analog 0-2.048V)", DGD_TYPE_MCP4728, 
+      { 4095, (MCP4728_VREF_INT|MCP4728_GAIN_LOW) }, {} }
 };
 
 static const struct ga_types gaugeTypesLarge[] = {
@@ -122,33 +128,43 @@ static const struct ga_types gaugeTypesLarge[] = {
     // None
     { 0, "None", DGD_TYPE_NONE, {}, {} },  
 
-    // Type 1: Analog gauge: 0-0.014V through MCP4728 (searched for at two i2c addresses) 
+    // Type 1: Analog gauge: 0-0.014V through MCP4728
     //         Simpson Roentgens meter (with no resistor) 
     //         Using MCP4728's built-in Vref (2.048V), limited by "max" parameter to 0.014V (28/4095*2.048)
     //         FIXME - need a resistor value to keep this within reasonable limits - 14mV is too low
     { 1, "Simpson Roentgens (0-0.014V)", DGD_TYPE_MCP4728,
-      { { 0x64, 0x60 },   28, MCP4728_VREF_INT|MCP4728_GAIN_LOW }, {} },
+      {   28, MCP4728_VREF_INT|MCP4728_GAIN_LOW }, {} },
     
-    // Type 2: Analog gauge: 0-1.6V through MCP4728 (searched for at two i2c addresses) 
+    // Type 2: Analog gauge: 0-1.6V through MCP4728
     //         Simpson 49L VU meter with 3k6 resistor in series
     //         Using MCP4728's built-in Vref (2.048V), limited by "maxV" parameter to 1.6V (3200/4095*2.048)
-    { 2, "Simpson 49L VU-Meter (0-1.6V)", DGD_TYPE_MCP4728,
-      { { 0x64, 0x60 }, 3200, MCP4728_VREF_INT|MCP4728_GAIN_LOW }, {} },
+    { 2, "Standard VU-Meter (0-1.6V)", DGD_TYPE_MCP4728,
+      { 3200, MCP4728_VREF_INT|MCP4728_GAIN_LOW }, {} },
 
     // Type 3: Digital gauge: 0 or 12V, switched through DIGITAL_GAUGE_PIN. On the OEM control
     // board, the output voltage is 12V, but can be adjusted by putting a resistor
     // instead of a bridge at LEG5. A digital "Roentgens" meter must be connected to the 
     // "Digital/Legacy" connector, pins 1 (+) and 2 (-).
     { 3, "Digital / Legacy (0/12V)", DGD_TYPE_DIGITAL,
-      {}, { DIGITAL_GAUGE_PIN } }
+      {}, { DIGITAL_GAUGE_PIN } },
+
+    { 4, "Generic Analog (0-5V)", DGD_TYPE_MCP4728, 
+      { 4095, MCP4728_VREF_EXT }, {} },
+
+    { 5, "Generic Analog (0-4.095V)", DGD_TYPE_MCP4728, 
+      { 4095, (MCP4728_VREF_INT|MCP4728_GAIN_HIGH) }, {} },
+
+    { 6, "Generic Analog (0-2.048V)", DGD_TYPE_MCP4728, 
+      { 4095, (MCP4728_VREF_INT|MCP4728_GAIN_LOW) }, {} }
 
     /*
     // Example:
-    // 50V DC Simpson voltmeter with the internal resistor bridged/removed, and a 5k6
+    // 50V DC Simpson voltmeter with the internal resistor bridged, and a 4k7
     // resistor added on the Control Board (R5/R6) so that full scale is at about 5V. 
     // We use Vcc (which is 5V) as reference, and can go to maximum (4095).
-    { 4, "Simpson DC 0-50V modified (0-5V)", DGD_TYPE_MCP4728,
-      { { 0x64, 0x60 }, 4095, MCP4728_VREF_EXT }, {} }
+    // This is covered by the "Generic 0-5V" entry above.
+    { 7, "Simpson DC 0-50V modified (0-5V)", DGD_TYPE_MCP4728,
+      { 4095, MCP4728_VREF_EXT }, {} }
     */
 };
 
@@ -221,7 +237,7 @@ static void IRAM_ATTR _el_off()
 }
 
 static void IRAM_ATTR ISR_DG_Empty()
-{
+{       
     if(_critical)
         return;
 
@@ -289,6 +305,7 @@ static void IRAM_ATTR ISR_DG_Empty()
             _emptyLED ? _el_on() : _el_off();
         }
     }
+
 }
 
 EmptyLED::EmptyLED(uint8_t timer_no)
@@ -363,6 +380,21 @@ bool Gauges::begin(uint8_t idA, uint8_t idB, uint8_t idC)
 {
     int numMCP4728 = 0;
     uint8_t idArray[3] = { idA, idB, idC };
+    int pinIdx = 0;
+
+    // Check for MCP4728
+    Wire.beginTransmission((uint8_t)0x60);
+    if(Wire.endTransmission(true)) {
+        Wire.beginTransmission((uint8_t)0x64);
+        if(Wire.endTransmission(true)) {
+            Serial.println("MCP4728 not found");
+        } else {
+            _address = 0x64;
+        }
+    } else {
+        _address = 0x60;
+    }
+    _haveMCP4728 = (_address != 255);
 
     for(int i = 0; i < 3; i++) {
      
@@ -382,34 +414,28 @@ bool Gauges::begin(uint8_t idA, uint8_t idB, uint8_t idC)
         case DGD_TYPE_NONE:
             break;
         case DGD_TYPE_MCP4728:
-            if(_address == 255) {
-                // Check for DAC module on i2c bus
-                Wire.beginTransmission((uint8_t)gat->aga.i2cAddresses[0]);
-                if(Wire.endTransmission(true)) {
-                    Wire.beginTransmission((uint8_t)gat->aga.i2cAddresses[1]);
-                    if(Wire.endTransmission(true)) {
-                        Serial.println("MCP4728 not found");
-                        _type[i] = DGD_TYPE_NONE;
-                    } else {
-                        _address = gat->aga.i2cAddresses[1];
-                    }
-                } else {
-                    _address = gat->aga.i2cAddresses[0];
-                }
-            }
-            if(_type[i] == DGD_TYPE_MCP4728) {
+            if(_haveMCP4728) {
                 setMax(i, gat->aga.maxV);
                 _vrefGain[i] = gat->aga.VRefGain & MCP4728_VREF_GAIN_MASK;
                 _supportVarPerc[i] = true;
-                _haveMCP4728 = true;
+                _haveMCP4728gauge = true;
                 numMCP4728++;
+            } else {
+                _type[i] = DGD_TYPE_NONE;
             }
             break;
         case DGD_TYPE_DIGITAL:
-            _pins[i] = gat->dga.gpioPin;
-            pinMode(_pins[i], OUTPUT);
-            digitalWrite(_pins[i], LOW);
-            _supportVarPerc[i] = false;
+            if((_pins[i] = gat->dga.gpioPin) < 40) {
+                if(_pinIndices[_pins[i]] < 0) {
+                    _pinIndices[_pins[i]] = pinIdx++;
+                }
+                pinMode(_pins[i], OUTPUT);
+                setDigitalPin(_pins[i], LOW);
+                _supportVarPerc[i] = false;
+            } else {
+                Serial.printf("Bad GPIO number: %d", _pins[i]);
+                _type[i] = DGD_TYPE_NONE;
+            }
             break;
         }
           
@@ -419,45 +445,51 @@ bool Gauges::begin(uint8_t idA, uint8_t idB, uint8_t idC)
 
     if(_haveMCP4728) {
         uint8_t readBack[24];
-        int i2clen;
 
-        _vrefGain[3] = MCP4728_VREF_INT;    // DAC D unused, set to lowest
+        readEEPROM(readBack);
         
-        // Read EEPROM and set it up to our values if not already so
-        i2clen = Wire.requestFrom(_address, (uint8_t)24);
-        if(i2clen < 24) {
-            Serial.printf("Error: Can only read back %d bytes from MCP4728 DAC\n", i2clen);
-        }
-        for(int i = 0; i < min(24, i2clen); i++) {
-            readBack[i] = Wire.read();
-            #ifdef DG_DBG
-            Serial.printf("0x%02x ", readBack[i]);
-            #endif
-        }
-        #ifdef DG_DBG
-        Serial.println("");
-        #endif
-        
-        if( (readBack[(0*6)+4] & MCP4728_VREF_GAIN_MASK != _vrefGain[0]) ||
-            (readBack[(1*6)+4] & MCP4728_VREF_GAIN_MASK != _vrefGain[1]) ||
-            (readBack[(2*6)+4] & MCP4728_VREF_GAIN_MASK != _vrefGain[2]) ||
-            (readBack[(3*6)+4] & 0xe0 != 0xe0) ) {
-            #ifdef DG_DBG
-            Serial.println("Resetting MCP4728 EEPROM");
-            #endif
-            Wire.beginTransmission(_address);
-            Wire.write(0b01010000);   // Sequ write with EEPROM
-            for(int i = 0; i < 4; i++) {
-                Wire.write((i == 3) ? 0b11100000 : _vrefGain[i]);
-                Wire.write(0x00);
+        if(_haveMCP4728gauge) {
+                
+            if( ((readBack[(0*6)+4] & MCP4728_DEFAULT_MASK) != (_vrefGain[0] | MCP4728_POWER_DOWN)) ||
+                ((readBack[(1*6)+4] & MCP4728_DEFAULT_MASK) != (_vrefGain[1] | MCP4728_POWER_DOWN)) ||
+                ((readBack[(2*6)+4] & MCP4728_DEFAULT_MASK) != (_vrefGain[2] | MCP4728_POWER_DOWN)) ||
+                ((readBack[(3*6)+4] & MCP4728_DEFAULT_MASK) != MCP4728_DEFAULT) ) {
+                #ifdef DG_DBG
+                Serial.println("Resetting MCP4728 EEPROM for current gauge config");
+                #endif
+                Wire.beginTransmission(_address);
+                Wire.write(0b01010000);   // Sequ write with EEPROM
+                for(int i = 0; i < 4; i++) {
+                    Wire.write(_vrefGain[i] | MCP4728_POWER_DOWN);
+                    Wire.write(0x00);
+                }
+                Wire.endTransmission(true);
             }
-            Wire.endTransmission(true);
+            
+        } else {
+          
+            if( ((readBack[(0*6)+4] & MCP4728_DEFAULT_MASK) != MCP4728_DEFAULT) ||
+                ((readBack[(1*6)+4] & MCP4728_DEFAULT_MASK) != MCP4728_DEFAULT) ||
+                ((readBack[(2*6)+4] & MCP4728_DEFAULT_MASK) != MCP4728_DEFAULT) ||
+                ((readBack[(3*6)+4] & MCP4728_DEFAULT_MASK) != MCP4728_DEFAULT) ) {
+                #ifdef DG_DBG
+                Serial.println("Resetting MCP4728 EEPROM to all disabled");
+                #endif
+                Wire.beginTransmission(_address);
+                Wire.write(0b01010000);   // Sequ write with EEPROM
+                for(int i = 0; i < 4; i++) {
+                    Wire.write(MCP4728_DEFAULT);
+                    Wire.write(0x00);
+                }
+                Wire.endTransmission(true);
+            }
+
         }
 
         // Disable channel D
         Wire.beginTransmission(_address);
         Wire.write(0b01000110);    // Multi-write
-        Wire.write(0b11100000);
+        Wire.write(MCP4728_DEFAULT);
         Wire.write(0x00);
         Wire.endTransmission(true);
     }
@@ -492,13 +524,13 @@ void Gauges::off()
             switch(_type[i]) {
             case DGD_TYPE_MCP4728:
                 Wire.beginTransmission(_address);
-                Wire.write(0b01000000 | ((i << 1) & 0x06));    // Multi-write   FIXME ?
+                Wire.write(0b01000000 | ((i << 1) & 0x06));    // Multi-write
                 Wire.write(_vrefGain[i]);
                 Wire.write(0x00);
                 Wire.endTransmission(true);
                 break;
             case DGD_TYPE_DIGITAL:
-                digitalWrite(_pins[0], LOW);
+                setDigitalPin(_pins[i], LOW);
                 break;
             }
         }
@@ -575,13 +607,13 @@ void Gauges::UpdateAll()
             switch(_type[i]) {
             case DGD_TYPE_MCP4728:
                 Wire.beginTransmission(_address);   // Send value to DAC
-                Wire.write(0b01000000 | ((i << 1) & 0x06));    // Multi-write   FIXME ?
+                Wire.write(0b01000000 | ((i << 1) & 0x06));    // Multi-write
                 Wire.write((_values[i] >> 8) | _vrefGain[i]);
                 Wire.write(_values[i] & 0xff);
                 Wire.endTransmission(true);
                 break;
             case DGD_TYPE_DIGITAL:
-                digitalWrite(_pins[i], (_values[i] > _thresholds[i]) ? HIGH : LOW);
+                setDigitalPin(_pins[i], (_values[i] > _thresholds[i]) ? HIGH : LOW);
                 break;
             }
         }
@@ -599,35 +631,36 @@ const struct ga_types *Gauges::getGTStruct(bool isSmall, int index)
     }
 }
 
+void Gauges::loop()
+{
+    for(int i = 0; i < 3; i++) {
+        if(_type[i] == DGD_TYPE_DIGITAL) {
+            int pidx = _pinIndices[_pins[i]];
+            if(pidx >= 0 && _scheduled[pidx]) {
+                if(millis() >= _scheduled[pidx]) {
+                    digitalWrite(_pins[i], _desiredState[pidx]);
+                    _lastState[pidx] = _desiredState[pidx];
+                    _lastStateChg[pidx] = millis();
+                    _scheduled[pidx] = 0;
+                }
+            }
+        }
+    }
+}
+
+
 // Private
 
 
 void Gauges::setMax(int8_t index, uint16_t maxVal)
 {
-    //int s, e;
-
     switch(_type[index]) {
-    case DGD_TYPE_NONE:
-    case DGD_TYPE_DIGITAL:
-        break;
     case DGD_TYPE_MCP4728:    // Set max value written to DAC
         if(maxVal > 0xfff) maxVal = 0xfff;
 
         index &= 0x03;
         
         _max[index] = maxVal;
-
-        /*
-        if(index >= 0) {
-            s = e = index & 0x03;
-        } else {
-            s = 0; e = 2;
-        }
-    
-        for(int i = s; i <= e; i++) {
-            _max[i] = maxVal;
-        }
-        */
         break;
     }
 }
@@ -649,4 +682,65 @@ const struct ga_types *Gauges::findGauge(bool isSmall, int id)
     }
 
     return NULL;
+}
+
+void Gauges::setDigitalPin(uint8_t pin, uint8_t state)
+{
+    int pidx = _pinIndices[pin];
+    unsigned long now = millis();
+    unsigned long elapsed;
+
+    if(pidx < 0) {
+        #ifdef DG_DBG
+        Serial.printf("setDigitalPin: Bad pin! %d\n", pin);
+        #endif
+        return;
+    }
+    
+    elapsed = now - _lastStateChg[pidx];
+
+    if(state != _lastState[pidx]) {
+        if(elapsed < DIG_SWITCH_MIN_TIME) {
+            _desiredState[pidx] = state;
+            if(!_scheduled[pidx]) {
+                _scheduled[pidx] = now + (DIG_SWITCH_MIN_TIME - elapsed);
+                #ifdef DG_DBG
+                Serial.printf("Scheduled switch for gauge pin %d\n", pin);
+                #endif
+            } else {
+                #ifdef DG_DBG
+                Serial.printf("Switch for gauge pin %d already scheduled\n", pin);
+                #endif
+            }
+            return;
+        }
+    }
+    
+    digitalWrite(pin, state);
+
+    if(state != _lastState[pidx]) {
+        _lastState[pidx] = state;
+        _lastStateChg[pidx] = now;
+    }
+    _scheduled[pidx] = 0;
+}
+
+int Gauges::readEEPROM(uint8_t *buf)
+{
+    // Read EEPROM
+    int i2clen = Wire.requestFrom(_address, (uint8_t)24);
+    if(i2clen < 24) {
+        Serial.printf("Error: Can only read back %d bytes from MCP4728 DAC\n", i2clen);
+    }
+    for(int i = 0; i < min(24, i2clen); i++) {
+        buf[i] = Wire.read();
+        #ifdef DG_DBG
+        Serial.printf("0x%02x ", buf[i]);
+        #endif
+    }
+    #ifdef DG_DBG
+    Serial.println("");
+    #endif
+
+    return i2clen;
 }

@@ -72,14 +72,16 @@ static const float volTable[20] = {
     0.35, 0.40, 0.50, 0.60,
     0.70, 0.80, 0.90, 1.00
 };
+uint8_t         curSoftVol = DEFAULT_VOLUME;
+#ifdef DG_HAVEVOLKNOB
 // Resolution for pot, 9-12 allowed
 #define POT_RESOLUTION 9
-uint8_t         curSoftVol = DEFAULT_VOLUME; 
 #define VOL_SMOOTH_SIZE 4
 static int      rawVol[VOL_SMOOTH_SIZE];
 static int      rawVolIdx = 0;
 static int      anaReadCount = 0;
 static long     prev_avg, prev_raw, prev_raw2;
+#endif
 static uint32_t g(uint32_t a, int o) { return a << (PA_MASKA - o); }
 
 static float    curVolFact = 1.0;
@@ -89,6 +91,8 @@ static int      sampleCnt = 0;
 bool            playingEmpty = false;
 bool            playingEmptyEnds = false;
 
+bool            playingDoor = false;
+
 static char     append_audio_file[256];
 static float    append_vol;
 static uint16_t append_flags;
@@ -97,7 +101,7 @@ static bool     appendFile = false;
 static const char *tcdrdone = "/TCD_DONE.TXT";   // leave "TCD", SD is interchangable this way
 unsigned long   renNow1;
 
-static float  getVolume();
+static float    getVolume();
 
 static int      mp_findMaxNum();
 static bool     mp_checkForFile(int num);
@@ -121,8 +125,10 @@ void audio_setup()
     #endif
 
     // Set resolution for volume pot
+    #ifdef DG_HAVEVOLKNOB
     analogReadResolution(POT_RESOLUTION);
     analogSetWidth(POT_RESOLUTION);
+    #endif
 
     out = new AudioOutputI2S(0, 0, 32, 0);
     out->SetOutputModeMono(true);
@@ -277,6 +283,8 @@ void play_file(const char *audio_file, uint16_t flags, float volumeFactor)
 
     playingEmpty = (flags & PA_ISEMPTY) ? true : false;
     playingEmptyEnds = false;
+
+    playingDoor = (flags & PA_DOOR) ? true : false;
     
     out->SetGain(getVolume());
 

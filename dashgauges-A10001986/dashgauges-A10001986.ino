@@ -96,25 +96,35 @@
 
 /*  Changelog
  *  
+ *  2024/05/05 (A10001986)
+ *    - Remove i2c addresses from array entries; reset MCP4728 EEPROM if not used.
+ *  2024/05/04 (A10001986)
+ *    - Add "EMPTY" and "REFILL" MQTT commands
+ *  2024/05/01 (A10001986)
+ *    - CB1.04: Swap pins for Backlight and Door 1 switch
+ *  2024/04/30 (A10001986)
+ *    - Add "beep" sound when TT button is held to unlock Gauge hardware type selection
+ *      in CP
+ *  2024/04/28 (A10001986)
+ *    - CB 1.04: Changed Side Switch from active high to active low
+ *  2024/04/27 (A10001986)
+ *    - Support second door switch on new Control Board v1.03
+ *  2024/04/25 (A10001986)
+ *    - Add mechanism to avoid switching on/off digital gauges too quickly. Gauges
+ *      with motors might get confused and stuck at arbitrary positions on very short
+ *      periods of power (if the cap hasn't fully been charged to bring them back to 0).
+ *  2024/04/24 (A10001986)
+ *    - Added generic analog gauge types (0-5V, 0-4.095V, 0-2.048V)
  *  2024/04/22 (A10001986)
  *    - Gauge types can now be selected separately, not only in "groups" any more. 
  *      For each gauge (Primary, Percent Power, Roentgens), the hardware access method 
  *      and type (voltage range) can be defined.
  *      The complete definition table is now in dgdisplay.cpp.
  *    - For binary gauges, the threshold is now configurable in the CP
- *    - "Button 1" on Control Board v1 supported; HOLDing it makes the DG say the
- *      IP address out loud
+ *    - CB 1.01: Add support for "Button 1"; HOLDing it makes the DG say the IP
+ *      address out loud
  *  2024/04/10 (A10001986)
- *    - Add support for SwitchBoard v2. There are now three versions of
- *      the hardware:
- *      - Switch Board v1: Requires TCD control board to operate.
- *      - Switch Board v2: Requires TCD control board to operate, but needs
- *                         less "butchering" and fewer wires.
- *      - Control Board v1: Is a complete stand-alone solution, does not 
- *                          require a TCD control board.
- *      Switch Board v1 and Control Board v1 are 100% compatible with each
- *      other, the firmware does not make a difference. Switch Board v2 needs
- *      some special treatment.
+ *    - Add support for SwitchBoard v2 (unreleased)
  *      The firmware auto-detects the hardware version.
  *    - Add Music Folder to CP; Music-folder-change optimization
  *    - Make hardware support for volume knob a compile time option

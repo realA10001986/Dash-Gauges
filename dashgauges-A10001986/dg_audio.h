@@ -46,6 +46,7 @@
 #define PA_DYNVOL  0x0008
 #define PA_ISEMPTY 0x0010
 #define PA_WAV     0x0020
+#define PA_DOOR    0x0040
 #define PA_MASKA   (PA_LOOP|PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL|PA_ISEMPTY)
 
 void audio_setup();
@@ -80,6 +81,8 @@ extern bool mpActive;
 
 extern bool playingEmpty;
 extern bool playingEmptyEnds;
+
+extern bool playingDoor;
 
 extern uint8_t curSoftVol;
 

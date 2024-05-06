@@ -74,6 +74,7 @@ void mydelay(unsigned long mydel);
 
 void prepareTT();
 void refill_plutonium();
+void set_empty();
 void wakeup();
 
 void sideSwitch_scan();

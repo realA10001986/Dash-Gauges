@@ -12,10 +12,10 @@
 #define _DG_GLOBAL_H
 
 // Version strings
-#define DG_VERSION       "V0.40"
-#define DG_VERSION_EXTRA "APR222024"
+#define DG_VERSION       "V0.47"
+#define DG_VERSION_EXTRA "MAY052024"
 
-//#define DG_DBG              // debug output on Serial
+#define DG_DBG              // debug output on Serial
 
 /*************************************************************************
  ***                     mDNS (Bonjour) support                        ***
@@ -39,12 +39,17 @@
 // Uncomment for support of door switches/door sounds
 // Comment if using DOOR_SWITCH_PIN for something else
 #define DG_HAVEDOORSWITCH
+// Comment if only one door switch is supported by hardware
+#define DG_HAVEDOORSWITCH2
+
+// Uncomment for HomeAssistant MQTT protocol support
+#define DG_HAVEMQTT
 
 // Uncomment if hardware has a volume knob
 //#define DG_HAVEVOLKNOB
 
-// Uncomment for HomeAssistant MQTT protocol support
-#define DG_HAVEMQTT
+// Version of Control Board
+#define CB_VERSION 3
 
 // --- end of config options
 
@@ -78,19 +83,36 @@
 #endif
 
 /*************************************************************************
+ ***                            Sanitation                             ***
+ *************************************************************************/
+
+ #ifdef DG_HAVEVOLKNOB
+ #undef DG_HAVEDOORSWITCH2
+ #endif
+
+/*************************************************************************
  ***                             GPIO pins                             ***
  *************************************************************************/
 
 #define STATUS_LED_PIN     2  // Status LED (on ESP)
 
-#define DIGITAL_GAUGE_PIN 12  // Placeholder for "digital" gauges
+#define DIGITAL_GAUGE_PIN 12  // "Digital" gauges (all three)
 
 #define TT_IN_PIN         13  // Time Travel button (or TCD tt trigger input)
 #define BUTTON1_PIN       36  // Button 1
 
 #define SIDESWITCH_PIN    16  // SBv1/CBv1: Toggle switch on side
-#define DOOR_SWITCH_PIN   27  // SBv1/CBv1: Door switch
-#define BACKLIGHTS_PIN    14  // SBv1/CBv1: Gauges' backlights (via relay)
+#if CB_VERSION < 4
+#define DOOR_SWITCH_PIN   27  // SBv1/CBv1.03: Door switch for door 1
+#else
+#define DOOR_SWITCH_PIN   14  // SBv1/CBv1.04: Door switch for door 1
+#endif
+#define DOOR2_SWITCH_PIN  32  // CBv1.03: Door switch for door 2
+#if CB_VERSION < 4
+#define BACKLIGHTS_PIN    14  // SBv1/CBv1.03: Gauges' backlights
+#else
+#define BACKLIGHTS_PIN    27  // SBv1/CBv1.04: Gauges' backlights
+#endif
 
 #define EMPTY_LED_PIN     17  // SBv1/CBv1: "Empty" LED
 #define EMPTY_LED_PIN2    14  // SBv2:      "Empty" LED
@@ -106,7 +128,7 @@
 #define SPI_MISO_PIN      19
 #define SPI_SCK_PIN       18 
 
-// Analog input for volume (unused on OEM Control Board)
+// Analog input for volume (unused on A10001986 Control Boards)
 #define VOLUME_PIN        32
 
 /* 

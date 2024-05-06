@@ -67,7 +67,6 @@ class EmptyLED {
  */
 
 struct dacGauge {               // DGD_TYPE_MCP4728:
-    uint8_t  i2cAddresses[2];   // i2c addresses: 0x64, 0x60
     uint16_t maxV;              // max (0-4095) (VRef = 4095)                
     uint8_t  VRefGain;          // Int/Ext VRef; Gain flags
 };
@@ -89,14 +88,20 @@ struct ga_types {
 // Connection type
 #define DGD_TYPE_NONE       0
 #define DGD_TYPE_MCP4728    1
-#define DGD_TYPE_DIGITAL     2
+#define DGD_TYPE_DIGITAL    2
 
-// VRefGain
-#define MCP4728_VREF_INT    0x80    // Vref = 2.048V / 4.096V (depending on GAIN)
-#define MCP4728_VREF_EXT    0x00    // Vref = Vcc (GAIN ignored)
-#define MCP4728_GAIN_HIGH   0x10
-#define MCP4728_GAIN_LOW    0x00
+// DGD_TYPE_MCP4728: VRefGain
+#define MCP4728_VREF_INT       0x80    // Vref = 2.048V / 4.096V (depending on GAIN)
+#define MCP4728_VREF_EXT       0x00    // Vref = Vcc = 5V (GAIN ignored)
+#define MCP4728_GAIN_HIGH      0x10
+#define MCP4728_GAIN_LOW       0x00
+#define MCP4728_POWER_DOWN     0x60
 #define MCP4728_VREF_GAIN_MASK (MCP4728_VREF_INT|MCP4728_GAIN_HIGH)
+#define MCP4728_DEFAULT        (MCP4728_VREF_INT|MCP4728_POWER_DOWN)
+#define MCP4728_DEFAULT_MASK   (MCP4728_VREF_INT|MCP4728_POWER_DOWN|MCP4728_GAIN_HIGH)
+
+// Minimum time between state changes for digital gauges
+#define DIG_SWITCH_MIN_TIME 750
 
 class Gauges {
 
@@ -109,6 +114,8 @@ class Gauges {
 
         void on();
         void off();
+
+        void loop();
 
         void setBinGaugeThreshold(uint8_t index, uint8_t thres);
 
@@ -126,10 +133,15 @@ class Gauges {
     private:
         void setMax(int8_t index, uint16_t maxVal);
         const struct ga_types *findGauge(bool isSmall, int id);
+
+        void setDigitalPin(uint8_t pin, uint8_t state);
+
+        int  readEEPROM(uint8_t *buf);
         
         uint8_t _type[3];
 
         bool _haveMCP4728 = false;
+        bool _haveMCP4728gauge = false;
         bool _allMCP4728 = false;
 
         bool _supportVarPerc[4] = { false, false, false, false };
@@ -140,11 +152,17 @@ class Gauges {
         // For DGD_TYPE_MCP4728:
         uint8_t _address     = 255;
         uint16_t _max[4]     = { 0, 0, 0, 0 };
-        uint8_t _vrefGain[4] = { MCP4728_VREF_INT, MCP4728_VREF_INT, MCP4728_VREF_INT, MCP4728_VREF_INT };
+        uint8_t _vrefGain[4] = { MCP4728_DEFAULT, MCP4728_DEFAULT, MCP4728_DEFAULT, MCP4728_DEFAULT };
 
         // For DGD_TYPE_DIGITAL
         uint8_t _pins[4]       = { 255, 255, 255, 255 };
         uint8_t _thresholds[4] = { 0, 0, 0, 0 };
+
+        int8_t        _pinIndices[40]  = { - 1 };
+        uint8_t       _lastState[3]    = { 0, 0, 0 };
+        uint8_t       _desiredState[3] = { 0, 0, 0 };
+        unsigned long _lastStateChg[3] = { 0, 0, 0 };
+        unsigned long _scheduled[3]    = { 0, 0, 0 };
 };
 
 #endif

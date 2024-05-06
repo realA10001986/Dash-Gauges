@@ -74,8 +74,13 @@ static EmptyLED emptyLED = EmptyLED(0);
 
 // The side switch
 static DGButton sideSwitch = DGButton(SIDESWITCH_PIN,
-    false,    // Switch is active HIGH
+    #if CB_VERSION < 4
+    false,    // Switch is active HIGH (CB <= 1.03)
     false     // Disable internal pull-up resistor
+    #else
+    true,     // Switch is active LOW (CB 1.04)
+    true      // Enable internal pull-up resistor
+    #endif
 );
 
 static bool          isSSwitchPressed = false;
@@ -118,6 +123,16 @@ static bool          isDSwitchChange = false;
 static int           doorSwitchStatus = -1;
 static unsigned long isDSwitchChangeNow = 0;
 static bool          dsCloseOnClose = false;
+#ifdef DG_HAVEDOORSWITCH2
+static DGButton door2Switch = DGButton(DOOR2_SWITCH_PIN,
+    true,    // Switch is active LOW
+    true     // Enable internal pull-up resistor
+);
+static bool          isD2SwitchPressed = false;
+static bool          isD2SwitchChange = false;
+static int           door2SwitchStatus = -1;
+static unsigned long isD2SwitchChangeNow = 0;
+#endif
 // Doorswitch sequence
 static bool          dsPlay = false;
 static unsigned long dsNow = 0;
@@ -125,6 +140,14 @@ static bool          dsTimer = false;
 static unsigned long dsDelay = 0;
 static unsigned long dsADelay = 0;
 static bool          dsOpen = false;
+static unsigned long lastDoorSoundNow = 0;
+static int           lastDoorNum = 0;
+#ifdef DG_HAVEDOORSWITCH2
+static unsigned long d2sNow = 0;
+static bool          d2sTimer = false;
+static unsigned long d2sADelay = 0;
+static bool          d2sOpen = false;
+#endif
 #endif
 
 static unsigned long swInitNow = 0;
@@ -277,9 +300,14 @@ static void start_blink_empty();
 static void sideSwitchLongPress();
 static void sideSwitchLongPressStop();
 #ifdef DG_HAVEDOORSWITCH
+static void play_door_open(int doorNum, bool isOpen);
 static void dsScan();
 static void doorSwitchLongPress();
 static void doorSwitchLongPressStop();
+#ifdef DG_HAVEDOORSWITCH2
+static void door2SwitchLongPress();
+static void door2SwitchLongPressStop();
+#endif
 #endif
 static void ttkeyScan();
 static void TTKeyPressed();
@@ -330,7 +358,7 @@ void main_boot()
         write_port(0);
         portx_shadow = 0;
     } else {
-        // Setup pin for lights relay
+        // Setup pin for lights
         pinMode(BACKLIGHTS_PIN, OUTPUT);
     }
     
@@ -355,6 +383,12 @@ void main_boot()
         doorSwitch.setTicks(50, 10, 50);
         doorSwitch.attachLongPressStart(doorSwitchLongPress);
         doorSwitch.attachLongPressStop(doorSwitchLongPressStop);
+        #ifdef DG_HAVEDOORSWITCH2
+        door2Switch.begin();
+        door2Switch.setTicks(50, 10, 50);
+        door2Switch.attachLongPressStart(door2SwitchLongPress);
+        door2Switch.attachLongPressStop(door2SwitchLongPressStop);
+        #endif
     }
     doorSwitch_scan();
     #endif
@@ -401,7 +435,7 @@ void main_setup()
         if(center_gauge_empty >= center_gauge_idle) { center_gauge_idle = DEF_C_GAUGE_IDLE; center_gauge_empty = DEF_C_GAUGE_EMPTY; } 
     } else {
         center_gauge_idle = 100;
-        left_gauge_empty = 0;
+        center_gauge_empty = 0;
     }
 
     if(gauges.supportVariablePercentage(2)) {
@@ -413,6 +447,7 @@ void main_setup()
         right_gauge_empty = 0;
     }
 
+    // Thresholds for digital gauges
     gauges.setBinGaugeThreshold(0, atoi(settings.lThreshold));
     gauges.setBinGaugeThreshold(1, atoi(settings.cThreshold));
     gauges.setBinGaugeThreshold(2, atoi(settings.rThreshold));
@@ -511,6 +546,7 @@ void main_setup()
     #ifdef DG_HAVEDOORSWITCH
     doorSwitch_scan();
     isDSwitchChange = false;
+    isD2SwitchChange = false;
     #endif
 
     #ifdef DG_DBG
@@ -545,6 +581,9 @@ void main_setup()
 void main_loop()
 {
     unsigned long now = millis();
+
+    // Execute scheduled digital gauge changes
+    gauges.loop();
 
     if(sbv2) {
         portScannedNow = now;
@@ -664,17 +703,7 @@ void main_loop()
             } else if(emptyAlarm) {
                 refill_plutonium();
             } else {
-                gauges.setValuePercent(0, left_gauge_empty);
-                gauges.setValuePercent(1, center_gauge_empty);
-                gauges.setValuePercent(2, right_gauge_empty);
-                gauges.UpdateAll();
-                startAlarm = true;
-                startAlarmNow = millis();
-                emptyAlarm = true;  // Set this here already for checks elsewhere
-                refill = refillWA = false;
-                #ifdef DG_HAVEDOORSWITCH
-                dsTimer = false;
-                #endif
+                set_empty(); 
             }
             isSSwitchChange = false;
             ssRestartTimer();
@@ -687,12 +716,19 @@ void main_loop()
     if(dsTimer && now - dsNow >= dsADelay) {
         // delay door sound by max 500ms, otherwise effect is lost and we skip it
         if(now - dsNow <= dsADelay + 500) {
-            if(checkAudioDone()) {
-                play_file(dsOpen ? "/dooropen.mp3" : "/doorclose.mp3", PA_ALLOWSD, 1.0);
-            }
+            play_door_open(1, dsOpen);
         }
         dsTimer = false;
     }
+    #ifdef DG_HAVEDOORSWITCH2
+    if(d2sTimer && now - d2sNow >= d2sADelay) {
+        // delay door sound by max 500ms, otherwise effect is lost and we skip it
+        if(now - d2sNow <= d2sADelay + 500) {
+            play_door_open(2, d2sOpen);
+        }
+        d2sTimer = false;
+    }
+    #endif
     
     if(dsPlay && isDSwitchChange) {
         if(!refillWA) {
@@ -702,12 +738,28 @@ void main_loop()
                 dsTimer = true;
                 dsADelay = dsDelay;
                 dsNow = isDSwitchChangeNow;
-            } else if(timePassed < 500 && checkAudioDone()) {
-                play_file(dsOpen ? "/dooropen.mp3" : "/doorclose.mp3", PA_ALLOWSD, 1.0);
+            } else if(timePassed < 500) {
+                play_door_open(1, dsOpen);
             }
         }
         isDSwitchChange = false;
     }
+    #ifdef DG_HAVEDOORSWITCH2
+    if(dsPlay && isD2SwitchChange) {
+        if(!refillWA) {
+            unsigned long timePassed = millis() - isD2SwitchChangeNow;
+            d2sOpen = (isD2SwitchPressed != dsCloseOnClose);
+            if(dsDelay && (dsDelay > timePassed + 100)) {
+                d2sTimer = true;
+                d2sADelay = dsDelay;
+                d2sNow = isD2SwitchChangeNow;
+            } else if(timePassed < 500) {
+                play_door_open(2, d2sOpen);
+            }
+        }
+        isD2SwitchChange = false;
+    }
+    #endif
     #endif
 
     // Button 1 evaluation
@@ -719,7 +771,7 @@ void main_loop()
             say_ip_address();
         } else if(isB1Pressed) {
             isB1Pressed = false;
-            // TODO ?
+            // TODO?
         }
     }
     
@@ -734,6 +786,9 @@ void main_loop()
                 gaugeTypeLocked = false;
                 updateConfigPortalValues();
             }
+            //if() {
+                play_file("/buttonl.mp3", PA_ALLOWSD, 1.0);
+            //}
         } else if(isTTKeyPressed) {
             isTTKeyPressed = false;
             if(!TCDconnected && ssActive) {
@@ -949,7 +1004,7 @@ void main_loop()
         execute_remote_command();
     }
 
-    // Wake up on GPS/RotEnc speed changes
+    // Wake up on RotEnc speed changes
     if(gpsSpeed != oldGpsSpeed) {
         if(FPBUnitIsOn && !TTrunning && spdIsRotEnc && gpsSpeed >= 0) {
             wakeup();
@@ -979,13 +1034,9 @@ void main_loop()
     }
 
     if(networkAlarm && !TTrunning && !startup && !startAlarm && !refill && !refillWA) {
-        //bool pE = playingEmpty && !playingEmptyEnds;
         networkAlarm = false;
         if(atoi(settings.playALsnd) > 0) {
             play_file("/alarm.mp3", PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL, 1.0);
-            //if(pE) {    // would be async
-            //    append_file("/empty.wav", PA_LOOP|PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL|PA_WAV|PA_ISEMPTY, 0.5);
-            //}
         }
         emptyLED.specialSignal(DGSEQ_ALARM);
     }
@@ -1169,6 +1220,45 @@ void refill_plutonium()
     refill = true;
     refillNow = millis();
 }
+
+void set_empty()
+{
+    // Triggered by (user)MQTT or sideswitch
+    // Must not run when TTrunning or !FPBUnitIsOn
+
+    if(!FPBUnitIsOn || TTrunning)
+        return;
+
+    // Bail if already empty.
+    if( (gauges.getValuePercent(0) == left_gauge_empty) &&
+        (gauges.getValuePercent(1) == center_gauge_empty) &&
+        (gauges.getValuePercent(2) == right_gauge_empty) ) {
+        return;     
+    }
+        
+    gauges.setValuePercent(0, left_gauge_empty);
+    gauges.setValuePercent(1, center_gauge_empty);
+    gauges.setValuePercent(2, right_gauge_empty);
+
+    // Avoid updating the needles if ss is active
+    if(!ssActive) {
+        gauges.UpdateAll();
+    }
+    
+    startAlarm = true;
+    startAlarmNow = millis();
+    
+    emptyAlarm = true;  // Set this here already for checks elsewhere
+    
+    refill = refillWA = false;
+    
+    #ifdef DG_HAVEDOORSWITCH
+    dsTimer = false;
+    #ifdef DG_HAVEDOORSWITCH2
+    d2sTimer = false;
+    #endif
+    #endif
+}     
 
 static void execute_remote_command()
 {
@@ -1514,6 +1604,21 @@ static void sideSwitchLongPressStop()
 }
 
 #ifdef DG_HAVEDOORSWITCH
+void play_door_open(int doorNum, bool isOpen)
+{
+    // Sounds from same door may interrupt themselves; if sound from
+    // other door is to be played while first door's is running, we 
+    // only interrupt if resonable part of the first door's sound is already 
+    // played back.
+    if(lastDoorNum == doorNum || (millis() - lastDoorSoundNow > 750)) {
+        if(playingDoor || checkAudioDone()) {
+            play_file(isOpen ? "/dooropen.mp3" : "/doorclose.mp3", PA_ALLOWSD|PA_DOOR, 1.0);
+            lastDoorSoundNow = millis();
+            lastDoorNum = doorNum;
+        }
+    }
+}
+
 void doorSwitch_scan()
 {
     if(sbv2) {
@@ -1538,6 +1643,9 @@ void doorSwitch_scan()
         }
     } else {
         doorSwitch.scan();
+        #ifdef DG_HAVEDOORSWITCH2
+        door2Switch.scan();
+        #endif
     }
 }
 static void doorSwitchLongPress()
@@ -1553,6 +1661,21 @@ static void doorSwitchLongPressStop()
     isDSwitchChange = true;
     isDSwitchChangeNow = millis();
 }
+#ifdef DG_HAVEDOORSWITCH2
+static void door2SwitchLongPress()
+{
+    isD2SwitchPressed = true;
+    isD2SwitchChange = true;
+    isD2SwitchChangeNow = millis();
+}
+
+static void door2SwitchLongPressStop()
+{
+    isD2SwitchPressed = false;
+    isD2SwitchChange = true;
+    isD2SwitchChangeNow = millis();
+}
+#endif
 #endif
 
 static void ttkeyScan()

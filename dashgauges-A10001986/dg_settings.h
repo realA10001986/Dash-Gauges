@@ -131,9 +131,9 @@ struct Settings {
     char CfgOnSD[4]         = MS(DEF_CFG_ON_SD);
     char sdFreq[4]          = MS(DEF_SD_FREQ);
 
-    char gaugeIDA[4]      = MS(DEF_GAUGE_TYPE);
-    char gaugeIDB[4]      = MS(DEF_GAUGE_TYPE);
-    char gaugeIDC[4]      = MS(DEF_GAUGE_TYPE);
+    char gaugeIDA[4]        = MS(DEF_GAUGE_TYPE);
+    char gaugeIDB[4]        = MS(DEF_GAUGE_TYPE);
+    char gaugeIDC[4]        = MS(DEF_GAUGE_TYPE);
 
 #ifdef DG_HAVEVOLKNOB
     char FixV[4];   // Dynamically set for CP, not saved
