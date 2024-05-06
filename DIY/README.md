@@ -32,7 +32,7 @@ The terms "analog" and "digital" have the following meaning in this document:
 
 "Digital" gauges are ones that can only be controlled by power-on and power-off for "full" and "empty" pointer positions, respectively; this is useful if the gauge needs voltages beyond what the Control Board can provide (which is, as said, 5V), and is driven using external power and through a relay. One might also come up with the idea to create a gauge replica using a stepper motor and some logic to move the pointer to a fixed position on power-on, and reset it to the "Empty" position on power-loss. 
 
-Digital gauges are presumed to require 12V, fed through the "DG+" and "-" pins of the three-pin 12V connector; in that case it is recommenced to supply the entire Control Board with 12V through said connector, with the "DG+" and "+" pins shorted.
+Digital gauges are presumed to require 12V, fed through the "DG+" and "-" pins of the three-pin 12V connector; in that case it is recommended to supply the entire Control Board with 12V through said connector, with the "DG+" and "+" pins shorted.
 
 #### Control Board Hardware Configuration
 
@@ -84,8 +84,8 @@ Tested meter options and configuration:
 <table>
   <tr><td>Meter</td><td>Modification</td><td>R1/R2, R3/R4</td><td>Gauge type setting</td></tr>
   <tr><td>H&P 631-14672 0-0.5V DC voltmeter</td><td>None</td><td>470R/8k2</td><td>H&P 631-14672</td></tr>
-  <tr><td>Phaostron 0-5KV DC voltmeter (300-07970)</td><td>None</td><td>470R/4k7</td><td>Generic (0-5V)</td></tr>
-  <tr><td>Phaostron "Cyclic Trim" meter (631-15099)</td><td>The two resistors and the pot inside the meter need to be removed, and the wire (which lead to the pot) needs to be re-attached to the input terminal.</td><td>470R/4k7</td><td>Generic (0-5V)</td></tr>
+  <tr><td>Phaostron 0-5KV DC voltmeter (300-07970)</td><td>None</td><td>470R/4k7</td><td>Generic Analog (0-5V)</td></tr>
+  <tr><td>Phaostron "Cyclic Trim" meter (631-15099)</td><td>The two resistors and the pot inside the meter need to be removed, and the wire (which lead to the pot) needs to be re-attached to the input terminal.</td><td>470R/4k7</td><td>Generic Analog (0-5V)</td></tr>
 </table>
 
 Unusable:
@@ -122,7 +122,7 @@ If you can't find a model 49 VU-meter or consider the 142 too far off, you could
 Tested meter options and configuration:
 
 <table>
-  <tr><td>Meter</td><td>Modification</td><td>R1/R2, R3/R4</td><td>Gauge type setting</td></tr>
+  <tr><td>Meter</td><td>Modification</td><td>R5/R6</td><td>Gauge type setting</td></tr>
   <tr><td>Standard VU meter (Simpson 49(L/MC), 142)</td><td>None</td><td>330R/3k3</td><td>Standard VU-Meter</td></tr>
   <tr><td>Simpson model 49 0-50V DC voltmeter</td><td>Internal resistor needs to be bridged</td><td>0R/5k6</td><td>Generic Analog (0-5V)</td></tr>
   <tr><td>Simpson model 49 0-250mA DC ammeter</td><td>Internal coil in the rear, close to the bottom, needs to be removed: No need to take the meter apart; just cut the two blank wires leading from the terminals towards the center, the coil will fall out then (be sure to bend down the remaining stubs so that they don't touch anything), the resistor can remain.</td><td>0R/1k0</td><td>Generic Analog (0-5V)</td></tr>
