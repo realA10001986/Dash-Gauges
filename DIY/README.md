@@ -32,51 +32,62 @@ The terms "analog" and "digital" have the following meaning in this document:
 
 "Digital" gauges are ones that can only be controlled by power-on and power-off for "full" and "empty" pointer positions, respectively; this is useful if the gauge needs voltages beyond what the Control Board can provide (which is, as said, 5V), and is driven using external power and through a relay. One might also come up with the idea to create a gauge replica using a stepper motor and some logic to move the pointer to a fixed position on power-on, and reset it to the "Empty" position on power-loss. 
 
-When using Digital gauges, the Control Board must be powered through the three-pin "12V" power connector, with the "DG+" and "+" pins shorted.
+Digital gauges are presumed to require 12V, fed through the "DG+" and "-" pins of the three-pin 12V connector; in that case it is recommenced to supply the entire Control Board with 12V through said connector, with the "DG+" and "+" pins shorted.
 
 #### Control Board Hardware Configuration
 
-In order to make the Control Board as versatile as possible, there are some solder jumpers (pads which need to be connected using solder), and easy-to-solder through-the-hole resistors which need to be added by the end user:
+In order to make the Control Board as versatile as possible, there are some solder jumpers (ie adjacent solder pads which are connected using solder), and easy-to-solder through-the-hole resistors which need to be added by the end user:
 
-- "Light Power": Solder jumpers for internal or external gauge backlight power: Connect either INT or EXT. For 5V lighting, close INT. To use external power, connect the power supply to "Ext. Light Power", and close EXT. If all gauges are lit through LEDs, INT is preferred.
+Gauge illumination:
+- "Light Power": Solder jumpers for internal or external gauge illumination power: Connect either INT or EXT. For 5V lighting, close INT. To use external power (max. 12V), close EXT and connect the power supply to "Ext. Light Power". If all gauges are lit through LEDs, INT is preferred.
 - LED1, LED2: Backlight LEDs for left and center gauge. These are soldered to the back of the Control Board so they directly stick into the gauge's enclosure (which naturally requires a hole in that enclosure, see below).
-- R7, R8: Resistors for backlight LEDs of left and center gauge. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (EXT). The resistor value depends on LED type and desired brightness. Example: 150R for a yellow LEDs at 5V (INT).
-- R11: Resistor for Roentgens backlight on "Roentgens Light" connector [2]. If using lamps, just bridge. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (EXT).
+- R7, R8: Resistors for backlight LEDs of left and center gauge. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (EXT). The resistor value depends on LED type and desired brightness. Example: 150R for yellow LEDs at 5V (INT). A calculator for the resistor value is [here](https://www.digikey.at/en/resources/conversion-calculators/conversion-calculator-led-series-resistor).
+- R11: Resistor for Roentgens backlight on "Roentgens Light" connector [2]. When incandescent light bulbs are used, just bridge this. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (EXT).
 
 Hardware configuration for "analog" gauges:
-- Left gauge:
+- Left gauge ("Primary"):
   - R3, R4: Populate depending on gauge and supply voltage; see below
-  - Close ANA4 solder jumper
-- Center Gauge:
+  - Close ANA4 solder jumper; DIG4 must be open
+  - Leave "DIG3" unconnected/open
+- Center Gauge ("Percent Power"):
   - R1, R2: Populate depending on gauge and supply voltage; see below
-  - Close ANA2 solder jumper
+  - Close ANA2 solder jumper; DIG2 must be open
+  - Leave "DIG1" unconnected/open
 - "Roentgens" gauge (connected to "Analog Roentgens" connector [3]):
-  - R5, R6: Populate depending on gauge and supply voltage; 
+  - R5, R6: Populate depending on gauge and supply voltage;
+  - (DIG5: Does not matter, has no influence on this connector)
 
 Configuration for digital gauges (requires 12V power):
 - Left gauge:
-  - R3/R4: Leave unpopulated
-  - Close DIG4 solder jumper
+  - R3, R4: Leave unpopulated or remove
   - Bridge DIG3 by wire (or resistor, depending on gauge type)
+  - Close DIG4 solder jumper; ANA4 must be open
 - Center gauge:    
-  - R1/R2: Leave unpopulated
-  - Close DIG2 solder jumper
+  - R1, R2: Leave unpopulated or remove
   - Bridge DIG1 by wire (or resistor, depending on gauge type)
-- Roentgens gauge (connected to "Digital Roentgens" connector, pins 1 (+) and 2 (-)):
-  - R5/R6: Leave unpopulated
-  - Bridge LEG5 by wire (or resistor, depending on gauge type)
+  - Close DIG2 solder jumper; ANA2 must be open
+- Roentgens gauge (connected to "Digital Roentgens" connector [6], pins 1 (+) and 2 (-)):
+  - Bridge DIG5 by wire (or resistor, depending on gauge type)
+  - (R5/R6: Don't matter, have no influence on this connector)
+  
 
 You can mix analog and digital gauges; the firmware provides a type selection for each single gauge.
 
 ### Gauges
 
-*Important*: When using analog gauges in your project, do not connect the actual gauges until you selected the right hardware type in the Config Portal and have powered-down and powered-up the device once afterwards. This power-cycle is needed to reset the hardware to the correct settings and to avoid a power output too high at boot.
-
 #### "Primary", "Percent Power"
 
-For the smaller gauges I used two H&P 631-14672 (built by Phaostron). The pointers on these are red, but an Edding permanent marker was quickly able to change them to black. I also tested a few other types.
+For the smaller gauges I used two H&P 631-14672 (built by Phaostron). The pointers on these are red, but an Edding permanent marker was quickly able to change them to black. I have also tested a few other types.
 
 Tested meter options and configuration:
+
+<table>
+  <tr><td>Meter</td><td>Modification</td><td>R1/R2, R3/R4</td><td>Gauge type setting</td></tr>
+  <tr><td>H&P 631-14672 0-0.5V DC voltmeter</td><td>None</td><td>470R/8k2</td><td>H&P 631-14672</td></tr>
+  <tr><td>Phaostron 0-5KV DC voltmeter (300-07970)</td><td>None</td><td>470R/4k7</td><td>Generic (0-5V)</td></tr>
+  <tr><td>Phaostron "Cyclic Trim" meters (631-15099)</td><td>The two resistors and the pot inside the meter need to be removed, and the wire (which lead to the pot) needs to be re-attached to the input terminal.</td><td>470R/4k7</td><td>Generic (0-5V)</td></tr>
+</table>
+
 - H&P 631-14672 0-0.5V DC voltmeter. No internal modifications needed; R1=470R, R2=8k2 / R3=470R, R3=8k2; "H&P 631-14672" gauge type setting.
 - Phaostron 0-5KV DC voltmeter (300-07970). No internal modifications needed; R1=470R, R2=4k7 / R3=470R, R3=4k7; "Generic (0-5V)" gauge type setting.
 - Phaostron "Cyclic Trim" meters (631-15099) with a minor modification: The two resistors and the pot inside the meter need to be removed, and the wire (which lead to the pot) needs to be re-attached to the input terminal. With that modification: R1=470R, R2=4k7 / R3=470R, R3=4k7; "Generic (0-5V)" gauge type setting.
@@ -84,13 +95,13 @@ Tested meter options and configuration:
 Unusable:
 - Phaostron 0-50/100/250/500A ammeter (639-16341).
 
-Avoid Ammeters (Ampere meters) for currents >1A, and voltmeters for high voltages (>50V); those have stronger coils that cannot be used with low voltages. Otherwise, Ammeters (especially if the scale is in the milliampere range) can most likely be used after removing shunts, resistors or anything else that is between the two input terminals. 
+Avoid ammeters (Ampere meters) for currents >1A, and voltmeters for high voltages (>50V); those often have stronger coils that cannot be used with low voltages. Otherwise, ammeters (especially if the scale is in the milliampere range) can most likely be used after removing shunts, resistors or anything else that is between the two input terminals. 
 
 To find out a suitable resistors value, use a common 5V power supply (eg one for Arduino), and start out with a 8k2 resistor between the + output of the power supply and the + of the gauge (usually the left terminal when looking at the back), and work your way from there, until the 5V plus the resistor make the pointer move to the right end of the scale (but not beyond!).
 
 Movie-accurate dials for those gauges are available in the [DIY/faces-labels](/DIY/faces-labels) folder in this repository.
 
-For the backlight, I drilled a hole in the rear of the metal enclosure, center bottom, and put a 5mm yellow LED (590nm) on the Control Board. Most replicas use white LEDs, but I think on the A-Car as shown in the Petersen Museum, there are yellow ones used, and I found white ones too bright. The LEDs are mounted on the board and they stick out approx 12mm from PCB to the LED's top.
+For illumination, I drilled a hole in the rear of the metal enclosure, center bottom, and put a 5mm yellow LED (590nm) on the Control Board. Most replicas use white LEDs, but I think on the A-Car as shown in the Petersen Museum, there are yellow ones used, and I found white ones too bright. The LEDs are mounted on the board and they stick out approx 12mm from PCB to the LED's top.
 
 #### "Roentgens"
 
