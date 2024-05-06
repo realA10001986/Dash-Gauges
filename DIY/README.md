@@ -88,14 +88,10 @@ Tested meter options and configuration:
   <tr><td>Phaostron "Cyclic Trim" meters (631-15099)</td><td>The two resistors and the pot inside the meter need to be removed, and the wire (which lead to the pot) needs to be re-attached to the input terminal.</td><td>470R/4k7</td><td>Generic (0-5V)</td></tr>
 </table>
 
-- H&P 631-14672 0-0.5V DC voltmeter. No internal modifications needed; R1=470R, R2=8k2 / R3=470R, R3=8k2; "H&P 631-14672" gauge type setting.
-- Phaostron 0-5KV DC voltmeter (300-07970). No internal modifications needed; R1=470R, R2=4k7 / R3=470R, R3=4k7; "Generic (0-5V)" gauge type setting.
-- Phaostron "Cyclic Trim" meters (631-15099) with a minor modification: The two resistors and the pot inside the meter need to be removed, and the wire (which lead to the pot) needs to be re-attached to the input terminal. With that modification: R1=470R, R2=4k7 / R3=470R, R3=4k7; "Generic (0-5V)" gauge type setting.
-
 Unusable:
-- Phaostron 0-50/100/250/500A ammeter (639-16341).
+- Phaostron 0-50/100/250/500A AC ammeter (639-16341).
 
-Avoid ammeters (Ampere meters) for currents >1A, and voltmeters for high voltages (>50V); those often have stronger coils that cannot be used with low voltages. Otherwise, ammeters (especially if the scale is in the milliampere range) can most likely be used after removing shunts, resistors or anything else that is between the two input terminals. 
+It is hard to tell what a meter has inside and whether it's usable. Many meters have scales that don't match their actual input, and require an external "multiplier" (such as the 5KV voltmeter I tested). Avoid ammeters (Ampere meters) for currents >1A, and AC voltmeters for high voltages (>50V); those often have stronger coils that cannot be used with low voltages. Otherwise, ammeters (especially if the scale is in the milliampere range) can most likely be used after removing shunts, resistors or anything else that is between the two input terminals. 
 
 To find out a suitable resistors value, use a common 5V power supply (eg one for Arduino), and start out with a 8k2 resistor between the + output of the power supply and the + of the gauge (usually the left terminal when looking at the back), and work your way from there, until the 5V plus the resistor make the pointer move to the right end of the scale (but not beyond!).
 
@@ -107,24 +103,30 @@ For illumination, I drilled a hole in the rear of the metal enclosure, center bo
 
 The big "Roentgens" gauge is more of a problem. The original in the movie was a real Roentgens meter from a CP95 radiac. Such devices are hard to find, let alone one with the correct Simpson meter. The CP95 was built over a long period of time and they used meters from different manufacturers.
 
-Since I could not find a properly equipped CP95, I searched for an alternative ... and came across a lot of Simpson meters that looked good (while not identical). However: One - quite important - issue is that most Simpson meters are not illuminated. Because of this, their front is thinner, the glass is closer to the dial, and that is a problem because the movie-accurate "Empty" light won't fit.
+Since I could not find a properly equipped CP95, I searched for an alternative ... and came across a lot of Simpson meters that looked good (while not identical). However: One - quite important - issue is that most Simpson meters are not illuminated. Because of this, their front is thinner, the glass is closer to the dial, and, as a result, the movie-accurate "Empty" light won't fit.
 
 A word on Simpson model numbers: Their main model number means "case style", not "type of meter". "Model 49" therefore only means "4.5 inch case", but not whether this is a VU meter, a voltmeter, or what not:
 
 <img width="985" alt="Simpson meters" src="img/simpson_catalog.png">
 
-The only Simpson meters that came with illumination - apart from the Roentgens meters - were apparently their VU meters, models 49L ("L" for "light"; not listed above as it pre-dates the catalog) and 142 (10470, 10540). Model 49L has the correct front dimensions; depending on their build date, they have either the three bands of "stripes" (like in the movie), or one thicker band of "stripes" in the center. (Later models, unfortunately using the same model number, look entirely different.)
+To make things worse, they re-used other codes (such as "SK 525-447") for a variaty of meters, so that isn't an ID of a specific model either.
 
-I was lucky to score a **Simpson model 49L VU-meter** with the movie-accurate front. It is illuminated through two 6V incandescent light bulbs. The additional red pointer was added by drilling a hole into the front and putting a pointer from another meter inside. This red pointer is not moving, so it is reasonably easy to add.
+The only Simpson meters that came with illumination - apart from the Roentgens meters - were apparently their VU meters, models 49L ("L" for "light"; not listed above as it pre-dates the catalog) and 142 (10470, 10540). Model 49L has the correct front dimensions; depending on their build date, they have either the three bands of "stripes" (like in the movie), or one thicker band of "stripes" in the center. Later models, unfortunately using the same model number, look entirely different.
 
-The **model 142 VU-meters**, while perfectly usable electronically, are a bit smaller (4.25x3.9" vs 4.66x4.2") and look a bit different on the back; their barrel is thicker (3.25" vs 2.78" in diameter), and the screws are not at the outer corners but closer to the barrel. There are special files in the DIY/enclosure folder for model 142 dimensions. Unfortunately, the barrel is so big that it does not allow for a simple hole for the "Empty" light; this must be done another way.
+I was lucky to score a **Simpson model 49L VU-meter** with the movie-accurate front. It is illuminated through two 6V incandescent light bulbs. The additional red pointer was added by drilling a hole into the front and putting a pointer from another meter inside, held by a screw. This red pointer is not moving, so it is reasonably easy to add.
 
-If you can't find a VU-meter or consider the 142 too far off, you could try going with a Simpson voltmeter or ammeter (models 29, 39, 49, 59, or 79 fit size-wise). These meters mostly are for voltages/currents beyond what we have available directly, but: Most of those meters can be modified easily: For instance, the **Simpson model 49 0-50V DC voltmeter (SK 525-447)** has a 50K resistor inside; if this resistor is bridged, the meter shows full scale at 0.0375V. With a 5K6 or so resistor is shows full scale at approx 5V, which is perfectly usable for our purposes. But again: You also need to compromise on the "Empty" light, since non-illuminated Simpson meters are too thin.
+The **model 142 VU-meters**, while perfectly usable electronically, are a bit smaller (4.25x3.9" vs 4.66x4.2") and look different on the back; their barrel is thicker (3.25" vs 2.78" in diameter), and the screws are not at the outer corners but closer to the barrel. There are special files in the DIY/enclosure folder for model 142 dimensions. Unfortunately, the barrel is so big that it does not allow for a simple hole for the "Empty" light; this must be done another way.
+
+If you can't find a model 49 VU-meter or consider the 142 too far off, you could try going with a Simpson voltmeter or ammeter (models 29, 39, 49, 59, or 79 fit size-wise). These meters mostly are for voltages/currents beyond what we have available directly, but: Most of those meters can be modified easily: For instance, the **Simpson model 49 0-50V DC voltmeter** has a 50K resistor inside; if this resistor is bridged, the meter shows full scale at 0.0375V. With a 5K6 or so resistor is shows full scale at approx 5V, which is perfectly usable for our purposes. But again: You also need to compromise on the "Empty" light, since non-illuminated Simpson meters are too thin.
 
 Tested meter options and configuration:
-- Standard VU meter (Simpson 49(L/MC), 142): Internally unmodified. R5=330R, R6=3k3; R11 bridged as the 6V incandescent light bulbs need to resistor. Gauge Type setting "Standard VU-Meter".
-- Simpson model 49 0-50V DC voltmeter: Internal resistor needs to be bridged. R5=bridged, R6=5k6; R11 depends on user's design of illumination. Gauge Type setting "Generic Analog (0-5V)".
-- Simpson model 49 0-250mA DC ammeter: Internal coil in the rear, close to the bottom, needs to be removed: No need to take the meter apart; just cut the two blank wires leading from the terminals towards the center, the coil will fall out then (be sure to bend down the remaining stubs so that they don't touch anything), the resistor can remain. R5=bridged, R6=1k0. Gauge type setting "Generic Analog (0-5V)".
+
+<table>
+  <tr><td>Meter</td><td>Modification</td><td>R1/R2, R3/R4</td><td>Gauge type setting</td></tr>
+  <tr><td>Standard VU meter (Simpson 49(L/MC), 142)</td><td>None</td><td>330R/3k3</td><td>Standard VU-Meter</td></tr>
+  <tr><td>Simpson model 49 0-50V DC voltmeter</td><td>Internal resistor needs to be bridged</td><td>0R/5k6</td><td>Generic Analog (0-5V)</td></tr>
+  <tr><td>Simpson model 49 0-250mA DC ammeter</td><td>Internal coil in the rear, close to the bottom, needs to be removed: No need to take the meter apart; just cut the two blank wires leading from the terminals towards the center, the coil will fall out then (be sure to bend down the remaining stubs so that they don't touch anything), the resistor can remain.</td><td>0R/1k0</td><td>Generic Analog (0-5V)</td></tr>
+</table>
 
 Unusable:
 - Simpson model 49 voltmeter 0-250V AC.
