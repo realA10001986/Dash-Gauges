@@ -323,6 +323,8 @@ The Dash Gauges support the MQTT protocol version 3.1.1 for the following featur
 
 The Dash Gauges can - to some extent - be controlled through messages sent to topic **bttf/dg/cmd**. Support commands are
 - TIMETRAVEL: Start a [time travel](#time-travel)
+- EMPTY: "Drain" Plutonium and trigger alarm
+- REFILL: Refill the Plutonium chamber
 - MP_PLAY: Starts the [Music Player](#the-music-player)
 - MP_STOP: Stops the [Music Player](#the-music-player)
 - MP_NEXT: Jump to next song
