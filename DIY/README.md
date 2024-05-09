@@ -97,15 +97,13 @@ To find out a suitable resistors value, use a common 5V power supply (eg one for
 
 Movie-accurate dials for those gauges are available in the [DIY/faces-labels](/DIY/faces-labels) folder in this repository.
 
-For illumination, I drilled a 6mm hole in the rear of the metal enclosure (center: 7mm from barrel bottom edge), and put a 5mm yellow LED (590nm) on the Control Board. Most replicas use white LEDs, but I think on the A-Car as shown in the Petersen Museum, there are yellow ones used, and I found white ones too bright. The LEDs are mounted on the board.
+For illumination, there are LEDs mounted on the back of the Control Board that reach into the enclosures of the gauges. I drilled a 6mm hole in the rear of the metal enclosure (center: 7mm from barrel bottom edge), and used a 5mm yellow LED (590nm). Most replicas use white LEDs, but I think on the A-Car as shown in the Petersen Museum, there are yellow ones used, and I found white ones too bright. 
 
 ![Hole](img/phaostron_hole.jpg)
 
 ![Hole](img/phaostron_hole_2.jpg)
 
-Phaostron meters in most cases have Mx screw terminals on the back. However, some have My screws which are also shorter. For the Mx versions (original plastic washer, Mx nut, washer, Control Board, washer, Mx nut), the LEDs should stick out approx 12mm from PCB to the LED's top, for the shorter My terminals (original plastic washer, My nut, washer, Control Board, washer, My nut) only xxmm [info coming soon].
-
-
+Phaostron meters in most cases have 6mm screw terminals on the back. However, some have 4mm screws which are also shorter. For the 6mm versions (mounting order: original plastic washer, nut, washer, Control Board, washer, nut), the LEDs can usually stick out approx 12-16mm from PCB to the LED's top, but you have to check your Phaostron meter for obstacles. for the shorter 4mm terminals (mount order: original plastic washer, washer, nut, Control Board, washer, nut) the LED must be shorter - but again: Look into your meter to find out about possible depth.
 
 #### "Roentgens"
 
