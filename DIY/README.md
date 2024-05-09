@@ -97,7 +97,9 @@ To find out a suitable resistors value, use a common 5V power supply (eg one for
 
 Movie-accurate dials for those gauges are available in the [DIY/faces-labels](/DIY/faces-labels) folder in this repository.
 
-For illumination, I drilled a hole in the rear of the metal enclosure, center bottom, and put a 5mm yellow LED (590nm) on the Control Board. Most replicas use white LEDs, but I think on the A-Car as shown in the Petersen Museum, there are yellow ones used, and I found white ones too bright. The LEDs are mounted on the board and they stick out approx 12mm from PCB to the LED's top.
+For illumination, I drilled a 6mm hole in the rear of the metal enclosure (center: 7mm from barrel bottom edge), and put a 5mm yellow LED (590nm) on the Control Board. Most replicas use white LEDs, but I think on the A-Car as shown in the Petersen Museum, there are yellow ones used, and I found white ones too bright. The LEDs are mounted on the board and they stick out approx 12mm from PCB to the LED's top.
+
+![Hole](img/phaostron_hole.jpg)
 
 #### "Roentgens"
 
