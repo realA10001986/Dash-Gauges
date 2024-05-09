@@ -85,7 +85,7 @@ Tested meter options and configuration:
   <tr><td>Meter</td><td>Modification</td><td>R1/R2, R3/R4</td><td>Gauge type setting</td></tr>
   <tr><td>H&P 631-14672 0-0.5V DC voltmeter</td><td>None</td><td>470R/8k2</td><td>H&P 631-14672</td></tr>
   <tr><td>Phaostron 0-5KV DC voltmeter (300-07970)</td><td>None</td><td>470R/4k7</td><td>Generic Analog (0-5V)</td></tr>
-  <tr><td>Phaostron "Cyclic Trim" meter (631-15099)</td><td>The two resistors and the pot inside the meter need to be removed, and the wire (which lead to the pot) needs to be re-attached to the input terminal.</td><td>470R/4k7</td><td>Generic Analog (0-5V)</td></tr>
+  <tr><td>Phaostron "Cyclic Trim" meter (631-15099)</td><td>The two resistors and the pot inside the meter need to be removed, and the wire (which lead to the pot) needs to be re-attached to the input terminal. ATTN: Terminal screws are shorter and thinner; see below.</td><td>470R/4k7</td><td>Generic Analog (0-5V)</td></tr>
 </table>
 
 Unusable:
@@ -97,9 +97,15 @@ To find out a suitable resistors value, use a common 5V power supply (eg one for
 
 Movie-accurate dials for those gauges are available in the [DIY/faces-labels](/DIY/faces-labels) folder in this repository.
 
-For illumination, I drilled a 6mm hole in the rear of the metal enclosure (center: 7mm from barrel bottom edge), and put a 5mm yellow LED (590nm) on the Control Board. Most replicas use white LEDs, but I think on the A-Car as shown in the Petersen Museum, there are yellow ones used, and I found white ones too bright. The LEDs are mounted on the board and they stick out approx 12mm from PCB to the LED's top.
+For illumination, I drilled a 6mm hole in the rear of the metal enclosure (center: 7mm from barrel bottom edge), and put a 5mm yellow LED (590nm) on the Control Board. Most replicas use white LEDs, but I think on the A-Car as shown in the Petersen Museum, there are yellow ones used, and I found white ones too bright. The LEDs are mounted on the board.
 
 ![Hole](img/phaostron_hole.jpg)
+
+![Hole](img/phaostron_hole_2.jpg)
+
+Phaostron meters in most cases have Mx screw terminals on the back. However, some have My screws which are also shorter. For the Mx versions (original plastic washer, Mx nut, washer, Control Board, washer, Mx nut), the LEDs should stick out approx 12mm from PCB to the LED's top, for the shorter My terminals (original plastic washer, My nut, washer, Control Board, washer, My nut) only xxmm [info coming soon].
+
+
 
 #### "Roentgens"
 
