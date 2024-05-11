@@ -103,15 +103,15 @@ For illumination, there are LEDs mounted on the back of the Control Board that r
 
 ![Hole](img/phaostron_hole_2.png)
 
-Phaostron meters in most cases have 6mm (1/4"-28???) screw terminals on the back. However, some have 4mm (8-32 UNC???) screws which are also shorter. For the 6mm versions (mounting order: original plastic washer, washer, nut, washer, Control Board, washer, nut), the LEDs can usually stick out approx 12-16mm from PCB to the LED's top, but you have to check your Phaostron meter for obstacles. For the shorter 4mm terminals (mounting order: original plastic washer, washer, nut, Control Board, washer, nut) the LED must be shorter. Look into your meter to find out about possible depth.
+Phaostron meters have either 6mm (1/4"-28???) or 4mm (8-32 UNC???) screw terminals on the back. For the 6mm versions (mounting order: original plastic washer, washer, nut, washer, Control Board, washer, nut), the LEDs can usually stick out approx 12-16mm from PCB to the LED's top, but you have to check your Phaostron meter for obstacles. For the shorter 4mm terminals (mounting order: original plastic washer, washer, nut, washer, Control Board, washer, nut) the LED must be shorter. Look into your meter to find out about possible depth.
 
 ![MountingOrder](img/mo_6mm.jpg)
 
 #### "Roentgens"
 
-The big "Roentgens" gauge is more of a problem. The original in the movie was a real Roentgens meter from a CP95 radiac. Such devices are hard to find, let alone one with the correct Simpson meter. The CP95 was built over a long period of time and they used meters from different manufacturers.
+The "Roentgens" gauge is more of a problem. The original in the movie was a real Roentgens meter from a CP95 radiac. Such devices are hard to find, let alone one with the correct Simpson meter. The CP95 was built over a long period of time and they used meters from different manufacturers.
 
-Since I could not find a properly equipped CP95, I searched for an alternative ... and came across a lot of Simpson meters that looked good (while not identical). However: One - quite important - issue is that most Simpson meters are not illuminated. Because of this, their front is a whopping 7mm thinner, the glass is much closer to the dial, and, as a result, the movie-accurate "Empty" light won't fit.
+Since I could not find a properly equipped CP95, I searched for an alternative ... and came across a lot of Simpson meters that looked good (while not identical). However: One - quite important - issue is that hardly any Simpson meters are illuminated. Non-illuminated meters have a front that is a whopping 7mm thinner than the fronts of illuminated models, the glass is much closer to the dial, and, as a result, the movie-accurate "Empty" light won't fit.
 
 A word on Simpson model numbers: Their main model number means "case style", not "type of meter". "Model 49" therefore only means "4.5 inch case", but not whether this is a VU meter, a voltmeter, or what not:
 
@@ -125,7 +125,7 @@ I was lucky to score a **Simpson model 49L VU-meter** with the movie-accurate fr
 
 The **model 142 VU-meters**, while perfectly usable electronically, are a bit smaller (4.25x3.9" vs 4.66x4.2") and look different on the back; their barrel is thicker (3.25" vs 2.78" in diameter), and the screws are not at the outer corners but closer to the barrel. There are special files in the DIY/enclosure folder for model 142 dimensions. Unfortunately, the barrel is so big that it does not allow for a simple hole for the "Empty" light; this must be done another way.
 
-If you can't find a model 49 VU-meter or consider the 142 too far off, you could try going with a Simpson voltmeter or ammeter (models 29, 39, 49, 59, or 79 fit size-wise). These meters mostly are for voltages/currents beyond what we have available directly, but: Most of those meters can be modified easily: For instance, the **Simpson model 49 0-50V DC voltmeter** has a 50K resistor inside; if this resistor is bridged, the meter shows full scale at 0.0375V. With a 5K6 or so resistor is shows full scale at approx 5V, which is perfectly usable for our purposes. But again: You also need to compromise on the "Empty" light, since non-illuminated Simpson meters are too thin.
+If you can't find a model 49 VU-meter or consider the 142 too far off, you could try a Simpson voltmeter or ammeter (models 29, 39, 49, 59, or 79 fit size-wise). These meters mostly are for voltages/currents beyond what the Control Board can deliver, but: Many of those meters can be modified easily: For instance, the **Simpson model 49 0-50V DC voltmeter** has a 50K resistor inside; if this resistor is bridged, the meter shows full scale at 0.0375V. With a 5K6 resistor it shows full scale at approx 5V, which is perfectly usable. But again: You also need to compromise on the "Empty" light, since non-illuminated Simpson meters are too thin.
 
 Tested meter options and configuration:
 
