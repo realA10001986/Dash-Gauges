@@ -103,7 +103,7 @@ For illumination, there are LEDs mounted on the back of the Control Board that r
 
 ![Hole](img/phaostron_hole_2.png)
 
-Phaostron meters have either 6mm (1/4"-28) or 4mm (8-32 UNC???) screw terminals on the back. For the 6mm versions (mounting order: original plastic washer, washer, nut, washer, Control Board, washer, nut), the LEDs can usually stick out approx 12-16mm from PCB to the LED's top, but you have to check your Phaostron meter for obstacles. For the shorter 4mm terminals (mounting order: original plastic washer, washer, nut, washer, Control Board, washer, nut) the LED must be shorter. Look into your meter to find out about possible depth.
+Phaostron meters have either 6mm (1/4"-28 UNF) or 4mm (8-36 UNF???) screw terminals on the back. For the 6mm versions (mounting order: original plastic washer, washer, nut, washer, Control Board, washer, nut), the LEDs can usually stick out approx 12-16mm from PCB to the LED's top, but you have to check your Phaostron meter for obstacles. For the shorter 4mm terminals (mounting order: original plastic washer, washer, nut, washer, Control Board, washer, nut) the LED must be shorter. Look into your meter to find out about possible depth.
 
 ![MountingOrder](img/mo_6mm.jpg)
 
