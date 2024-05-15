@@ -103,7 +103,7 @@ For illumination, there are LEDs mounted on the back of the Control Board that r
 
 ![Hole](img/phaostron_hole_2.png)
 
-Phaostron meters have either 6mm (1/4"-28???) or 4mm (8-32 UNC???) screw terminals on the back. For the 6mm versions (mounting order: original plastic washer, washer, nut, washer, Control Board, washer, nut), the LEDs can usually stick out approx 12-16mm from PCB to the LED's top, but you have to check your Phaostron meter for obstacles. For the shorter 4mm terminals (mounting order: original plastic washer, washer, nut, washer, Control Board, washer, nut) the LED must be shorter. Look into your meter to find out about possible depth.
+Phaostron meters have either 6mm (1/4"-28) or 4mm (8-32 UNC???) screw terminals on the back. For the 6mm versions (mounting order: original plastic washer, washer, nut, washer, Control Board, washer, nut), the LEDs can usually stick out approx 12-16mm from PCB to the LED's top, but you have to check your Phaostron meter for obstacles. For the shorter 4mm terminals (mounting order: original plastic washer, washer, nut, washer, Control Board, washer, nut) the LED must be shorter. Look into your meter to find out about possible depth.
 
 ![MountingOrder](img/mo_6mm.jpg)
 
@@ -139,7 +139,7 @@ Tested meter options and configuration:
 Unusable:
 - Simpson model 49 voltmeter 0-250V AC.
 
-Most Simpson meters have a drop-shaped pointer top which I was not able to remove (in fact, I didn't even try; I don't think the pointer top would have ended up properly straight); although I mounted the "Empty" light as high on the scale as possible, the pointer was still too long and collided with the light. My solution was to change the bends of the pointer where it leaves the driving mechanism more into an "S" shape, and I could thereby make it ever so short enough to pass the light. Another way would be to cut off the drop part, but that would make the pointer a tad too short in my opinion.
+Most Simpson meters have a drop-shaped pointer top which I was not able to remove (in fact, I didn't even try; I don't think the pointer top would have ended up properly straight); although I mounted the "Empty" light as high on the scale as possible, the pointer was still too long and collided with the light. My solution was to change the bends of the pointer where it leaves the driving mechanism more into an "S" shape, and I could thereby make it ever so short enough to pass the light. Another way would be to cut off the drop part, but that would make the pointer a tad too short in my opinion. _Warning_: Those pointers have a counter-weight on the opposite end and are perfectly balanced. If you decide to cut off the drop, the pointer is unbalanced and you need to cut off a tiny (!) bit of the other end, too, otherwise the pointer will not fully return to zero position and wander around if you tilt the gauge.
 
 Regarding the "Empty" light: I used a light like this one (12V version), available from aliexpress:
 
@@ -153,9 +153,7 @@ The LED in those lights/buttons requires 12V. The Control Board has two connecto
 - When using the "Empty Light" [4] connector, the light/button's resistor needs to be removed: Pull up the red cover and pull out the LED; then desolder the LED and bridge the resistor.
 - When using the LED pins of the Digital Roetgens connector [6]: No modification of light/button needed, but the Control Board must be run with a 12V power supply. When using 5V, the LED will stay dark.
 
-About the hole for the "Empty" light: Above light/button requires a 16mm hole. The center of this hole is, looking at the meter from the front, with the dial removed, 11mm above the edge of the barrel. When looking at the back, the center is 9mm above the barrel. Start with the hole in the enclosure, then mount the dial. mark the hole on the back of the dial, then remove the dial again and make the hole there.
-
-![Hole](img/Empty_hole_back.png)
+About the hole for the "Empty" light: Above light/button requires a 16mm hole. The center of this hole is, looking at the meter from the front, at 13mm below the enclosure's edge, horizontally centered. In order to make the hole into the enclosure and the dial at exactly the same spot, drill the hole with the dial mounted. I used a step drill and drilled from the dial's side. Have a vacuum ready, the Bakelite makes a lot of dirt. Do not attach your new dial label before drilling, it's better to do this afterwards.
 
 ### Enclosure
 
