@@ -79,7 +79,7 @@ static DGButton sideSwitch = DGButton(SIDESWITCH_PIN,
     false     // Disable internal pull-up resistor
     #else
     true,     // Switch is active LOW (CB 1.04)
-    true      // Enable internal pull-up resistor
+    true      // Enable internal pull-up resistor (doesn't have one though)
     #endif
 );
 
@@ -126,7 +126,7 @@ static bool          dsCloseOnClose = false;
 #ifdef DG_HAVEDOORSWITCH2
 static DGButton door2Switch = DGButton(DOOR2_SWITCH_PIN,
     true,    // Switch is active LOW
-    true     // Enable internal pull-up resistor
+    true     // Enable internal pull-up resistor (does not have one, though)
 );
 static bool          isD2SwitchPressed = false;
 static bool          isD2SwitchChange = false;
@@ -578,6 +578,8 @@ void main_setup()
     }
 }
 
+//int dbgcnt = 0;
+
 void main_loop()
 {
     unsigned long now = millis();
@@ -910,6 +912,17 @@ void main_loop()
                 if(now - TTstart < P0_DUR) {
 
                     // Nothing.
+                    /*
+                    dbgcnt++;
+                    if(dbgcnt < 19) {
+                        Serial.println("Inverting 0");
+                        gauges.setValuePercent(0, 100-gauges.getValuePercent(0));
+                        gauges.UpdateAll();
+                        Serial.println("Inverting 2");
+                        gauges.setValuePercent(2, 100-gauges.getValuePercent(2));
+                        gauges.UpdateAll();
+                    }
+                    */
                              
                 } else {
 
@@ -1078,6 +1091,8 @@ static void timeTravel(bool TCDtriggered, uint16_t P0Dur, uint16_t P1Dur)
     
     if(TTrunning)
         return;
+
+    //dbgcnt = 0;
 
     flushDelayedSave();
     
@@ -1595,12 +1610,14 @@ static void sideSwitchLongPress()
 {
     isSSwitchPressed = true;
     isSSwitchChange = true;
+    Serial.println("Side switch is now pressed");
 }
 
 static void sideSwitchLongPressStop()
 {
     isSSwitchPressed = false;
     isSSwitchChange = true;
+    Serial.println("Side switch is now released");
 }
 
 #ifdef DG_HAVEDOORSWITCH

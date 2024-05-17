@@ -109,7 +109,7 @@ static const struct ga_types gaugeTypesSmall[] = {
 
     // Type 2: Digital gauge: 0 or 12V, switched through DIGITAL_GAUGE_PIN. On the OEM Control
     // Board, the output voltage is 12V, but can be adjusted by putting a resistor
-    // instead of a bridge at LEG1 (for "Percent Power") or LEG2 (for "Primary").
+    // instead of a bridge at DIG1 (for "Percent Power") or DIG2 (for "Primary").
     { 2, "Digital / Legacy (0/12V)", DGD_TYPE_DIGITAL, 
       {}, { DIGITAL_GAUGE_PIN } },
 
@@ -143,7 +143,7 @@ static const struct ga_types gaugeTypesLarge[] = {
 
     // Type 3: Digital gauge: 0 or 12V, switched through DIGITAL_GAUGE_PIN. On the OEM control
     // board, the output voltage is 12V, but can be adjusted by putting a resistor
-    // instead of a bridge at LEG5. A digital "Roentgens" meter must be connected to the 
+    // instead of a bridge at DIG5. A digital "Roentgens" meter must be connected to the 
     // "Digital/Legacy" connector, pins 1 (+) and 2 (-).
     { 3, "Digital / Legacy (0/12V)", DGD_TYPE_DIGITAL,
       {}, { DIGITAL_GAUGE_PIN } },
@@ -382,6 +382,10 @@ bool Gauges::begin(uint8_t idA, uint8_t idB, uint8_t idC)
     uint8_t idArray[3] = { idA, idB, idC };
     int pinIdx = 0;
 
+    for(int i = 0; i < 40; i++) {
+        _pinIndices[i] = -1;
+    }
+
     // Check for MCP4728
     Wire.beginTransmission((uint8_t)0x60);
     if(Wire.endTransmission(true)) {
@@ -428,12 +432,13 @@ bool Gauges::begin(uint8_t idA, uint8_t idB, uint8_t idC)
             if((_pins[i] = gat->dga.gpioPin) < 40) {
                 if(_pinIndices[_pins[i]] < 0) {
                     _pinIndices[_pins[i]] = pinIdx++;
+                    Serial.printf("pinIdx: %d\n", pinIdx);
                 }
                 pinMode(_pins[i], OUTPUT);
                 setDigitalPin(_pins[i], LOW);
                 _supportVarPerc[i] = false;
             } else {
-                Serial.printf("Bad GPIO number: %d", _pins[i]);
+                Serial.printf("Bad GPIO number: %d\n", _pins[i]);
                 _type[i] = DGD_TYPE_NONE;
             }
             break;
@@ -442,6 +447,11 @@ bool Gauges::begin(uint8_t idA, uint8_t idB, uint8_t idC)
     }
 
     _allMCP4728 = (numMCP4728 == 3);
+    _numDigPins = pinIdx;
+
+    #ifdef DG_DBG
+    Serial.printf("Number of digital pins in use: %d\n", _numDigPins);
+    #endif
 
     if(_haveMCP4728) {
         uint8_t readBack[24];
@@ -520,6 +530,7 @@ void Gauges::off()
         }
         Wire.endTransmission(true);
     } else {
+        int digcnt = 0;
         for(int i = 0; i < 3; i++) {
             switch(_type[i]) {
             case DGD_TYPE_MCP4728:
@@ -530,7 +541,10 @@ void Gauges::off()
                 Wire.endTransmission(true);
                 break;
             case DGD_TYPE_DIGITAL:
-                setDigitalPin(_pins[i], LOW);
+                if(digcnt < _numDigPins) {
+                    setDigitalPin(_pins[i], LOW);
+                    digcnt++;
+                }
                 break;
             }
         }
@@ -548,7 +562,7 @@ void Gauges::setBinGaugeThreshold(uint8_t index, uint8_t thres)
     index &= 0x03;
 
     if(thres > 99) thres = 99;
-    
+
     _thresholds[index] = thres;
 }
 
@@ -603,6 +617,7 @@ void Gauges::UpdateAll()
         }
         Wire.endTransmission(true);
     } else {
+        int digcnt = 0;
         for(int i = 0; i < 3; i++) {
             switch(_type[i]) {
             case DGD_TYPE_MCP4728:
@@ -613,7 +628,10 @@ void Gauges::UpdateAll()
                 Wire.endTransmission(true);
                 break;
             case DGD_TYPE_DIGITAL:
-                setDigitalPin(_pins[i], (_values[i] > _thresholds[i]) ? HIGH : LOW);
+                if(digcnt < _numDigPins) {
+                    setDigitalPin(_pins[i], (_values[i] > _thresholds[i]) ? HIGH : LOW);
+                    digcnt++;
+                }
                 break;
             }
         }
@@ -642,6 +660,9 @@ void Gauges::loop()
                     _lastState[pidx] = _desiredState[pidx];
                     _lastStateChg[pidx] = millis();
                     _scheduled[pidx] = 0;
+                    #ifdef DG_DBG
+                    Serial.printf("Executing scheduled switch to %d on pin %d\n", _desiredState[pidx], _pins[i]);
+                    #endif
                 }
             }
         }
@@ -705,11 +726,11 @@ void Gauges::setDigitalPin(uint8_t pin, uint8_t state)
             if(!_scheduled[pidx]) {
                 _scheduled[pidx] = now + (DIG_SWITCH_MIN_TIME - elapsed);
                 #ifdef DG_DBG
-                Serial.printf("Scheduled switch for gauge pin %d\n", pin);
+                Serial.printf("Scheduled switch to %d for gauge pin %d\n", state, pin);
                 #endif
             } else {
                 #ifdef DG_DBG
-                Serial.printf("Switch for gauge pin %d already scheduled\n", pin);
+                Serial.printf("Switch to %d for gauge pin %d already scheduled\n", state, pin);
                 #endif
             }
             return;

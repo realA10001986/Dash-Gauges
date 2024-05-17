@@ -96,6 +96,8 @@
 
 /*  Changelog
  *  
+ *  2024/05/17 (A10001986)
+ *    - Some optimizations for digital gauges
  *  2024/05/05 (A10001986)
  *    - Remove i2c addresses from array entries; reset MCP4728 EEPROM if not used.
  *  2024/05/04 (A10001986)

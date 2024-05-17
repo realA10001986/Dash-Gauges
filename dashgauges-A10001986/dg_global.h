@@ -12,8 +12,8 @@
 #define _DG_GLOBAL_H
 
 // Version strings
-#define DG_VERSION       "V0.47"
-#define DG_VERSION_EXTRA "MAY052024"
+#define DG_VERSION       "V0.48"
+#define DG_VERSION_EXTRA "MAY172024"
 
 #define DG_DBG              // debug output on Serial
 
@@ -49,7 +49,7 @@
 //#define DG_HAVEVOLKNOB
 
 // Version of Control Board
-#define CB_VERSION 3
+#define CB_VERSION 4
 
 // --- end of config options
 
@@ -96,26 +96,26 @@
 
 #define STATUS_LED_PIN     2  // Status LED (on ESP)
 
-#define DIGITAL_GAUGE_PIN 12  // "Digital" gauges (all three)
+#define DIGITAL_GAUGE_PIN 12  // [OUT] "Digital" gauges (all three)                 
 
-#define TT_IN_PIN         13  // Time Travel button (or TCD tt trigger input)
-#define BUTTON1_PIN       36  // Button 1
+#define TT_IN_PIN         13  // [IN]  Time Travel button (or TCD tt trigger input) (has internal PU/PD; PD on CB)
+#define BUTTON1_PIN       36  // [IN]  Button 1                                     (has no internal PU; PD on CB)
 
-#define SIDESWITCH_PIN    16  // SBv1/CBv1: Toggle switch on side
+#define SIDESWITCH_PIN    16  // [IN]  SBv1/CBv1: Toggle switch on side             (has no internal PU; PU on CB)
 #if CB_VERSION < 4
-#define DOOR_SWITCH_PIN   27  // SBv1/CBv1.03: Door switch for door 1
+#define DOOR_SWITCH_PIN   27  // [IN]  SBv1/CBv1.03: Door switch for door 1         (has internal PU)
 #else
-#define DOOR_SWITCH_PIN   14  // SBv1/CBv1.04: Door switch for door 1
+#define DOOR_SWITCH_PIN   14  // [IN]  SBv1/CBv1.04: Door switch for door 1         (has internal PU/PD)
 #endif
-#define DOOR2_SWITCH_PIN  32  // CBv1.03: Door switch for door 2
+#define DOOR2_SWITCH_PIN  32  // [IN]  CBv1.03+: Door switch for door 2             (has no internal PU?; PU on CB)
 #if CB_VERSION < 4
-#define BACKLIGHTS_PIN    14  // SBv1/CBv1.03: Gauges' backlights
+#define BACKLIGHTS_PIN    14  // [OUT] SBv1/CBv1.03: Gauges' backlights
 #else
-#define BACKLIGHTS_PIN    27  // SBv1/CBv1.04: Gauges' backlights
+#define BACKLIGHTS_PIN    27  // [OUT] SBv1/CBv1.04: Gauges' backlights
 #endif
 
-#define EMPTY_LED_PIN     17  // SBv1/CBv1: "Empty" LED
-#define EMPTY_LED_PIN2    14  // SBv2:      "Empty" LED
+#define EMPTY_LED_PIN     17  // [OUT] SBv1/CBv1: "Empty" LED
+#define EMPTY_LED_PIN2    14  // [OUT] SBv2:      "Empty" LED
 
 // I2S audio pins
 #define I2S_BCLK_PIN      26

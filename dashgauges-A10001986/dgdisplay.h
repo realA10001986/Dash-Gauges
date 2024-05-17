@@ -101,7 +101,7 @@ struct ga_types {
 #define MCP4728_DEFAULT_MASK   (MCP4728_VREF_INT|MCP4728_POWER_DOWN|MCP4728_GAIN_HIGH)
 
 // Minimum time between state changes for digital gauges
-#define DIG_SWITCH_MIN_TIME 750
+#define DIG_SWITCH_MIN_TIME 1500
 
 class Gauges {
 
@@ -143,6 +143,7 @@ class Gauges {
         bool _haveMCP4728 = false;
         bool _haveMCP4728gauge = false;
         bool _allMCP4728 = false;
+        int  _numDigPins = 0;
 
         bool _supportVarPerc[4] = { false, false, false, false };
         
@@ -158,7 +159,7 @@ class Gauges {
         uint8_t _pins[4]       = { 255, 255, 255, 255 };
         uint8_t _thresholds[4] = { 0, 0, 0, 0 };
 
-        int8_t        _pinIndices[40]  = { - 1 };
+        int8_t        _pinIndices[40]  = { -1 };
         uint8_t       _lastState[3]    = { 0, 0, 0 };
         uint8_t       _desiredState[3] = { 0, 0, 0 };
         unsigned long _lastStateChg[3] = { 0, 0, 0 };

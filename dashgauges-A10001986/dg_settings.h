@@ -110,9 +110,9 @@ struct Settings {
     char cEmpty[6]          = MS(DEF_C_GAUGE_EMPTY);
     char rEmpty[6]          = MS(DEF_R_GAUGE_EMPTY);
 
-    char lThreshold[6]      = "0";
-    char cThreshold[6]      = "0";
-    char rThreshold[6]      = "0";
+    char lThreshold[6]      = "20";
+    char cThreshold[6]      = "20";
+    char rThreshold[6]      = "20";
 
     char playALsnd[4]       = MS(DEF_PLAY_ALM_SND);
 
