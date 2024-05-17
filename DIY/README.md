@@ -10,7 +10,7 @@ This prop was made to be compatible with the CircuitSetup line of movie props ([
 
 The Panel consists of several parts:
 - Aluminium (Aluminum for Americans) enclosure; the measurements are in the ["enclosure"](/DIY/enclosure) folder of this repository. Can be bought at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/) (does not fit model 142 gauge, see [here](#roentgens)).
-- The gauges: The smaller gauges depicted are H&P 631-14672 (built by Phaostron) and the "Plutonium chamber" gauge is a Simpson 49L VU Meter. Movie-accurate faces for these gauges are in the ["faces-labels"](/DIY/faces-labels) folder of this repository.
+- The gauges: The smaller gauges depicted are H&P 631-14672 (built by Phaostron) and the "Plutonium chamber" gauge is a Simpson 49L VU Meter. 
 - A Control Board
 
 ### Control board
@@ -19,7 +19,7 @@ The Control board is mounted on the smaller gauges. Its features include
 - 5V or 12V power supply (12V needed for digital gauges)
 - audio, with speaker connector
 - SD card slot
-- a DAC for driving "analog" gauges with arbitrary voltages between 0 and 5V, and support for "digital" gauges (0/12V); room for user-mountable resistors to adjust voltage to gauge type used
+- a DAC for driving "analog" gauges with arbitrary voltages between 0 and 5V, and support for "digital" gauges (0/12V); room for user-mountable resistors to adjust voltage to very gauge type used
 - "Legacy" connector with pins for 12V digital Roentgens gauge, 12V Roentgens backlight, 12V "Empty" LED,
 - Time Travel button, plus an additional multi-purpose button ("Button 1"); Time Travel connector for external button
 - Connector for two Door Switches, for Door-Sound play back.
@@ -32,8 +32,6 @@ The terms "analog" and "digital" have the following meaning in this document:
 
 "Digital" gauges are ones that can only be controlled by power-on and power-off for "full" and "empty" pointer positions, respectively; this is useful if the gauge needs voltages beyond what the Control Board can provide (which is, as said, 5V), and is driven using external power and through a relay. One might also come up with the idea to create a gauge replica using a stepper motor and some logic to move the pointer to a fixed position on power-on, and reset it to the "Empty" position on power-loss. 
 
-Digital gauges are presumed to require 12V, fed through the "DG+" and "-" pins of the three-pin 12V connector; in that case it is recommended to supply the entire Control Board with 12V through said connector, with the "DG+" and "+" pins shorted.
-
 #### Control Board Hardware Configuration
 
 In order to make the Control Board as versatile as possible, there are some solder jumpers (ie adjacent solder pads which are connected using solder), and easy-to-solder through-the-hole resistors which need to be added depending on the other hardware used.
@@ -44,13 +42,13 @@ In order to make the Control Board as versatile as possible, there are some sold
 
 Main connectors (red numbers):
 - Red_1: 5V input for analog gauges and electronics
-- Red_2: 12V input for digital gauges (DG+ pin) and electronics ("+" pin)
+- Red_2: 12V input for digital gauges ("DG+"/"-" pins) and electronics ("+"/"-" pins)
 - Red_3: Time Travel button: To trigger a time travel, "TT" and "3V3" must be shorted.
 - Red_4: Door switches: Switches need to connect "C" and "1" for door 1, and "C" and "2" for door 2.
 
 Power supply:
 
-The electronics can be run off 5V or 12V. If you are using analog gauges only, the choice is yours. 
+The electronics can be run off 5V or 12V ("+"/"-" pins). If you are using analog gauges only, the choice is yours.
 
 Digital gauges, as well as connecting anything to connector green_6, require 12V on the "DG+" pin of the 12V power connector [red_2]. If you want to power everything with 12V, bridge the "+" and "DG+" pins of connector red_2 with a short wire, as indicated on the silkscreen. 
 
@@ -85,22 +83,24 @@ Example for configuration for three analog gauges:
 
 Configuration for digital gauges (blue numbers):
 - Left gauge:
-  - Blue_3: Bridge DIG3 by wire (or resistor, depending on gauge type)
+  - Blue_3: Bridge DIG3 by wire
   - Blue_4: Close DIG4 solder jumper (ANA4 [purple 4] must be open)
   - (R3, R4 [purple_3]: Leave unpopulated or remove)
 - Center gauge:    
-  - Blue_1: Bridge DIG1 by wire (or resistor, depending on gauge type)
+  - Blue_1: Bridge DIG1 by wire
   - Blue_2: Close DIG2 solder jumper; ANA2 (purple_2) must be open
   - (R1, R2: [purple_1]: Leave unpopulated or remove)
 - Roentgens gauge (connected to "Digital Roentgens" connector [green 6]:
-  - Blue_5: Bridge DIG5 by wire (or resistor, depending on gauge type)
+  - Blue_5: Bridge DIG5 by wire
   - (R5/R6 [purple 5]: Don't matter, have no influence on this connector)
+
+Example for configuration for three digital gauges:
 
 | [<img src="img/cb-digital-s.jpg">](img/cb-digital.jpg) |
 |:--:| 
 | *Click for hi-res image* |
 
-You can mix analog and digital gauges; the firmware provides a type selection for each single gauge.
+You can mix analog and digital gauges; the firmware provides a type selection for each single gauge. In "full digital" configuration, as depticted above, the board can replace OEM boards from another manufacturer in order to make the otherwise "alien" Dash Gauges integrate with other CircuitSetup props.
 
 Gauge illumination [yellow numbers]:
 - Yellow_1, yellow_2: R7, R8: Resistors for backlight LEDs of left and center gauge. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (yellow_5) (EXT). The resistor value depends on LED type and desired brightness. Example: 150R for yellow LEDs at 5V (INT). A calculator for the resistor value is [here](https://www.digikey.at/en/resources/conversion-calculators/conversion-calculator-led-series-resistor).
