@@ -67,12 +67,12 @@ Other connectors (green numbers):
 Hardware configuration for "analog" gauges (purple numbers):
 - Left gauge ("Primary"):
   - Purple_3: R3, R4: Populate depending on gauge and supply voltage; see below
-  - Purple_4: Close ANA4 solder jumper; DIG4 must be open
+  - Purple_4: Close ANA4 solder jumper; DIG4 (blue_4) must be open
   - Leave "DIG3" (blue_3) unconnected/open
 - Center Gauge ("Percent Power"):
   - Purple_1: R1, R2: Populate depending on gauge and supply voltage; see below
-  - Purple_2: Close ANA2 solder jumper; DIG2 must be open
-  - Leave "DIG1" ((blue_1) unconnected/open
+  - Purple_2: Close ANA2 solder jumper; DIG2 (blue_2) must be open
+  - Leave "DIG1" (blue_1) unconnected/open
 - "Roentgens" gauge, (connected to "Analog Roentgens" connector [green_3]:
   - Purple_5: R5, R6: Populate depending on gauge and supply voltage;
   - (DIG5 [blue_5]: Does not matter, has no influence on this connector)
@@ -90,9 +90,9 @@ Configuration for digital gauges (blue numbers):
   - (R3, R4 [purple_3]: Leave unpopulated or remove)
 - Center gauge:    
   - Blue_1: Bridge DIG1 by wire (or resistor, depending on gauge type)
-  - Blue_2: Close DIG2 solder jumper; ANA2 must be open
+  - Blue_2: Close DIG2 solder jumper; ANA2 (purple_2) must be open
   - (R1, R2: [purple_1]: Leave unpopulated or remove)
-- Roentgens gauge (connected to "Digital Roentgens" connector [green 6], pins 1 (+) and 2 (-)):
+- Roentgens gauge (connected to "Digital Roentgens" connector [green 6]:
   - Blue_5: Bridge DIG5 by wire (or resistor, depending on gauge type)
   - (R5/R6 [purple 5]: Don't matter, have no influence on this connector)
 
@@ -103,10 +103,10 @@ Configuration for digital gauges (blue numbers):
 You can mix analog and digital gauges; the firmware provides a type selection for each single gauge.
 
 Gauge illumination [yellow numbers]:
-- Yellow 1, yellow 2: R7, R8: Resistors for backlight LEDs of left and center gauge. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (EXT). The resistor value depends on LED type and desired brightness. Example: 150R for yellow LEDs at 5V (INT). A calculator for the resistor value is [here](https://www.digikey.at/en/resources/conversion-calculators/conversion-calculator-led-series-resistor).
-- Yellow 3: R11: Resistor for Roentgens backlight on "Roentgens Light" connector [green 2]. When incandescent light bulbs are used, just bridge this. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (EXT).
-- Yellow 4: "Light Power": Solder jumpers for internal or external gauge illumination power: Connect either INT or EXT. For 5V lighting, close INT. To use external power (max. 12V), close EXT and connect the power supply to "Ext. Light Power" [yellow 5]. If all gauges are lit through LEDs, INT is preferred.
-- 5: "Ext. light power": Power supply for "EXT" setting.
+- Yellow_1, yellow_2: R7, R8: Resistors for backlight LEDs of left and center gauge. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (yellow_5) (EXT). The resistor value depends on LED type and desired brightness. Example: 150R for yellow LEDs at 5V (INT). A calculator for the resistor value is [here](https://www.digikey.at/en/resources/conversion-calculators/conversion-calculator-led-series-resistor).
+- Yellow_3: R11: Resistor for Roentgens backlight on "Roentgens Light" connector [green 2]. When incandescent light bulbs are used, just bridge this. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (yellow_5) (EXT).
+- Yellow_4: "Light Power": Solder jumpers for selecting internal or external gauge illumination power: Connect either INT or EXT. For 5V lighting, close INT. To use external power (max. 12V), close EXT and connect the power supply to "Ext. Light Power" [yellow 5]. If all gauges are lit through LEDs, INT is preferred.
+- Yellow_5: "Ext. light power": Power supply for "EXT" setting.
 - LED1, LED2: Backlight LEDs for left and center gauge. These are soldered to the back of the Control Board so they directly reach into the gauge's enclosure.
 
 ### Gauges
@@ -141,7 +141,7 @@ For illumination, there are LEDs mounted on the back of the Control Board that r
 
 ![Hole](img/phaostron_hole_2.png)
 
-Phaostron meters have either 6mm (1/4"-28 UNF) or 4mm (8-36 UNF???) screw terminals on the back. For the 6mm versions (mounting order: original plastic washer, washer, nut, washer, Control Board, washer, nut), the LEDs can usually stick out approx 12-16mm from PCB to the LED's top, but you have to check your Phaostron meter for obstacles. For the shorter 4mm terminals (mounting order: original plastic washer, washer, nut, washer, Control Board, washer, nut) the LED must be shorter. Look into your meter to find out about possible depth.
+Phaostron meters have either 6mm (1/4"-28 UNF) or 4mm (8-32 UNC) screw terminals on the back. For the 6mm versions (mounting order: original plastic washer, washer, nut, washer, Control Board, washer, nut), the LEDs can usually stick out approx 12-16mm from PCB to the LED's top, but you have to check your Phaostron meter for obstacles. For the shorter 4mm terminals (mounting order: original plastic washer, washer, nut, washer, Control Board, washer, nut) the LED must be shorter. Look into your meter to find out about possible depth.
 
 ![MountingOrder](img/mo_6mm.jpg)
 
