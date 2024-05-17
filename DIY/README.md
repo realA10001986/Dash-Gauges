@@ -2,7 +2,9 @@
 
 This is a custom built prop; there is no complete kit available. 
 
-CircuitSetup at this point only offers the [bezel](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/); a Control Board which allows using a wide range of meters will be available soon. This prop was made to be compatible with the CircuitSetup line of movie props ([Time Circuits Display](https://tcd.out-a-ti.me), [Flux Capacitor](https://fc.out-a-ti.me), [SID](https://sid.out-a-ti.me)).
+CircuitSetup at this point only offers the [bezel](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/); production data for a Control Board which allows using a wide range of meters is in the ["electronics"](/DIY/electronics) folder. 
+
+This prop was made to be compatible with the CircuitSetup line of movie props ([Time Circuits Display](https://tcd.out-a-ti.me), [Flux Capacitor](https://fc.out-a-ti.me), [SID](https://sid.out-a-ti.me)).
 
 ![Dash Gauges](img/thedg_n.jpg)
 
@@ -41,30 +43,38 @@ In order to make the Control Board as versatile as possible, there are some sold
 | *Click for hi-res image* |
 
 Main connectors (red numbers):
-- Red1: 5V input for analog gauges and electronics
-- Red2: 12V input for digital gauges and electronics
-- Red3: Time Travel: To trigger a time travel, "TT" and "3V3" must be shorted.
-- Red4: Door switches: Switches need to connect "C" and "1" for door 1, and "C" and "2" for door 2.
+- Red_1: 5V input for analog gauges and electronics
+- Red_2: 12V input for digital gauges and electronics
+- Red_3: Time Travel button: To trigger a time travel, "TT" and "3V3" must be shorted.
+- Red_4: Door switches: Switches need to connect "C" and "1" for door 1, and "C" and "2" for door 2.
+
+Power supply:
+
+The electronics can be run off 5V or 12V. If you are using analog gauges only, the choice is yours. 
+
+Digital gauges, as well as connecting anything to connector green_6, require 12V on the "DG+" pin of the 12V power connector [red_2]. If you want to power everything with 12V, bridge the "+" and "DG+" of connector red_2 with a short wire, as indicated on the silkscreen. 
+
+ For experts: To power the electronics with 5V, but the digital gauges with 12V, put 12V on "DG+" and "-" of the 12V connector red_2, and 5V on the 5V connector red_1 or on the ESP32 via USB.
 
 Other connectors (green numbers):
-- 1: Speaker
-- 2: Backlight for Roentgens gauge
-- 3: Analog Roentgens meter
-- 4: Empty LED (White LED, forward voltage 3.3V)
-- 5: Side switch
-- 6: Connector for digital Roentgens, 12V Roetgens backlight, 12V empty light
+- Green_1: Speaker
+- Green_2: Backlight for Roentgens gauge
+- Green_3: Analog Roentgens meter
+- Green_4: Empty LED (White LED, forward voltage 3.3V)
+- Green_5: Side switch
+- Green_6: Connector for digital Roentgens, 12V Roetgens backlight, 12V empty light
 
 Hardware configuration for "analog" gauges (purple numbers):
 - Left gauge ("Primary"):
-  - 3: R3, R4: Populate depending on gauge and supply voltage; see below
-  - 4: Close ANA4 solder jumper; DIG4 must be open
+  - Purple 3: R3, R4: Populate depending on gauge and supply voltage; see below
+  - Purple 4: Close ANA4 solder jumper; DIG4 must be open
   - Leave "DIG3" (blue 3) unconnected/open
 - Center Gauge ("Percent Power"):
-  - 1: R1, R2: Populate depending on gauge and supply voltage; see below
-  - 2: Close ANA2 solder jumper; DIG2 must be open
+  - Purple 1: R1, R2: Populate depending on gauge and supply voltage; see below
+  - Purple 2: Close ANA2 solder jumper; DIG2 must be open
   - Leave "DIG1" ((blue 1) unconnected/open
 - "Roentgens" gauge (connected to "Analog Roentgens" connector [green 3]):
-  - 5: R5, R6: Populate depending on gauge and supply voltage;
+  - Purple 5: R5, R6: Populate depending on gauge and supply voltage;
   - (DIG5 [blue 5]: Does not matter, has no influence on this connector)
  
 Example for configuration for three analog gauges:
@@ -75,15 +85,15 @@ Example for configuration for three analog gauges:
 
 Configuration for digital gauges (blue numbers):
 - Left gauge:
-  - 3: Bridge DIG3 by wire (or resistor, depending on gauge type)
-  - 4: Close DIG4 solder jumper (ANA4 [purple 4] must be open)
+  - Blue 3: Bridge DIG3 by wire (or resistor, depending on gauge type)
+  - Blue 4: Close DIG4 solder jumper (ANA4 [purple 4] must be open)
   - (R3, R4 [purple 3]: Leave unpopulated or remove)
 - Center gauge:    
-  - 1: Bridge DIG1 by wire (or resistor, depending on gauge type)
-  - 2: Close DIG2 solder jumper; ANA2 must be open
+  - Blue 1: Bridge DIG1 by wire (or resistor, depending on gauge type)
+  - Blue 2: Close DIG2 solder jumper; ANA2 must be open
   - (R1, R2: [purple 1]: Leave unpopulated or remove)
 - Roentgens gauge (connected to "Digital Roentgens" connector [green 6], pins 1 (+) and 2 (-)):
-  - 5: Bridge DIG5 by wire (or resistor, depending on gauge type)
+  - Blue 5: Bridge DIG5 by wire (or resistor, depending on gauge type)
   - (R5/R6 [purple 5]: Don't matter, have no influence on this connector)
 
 | [<img src="img/cb-digital-s.jpg">](img/cb-digital.jpg) |
@@ -93,9 +103,9 @@ Configuration for digital gauges (blue numbers):
 You can mix analog and digital gauges; the firmware provides a type selection for each single gauge.
 
 Gauge illumination [yellow numbers]:
-- 1, 2: R7, R8: Resistors for backlight LEDs of left and center gauge. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (EXT). The resistor value depends on LED type and desired brightness. Example: 150R for yellow LEDs at 5V (INT). A calculator for the resistor value is [here](https://www.digikey.at/en/resources/conversion-calculators/conversion-calculator-led-series-resistor).
-- 3: R11: Resistor for Roentgens backlight on "Roentgens Light" connector [green 2]. When incandescent light bulbs are used, just bridge this. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (EXT).
-- 4: "Light Power": Solder jumpers for internal or external gauge illumination power: Connect either INT or EXT. For 5V lighting, close INT. To use external power (max. 12V), close EXT and connect the power supply to "Ext. Light Power" [yellow 5]. If all gauges are lit through LEDs, INT is preferred.
+- Yellow 1, yellow 2: R7, R8: Resistors for backlight LEDs of left and center gauge. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (EXT). The resistor value depends on LED type and desired brightness. Example: 150R for yellow LEDs at 5V (INT). A calculator for the resistor value is [here](https://www.digikey.at/en/resources/conversion-calculators/conversion-calculator-led-series-resistor).
+- Yellow 3: R11: Resistor for Roentgens backlight on "Roentgens Light" connector [green 2]. When incandescent light bulbs are used, just bridge this. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (EXT).
+- Yellow 4: "Light Power": Solder jumpers for internal or external gauge illumination power: Connect either INT or EXT. For 5V lighting, close INT. To use external power (max. 12V), close EXT and connect the power supply to "Ext. Light Power" [yellow 5]. If all gauges are lit through LEDs, INT is preferred.
 - 5: "Ext. light power": Power supply for "EXT" setting.
 - LED1, LED2: Backlight LEDs for left and center gauge. These are soldered to the back of the Control Board so they directly reach into the gauge's enclosure.
 
