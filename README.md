@@ -17,8 +17,8 @@ Firmware features include
 - [Time Travel](#time-travel) function, triggered by button, [Time Circuits Display](https://tcd.out-a-ti.me) (TCD) or via [MQTT](#home-assistant--mqtt)
 - support for Side Switch to play "empty" and "refill" sequences
 - Automatic refill timer, automatic alarm mute timer (both optional)
-- easy expandability to support different gauges hardware (currently implemented: variable voltage (0-5V) via MCP4728; digital [on/off, all or separate])
-- Support for door switch for playing sounds when opening/closing the car doors
+- easy expandability to support different gauges hardware (currently implemented: variable voltage (0-5V); digital [on/off, all or separate])
+- Support for door switches for playing sounds when opening/closing the car doors
 - [Wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://tcd.out-a-ti.me); used for synchonized time travels, alarm, night mode, fake power and remote control through TCD keypad
 - [Music player](#the-music-player): Play mp3 files located on an SD card [requires TCD connected wirelessly for control]
 - [SD card](#sd-card) support for custom audio files for effects, and music for the Music Player
@@ -540,7 +540,7 @@ If a TCD is connected via BTTFN or MQTT, the Dash Gauges visually signals when t
 
 ##### &#9654; Play door sounds
 
-The Switch Board has a connector for door switches; these switches change state whenever a door is opened or closed. The firmware can play a sound for each such event. To enable door sounds, check this.
+The Control Board has a connector for two door switches; these switches change state whenever a door is opened or closed. The firmware can play a sound for each such event. To enable door sounds, check this.
 
 ##### &#9654; Switch closes when door is closed
 
