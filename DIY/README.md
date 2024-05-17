@@ -34,40 +34,60 @@ Digital gauges are presumed to require 12V, fed through the "DG+" and "-" pins o
 
 #### Control Board Hardware Configuration
 
-In order to make the Control Board as versatile as possible, there are some solder jumpers (ie adjacent solder pads which are connected using solder), and easy-to-solder through-the-hole resistors which need to be added by the end user:
+In order to make the Control Board as versatile as possible, there are some solder jumpers (ie adjacent solder pads which are connected using solder), and easy-to-solder through-the-hole resistors which need to be added depending on the other hardware used.
 
-Gauge illumination:
-- "Light Power": Solder jumpers for internal or external gauge illumination power: Connect either INT or EXT. For 5V lighting, close INT. To use external power (max. 12V), close EXT and connect the power supply to "Ext. Light Power". If all gauges are lit through LEDs, INT is preferred.
-- LED1, LED2: Backlight LEDs for left and center gauge. These are soldered to the back of the Control Board so they directly stick into the gauge's enclosure (which naturally requires a hole in that enclosure, see below).
-- R7, R8: Resistors for backlight LEDs of left and center gauge. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (EXT). The resistor value depends on LED type and desired brightness. Example: 150R for yellow LEDs at 5V (INT). A calculator for the resistor value is [here](https://www.digikey.at/en/resources/conversion-calculators/conversion-calculator-led-series-resistor).
-- R11: Resistor for Roentgens backlight on "Roentgens Light" connector [2]. When incandescent light bulbs are used, just bridge this. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (EXT).
+| [<img src="img/cb-analog-s.jpg">](img/cb-analog.jpg) |
+|:--:| 
+| *Click for hi-res image* |
 
-Hardware configuration for "analog" gauges:
+Main connectors (red numbers):
+- 1: 5V input for analog gauges and electronics
+- 2: 12V input for digital gauges and electronics
+- 3: Time Travel
+- 4: Door switches
+
+Hardware configuration for "analog" gauges (purple numbers):
 - Left gauge ("Primary"):
-  - R3, R4: Populate depending on gauge and supply voltage; see below
-  - Close ANA4 solder jumper; DIG4 must be open
-  - Leave "DIG3" unconnected/open
+  - 3: R3, R4: Populate depending on gauge and supply voltage; see below
+  - 4: Close ANA4 solder jumper; DIG4 must be open
+  - Leave "DIG3" (blue 3) unconnected/open
 - Center Gauge ("Percent Power"):
-  - R1, R2: Populate depending on gauge and supply voltage; see below
-  - Close ANA2 solder jumper; DIG2 must be open
-  - Leave "DIG1" unconnected/open
-- "Roentgens" gauge (connected to "Analog Roentgens" connector [3]):
-  - R5, R6: Populate depending on gauge and supply voltage;
-  - (DIG5: Does not matter, has no influence on this connector)
+  - 1: R1, R2: Populate depending on gauge and supply voltage; see below
+  - 2: Close ANA2 solder jumper; DIG2 must be open
+  - Leave "DIG1" ((blue 1) unconnected/open
+- "Roentgens" gauge (connected to "Analog Roentgens" connector [green 3]):
+  - 5: R5, R6: Populate depending on gauge and supply voltage;
+  - (DIG5 [blue 5]: Does not matter, has no influence on this connector)
+ 
+Example for configuration for three analog gauges:
 
-Configuration for digital gauges (requires 12V power):
+| [<img src="img/cb-analog-s.jpg">](img/cb-analog.jpg) |
+|:--:| 
+| *Click for hi-res image* |
+
+Configuration for digital gauges (blue numbers):
 - Left gauge:
-  - R3, R4: Leave unpopulated or remove
-  - Bridge DIG3 by wire (or resistor, depending on gauge type)
-  - Close DIG4 solder jumper; ANA4 must be open
+  - 3: Bridge DIG3 by wire (or resistor, depending on gauge type)
+  - 4: Close DIG4 solder jumper (ANA4 [purple 4] must be open)
+  - (R3, R4 [purple 3]: Leave unpopulated or remove)
 - Center gauge:    
-  - R1, R2: Leave unpopulated or remove
-  - Bridge DIG1 by wire (or resistor, depending on gauge type)
-  - Close DIG2 solder jumper; ANA2 must be open
-- Roentgens gauge (connected to "Digital Roentgens" connector [6], pins 1 (+) and 2 (-)):
-  - Bridge DIG5 by wire (or resistor, depending on gauge type)
-  - (R5/R6: Don't matter, have no influence on this connector)
-  
+  - 1: Bridge DIG1 by wire (or resistor, depending on gauge type)
+  - 2: Close DIG2 solder jumper; ANA2 must be open
+  - (R1, R2: [purple 1]: Leave unpopulated or remove)
+- Roentgens gauge (connected to "Digital Roentgens" connector [green 6], pins 1 (+) and 2 (-)):
+  - 5: Bridge DIG5 by wire (or resistor, depending on gauge type)
+  - (R5/R6 [purple 5]: Don't matter, have no influence on this connector)
+
+| [<img src="img/cb-digital-s.jpg">](img/cb-digital.jpg) |
+|:--:| 
+| *Click for hi-res image* |
+
+Gauge illumination [yellow numbers]:
+- 1, 2: R7, R8: Resistors for backlight LEDs of left and center gauge. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (EXT). The resistor value depends on LED type and desired brightness. Example: 150R for yellow LEDs at 5V (INT). A calculator for the resistor value is [here](https://www.digikey.at/en/resources/conversion-calculators/conversion-calculator-led-series-resistor).
+- 3: R11: Resistor for Roentgens backlight on "Roentgens Light" connector [green 2]. When incandescent light bulbs are used, just bridge this. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (EXT).
+- 4: "Light Power": Solder jumpers for internal or external gauge illumination power: Connect either INT or EXT. For 5V lighting, close INT. To use external power (max. 12V), close EXT and connect the power supply to "Ext. Light Power". If all gauges are lit through LEDs, INT is preferred.
+- 5: "Ext. light power": Power supply for "EXT" setting.
+- LED1, LED2: Backlight LEDs for left and center gauge. These are soldered to the back of the Control Board so they directly stick into the gauge's enclosure (which naturally requires a hole in that enclosure, see below).
 
 You can mix analog and digital gauges; the firmware provides a type selection for each single gauge.
 
