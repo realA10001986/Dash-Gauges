@@ -10,7 +10,7 @@ This prop was made to be compatible with the CircuitSetup line of movie props ([
 
 The Panel consists of several parts:
 - Aluminium (Aluminum for Americans) enclosure; the measurements are in the ["enclosure"](/DIY/enclosure) folder of this repository. Can be bought at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/) (does not fit model 142 gauge, see [here](#roentgens)).
-- The gauges: The smaller gauges depicted are H&P 631-14672 (built by Phaostron) and the "Plutonium chamber" gauge is a Simpson 49L VU Meter. 
+- The gauges: In the Original, the small ones were made by Phaostron (631 series), the large one by Simpson (Model 49). In the picture above you see two H&P 631-14672 (built by Phaostron) and a Simpson 49L VU Meter disguised as the "Plutonium chamber" gauge. Many other types of meter can be used.
 - A Control Board
 
 ### Control board
@@ -30,7 +30,7 @@ The terms "analog" and "digital" have the following meaning in this document:
 
 "Analog" gauges are ones that can show arbitrary values, ie move their pointers to arbitrary positions by using variable voltages. Best suited are voltmeters or VU-meters. Voltmeters can be usually driven with minimal voltages, even if their scale is far beyond that. It is mostly a matter of removing the meter's internal resistor(s), and putting suitable resistors on the Control Board. The Control Board can provide up to 5V and has room for two through-the-hole resistors per gauge. The firmware can easily be extended to define custom analog gauge types as regards their voltage range.
 
-"Digital" gauges are ones that can only be controlled by power-on and power-off for "full" and "empty" pointer positions, respectively; this is useful if the gauge needs voltages beyond what the Control Board can provide (which is, as said, 5V), and is driven using external power and through a relay. One might also come up with the idea to create a gauge replica using a stepper motor and some logic to move the pointer to a fixed position on power-on, and reset it to the "Empty" position on power-loss. 
+"Digital" gauges are ones that can only be controlled by power-on and power-off for "full" and "empty" pointer positions, respectively; this is useful if the gauge needs voltages beyond what the Control Board can provide (which is, as said, 5V), and is driven using external power and through a relay. Alternatively, one might also come up with the idea to create a gauge replica using a stepper motor and some logic to move the pointer to a fixed position on power-on, and move it back to the "Empty" position on power-loss, using a large capacitor to power the motor after power-loss.
 
 #### Control Board Hardware Configuration
 
@@ -177,7 +177,7 @@ Tested meter options and configuration:
 Unusable:
 - Simpson model 49 voltmeter 0-250V AC.
 
-Most Simpson meters have a drop-shaped pointer top which I was not able to remove (in fact, I didn't even try; I don't think the pointer top would have ended up properly straight); although I mounted the "Empty" light as high on the scale as possible, the pointer was still too long and collided with the light. My solution was to change the bends of the pointer where it leaves the driving mechanism more into an "S" shape, and I could thereby make it ever so short enough to pass the light. Another way would be to cut off the drop part, but that would make the pointer a tad too short in my opinion. _Warning_: Those pointers have a counter-weight on the opposite end and are perfectly balanced. If you decide to cut off the drop, the pointer is unbalanced and you need to cut off a tiny (!) bit of the other end, too, otherwise the pointer will not fully return to zero position and wander around if you tilt the gauge.
+Most Simpson meters have a drop-shaped pointer top which I was not able to remove (in fact, I didn't even try; I don't think the pointer top would have ended up properly straight); although I mounted the "Empty" light as high on the scale as possible, the pointer was still too long and collided with the light. My solution was to change the bends of the pointer where it leaves the driving mechanism more into an "S" shape, and I could thereby make it ever so short enough to pass the light. Another way would be to cut off the drop part, but that would make the pointer a tad too short in my opinion. _Warning_: Those pointers have a counter-weight on the opposite end and are perfectly balanced. If you decide to cut off the drop, the pointer is unbalanced and you need to cut off a tiny (!) bit of the other end, too, otherwise the pointer might not fully return to zero position and wander around if you tilt the gauge.
 
 Regarding the "Empty" light: I used a light like this one (12V version), available from aliexpress:
 
@@ -188,10 +188,12 @@ There are also buttons that look identical and can be used instead:
 ![emptybutton](img/emptybutton.png)
 
 The LED in those lights/buttons requires 12V. The Control Board has two connectors for the Empty LED:
-- When using the "Empty Light" [4] connector, the light/button's resistor needs to be removed: Pull up the red cover and pull out the LED; then desolder the LED and bridge the resistor.
+- When using the "Empty Light" [4] connector, the light/button's resistor needs to be removed: Pull up the red cover and pull out the LED; then desolder the LED (desolder the two metal tops) and bridge the resistor, or replace it with a wire.
 - When using the LED pins of the Digital Roetgens connector [6]: No modification of light/button needed, but the Control Board must be run with a 12V power supply. When using 5V, the LED will stay dark.
 
-About the hole for the "Empty" light: Above light/button requires a 16mm hole. The center of this hole is, looking at the meter from the front, at 13mm below the enclosure's edge, horizontally centered. In order to make the hole into the enclosure and the dial at exactly the same spot, drill the hole with the dial mounted. I used a step drill and drilled from the dial's side. Have a vacuum ready, the Bakelite makes a lot of dirt. Do not attach your new dial label before drilling, it's better to do this afterwards.
+About the hole for the "Empty" light: Above light/button requires a 16mm hole. The vertical center of this hole is, looking at the meter from the front, at 13mm below the enclosure's edge, horizontally centered (relative to the enclosure, not the dial; the dial might be not accurately centered). In order to make the hole into the enclosure and the dial at exactly the same spot, drill the hole with the dial mounted. I used a step drill and drilled from the dial's side. Have a vacuum ready, the Bakelite makes a lot of dirt. Do not attach your new dial label before drilling, it's better to do this afterwards.
+
+![emptyhole](img/emptyhole.jpg)
 
 ### Enclosure
 
