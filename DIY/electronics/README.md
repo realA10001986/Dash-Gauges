@@ -1,7 +1,7 @@
 
 ## The Control Board
 
-To have JCLPCB make your board:
+To have [JCLPCB](https://jlcpcb.com) make your board:
 1) Create an account at jlcpcb.com
 2) Click "Upload Gerber file" or "order now"
 3) Upload the Gerber file (.zip, do not decompress!); leave all options at their defaults. You can choose a PCB color though...
