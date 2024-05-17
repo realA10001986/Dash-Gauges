@@ -44,7 +44,7 @@ In order to make the Control Board as versatile as possible, there are some sold
 
 Main connectors (red numbers):
 - Red_1: 5V input for analog gauges and electronics
-- Red_2: 12V input for digital gauges (DG+ oin) and electronics ("+" pin)
+- Red_2: 12V input for digital gauges (DG+ pin) and electronics ("+" pin)
 - Red_3: Time Travel button: To trigger a time travel, "TT" and "3V3" must be shorted.
 - Red_4: Door switches: Switches need to connect "C" and "1" for door 1, and "C" and "2" for door 2.
 
