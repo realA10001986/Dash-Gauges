@@ -41,10 +41,18 @@ In order to make the Control Board as versatile as possible, there are some sold
 | *Click for hi-res image* |
 
 Main connectors (red numbers):
-- 1: 5V input for analog gauges and electronics
-- 2: 12V input for digital gauges and electronics
-- 3: Time Travel
-- 4: Door switches
+- Red1: 5V input for analog gauges and electronics
+- Red2: 12V input for digital gauges and electronics
+- Red3: Time Travel: To trigger a time travel, "TT" and "3V3" must be shorted.
+- Red4: Door switches: Switches need to connect "C" and "1" for door 1, and "C" and "2" for door 2.
+
+Other connectors (green numbers):
+- 1: Speaker
+- 2: Backlight for Roentgens gauge
+- 3: Analog Roentgens meter
+- 4: Empty LED (White LED, forward voltage 3.3V)
+- 5: Side switch
+- 6: Connector for digital Roentgens, 12V Roetgens backlight, 12V empty light
 
 Hardware configuration for "analog" gauges (purple numbers):
 - Left gauge ("Primary"):
@@ -82,14 +90,14 @@ Configuration for digital gauges (blue numbers):
 |:--:| 
 | *Click for hi-res image* |
 
+You can mix analog and digital gauges; the firmware provides a type selection for each single gauge.
+
 Gauge illumination [yellow numbers]:
 - 1, 2: R7, R8: Resistors for backlight LEDs of left and center gauge. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (EXT). The resistor value depends on LED type and desired brightness. Example: 150R for yellow LEDs at 5V (INT). A calculator for the resistor value is [here](https://www.digikey.at/en/resources/conversion-calculators/conversion-calculator-led-series-resistor).
 - 3: R11: Resistor for Roentgens backlight on "Roentgens Light" connector [green 2]. When incandescent light bulbs are used, just bridge this. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (EXT).
-- 4: "Light Power": Solder jumpers for internal or external gauge illumination power: Connect either INT or EXT. For 5V lighting, close INT. To use external power (max. 12V), close EXT and connect the power supply to "Ext. Light Power". If all gauges are lit through LEDs, INT is preferred.
+- 4: "Light Power": Solder jumpers for internal or external gauge illumination power: Connect either INT or EXT. For 5V lighting, close INT. To use external power (max. 12V), close EXT and connect the power supply to "Ext. Light Power" [yellow 5]. If all gauges are lit through LEDs, INT is preferred.
 - 5: "Ext. light power": Power supply for "EXT" setting.
-- LED1, LED2: Backlight LEDs for left and center gauge. These are soldered to the back of the Control Board so they directly stick into the gauge's enclosure (which naturally requires a hole in that enclosure, see below).
-
-You can mix analog and digital gauges; the firmware provides a type selection for each single gauge.
+- LED1, LED2: Backlight LEDs for left and center gauge. These are soldered to the back of the Control Board so they directly reach into the gauge's enclosure.
 
 ### Gauges
 
