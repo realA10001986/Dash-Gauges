@@ -193,7 +193,7 @@ The LED in those lights/buttons requires 12V. The Control Board has two connecto
 
 About the hole for the "Empty" light: Above light/button requires a 16mm hole. The vertical center of this hole is, looking at the meter from the front, at 13mm below the enclosure's edge, horizontally centered (relative to the enclosure, not the dial; the dial might be not accurately centered). In order to make the hole into the enclosure and the dial at exactly the same spot, drill the hole with the dial mounted. I used a step drill and drilled from the dial's side. Have a vacuum ready, the Bakelite makes a lot of dirt. Do not attach your new dial label before drilling, it's better to do this afterwards.
 
-![emptyhole](img/emptyhole.jpg)
+![emptyhole](img/empty_hole.jpg)
 
 ### Enclosure
 
