@@ -15,7 +15,7 @@ The Panel consists of several parts:
 
 ### Control board
 
-| <img src="img/cb-mounted.jpg"> |
+| <img src="img/cb_mounted.jpg"> |
 |:--:| 
 | *The Control Board* |
 
