@@ -6,12 +6,13 @@ To have [JCLPCB](https://jlcpcb.com) make your board:
 2) Click "Upload Gerber file" or "order now"
 3) Upload the Gerber file (.zip, do not decompress!); leave all options at their defaults. You can choose a PCB color though...
 4) Activate "PCB assembly", click "NEXT"
-5) Upload the BOM and "PickAndPlace" files, click NEXT
-6) After uploading BOM and CPL, JLCPCB will complain about missing data for the axial resistors R1-R8, R11. These are intentionally missing in the BOM since they depend on your hardware. Click "Continue".
-7) Read the remarks regarding the BOM below and uncheck superfluous parts in the list, click Next
-8) Click "Do not place" when JLCPCB complains about "unselected parts"
-9) Enjoy a nice 2D or 3D views of your future board, click "Next"
-10) Select a "product description" and click "Save to cart". Then finalize your order.
+5) Enjoy a view of the PCB, click "NEXT"
+6) Upload the BOM and "PickAndPlace" files, click NEXT
+7) After uploading BOM and CPL, JLCPCB will complain about missing data for the axial resistors R1-R8, R11. These are intentionally missing in the BOM since they depend on your hardware. Click "Continue".
+8) Read the remarks regarding the BOM below and uncheck superfluous parts in the list, click Next
+9) Click "Do not place" when JLCPCB complains about "unselected parts"
+10) Enjoy a nice 2D or 3D views of your future board, click "Next"
+11) Select a "product description" and click "Save to cart". Then finalize your order.
 
 
 ### About the BOM:
