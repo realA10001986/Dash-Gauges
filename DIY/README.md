@@ -9,7 +9,7 @@ This prop was made to be compatible with the CircuitSetup line of movie props ([
 ![Dash Gauges](img/thedg_n.jpg)
 
 The Panel consists of several parts:
-- Aluminium (Aluminum for Americans) enclosure; the measurements are in the ["enclosure"](/DIY/enclosure) folder of this repository. Can be bought at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/) (does not fit model 142 gauge, see [here](#roentgens)).
+- Aluminium (Aluminum for Americans) bezel; the measurements are in the ["enclosure"](/DIY/enclosure) folder of this repository. Can be bought at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/) (does not fit model 142 gauge, see [here](#roentgens)).
 - The gauges: In the Original, the small ones were made by Phaostron (631 series), the large one by Simpson (Model 49). In the picture above you see two H&P 631-14672 (built by Phaostron) and a Simpson 49L VU Meter disguised as the "Plutonium chamber" gauge. Many other types of meter can be used.
 - A Control Board
 
@@ -199,11 +199,11 @@ About the hole for the "Empty" light: Above light/button requires a 16mm hole. T
 
 ![emptyhole](img/empty_hole.jpg)
 
-### Enclosure
+### Bezel
 
-The enclosure consists of three parts: The front and two side pieces. Measurements are in the [DIY/enclosure](/DIY/enclosure) folder of this repository.
+The bezel consists of three parts: The front and two side pieces. Measurements are in the [DIY/enclosure](/DIY/enclosure) folder of this repository.
 
-You can buy an enclosure at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/); note that it is for a model 49 panel meter ('Roentgens'); a model 142 won't fit.
+You can buy a bezel at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/); note that it is for a model 49 panel meter ('Roentgens'); a model 142 won't fit.
 
 ### Connecting a Time Travel button
 
