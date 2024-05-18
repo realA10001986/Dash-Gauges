@@ -15,6 +15,10 @@ The Panel consists of several parts:
 
 ### Control board
 
+| <img src="img/cb-mounted.jpg"> |
+|:--:| 
+| *The Control Board* |
+
 The Control board is mounted on the smaller gauges. Its features include
 - 5V or 12V power supply (12V needed for digital gauges)
 - audio, with speaker connector
