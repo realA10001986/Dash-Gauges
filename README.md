@@ -498,13 +498,17 @@ If the dash gauges are connected to a TCD through BTTFN, this option allows to t
 
 ##### &#9654; 'Primary' full percentage
 
-For analog gauges only: Here you can select the readiing the "Primary" meter should give when "full". You can enter a value between 0 and 100 here. 0 will reset the "full" percentage to a default; 1-100 select a specific percentage. Values below 10 don't really make sense, though.
+For analog gauges only. 
+
+Here you can select the readiing the "Primary" meter should give when "full". You can enter a value between 0 and 100 here. 0 will reset the "full" percentage to a default; 1-100 select a specific percentage. Values below 10 don't really make sense, though.
 
 The "full" percentage can be changed through the TCD keypad (91xx for the "Primary" gauge, 93xx for the "Pecent Power" one, and 97xx for the "Roentgens"). 9x00 resets the "full" position the a default value. Note that changing the "full" percentage through the TCD keypad is not persistent. The boot-up value are only set through the Config Portal.
 
 ##### &#9654; 'Primary' empty percentage
 
-For analog gauges only: This allows to select the pointer position when the meter is supposed to show "empty". This should be 0 (zero), but if your hardware is either inaccurate or the pointer isn't exactly 0-adjusted, you can modify its "zero" position here. Values from 0-100 are allowed, but obviously only values < 20 make sense.
+For analog gauges only. 
+
+This allows to select the pointer position when the meter is supposed to show "empty". This should be 0 (zero), but if your hardware is either inaccurate or the pointer isn't exactly 0-adjusted, you can modify its "zero" position here. Values from 0-100 are allowed, but obviously only values < 20 make sense.
 
 ##### &#9654; 'Percent Power' full percentage
 
@@ -524,15 +528,19 @@ Same as [this](#-primary-empty-percentage), but for the 'Roentgens' gauge
 
 ##### &#9654; 'Primary' empty threshold
 
-For digital gauges only: This defines the "virtual percentage" (0% being the left end of the scale, 100% being the right end of the scale) at which the gauge should switch from "full" to "empty" in animations. This value depends on the speed of pointer movement: In the time travel sequence, the pointers are slowly moved towards "Empty" in sync with the length of the sequence. If your pointers "jump" to zero quickly, a threshold of 0 is ok. If the pointers move more slowly, the threshold should by adjusted so that the pointers are at "empty" at the end of the sequence, when the "Empty" alarm goes off. Start with "50" and work your way from there.
+For digital gauges only. 
+
+This defines the "virtual percentage" (0% being the left end of the scale, 100% being the right end of the scale) at which the gauge should switch from "full" to "empty" in animations. This value depends on the speed of pointer movement: In the time travel sequence, the pointers are slowly moved towards "Empty" in sync with the length of the sequence. If your pointers "jump" to zero quickly, a threshold of 0 is ok. If the pointers move more slowly, the threshold should by adjusted so that the pointers are at "empty" at the end of the sequence, when the "Empty" alarm goes off. Start with "50" and work your way from there.
+
+_Note_: The current OEM control board only supports one digital output for all connected digital gauges. Therefore, they can only _all_ be "full", or _all_ be "empty", and as a result, there can only be one Threshold for all digital gauges. If you have three digital gauges connected, the Threshold configured for "Primary" has priority.
 
 ##### &#9654; 'Percent Power' empty threshold
 
-Same as [this](#-primary-empty-threshold), but for the 'Percent Power' gauge
+Same as [this](#-primary-empty-threshold), but for the 'Percent Power' gauge. In light of the _Note_ above, this value is only used, if your "Primary" gauge is of analog kind, and the "Percent Power" gauge is the first digital gauge (counting from the left).
 
 ##### &#9654; 'Roentgens' empty threshold
 
-Same as [this](#-primary-empty-threshold), but for the 'Roentgens' gauge
+Same as [this](#-primary-empty-threshold), but for the 'Roentgens' gauge. In light of the _Note_ above, this value is only used, if your "Roentgens" gauge is your only digital gauge.
 
 ##### &#9654; Play TCD-alarm sounds
 
