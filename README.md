@@ -107,7 +107,7 @@ It can be accessed as follows:
 
   Accessing the Config Portal through this address requires the operating system of your hand-held/computer to support Bonjour/mDNS: Windows 10 version TH2     (1511) [other sources say 1703] and later, Android 13 and later; MacOS and iOS since the dawn of time.
 
-  If connecting to http://gauges.local fails due to a name resolution error, you need to find out the Gauges' IP address: FIXME
+  If connecting to http://gauges.local fails due to a name resolution error, you need to find out the Gauges' IP address. In order to do so, hold "Button 1" on the Control Board for 2 seconds, and listen. The IP address will b spoken out loud.
 
 In the main menu, click on "Setup" to configure your Dash Gauges. 
 
