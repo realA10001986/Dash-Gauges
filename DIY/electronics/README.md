@@ -19,10 +19,10 @@ To have [JCLPCB](https://jlcpcb.com) make your board:
 
 #### Things requiring manual selection:
 1) L1, L2, L3: Only ONE of those three can be placed on the board since they share the same space. Choose one, deselect the others.
-2) CN5SW-A and CN5SW-B are mutually exclusive. -A is an [S2B-XH-A-1](https://www.lcsc.com/product-detail/Wire-To-Board-Connector_JST-S2B-XH-A-1-LF-SN_C163035.html) header, -B a [2510 KK](https://www.lcsc.com/product-detail/Wire-To-Board-Connector_HCTL-HC-2510-2AW_C2982041.html) header. Choose one. To use this board to replace a "legacy" board, use the -B version.
+2) CN5SW-A and CN5SW-B are mutually exclusive. -A is an [S2B-XH-A-1](https://www.lcsc.com/product-detail/Wire-To-Board-Connector_JST-S2B-XH-A-1-LF-SN_C163035.html) header (for example: LCSC part number C163035), -B a [2510 KK](https://www.lcsc.com/product-detail/Wire-To-Board-Connector_HCTL-HC-2510-2AW_C2982041.html) header (For example: LCSC part number C2982041). Choose one. To use this board to replace a "legacy" board, use the -B version.
 
 #### Unmatched or "shortfall" parts:
-1) HDR1 and HDR2 are [19-pin 2,54mm pitch 8.5mm high female headers](https://www.lcsc.com/product-detail/Female-Headers_CONNFLY-Elec-DS1023-1x19SF11_C7509529.html) for the NodeMCU ESP32S dev board. You have to source and solder them on yourself.
+1) HDR1 and HDR2 are [19-pin 2,54mm pitch 8.5mm high female headers](https://www.lcsc.com/product-detail/Female-Headers_CONNFLY-Elec-DS1023-1x19SF11_C7509529.html) for the NodeMCU ESP32S dev board. You have to source and solder them on yourself. For example: LCSC part number C7509529.
 2) CN12V, CNDSW, CNTT are 3-pin 3.5mm pitch screw terminals which you will have to source and solder yourself. I use [these](https://www.mouser.com/ProductDetail/TE-Connectivity/284514-3?qs=woBvfblj%2FzwGS50caoQlYA%3D%3D) with [these](https://www.mouser.com/ProductDetail/TE-Connectivity/284506-3?qs=pW%2FyRk%2FT1EErkHTioRHy7Q%3D%3D).
 3) CN5V, CNELP are 2-pin 3.5mm pitch screw terminals which you will have to source and solder yourself. I use [these](https://www.mouser.com/ProductDetail/TE-Connectivity/284514-2?qs=woBvfblj%2FzwP8grZOAh0Gg%3D%3D) with [these](https://www.mouser.com/ProductDetail/TE-Connectivity/284506-2?qs=pW%2FyRk%2FT1EEEaP6r3xD3uw%3D%3D).
 4) RELAY1, RELAY2 are either FRT5-5V, [Panasonic TQ2-5V](https://www.mouser.com/ProductDetail/Panasonic-Industrial-Devices/TQ2-5V?qs=HLLy2pIPwutHaTSpVfb1kw%3D%3D) or [Kemet EA2-5Nx](https://www.mouser.com/ProductDetail/KEMET/EA2-5NU?qs=UeqeubEbzTX2QGWq8LyCiw%3D%3D). You will probably have to source and solder those yourself.
@@ -30,3 +30,6 @@ To have [JCLPCB](https://jlcpcb.com) make your board:
 #### You additionally need
 1) NodeMCU ESP32 devboard, preferably with CP2102 USB-to-UART converter. 19pin version. For example: [This one](https://www.waveshare.com/nodemcu-32s.htm)
 2) 2x LED. For example: [5mm yellow (595nm, >=3000mcd) LED](https://www.mouser.com/ProductDetail/Kingbright/WP7113SYT?qs=58z0TXQGVSR5GO%2FDcefd%2FA%3D%3D).
+
+
+_(If links to LCSC get you a 403 error, click into the URL field in your browser and press ENTER.)_
