@@ -219,7 +219,7 @@ If you want to connect a TCD to the Dash Gauges by wire (such as mentioned [here
     <tr>
      <td align="center">Dash Gauges</td>
      <td align="center">TCD with control board 1.2</td>
-     <td align="center">TCD with control board 1.3</td>
+     <td align="center">TCD with control board >=1.3</td>
     </tr>
    <tr>
      <td align="center">GND of "Time Travel" connector</td>
