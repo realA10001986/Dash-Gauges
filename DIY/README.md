@@ -191,11 +191,13 @@ There are also buttons that look identical and can be used instead:
 
 ![emptybutton](img/emptybutton.png)
 
-The LED in those lights/buttons requires 12V. The Control Board has two connectors for the Empty LED:
-- When using the "Empty Light" [4] connector, the light/button's resistor needs to be removed: Pull up the red cover and pull out the LED; then desolder the LED (desolder the two metal tops) and bridge the resistor, or replace it with a wire.
-- When using the LED pins of the Digital Roetgens connector [6]: No modification of light/button needed, but the Control Board must be run with a 12V power supply. When using 5V, the LED will stay dark.
+A movie-accurate "Empty" label is in the [DIY/faces-labels](/DIY/faces-labels) folder.
 
-About the hole for the "Empty" light: Above light/button requires a 16mm hole. The vertical center of this hole is, looking at the meter from the front, at 13mm below the enclosure's edge, horizontally centered (relative to the enclosure, not the dial; the dial might be not accurately centered). In order to make the hole into the enclosure and the dial at exactly the same spot, drill the hole with the dial mounted. I used a step drill and drilled from the dial's side. Have a vacuum ready, the Bakelite makes a lot of dirt. Do not attach your new dial label before drilling, it's better to do this afterwards.
+The LED in those lights/buttons requires 12V. The Control Board has two connectors for the Empty LED:
+- When using the "Empty Light" [green_4] connector, the light/button's built-in resistor needs to be removed: Pull up the red cover and pull out the LED; then desolder the LED (ie desolder the two metal tops, and push the LED out) and bridge the resistor, or replace it with a wire. Reassemble.
+- When using the LED pins of the Digital Roetgens connector [6]: No modification of light/button needed, but the Control Board must fed 12V on the "DG+" pin of the 12V connector [red_2].
+
+Above light/button requires a 16mm hole. The vertical center of this hole is, looking at the meter from the front, at 13mm below the enclosure's edge, horizontally centered (relative to the enclosure, not the dial; the dial might be not accurately centered). In order to make the hole into the enclosure and the dial at exactly the same spot, drill the hole with the dial mounted. I used a step drill and drilled from the dial's side. Have a vacuum ready, the Bakelite makes a lot of dirt. Do not attach your new dial label sticker before drilling, it's better to do this afterwards.
 
 ![emptyhole](img/empty_hole.jpg)
 
