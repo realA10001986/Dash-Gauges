@@ -119,7 +119,7 @@ The Control Board has a Time Travel button (marked "TT"). If you want to connect
 
 #### Connecting a TCD to the Dash Gauges by wire
 
-If you want to connect a TCD to the Dash Gauges by wire (such as mentioned [here](https://github.com/realA10001986/Dash-Gauges/tree/main#connecting-a-tcd-by-wire)), wire as follows:
+If you want to connect a TCD to the Dash Gauges by wire (for synchronized time travel sequences), wire as follows:
 
 <table>
     <tr>
