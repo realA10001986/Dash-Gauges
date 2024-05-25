@@ -119,7 +119,7 @@ The Control Board has a Time Travel button (marked "TT"). If you want to connect
 
 #### Connecting a TCD to the Dash Gauges by wire
 
-If you want to connect a TCD to the Dash Gauges by wire (for synchronized time travel sequences), wire as follows:
+If you want to connect a TCD to the Dash Gauges (for synchronized time travel sequences), wire as follows:
 
 <table>
     <tr>
@@ -143,13 +143,11 @@ If you want to connect a TCD to the Dash Gauges by wire (for synchronized time t
 
 ### "Primary", "Percent Power"
 
-For the smaller gauges I used two H&P 631-14672 (built by Phaostron). The pointers on these are red, but an Edding permanent marker was quickly able to change them to black. I have also tested a few other types.
-
 Tested meter options and configuration:
 
 <table>
   <tr><td>Meter</td><td>Modification</td><td>R1/R2, R3/R4</td><td>Gauge type setting</td></tr>
-  <tr><td>H&P 631-14672 0-0.5V DC voltmeter</td><td>None</td><td>470R/8k2</td><td>H&P 631-14672</td></tr>
+  <tr><td>H&P 631-14672 0-0.5V DC voltmeter</td><td>Pointer color changed from red to black using an Edding permanent marker</td><td>470R/8k2</td><td>H&P 631-14672</td></tr>
   <tr><td>Phaostron 0-5KV DC voltmeter (300-07970)</td><td>None</td><td>470R/4k7</td><td>Generic Analog (0-5V)</td></tr>
   <tr><td>Phaostron "Cyclic Trim" meter (631-15099)</td><td>The two resistors and the pot inside the meter need to be removed, and the wire (which lead to the pot) needs to be re-attached to the input terminal.</td><td>470R/4k7</td><td>Generic Analog (0-5V)</td></tr>
 </table>
