@@ -28,7 +28,7 @@ The Control board is mounted on the smaller gauges. Its features include
 - Time Travel button, plus an additional multi-purpose button ("Button 1"); Time Travel connector for external button
 - Connector for two Door Switches, for Door-Sound play back.
 
-#### "Analog" vs. "Digital" gauges
+### "Analog" vs. "Digital" gauges
 
 The terms "analog" and "digital" have the following meaning in this document:
 
@@ -36,7 +36,7 @@ The terms "analog" and "digital" have the following meaning in this document:
 
 "Digital" gauges are ones that can only be controlled by power-on and power-off for "full" and "empty" pointer positions, respectively; this is useful if the gauge needs voltages beyond what the Control Board can provide (which is, as said, 5V), and is driven using external power and through a relay. Alternatively, one might also come up with the idea to create a gauge replica using a stepper motor and some logic to move the pointer to a fixed position on power-on, and move it back to the "Empty" position on power-loss, using a large capacitor to power the motor after power-loss.
 
-#### Control Board Hardware Configuration
+### Control Board Hardware Configuration
 
 In order to make the Control Board as versatile as possible, there are some solder jumpers (ie adjacent solder pads which are connected using solder), and easy-to-solder through-the-hole resistors which need to be added depending on the other hardware used.
 
@@ -113,9 +113,35 @@ Gauge illumination [yellow numbers]:
 - Yellow_5: "Ext. light power": Power supply for "EXT" setting.
 - LED1, LED2: Backlight LEDs for left and center gauge. These are soldered to the back of the Control Board so they directly reach into the gauge's enclosure.
 
-### Gauges
+#### Connecting a Time Travel button
 
-#### "Primary", "Percent Power"
+The Control Board has a Time Travel button (marked "TT"). If you want to connect an external Time Travel button, connect it to the "TT" and "3V3" pins of the "Time Travel" connector.
+
+#### Connecting a TCD to the Dash Gauges by wire
+
+If you want to connect a TCD to the Dash Gauges by wire (such as mentioned [here](https://github.com/realA10001986/Dash-Gauges/tree/main#connecting-a-tcd-by-wire)), wire as follows:
+
+<table>
+    <tr>
+     <td align="center">Dash Gauges</td>
+     <td align="center">TCD with control board 1.2</td>
+     <td align="center">TCD with control board >=1.3</td>
+    </tr>
+   <tr>
+     <td align="center">GND of "Time Travel" connector</td>
+     <td align="center">GND of "IO14" connector</td>
+     <td align="center">GND of "Time Travel" connector</td>
+    </tr>
+    <tr>
+     <td align="center">TT of "Time Travel" connector</td>
+     <td align="center">IO14 of "IO14" connector</td>
+     <td align="center">TT OUT of "Time Travel" connector</td>
+    </tr>
+</table>
+
+## Gauges
+
+### "Primary", "Percent Power"
 
 For the smaller gauges I used two H&P 631-14672 (built by Phaostron). The pointers on these are red, but an Edding permanent marker was quickly able to change them to black. I have also tested a few other types.
 
@@ -149,7 +175,7 @@ Phaostron meters have either 6mm (1/4"-28 UNF) or 4mm (8-32 UNC) screw terminals
 
 ![MountingOrder](img/mo_6mm.jpg)
 
-#### "Roentgens"
+### "Roentgens"
 
 The "Roentgens" gauge is more of a problem. The original in the movie was a real Roentgens meter from a CP95 radiac. Such devices are hard to find, let alone one with the correct Simpson meter. The CP95 was built over a long period of time and they used meters from different manufacturers.
 
@@ -201,37 +227,10 @@ Above light/button requires a 16mm hole. The vertical center of this hole is, lo
 
 ![emptyhole](img/empty_hole.jpg)
 
-### Bezel
+## Bezel
 
 The bezel consists of three parts: The front and two side pieces. Measurements are in the [DIY/enclosure](/DIY/enclosure) folder of this repository.
 
-You can buy a bezel at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/); note that it is for a model 49 panel meter ('Roentgens'); a model 142 won't fit.
-
-### Connecting a Time Travel button
-
-The Control Board has a Time Travel button (marked "TT"). If you want to connect an external Time Travel button, connect it to the "TT" and "3V3" pins of the "Time Travel" connector.
-
-### Connecting a TCD to the Dash Gauges by wire
-
-If you want to connect a TCD to the Dash Gauges by wire (such as mentioned [here](https://github.com/realA10001986/Dash-Gauges/tree/main#connecting-a-tcd-by-wire)), wire as follows:
-
-<table>
-    <tr>
-     <td align="center">Dash Gauges</td>
-     <td align="center">TCD with control board 1.2</td>
-     <td align="center">TCD with control board >=1.3</td>
-    </tr>
-   <tr>
-     <td align="center">GND of "Time Travel" connector</td>
-     <td align="center">GND of "IO14" connector</td>
-     <td align="center">GND of "Time Travel" connector</td>
-    </tr>
-    <tr>
-     <td align="center">TT of "Time Travel" connector</td>
-     <td align="center">IO14 of "IO14" connector</td>
-     <td align="center">TT OUT of "Time Travel" connector</td>
-    </tr>
-</table>
-
+You can purchase a bezel at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/); note that it is for a model 49 panel meter ('Roentgens'); a model 142 won't fit.
 
 
