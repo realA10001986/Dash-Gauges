@@ -283,13 +283,13 @@ While the music player is playing music, other sound effects are disabled/muted.
 
 ### Connecting a TCD by wire
 
-Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place, and there is no way to remote-control the Gauges through the TCD by wire. Therefore I strongly recommend a wireless BTTFN connection, see immediately below.
+>Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place, and there is no way to remote-control the Gauges through the TCD by wire. Therefore I strongly recommend a wireless BTTFN connection, see immediately below.
 
 For wiring information of my DIY solution, please see [here](https://github.com/realA10001986/Dash-Gauges/blob/main/DIY/README.md#connecting-a-tcd-to-the-dash-gauges-by-wire).
 
 With the wiring in place, head to the Config Portal and set the option **_TCD connected by wire_**. On the TCD, the option "Control props connected by wire" must be set.
 
->You can connect both the TCD and a Time Travel button to Dash Gauges. But the button should not be pressed when the option **_TCD connected by wire_** is set, as it might yield unwanted results.
+>You can connect both the TCD and a Time Travel button to the Dash Gauges. But the button should not be pressed when the option **_TCD connected by wire_** is set, as it might yield unwanted results.
 
 ### BTTF-Network ("BTTFN")
 
