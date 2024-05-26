@@ -139,6 +139,8 @@ If you want to connect a TCD to the Dash Gauges (for synchronized time travel se
     </tr>
 </table>
 
+_Do not connect 3V3 to the TCD!_
+
 ## Gauges
 
 ### "Primary", "Percent Power"
