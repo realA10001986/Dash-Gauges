@@ -115,7 +115,7 @@ Gauge illumination [yellow numbers]:
 
 #### Connecting a Time Travel button
 
-The Control Board has a Time Travel button (marked "TT"). If you want to connect an external Time Travel button, connect it to the "TT" and "3V3" pins of the "Time Travel" connector.
+The Control Board has a Time Travel button (marked "TT"). If you want to connect an external Time Travel button, connect it to the "TT" and "3V3" pins of the "Time Travel" connector (red_3).
 
 #### Connecting a TCD to the Dash Gauges by wire
 
