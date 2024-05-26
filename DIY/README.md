@@ -20,7 +20,7 @@ The Panel consists of several parts:
 | *The Control Board* |
 
 The Control board is mounted on the smaller gauges. Its features include
-- 5V or 12V power supply (12V needed for digital gauges)
+- 5V or 12V power supply
 - audio, with speaker connector
 - SD card slot
 - a DAC for driving "analog" gauges with arbitrary voltages between 0 and 5V, and support for "digital" gauges (0/12V); room for user-mountable resistors to adjust voltage to very gauge type used
@@ -46,7 +46,7 @@ In order to make the Control Board as versatile as possible, there are some sold
 
 Main connectors (red numbers):
 - Red_1: 5V input for analog gauges and electronics
-- Red_2: 12V input for digital gauges ("DG+"/"-" pins) and electronics ("+"/"-" pins)
+- Red_2: 12V input for electronics ("+"/"-" pins) and for digital gauges ("DG+"/"-" pins)
 - Red_3: Time Travel button: To trigger a time travel, "TT" and "3V3" must be shorted.
 - Red_4: Door switches: Switches need to connect "C" and "1" for door 1, and "C" and "2" for door 2.
 
