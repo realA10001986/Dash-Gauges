@@ -123,17 +123,17 @@ If you want to connect a TCD to the Dash Gauges (for synchronized time travel se
 
 <table>
     <tr>
-     <td align="center">Dash Gauges</td>
+     <td align="center">Dash Gauges:<br>"Time Travel" connector (red_3)</td>
      <td align="center">TCD with control board 1.2</td>
      <td align="center">TCD with control board >=1.3</td>
     </tr>
    <tr>
-     <td align="center">GND of "Time Travel" connector</td>
+     <td align="center">GND</td>
      <td align="center">GND of "IO14" connector</td>
      <td align="center">GND of "Time Travel" connector</td>
     </tr>
     <tr>
-     <td align="center">TT of "Time Travel" connector</td>
+     <td align="center">TT</td>
      <td align="center">IO14 of "IO14" connector</td>
      <td align="center">TT OUT of "Time Travel" connector</td>
     </tr>
