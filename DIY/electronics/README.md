@@ -28,7 +28,7 @@ To have [JCLPCB](https://jlcpcb.com) make your board:
 4) RELAY1, RELAY2 are either FRT5-5V, [Panasonic TQ2-5V](https://www.mouser.com/ProductDetail/Panasonic-Industrial-Devices/TQ2-5V?qs=HLLy2pIPwutHaTSpVfb1kw%3D%3D) or [Kemet EA2-5Nx](https://www.mouser.com/ProductDetail/KEMET/EA2-5NU?qs=UeqeubEbzTX2QGWq8LyCiw%3D%3D). You will probably have to source and solder those yourself.
 
 #### You additionally need
-1) NodeMCU ESP32 devboard, preferably with CP2102 USB-to-UART converter. 19pin version. For example: [This one](https://www.waveshare.com/nodemcu-32s.htm)
+1) NodeMCU ESP32 devboard, preferably with CP2102 USB-to-UART converter. 38pin, 25mm wide. For example: [This one](https://www.waveshare.com/nodemcu-32s.htm)
 2) 2x LED. For example: [5mm yellow (595nm, >=3000mcd) LED](https://www.mouser.com/ProductDetail/Kingbright/WP7113SYT?qs=58z0TXQGVSR5GO%2FDcefd%2FA%3D%3D).
 
 
