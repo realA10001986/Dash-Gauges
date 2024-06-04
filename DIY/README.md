@@ -152,6 +152,7 @@ Tested meter options and configuration:
   <tr><td>H&P 631-14672 0-0.5V DC voltmeter</td><td>Pointer color changed from red to black using an Edding permanent marker</td><td>470R/8k2</td><td>H&P 631-14672</td></tr>
   <tr><td>Phaostron 0-5KV DC voltmeter (300-07970)</td><td>None</td><td>470R/4k7</td><td>Generic Analog (0-5V)</td></tr>
   <tr><td>Phaostron "Cyclic Trim" meter (631-15099)</td><td>The two resistors and the pot inside the meter need to be removed, and the wire (which lead to the pot) needs to be re-attached to the input terminal.</td><td>470R/4k7</td><td>Generic Analog (0-5V)</td></tr>
+  <tr><td>Phaostron 0-75V DC voltmeter (631-16471A)</td><td>Internal resistor and caps need to be bridged.</td><td>470R/4k7</td><td>Generic Analog (0-5V)</td></tr>
 </table>
 
 Unusable:
