@@ -39,7 +39,7 @@
  *   to "Additional Boards Manager URLs". The list is comma-separated.
  *   
  * - Go to "Tools" > "Board" > "Boards Manager", then search for "esp32", and install 
- *   the latest version by Espressif Systems.
+ *   the latest 2.x version by Espressif Systems. Versions >=3.x are not supported.
  *   Detailed instructions for this step:
  *   https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html
  *   
@@ -96,6 +96,9 @@
 
 /*  Changelog
  *  
+ *  2024/06/05 (A10001986)
+ *    - Minor fixes for WiFiManager
+ *    * Switched to esp32-arduino 2.0.17 for pre-compiled binary.
  *  2024/05/17 (A10001986)
  *    - Some optimizations for digital gauges
  *  2024/05/05 (A10001986)

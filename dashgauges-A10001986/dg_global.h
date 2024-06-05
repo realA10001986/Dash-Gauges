@@ -12,10 +12,10 @@
 #define _DG_GLOBAL_H
 
 // Version strings
-#define DG_VERSION       "V0.48"
-#define DG_VERSION_EXTRA "MAY172024"
+#define DG_VERSION       "V0.49"
+#define DG_VERSION_EXTRA "JUN052024"
 
-#define DG_DBG              // debug output on Serial
+//#define DG_DBG              // debug output on Serial
 
 /*************************************************************************
  ***                     mDNS (Bonjour) support                        ***
@@ -28,9 +28,6 @@
 #define DG_MDNS
 // Uncomment this if WiFiManager has mDNS enabled
 //#define DG_WM_HAS_MDNS 
-
-// Uncomment when using WiFiManager 2.0.17 or later
-//#define WIFIMANAGER_2_0_17
 
 /*************************************************************************
  ***             Configuration for peripherals/features                ***

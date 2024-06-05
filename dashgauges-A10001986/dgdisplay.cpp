@@ -159,8 +159,8 @@ static const struct ga_types gaugeTypesLarge[] = {
 
     /*
     // Example:
-    // 50V DC Simpson voltmeter with the internal resistor bridged, and a 4k7
-    // resistor added on the Control Board (R5/R6) so that full scale is at about 5V. 
+    // 50V DC Simpson voltmeter with the internal resistor bridged, and 0R+5k6
+    // resistors added on the Control Board (R5/R6) so that full scale is at about 5V. 
     // We use Vcc (which is 5V) as reference, and can go to maximum (4095).
     // This is covered by the "Generic 0-5V" entry above.
     { 7, "Simpson DC 0-50V modified (0-5V)", DGD_TYPE_MCP4728,
