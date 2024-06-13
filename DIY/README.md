@@ -182,11 +182,11 @@ The "Roentgens" gauge is more of a problem. The original in the movie was a real
 
 Since I could not find a properly equipped CP95, I searched for an alternative ... and came across a lot of Simpson meters that looked good (while not identical). However: One - quite important - issue is that hardly any Simpson meters are illuminated. Non-illuminated meters have a front that is a whopping 7mm thinner than the fronts of illuminated models, the glass is much closer to the dial, and, as a result, the movie-accurate "Empty" light won't fit.
 
-A word on Simpson model numbers: Their main model number means "case style", not "type of meter". "Model 49" therefore only means "4.5 inch case", but not whether this is a VU meter, a voltmeter, or what not:
+A word on Simpson model numbers: Their main model number means "case dimension", not "type of meter". "Model 49" therefore only means "4.5 inch case", but not whether this is a VU meter, a voltmeter, or what not:
 
 <img width="985" alt="Simpson meters" src="img/simpson_catalog.png">
 
-To make things worse, they re-used other codes (such as "SK 525-447") for a variaty of meters, so that isn't an ID of a specific model either.
+To make things worse, they re-used other codes (such as "SK 525-447") for a variety of meters, so that isn't an ID of a specific model either.
 
 The only Simpson meters that came with illumination - apart from the Roentgens meters - were apparently their VU meters, models 49 (not listed above as they pre-date the catalog) and 142 (10470, 10540). Model 49 has the correct front dimensions; depending on their build date, they have either the three bands of "stripes" (like in the movie), or one thicker band of "stripes" in the center. Later models, unfortunately using the same model number, look entirely different.
 
@@ -210,7 +210,7 @@ Unusable:
 
 Most Simpson meters have a drop-shaped pointer top which I was not able to remove (in fact, I didn't even try; I don't think the pointer top would have ended up properly straight); although I mounted the "Empty" light as high on the scale as possible, the pointer was still too long and collided with the light. My solution was to change the bends of the pointer where it leaves the driving mechanism more into an "S" shape, and I could thereby make it ever so short enough to pass the light. Another way would be to cut off the drop part, but that would make the pointer a tad too short in my opinion. _Warning_: Those pointers have a counter-weight on the opposite end and are perfectly balanced. If you decide to cut off the drop, the pointer is unbalanced and you need to cut off a tiny (!) bit of the other end, too, otherwise the pointer might not fully return to zero position and wander around if you tilt the gauge.
 
-Regarding the "Empty" light: I used a light like this one (12V version), available from aliexpress:
+Regarding the "Empty" light: I used a light like this one (12V version), available from aliexpress and ebay:
 
 ![emptylight](img/emptylight.png)
 
@@ -222,7 +222,7 @@ A movie-accurate "Empty" label is in the [DIY/faces-labels](/DIY/faces-labels) f
 
 The LED in those lights/buttons requires 12V. The Control Board has two connectors for the Empty LED:
 - When using the "Empty Light" [green_4] connector, the light/button's built-in resistor needs to be removed: Pull up the red cover and pull out the LED; then desolder the LED (ie desolder the two metal tops, and push the LED out) and bridge the resistor, or replace it with a wire. Reassemble.
-- When using the LED pins of the Digital Roetgens connector [6]: No modification of light/button needed, but the Control Board must fed 12V on the "DG+" pin of the 12V connector [red_2].
+- When using the LED pins of the Digital Roetgens connector [6]: No modification of light/button needed, but the Control Board must be fed 12V on the "DG+" pin of the 12V connector [red_2].
 
 Above light/button requires a 16mm hole. The vertical center of this hole is, looking at the meter from the front, at 13mm below the enclosure's edge, horizontally centered (relative to the enclosure, not the dial; the dial might be not accurately centered). In order to make the hole into the enclosure and the dial at exactly the same spot, drill the hole with the dial mounted. I used a step drill and drilled from the dial's side. Have a vacuum ready, the Bakelite makes a lot of dirt. If the steps on your step drill aren't high enough to go through the dial and the back of the enclosure, drill until the hole in the dial is of correct size (16mm), then remove the dial and finish drilling the enclosure. Do not attach your new dial label sticker before drilling, it's better to do this afterwards.
 
