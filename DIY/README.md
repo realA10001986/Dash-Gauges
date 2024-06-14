@@ -10,7 +10,7 @@ This prop was made to be compatible with the CircuitSetup line of movie props ([
 
 The Panel consists of several parts:
 - A Control Board
-- The gauges: In the Original, the small ones were made by Phaostron (631 series), the large one by Simpson (Model 49). In the picture above you see two H&P 631-14672 (built by Phaostron) and a Simpson 49L VU Meter disguised as the "Plutonium chamber" gauge. Many other types of meter can be used.
+- The gauges: In the picture above you see two H&P 631-14672 (built by Phaostron) and a Simpson 49L VU Meter disguised as the "Plutonium chamber" gauge. Many other types of meters can be used.
 - Aluminium (Aluminum) bezel; can be purchased at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/). The measurements are in the ["enclosure"](/DIY/enclosure) folder of this repository. 
 
 ## Control board
@@ -145,6 +145,8 @@ _Do not connect 3V3 to the TCD!_
 
 ### "Primary", "Percent Power"
 
+In the Original, these were Phaostron 631 series meters. There are many different types/models of vintage Phaostron meters available; anything that starts with 63x fits size-wise; some older 300 series meters also fit. Not all 63x meters are usable though. I haven't seen a complete list, but what I cam accross leads to some conclusions: 634 are wattmeters, which cannot be used. 639 are mainly AC ammeters for high amperages, to be avoided. Some meters have their zero position in the center of the scale, so avoid those, too. In my (limited) experience, the 631 series is the safest bet.
+
 Tested meter options and configuration:
 
 <table>
@@ -158,9 +160,9 @@ Tested meter options and configuration:
 Unusable:
 - Phaostron 0-50/100/250/500A AC ammeter (639-16341).
 
-It is hard to tell what a meter has inside and whether it's usable. Many meters have scales that don't match their actual input, and require an external "multiplier" (such as the 5KV voltmeter I tested). Avoid ammeters (Ampere meters) for currents >1A, and AC voltmeters for high voltages (>50V); those often have stronger coils that cannot be used with low voltages. Otherwise, ammeters (especially if the scale is in the milliampere range) can most likely be used after removing shunts, resistors or anything else that is between the two input terminals. 
+It is hard to tell what a meter has inside and whether it's usable. Many meters have scales that don't match their actual input, and require an external "multiplier" (such as the 5KV voltmeter I tested). Avoid ammeters (Ampere meters) for currents >1A, and AC voltmeters for high voltages (>50V); those often have stronger coils that cannot be used with low voltages. Otherwise, ammeters (especially if the scale is in the uA or mA range) can most likely be used after removing shunts, resistors or anything else that is between the two input terminals. 
 
-To find out a suitable resistors value, use a common 5V power supply (eg one for Arduino), and start out with a 8k2 resistor between the + output of the power supply and the + of the gauge (usually the left terminal when looking at the back), and work your way from there, until the 5V plus the resistor make the pointer move to the right end of the scale (but not beyond!).
+To find out a suitable resistors value, use a common 5V power supply (eg one for Arduino), and start out with a 8k2 resistor between the + output of the power supply and the + of the gauge (usually the left terminal when looking at the back), and work your way from there, until the 5V plus the resistor make the pointer move to the right end of the scale (but not beyond!). That resistor is then your R1/R2 or R3/R4. (There is room for two resistors per gauge on the Control Board to allow combinations, for instance 3k3 + 300R to achieve 3k6.)
 
 Movie-accurate dials for those gauges are available in the [DIY/faces-labels](/DIY/faces-labels) folder. To apply them properly, cut them precisely at the bottom and the right hand side (leave some extra at the top and the left hand side; the template's top and left hand side lines account for that extra), then place the dial in the corner of a 90 deg angled ruler, and align the sticker at the bottom and right hand side. Slowly apply the sticker from the bottom up to avoid bubbles, and in the end, with the sticker facing down, use an Exacto knife to cut off the surplus.
 
@@ -178,15 +180,15 @@ Phaostron meters have either 6mm (1/4"-28 UNF) or 4mm (8-32 UNC) screw terminals
 
 ### "Roentgens"
 
-The "Roentgens" gauge is more of a problem. The original in the movie was a real Roentgens meter from a CP95 radiac. Such devices are hard to find, let alone one with the correct Simpson meter. The CP95 was built over a long period of time and they used meters from different manufacturers.
+The "Roentgens" gauge is more of a challenge. The original in the movie was a real Roentgens meter from a CP95 radiac. Such devices are hard to find, let alone one with the correct Simpson meter. The CP95 was built over a long period of time and they used meters from different manufacturers.
 
-Since I could not find a properly equipped CP95, I searched for an alternative ... and came across a lot of Simpson meters that looked good (while not identical). However: One - quite important - issue is that hardly any Simpson meters are illuminated. Non-illuminated meters have a front that is a whopping 7mm thinner than the fronts of illuminated models, the glass is much closer to the dial, and, as a result, the movie-accurate "Empty" light won't fit.
+There are a lot of Simpson meters that look similar - yet not identical - to what was seen in the movies. However: One - quite important - issue is that hardly any Simpson meters are illuminated. Non-illuminated meters have a front that is 7mm thinner than the fronts of illuminated models, the glass is closer to the dial, and, as a result, the movie-accurate "Empty" light won't fit.
 
 A word on Simpson model numbers: Their main model number means "case dimension", not "type of meter". "Model 49" therefore only means "4.5 inch case", but not whether this is a VU meter, a voltmeter, or what not:
 
 <img width="985" alt="Simpson meters" src="img/simpson_catalog.png">
 
-To make things worse, they re-used other codes (such as "SK 525-447") for a variety of meters, so that isn't an ID of a specific model either.
+They also re-used other codes (such as "SK 525-447") for a variety of meters, so that isn't an ID of a specific model either.
 
 The only Simpson meters that came with illumination - apart from the Roentgens meters - were apparently their VU meters, models 49 (not listed above as they pre-date the catalog) and 142 (10470, 10540). Model 49 has the correct front dimensions; depending on their build date, they have either the three bands of "stripes" (like in the movie), or one thicker band of "stripes" in the center. Later models, unfortunately using the same model number, look entirely different.
 
