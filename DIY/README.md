@@ -6,7 +6,7 @@ CircuitSetup at this point only offers the [bezel](https://circuitsetup.us/produ
 
 This prop was made to be compatible with the CircuitSetup line of movie props ([Time Circuits Display](https://tcd.out-a-ti.me), [Flux Capacitor](https://fc.out-a-ti.me), [SID](https://sid.out-a-ti.me)).
 
-![Dash Gauges](img/thedg_n.jpg)
+![Dash Gauges](img/mydg3.jpg)
 
 The Panel consists of several parts:
 - A Control Board
