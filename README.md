@@ -6,8 +6,8 @@ This repository holds
 
 This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](https://tcd.out-a-ti.me) as it relies on the TCD's keypad to control many of its functions.
 
-![Dash Gauges](img/mydg1.jpg)
-![Dash Gauges](img/mydg2.jpg)
+[<img src="img/mydg1.jpg">](img/mydg1_l.jpg)
+[<img src="img/mydg2.jpg">](img/mydg2_l.jpg)
 
 For DIY instructions, please see [here](/DIY/).
 
