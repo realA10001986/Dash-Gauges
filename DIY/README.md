@@ -52,7 +52,7 @@ Main connectors (red numbers):
 
 Power supply:
 
-The electronics can be run off 5V or 12V ("+"/"-" pins). If you are using analog gauges only, the choice is yours.
+The electronics can be run off 5V or 12V ("+"/"-" pins of connectors red_1 or red_2). If you are using analog gauges only, the choice is yours.
 
 Digital gauges, as well as connecting anything to connector green_6, require 12V on the "DG+" pin of the 12V power connector [red_2]. If you want to power everything with 12V, connect the power supply to connector red_2 ("+"/"-" pins), and bridge the "+" and "DG+" pins with a short wire, as indicated by the arc printed on the board.
 
