@@ -192,7 +192,7 @@ A word on Simpson model numbers: Their main model number means "case dimension",
 
 They also re-used other codes (such as "SK 525-447") for a variety of meters, so that isn't an ID of a specific model either.
 
-The only Simpson meters that came with illumination - apart from the Roentgens meters - were apparently their VU meters, models 49 (not listed above as they pre-date the catalog) and 142 (10470, 10540). Model 49 has the correct front dimensions; depending on their build date, they have either the three bands of "stripes" (like in the movie), or one thicker band of "stripes" in the center. Later models, unfortunately using the same model number, look entirely different.
+The only Simpson meters that came with illumination - apart from the Roentgens meters - were apparently their VU meters, models 49 (not listed above as they pre-date the catalog) and 142 (10470, 10540). Model 49 has the correct front dimensions - as long as its build date is something around the 1950s or earlier; later models, unfortunately using the same model number, look entirely different.
 
 I was lucky to score a **Simpson model 49L VU-meter** with the movie-accurate front, and later a **Simpson model 49MC VU-meter**. They are illuminated through two 6V incandescent light bulbs. The additional red pointer was added by drilling a hole into the front (which should be in the center of the original pointer's turning circle), bending some spring steel wire (0.4mm) and attaching this wire with a screw.
 
