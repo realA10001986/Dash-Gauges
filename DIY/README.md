@@ -54,7 +54,7 @@ Power supply:
 
 The electronics can be run off 5V or 12V ("+"/"-" pins). If you are using analog gauges only, the choice is yours.
 
-Digital gauges, as well as connecting anything to connector green_6, require 12V on the "DG+" pin of the 12V power connector [red_2]. If you want to power everything with 12V, bridge the "+" and "DG+" pins of connector red_2 with a short wire, as indicated on the silkscreen. 
+Digital gauges, as well as connecting anything to connector green_6, require 12V on the "DG+" pin of the 12V power connector [red_2]. If you want to power everything with 12V, connect the power supply to connector red_2 ("+"/"-" pins), and bridge the "+" and "DG+" pins with a short wire, as indicated by the arc printed on the board.
 
 >For experts: To power the electronics with 5V, but the digital gauges with 12V, put 12V on "DG+" and "-" of the 12V connector red_2, and 5V on the 5V connector red_1 or on the ESP32 via USB.
 
