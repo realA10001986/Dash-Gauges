@@ -521,7 +521,7 @@ Same as [this](#-primary-empty-percentage), but for the 'Percent Power' gauge
 
 ##### &#9654; 'Roentgens' full percentage
 
-Same as [this](#-primary-full-percentage), but for the 'Roentgens' gauge
+Same as [this](#-primary-full-percentage), but for the 'Roentgens' gauge. If you adjusted the pointer's zero position to the "green zero", be careful not to choose values too high; you might overshoot the pointer's physical end position.
 
 ##### &#9654; 'Roentgens' empty percentage
 
