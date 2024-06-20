@@ -212,6 +212,8 @@ Tested meter options and configuration:
 Unusable:
 - Simpson model 49 voltmeter 0-250V AC.
 
+Note hat I aligned the zero point to the "green zero" on the Roentgens scale in all meters. Be careful when setting the "full percentage" of the meter: Above approx 90% the pointer might hit its end point and that might damage the pointer.
+
 Most Simpson meters have a drop-shaped pointer top which I was not able to remove (in fact, I didn't even try; I don't think the pointer top would have ended up properly straight); although I mounted the "Empty" light as high on the scale as possible, the pointer was still too long and collided with the light. My solution was to change the bends of the pointer where it leaves the driving mechanism more into an "S" shape, and I could thereby make it ever so short enough to pass the light. Another way would be to cut off the drop part, but that would make the pointer a tad too short in my opinion. _Warning_: Those pointers have a counter-weight on the opposite end and are perfectly balanced. If you decide to cut off the drop, the pointer is unbalanced and you need to cut off a tiny (!) bit of the other end, too, otherwise the pointer might not fully return to zero position and wander around if you tilt the gauge.
 
 Regarding the "Empty" light: I used a light like this one (12V version), available from aliexpress and ebay:
