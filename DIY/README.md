@@ -198,7 +198,7 @@ I was lucky to score a **Simpson model 49L VU-meter** with the movie-accurate fr
 
 The **model 142 VU-meters**, while perfectly usable electronically, are a bit smaller (4.25x3.9" vs 4.66x4.2") and look different on the back; their barrel is thicker (3.25" vs 2.78" in diameter), and the screws are not at the outer corners but closer to the barrel. There are special files in the [DIY/enclosure](/DIY/enclosure) folder for model 142 dimensions. Unfortunately, the barrel is so big that it does not allow for a simple hole for the "Empty" light; this must be done another way.
 
-If you can't find a model 49 VU-meter or consider the 142 too far off, you could try a Simpson voltmeter or ammeter (models 29, 39, 49, 59, or 79 fit size-wise). Many meters are for voltages/currents beyond what the Control Board can deliver, but often they can be modified: For instance, the **Simpson model 49 0-50V DC voltmeter** has a 50K resistor inside; if this resistor is bridged, the meter shows full scale at 0.0375V. With a 5K6 resistor it shows full scale at approx 5V, which is perfectly usable. But again: You need to compromise on the "Empty" light, since non-illuminated Simpson meters are too thin.
+If you can't find a model 49 VU-meter or consider the 142 too far off, you could try a Simpson voltmeter or ammeter (models 29, 39, 49, 59, or 79 fit size-wise; ammeters should be in a range <25mA, otherwise they require a current higher than what the Control Board can provide). Many meters are for voltages/currents beyond what the Control Board can deliver, but often they can be modified: For instance, the **Simpson model 49 0-50V DC voltmeter** has a 50K resistor inside; if this resistor is bridged, the meter shows full scale at 0.0375V. With a 5K6 resistor it shows full scale at approx 5V, which is perfectly usable. But again: You need to compromise on the "Empty" light, since non-illuminated Simpson meters are too thin.
 
 Tested meter options and configuration:
 
@@ -210,7 +210,8 @@ Tested meter options and configuration:
 </table>
 
 Unusable:
-- Simpson model 49 voltmeter 0-250V AC.
+- Simpson model 49 voltmeter 0-250V AC
+- Simpson model 49 ammeter 0-250mA DC
 
 >How to take apart a Simpson meter: Those meters are very delicate. They have tiny sprial springs and other parts which need to be handled with care. To take a meter apart in order to access the "electronics" (resistors, caps, diodes, etc), unskrew the two nut _on the bottom_ of the meter (usually 5.5mm), then carefully lift the meter's mechanics out of the case. Never unscrew anything on top of the mechanic!
 
