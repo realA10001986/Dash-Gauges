@@ -162,7 +162,7 @@ Unusable:
 
 It is hard to tell what a meter has inside and whether it's usable. Many meters have scales that don't match their actual input, and require an external "multiplier" (such as the 5KV voltmeter I tested). Avoid ammeters (Ampere meters) for currents >1A, and AC voltmeters for high voltages (>50V); those often have stronger coils that cannot be used with low voltages. Otherwise, ammeters (especially if the scale is in the uA or mA range) can most likely be used after removing shunts, resistors or anything else that is between the two input terminals. 
 
-To find out a suitable resistor values for R1/R2 and/or R3/R4, use a common 5V power supply (eg one for Arduino), and start out with a 8k2 resistor between the + output of the power supply and the + terminal of the gauge (usually the left terminal when looking at the back), and work your way from there, until the 5V plus the resistor make the pointer move to the right end of the scale (but not beyond!). That resistor is then your R1/R2 or R3/R4. 
+To find out a suitable resistor values for R1/R2 and/or R3/R4, please see [here](#appendix-a-restistors-for-gauges).
 
 Movie-accurate dials for those gauges are available in the [DIY/faces-labels](/DIY/faces-labels) folder. To apply them properly, cut them precisely at the bottom and the right hand side (leave some extra at the top and the left hand side; the template's top and left hand side lines account for that extra), then place the dial in the corner of a 90 deg angled ruler, and align the sticker at the bottom and right hand side. Slowly apply the sticker from the bottom up to avoid bubbles, and in the end, with the sticker facing down, use an Exacto knife to cut off the surplus.
 
@@ -214,7 +214,7 @@ Unusable:
 
 >How to take apart a Simpson meter: Those meters are very delicate. They have tiny sprial springs and other parts which need to be handled with care. To take a meter apart in order to access the "electronics" (resistors, caps, diodes, etc), unskrew the two nut _on the bottom_ of the meter (usually 5.5mm), then carefully lift the meter's mechanics out of the case. Never unscrew anything on top of the mechanic!
 
-To find out suitable resistor values for R5/R6, use a common 5V power supply (eg one for Arduino), and start out with a 8k2 resistor between the + output of the power supply and the + of the gauge (usually the left terminal when looking at the back), and work your way from there, until the 5V plus the resistor make the pointer move to the right end of the scale (but not beyond!). That resistor is then your R5/R6. (There is room for two resistors on the Control Board to allow combinations, for instance 3k3 + 330R to achieve 3k6.)
+To find out suitable resistor values for R5/R6, please see [here](#appendix-a-restistors-for-gauges).
 
 When aligning the zero point to the "green zero" on the Roentgens scale, be careful when setting the "full percentage" of the meter: Above approx 90% the pointer might hit its end point and suffer damage.
 
@@ -251,6 +251,7 @@ To find out suitable resistor values for R1/R2, R3/R4 or R5/R6, use a common 5V 
 
 ![resistors](img/resistor.png)
 
+Look at the needle when applying power:
 - If the needle hits the right end point, remove power immediately and retry with a resistor with a _higher_ ohm value;
 - If the needle stops on the way, before reaching the right end of the scale, retry with a resistor with a slightly _lower_ ohm value.
 
