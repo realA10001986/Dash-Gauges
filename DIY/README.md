@@ -158,11 +158,11 @@ Tested meter options and configuration:
 </table>
 
 Unusable:
-- Phaostron 0-50/100/250/500A AC ammeter (639-16341).
+- Phaostron 0-50/100/250/500A AC ammeter (**639-16341**).
 
 It is hard to tell what a meter has inside and whether it's usable. Many meters have scales that don't match their actual input, and require an external "multiplier" (such as the 5KV voltmeter I tested). Avoid ammeters (Ampere meters) for currents >1A, and AC voltmeters for high voltages (>50V); those often have stronger coils that cannot be used with low voltages. Otherwise, ammeters (especially if the scale is in the uA or mA range) can most likely be used after removing shunts, resistors or anything else that is between the two input terminals. 
 
-To find out a suitable resistor values for R1/R2 and/or R3/R4 on the Control Board, please see [here](#appendix-a-restistors-for-gauges).
+To find out suitable resistor values for R1/R2 and/or R3/R4 on the Control Board, please see [here](#appendix-a-restistors-for-gauges).
 
 Movie-accurate dials for those gauges are available in the [DIY/faces-labels](/DIY/faces-labels) folder. To apply them properly, cut them precisely at the bottom and the right hand side (leave some extra at the top and the left hand side; the template's top and left hand side lines account for that extra), then place the dial in the corner of a 90 deg angled ruler, and align the sticker at the bottom and right hand side. Slowly apply the sticker from the bottom up to avoid bubbles, and in the end, with the sticker facing down, use an Exacto knife to cut off the surplus.
 
