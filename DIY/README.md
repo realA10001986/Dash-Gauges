@@ -160,7 +160,7 @@ Tested meter options and configuration:
 Unusable:
 - Phaostron 0-50/100/250/500A AC ammeter (**639-16341**).
 
-It is hard to tell what a meter has inside and whether it's usable. Many meters have scales that don't match their actual input, and require an external "multiplier" (such as the 5KV voltmeter I tested). Avoid ammeters (Ampere meters) for currents >1A, and AC voltmeters for high voltages (>50V); those often have stronger coils that cannot be used with low voltages. Otherwise, ammeters (especially if the scale is in the uA or mA range) can most likely be used after removing shunts, resistors or anything else that is between the two input terminals. 
+It is hard to tell what a meter has inside and whether it's usable. Many meters have scales that don't match their actual input, and require an external "multiplier" (such as the 5KV voltmeter I tested). Avoid ammeters (Ampere meters) for currents >25mA, and AC voltmeters for high voltages (>50V); those often have stronger coils that cannot be used with low voltages. Otherwise, ammeters (especially if the scale is in the uA range) can most likely be used after removing shunts, resistors or anything else that is between the two input terminals. 
 
 To find out suitable resistor values for R1/R2 and/or R3/R4 on the Control Board, please see [here](#appendix-a-restistors-for-gauges).
 
@@ -198,7 +198,7 @@ I was lucky to score a **Simpson model 49L VU-meter** with the movie-accurate fr
 
 The **model 142 VU-meters**, while perfectly usable electronically, are a bit smaller (4.25x3.9" vs 4.66x4.2") and look different on the back; their barrel is thicker (3.25" vs 2.78" in diameter), and the screws are not at the outer corners but closer to the barrel. There are special files in the [DIY/enclosure](/DIY/enclosure) folder for model 142 dimensions. Unfortunately, the barrel is so big that it does not allow for a simple hole for the "Empty" light; this must be done another way.
 
-If you can't find a model 49 VU-meter or consider the 142 too far off, you could try a Simpson voltmeter or ammeter (models 29, 39, 49, 59, or 79 fit size-wise; ammeters should be in a range <25mA, otherwise they require a current higher than what the Control Board can provide). Many meters are for voltages/currents beyond what the Control Board can deliver, but often they can be modified: For instance, the **Simpson model 49 0-50V DC voltmeter** has a 50K resistor inside; if this resistor is bridged, the meter shows full scale at 0.0375V. With a 5K6 resistor it shows full scale at approx 5V, which is perfectly usable. But again: You need to compromise on the "Empty" light, since non-illuminated Simpson meters are too thin.
+If you can't find a model 49 VU-meter or consider the 142 too far off, you could try a Simpson voltmeter (models 29, 39, 49, 59 or 79 fit size-wise; ammeters might work but should be in a range <25mA or, better yet, microampere, otherwise they probably require a current higher than what the Control Board can provide). Many meters are for voltages/currents beyond what the Control Board can deliver, but often they can be modified: For instance, the **Simpson model 49 0-50V DC voltmeter** has a 50K resistor inside; if this resistor is bridged, the meter shows full scale at 0.0375V. With a 5K6 resistor it shows full scale at approx 5V, which is perfectly usable. But again: You need to compromise on the "Empty" light, since non-illuminated Simpson meters are too thin.
 
 Tested meter options and configuration:
 
@@ -213,7 +213,7 @@ Unusable:
 - Simpson model 49 voltmeter 0-250V AC
 - Simpson model 49 ammeter 0-250mA DC
 
->How to take apart a Simpson meter: Those meters are very delicate. They have tiny sprial springs and other parts which need to be handled with care. To take a meter apart in order to access the "electronics" (resistors, caps, diodes, etc), unskrew the two nut _on the bottom_ of the meter (usually 5.5mm), then carefully lift the meter's mechanics out of the case. Never unscrew anything on top of the mechanic!
+>How to take apart a Simpson meter: Those meters are very delicate. They have tiny sprial springs and other parts which need to be handled with care. To take a meter apart in order to access the "electronics" (resistors, caps, diodes, etc), unskrew the two nuts _on the bottom_ of the meter (usually 5.5mm), then carefully lift the meter's mechanics out of the case. Never unscrew anything on top of the mechanic!
 
 To find out suitable resistor values for R5/R6 on the Control Board, please see [here](#appendix-a-restistors-for-gauges).
 
