@@ -162,7 +162,7 @@ Unusable:
 
 It is hard to tell what a meter has inside and whether it's usable. Many meters have scales that don't match their actual input, and require an external "multiplier" (such as the 5KV voltmeter I tested). Avoid ammeters (Ampere meters) for currents >1A, and AC voltmeters for high voltages (>50V); those often have stronger coils that cannot be used with low voltages. Otherwise, ammeters (especially if the scale is in the uA or mA range) can most likely be used after removing shunts, resistors or anything else that is between the two input terminals. 
 
-To find out a suitable resistors value for R1/R2 and/or R3/R4, use a common 5V power supply (eg one for Arduino), and start out with a 8k2 resistor between the + output of the power supply and the + of the gauge (usually the left terminal when looking at the back), and work your way from there, until the 5V plus the resistor make the pointer move to the right end of the scale (but not beyond!). That resistor is then your R1/R2 or R3/R4. (There is room for two resistors per gauge on the Control Board to allow combinations, for instance 3k3 + 330R to achieve 3k6.)
+To find out a suitable resistor values for R1/R2 and/or R3/R4, use a common 5V power supply (eg one for Arduino), and start out with a 8k2 resistor between the + output of the power supply and the + terminal of the gauge (usually the left terminal when looking at the back), and work your way from there, until the 5V plus the resistor make the pointer move to the right end of the scale (but not beyond!). That resistor is then your R1/R2 or R3/R4. 
 
 Movie-accurate dials for those gauges are available in the [DIY/faces-labels](/DIY/faces-labels) folder. To apply them properly, cut them precisely at the bottom and the right hand side (leave some extra at the top and the left hand side; the template's top and left hand side lines account for that extra), then place the dial in the corner of a 90 deg angled ruler, and align the sticker at the bottom and right hand side. Slowly apply the sticker from the bottom up to avoid bubbles, and in the end, with the sticker facing down, use an Exacto knife to cut off the surplus.
 
@@ -194,17 +194,17 @@ They also re-used other codes (such as "SK 525-447") for a variety of meters, so
 
 The only Simpson meters that came with illumination - apart from the Roentgens meters - were apparently their VU meters, models 49 (not listed above as they pre-date the catalog) and 142 (10470, 10540). Model 49 has the correct front dimensions - as long as its build date is something around the 1950s or earlier; later models, unfortunately using the same model number, look entirely different.
 
-I was lucky to score a **Simpson model 49L VU-meter** with the movie-accurate front, and later a **Simpson model 49MC VU-meter**. They are illuminated through two 6V incandescent light bulbs. The additional red pointer was added by drilling a hole into the front (which should be in the center of the original pointer's turning circle), bending some spring steel wire (0.4mm) and attaching this wire with a screw.
+I was lucky to score a **Simpson model 49L VU-meter** with the movie-accurate front, and later a **Simpson model 49MC VU-meter**. They are illuminated through two 6V incandescent light bulbs. The additional red pointer was added by drilling a hole into the front (which should be in the center of the original pointer's turning circle), bending some steel spring wire (0.4mm) and attaching this wire with a screw.
 
 The **model 142 VU-meters**, while perfectly usable electronically, are a bit smaller (4.25x3.9" vs 4.66x4.2") and look different on the back; their barrel is thicker (3.25" vs 2.78" in diameter), and the screws are not at the outer corners but closer to the barrel. There are special files in the [DIY/enclosure](/DIY/enclosure) folder for model 142 dimensions. Unfortunately, the barrel is so big that it does not allow for a simple hole for the "Empty" light; this must be done another way.
 
-If you can't find a model 49 VU-meter or consider the 142 too far off, you could try a Simpson voltmeter or ammeter (models 29, 39, 49, 59, or 79 fit size-wise). These meters mostly are for voltages/currents beyond what the Control Board can deliver, but: Many of those meters can be modified easily: For instance, the **Simpson model 49 0-50V DC voltmeter** has a 50K resistor inside; if this resistor is bridged, the meter shows full scale at 0.0375V. With a 5K6 resistor it shows full scale at approx 5V, which is perfectly usable. But again: You also need to compromise on the "Empty" light, since non-illuminated Simpson meters are too thin.
+If you can't find a model 49 VU-meter or consider the 142 too far off, you could try a Simpson voltmeter or ammeter (models 29, 39, 49, 59, or 79 fit size-wise). Many meters are for voltages/currents beyond what the Control Board can deliver, but often they can be modified: For instance, the **Simpson model 49 0-50V DC voltmeter** has a 50K resistor inside; if this resistor is bridged, the meter shows full scale at 0.0375V. With a 5K6 resistor it shows full scale at approx 5V, which is perfectly usable. But again: You need to compromise on the "Empty" light, since non-illuminated Simpson meters are too thin.
 
 Tested meter options and configuration:
 
 <table>
   <tr><td>Meter</td><td>Modification</td><td>R5/R6</td><td>Gauge type setting</td></tr>
-  <tr><td>Standard VU meter (Simpson models 49(L/MC), 142)</td><td>None</td><td>330R/3k3</td><td>Standard VU-Meter</td></tr>
+  <tr><td>Simpson models 49, 142 VU meters</td><td>None</td><td>330R/3k3</td><td>Standard VU-Meter</td></tr>
   <tr><td>Simpson model 49 0-50V DC voltmeter</td><td>Internal resistor needs to be bridged</td><td>0R/5k6</td><td>Generic Analog (0-5V)</td></tr>
   <tr><td>Simpson model 49 0-250mA DC ammeter</td><td>Internal coil resistor (looks like wire wrapped around paper) in the rear, close to the bottom, needs to be removed: No need to take the meter apart; just cut the two blank wires leading from the terminals towards the center, the coil resistor will fall out then (be sure to bend down the remaining stubs so that they don't touch anything), the other resistor can remain.</td><td>0R/1k0</td><td>Generic Analog (0-5V)</td></tr>
 </table>
@@ -212,7 +212,9 @@ Tested meter options and configuration:
 Unusable:
 - Simpson model 49 voltmeter 0-250V AC.
 
-To find out a suitable resistors value for R5/R6, use a common 5V power supply (eg one for Arduino), and start out with a 8k2 resistor between the + output of the power supply and the + of the gauge (usually the left terminal when looking at the back), and work your way from there, until the 5V plus the resistor make the pointer move to the right end of the scale (but not beyond!). That resistor is then your R5/R6.
+>How to take apart a Simpson meter: Those meters are very delicate. They have tiny sprial springs and other parts which need to be handled with care. To take a meter apart in order to access the "electronics" (resistors, caps, diodes, etc), unskrew the two nut _on the bottom_ of the meter (usually 5.5mm), then carefully lift the meter's mechanics out of the case. Never unscrew anything on top of the mechanic!
+
+To find out suitable resistor values for R5/R6, use a common 5V power supply (eg one for Arduino), and start out with a 8k2 resistor between the + output of the power supply and the + of the gauge (usually the left terminal when looking at the back), and work your way from there, until the 5V plus the resistor make the pointer move to the right end of the scale (but not beyond!). That resistor is then your R5/R6. (There is room for two resistors on the Control Board to allow combinations, for instance 3k3 + 330R to achieve 3k6.)
 
 When aligning the zero point to the "green zero" on the Roentgens scale, be careful when setting the "full percentage" of the meter: Above approx 90% the pointer might hit its end point and suffer damage.
 
@@ -241,5 +243,25 @@ Above light/button requires a 16mm hole. The vertical center of this hole is, lo
 The bezel consists of three parts: The front and two side pieces. Measurements are in the [DIY/enclosure](/DIY/enclosure) folder of this repository.
 
 You can purchase a bezel at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/); note that it is for a model 49 panel meter ('Roentgens'); a model 142 won't fit.
+
+
+# Appendix A: Restistors for Gauges
+
+To find out suitable resistor values for R1/R2, R3/R4 or R5/R6, use a common 5V power supply (eg one for Arduino), and start out with a 10k resistor between the + output of the power supply and the + of the gauge (usually the left terminal when looking at the back):
+
+![resistors](img/resistor.jpg)
+
+- If the needle hits the right end point, remove power immediately and retry with a resistor with a _higher_ ohm value;
+- If the needle stops on the way, before reaching the right end of the scale, retry with a resistor with a slightly _lower_ ohm value.
+
+There is room for two resistors per gauge on the Control Board to allow combinations, for instance 3k3 + 330R to achieve 3k6. So you can try daisy-chaining two resistors if you don't find one that makes the needle go nicely close to the right end of the scale.
+
+When you found (a) value(s) that make(s) the needle go exactly to the end point (or slightly below), that is what you put in 
+- R1/R2 for the "Percent Power" gauge (center),
+- R3/R4 for the "Primary" gauge (left),
+- R5/F6 for the "Roentgens" gauge.
+
+If a single resistor does the job, bridge the other position with a wire.
+
 
 
