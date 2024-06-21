@@ -10,7 +10,7 @@ This prop was made to be compatible with the CircuitSetup line of movie props ([
 
 The Panel consists of several parts:
 - A Control Board
-- The gauges: In the picture above you see two H&P 631-14672 (built by Phaostron) and a Simpson 49L VU Meter disguised as the "Plutonium chamber" gauge. Many other types of meters can be used.
+- The gauges: In the picture above you see two Phaostron 631-15099 "Cyclic Trim" meters, and a Simpson model 49MC VU Meter disguised as the "Roentgens" gauge. Many other types of meters can be used.
 - Aluminium (Aluminum) bezel; can be purchased at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/). The measurements are in the ["enclosure"](/DIY/enclosure) folder of this repository. 
 
 ## Control board
@@ -32,7 +32,7 @@ The Control board is mounted on the smaller gauges. Its features include
 
 The terms "analog" and "digital" have the following meaning in this document:
 
-"Analog" gauges are ones that can show arbitrary values, ie move their pointers to arbitrary positions by using variable voltages. Best suited are voltmeters or VU-meters. Voltmeters can be usually driven with minimal voltages, even if their scale is far beyond that. It is mostly a matter of removing the meter's internal resistor(s), and putting suitable resistors on the Control Board. The Control Board can provide up to 5V and has room for two through-the-hole resistors per gauge. The firmware can easily be extended to define custom analog gauge types as regards their voltage range.
+"Analog" gauges are ones that can show arbitrary values, ie move their pointers to arbitrary positions by using variable voltages. Best suited are voltmeters, ammeters or - for the Roentgens gauge: - VU-meters. Voltmeters can be usually driven with minimal voltages, even if their scale is far beyond that. It is mostly a matter of removing the meter's internal resistor(s), and putting suitable resistors on the Control Board. The Control Board can provide up to 5V and has room for two through-the-hole resistors per gauge. The firmware can easily be extended to define custom analog gauge types as regards their voltage range.
 
 "Digital" gauges are ones that can only be controlled by power-on and power-off for "full" and "empty" pointer positions, respectively; this is useful if the gauge needs voltages beyond what the Control Board can provide (which is, as said, 5V), and is driven using external power and through a relay. Alternatively, one might also come up with the idea to create a gauge replica using a stepper motor and some logic to move the pointer to a fixed position on power-on, and move it back to the "Empty" position on power-loss, using a large capacitor to power the motor after power-loss.
 
@@ -108,8 +108,8 @@ You can mix different types of analog and digital gauges; the firmware provides 
 
 Gauge illumination [yellow numbers]:
 - Yellow_1, yellow_2: R7, R8: Resistors for backlight LEDs of left and center gauge. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (yellow_5) (EXT). The resistor value depends on LED type and desired brightness. Example: 150R for yellow LEDs at 5V (INT). A calculator for the resistor value is [here](https://www.digikey.at/en/resources/conversion-calculators/conversion-calculator-led-series-resistor).
-- Yellow_3: R11: Resistor for Roentgens backlight on "Roentgens Light" connector [green 2]. When incandescent light bulbs are used, just bridge this. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (yellow_5) (EXT).
-- Yellow_4: "Light Power": Solder jumpers for selecting internal or external gauge illumination power: Connect either INT or EXT. For 5V lighting, close INT. To use external power (max. 12V), close EXT and connect the power supply to "Ext. Light Power" [yellow 5]. If all gauges are lit through LEDs, INT is preferred.
+- Yellow_3: R11: Resistor for Roentgens backlight on "Roentgens Light" connector [green 2]. When incandescent light bulbs are used, just bridge this with a wire. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (yellow_5) (EXT).
+- Yellow_4: "Light Power": Solder jumpers for selecting internal or external gauge illumination power: Connect either INT or EXT. For 5V lighting, close INT. To use external power (max. 12V), close EXT and connect the power supply to "Ext. Light Power" [yellow 5]. If all gauges are lit through LEDs, INT is sufficient.
 - Yellow_5: "Ext. light power": Power supply for "EXT" setting.
 - LED1, LED2: Backlight LEDs for left and center gauge. These are soldered to the back of the Control Board so they directly reach into the gauge's enclosure.
 
