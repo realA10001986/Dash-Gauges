@@ -249,7 +249,7 @@ You can purchase a bezel at [CircuitSetup](https://circuitsetup.us/product/delor
 
 To find out suitable resistor values for R1/R2, R3/R4 or R5/R6, use a common 5V power supply (eg one for Arduino), and start out with a 10k resistor between the + output of the power supply and the + of the gauge (usually the left terminal when looking at the back):
 
-![resistors](img/resistor.jpg)
+![resistors](img/resistor.png)
 
 - If the needle hits the right end point, remove power immediately and retry with a resistor with a _higher_ ohm value;
 - If the needle stops on the way, before reaching the right end of the scale, retry with a resistor with a slightly _lower_ ohm value.
