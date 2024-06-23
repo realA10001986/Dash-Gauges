@@ -180,7 +180,9 @@ Phaostron meters have either 6mm (1/4"-28 UNF) or 4mm (8-32 UNC) screw terminals
 
 ### The "Roentgens" Gauge
 
-[<img src="img/roentgens.jpg">](img/roentgens_l.jpg)
+[<img src="img/roeVU.jpg">](img/roeVU_l.jpg)
+[<img src="img/roe250mADC_s.jpg">](img/Roe250mADC_l.jpg)
+[<img src="img/roentgens_s.jpg">](img/roentgens_l.jpg)
 
 The "Roentgens" gauge is more of a challenge. The original in the movie was a real Roentgens meter from a CP95 radiac. Such devices are hard to find, let alone one with the correct Simpson meter. The CP95 was built over a long period of time and they used meters from different manufacturers.
 
