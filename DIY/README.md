@@ -107,10 +107,20 @@ Example for configuration for three digital gauges:
 You can mix different types of analog and digital gauges; the firmware provides a type selection for each single gauge. In "full digital" configuration, as depticted above, the board can replace OEM boards from another manufacturer in order to make the otherwise "alien" Dash Gauges integrate with other CircuitSetup props.
 
 Gauge illumination [yellow numbers]:
-- Yellow_1, yellow_2: R7, R8: Resistors for backlight LEDs of left and center gauge. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (yellow_5) (EXT). The resistor value depends on LED type and desired brightness. Example: 150R for yellow LEDs at 5V (INT). A calculator for the resistor value is [here](https://www.digikey.at/en/resources/conversion-calculators/conversion-calculator-led-series-resistor).
-- Yellow_3: R11: Resistor for Roentgens backlight on "Roentgens Light" connector [green 2]. When incandescent light bulbs are used, just bridge this with a wire. The supply voltage is 5V (INT) or whatever you connect to "Ext. Light Power" (yellow_5) (EXT).
-- Yellow_4: "Light Power": Solder jumpers for selecting internal or external gauge illumination power: Connect either INT or EXT. For 5V lighting, close INT. To use external power (max. 12V), close EXT and connect the power supply to "Ext. Light Power" [yellow 5]. If all gauges are lit through LEDs, INT is sufficient.
-- Yellow_5: "Ext. light power": Power supply for "EXT" setting.
+
+The gauges can be illuminated
+- using "internal" power ("INT", always 5V), or
+- using "external" power ("EXT"), fed through connector yellow_5.
+
+Solder jumper yellow_4 selects whether INT or EXT is to be used; in case of EXT, connect your power supply to connector yellow_5.
+
+INT is probably sufficient for most setups. The panel depicted above is running on INT with LEDs for the smaller gauges and 6V incandescent light bulbs for the Roentgens gauge. 
+
+Legend:
+- Yellow_1 (R7), yellow_2 (R8): Resistors for backlight LEDs of left and center gauge. The supply voltage is either 5V (INT), or whatever you connect to "Ext. Light Power" (yellow_5) (EXT). The resistor value depends on LED type and desired brightness. Example: 150R for yellow LEDs at 5V (INT). A calculator for the resistor value is [here](https://www.digikey.at/en/resources/conversion-calculators/conversion-calculator-led-series-resistor).
+- Yellow_3 (R11): Resistor for Roentgens backlight on "Roentgens Light" connector [green 2]. In case of using incandescent light bulbs, just bridge this with a wire. The supply voltage is either 5V (INT), or whatever you connect to "Ext. Light Power" (yellow_5) (EXT).
+- Yellow_4 ("Light Power"): Solder jumpers for selecting internal or external gauge illumination power: Connect either INT or EXT. For 5V lighting, close INT. To use external power (max. 12V), close EXT and connect the power supply to "Ext. Light Power" [yellow 5]. 
+- Yellow_5 ("Ext. light power" connector): Connector for power supply for "EXT" setting.
 - LED1, LED2: Backlight LEDs for left and center gauge. These are soldered to the back of the Control Board so they directly reach into the gauge's enclosure.
 
 #### Connecting a Time Travel button
