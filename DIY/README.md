@@ -226,7 +226,7 @@ Unusable:
 
 >How to take apart a Simpson meter: Those meters are very delicate. They have tiny sprial springs and other parts which need to be handled with care. To take a meter apart in order to access the "electronics" (resistors, caps, diodes, etc), unskrew the two nuts _on the bottom_ of the meter (usually 5.5mm), then carefully lift the meter's mechanics out of the case. Never unscrew anything on top of the mechanic! Before reassembly, check for washers or other metal parts the magnet might have attracted.
 
-To find out suitable resistor values for R5/R6 on the Control Board, please see [here](#appendix-a-restistors-for-gauges).
+To find out suitable resistor values for R5/R6 on the Control Board, please see [here](#appendix-a-resistors-for-gauges).
 
 When aligning the zero point to the "green zero" on the Roentgens scale, be careful when setting the "full percentage" of the meter: Above approx 90% the pointer might hit its end point and suffer damage.
 
@@ -270,6 +270,8 @@ Is my meter an ammeter or a voltmeter?
 Often the scale/dial doean't say. You need to look inside: Ammeters have resistors, coils, shuts, etc that connect the input terminals _to each other_. Voltmeters only have parts between the input terminal and the coil.
 
 For our purposes, however, the difference is unimportant. In order to make the meter work with the Dash Gauges Control Board, all built-in resistors, coils, capacitors, shuts, etc need to be removed. The input terminals need to be connected to the coil with nothing in between.
+
+In case of the Roentgens meter, align the pointer's "zero position" to the "green zero" on the "Reontgens" dial at this point.
 
 Now build your testing "circuit":
 
