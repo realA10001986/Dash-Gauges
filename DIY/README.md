@@ -218,7 +218,7 @@ The safest bet is a **model 29** DC voltmeter, although I have only tested this 
 
 **Model 49** meters, apart from aforementioned VU meters, are AC meters with a rectifier. Those should work; as regards meter rating, see my statement about model 29.
 
-**Model 59** meters use iron vane meter movement instead of a rectifier appear to be unusable for our purposes.
+**Model 59** meters use iron vane meter movement instead of a rectifier and appear to be unusable for our purposes.
 
 **Model 79** are wattmeters - no idea if (or how) those can be modified.
 
