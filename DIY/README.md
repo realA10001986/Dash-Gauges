@@ -64,19 +64,19 @@ Other connectors (green numbers):
 - Green_3: Analog Roentgens meter
 - Green_4: Empty LED (for direct connection of white LED, forward voltage 3.3V)
 - Green_5: Side switch for triggering empty/refill sequences
-- Green_6: Connector for digital Roentgens meter, 12V Roetgens backlight, 12V empty light
+- Green_6: Digital Roentgens meter, 12V Roetgens backlight, 12V empty light
 
 Hardware configuration for "analog" gauges (purple numbers):
 - Left gauge ("Primary"):
-  - Purple_3: R3, R4: Populate depending on gauge and supply voltage; see below
+  - Purple_3: Resistors R3, R4: Populate depending on gauge and supply voltage; see below
   - Purple_4: Close ANA4 solder jumper; DIG4 (blue_4) must be open
   - Leave "DIG3" (blue_3) unconnected/open
 - Center Gauge ("Percent Power"):
-  - Purple_1: R1, R2: Populate depending on gauge and supply voltage; see below
+  - Purple_1: Resistors R1, R2: Populate depending on gauge and supply voltage; see below
   - Purple_2: Close ANA2 solder jumper; DIG2 (blue_2) must be open
   - Leave "DIG1" (blue_1) unconnected/open
-- "Roentgens" gauge, (connected to "Analog Roentgens" connector [green_3]:
-  - Purple_5: R5, R6: Populate depending on gauge and supply voltage;
+- "Roentgens" gauge, connected to "Analog Roentgens" connector [green_3]:
+  - Purple_5: Resistors R5, R6: Populate depending on gauge and supply voltage;
   - (DIG5 [blue_5]: Does not matter, has no influence on this connector)
  
 Example for configuration for three analog gauges:
@@ -104,7 +104,7 @@ Example for configuration for three digital gauges:
 |:--:| 
 | *Click for hi-res image* |
 
-You can mix different types of analog and digital gauges; the firmware provides a type selection for each single gauge. In "full digital" configuration, as depticted above, the board can replace OEM boards from another manufacturer in order to make the otherwise "alien" Dash Gauges integrate with other CircuitSetup props.
+You can mix different types of analog and digital gauges; the firmware provides a type selection for each single gauge. In "full digital" configuration, as depticted above, the board can replace OEM ("legacy") boards from another manufacturer in order to make the otherwise "alien" Dash Gauges integrate with other CircuitSetup props.
 
 Gauge illumination [yellow numbers]:
 
@@ -155,7 +155,7 @@ _Do not connect 3V3 to the TCD!_
 
 ### The "Primary" and "Percent Power" Gauges
 
-In the Original, these were Phaostron 631 series meters. There are many different types/models of vintage Phaostron meters available; anything that starts with 63x fits size-wise; some older 300 series meters also fit. Not all 63x meters are usable though. I haven't seen a complete list, but what I cam accross leads to some conclusions: 634 are wattmeters, which cannot be used. 639 are mainly AC ammeters for high amperages, to be avoided. Some meters have their zero position in the center of the scale, so avoid those, too. In my (limited) experience, the 631 series is the safest bet.
+In the Original, these were Phaostron 631 series meters. There are many different types/models of vintage Phaostron meters available; anything that starts with 63x fits size-wise; some older 300 series meters also fit. Not all 63x meters are usable though. I haven't seen a complete list, but what I came accross leads to some conclusions: 634 are wattmeters, which cannot be used. 639 are mainly AC ammeters for high amperages, to be avoided. Some meters have their zero position in the center of the scale, so avoid those, too. In my (limited) experience, the 631 series is the safest bet.
 
 Tested meter options and configuration:
 
@@ -170,7 +170,7 @@ Tested meter options and configuration:
 Unusable:
 - Phaostron 0-50/100/250/500A AC ammeter (**639-16341**).
 
-It is hard to tell what a meter has inside and whether it's usable. Many meters have scales that don't match their actual input, and require an external "multiplier" (such as the 5KV voltmeter I tested). Avoid ammeters (Ampere meters) for currents >25mA, and AC voltmeters for high voltages (>50V); those often have stronger coils that cannot be used with low voltages. Otherwise, ammeters (especially if the scale is in the uA range) can most likely be used after removing shunts, resistors or anything else that is between the two input terminals. 
+It is hard to tell what a meter has inside and whether it's usable. Many meters have scales that don't match their actual input, and require an external "multiplier" (such as the 5KV voltmeter I tested). Avoid ammeters (Ampere meters) for currents >250mA, and AC voltmeters for high voltages (>50V); those often have stronger coils that cannot be used with low voltages. Otherwise, ammeters (especially if the scale is in the mA or uA range) can most likely be used after removing shunts, resistors or anything else that is between the two input terminals. 
 
 To find out suitable resistor values for R1/R2 and/or R3/R4 on the Control Board, please see [here](#appendix-a-restistors-for-gauges).
 
@@ -257,11 +257,25 @@ The bezel consists of three parts: The front and two side pieces. Measurements a
 You can purchase a bezel at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/); note that it is for a model 49 panel meter ('Roentgens'); a model 142 won't fit.
 
 
-# Appendix A: Restistors for Gauges
+# Appendix A: Resistors for Gauges
 
-To find out suitable resistor values for R1/R2, R3/R4 or R5/R6, use a common 5V power supply (eg. the one you are going to use to power the dash gauges with, or one suitable for powering an Arduino), and start out with a 10k resistor between the + output of the power supply and the + of the gauge (usually the left terminal when looking at the back):
+The goal of this procedure is to find resistor values that allow to drive the meter with a voltage of 0-5V.
+
+What you need:
+- A 5V power supply. If you plan on running the Dash Gauges with a 5V power supply, use that one for the following steps. 
+- a set of axial resistors of different values in the range of 0-10k.
+
+Is my meter an ammeter or a voltmeter? 
+
+Often the scale/dial doean't say. You need to look inside: Ammeters have resistors, coils, shuts, etc that connect the input terminals _to each other_. Voltmeters only have parts between the input terminal and the coil.
+
+For our purposes, however, the difference is unimportant. In order to make the meter work with the Dash Gauges Control Board, all built-in resistors, coils, capacitors, shuts, etc need to be removed. The input terminals need to be connected to the coil with nothing in between.
+
+Now build your testing "circuit":
 
 ![resistors](img/resistor.png)
+
+To find out suitable resistor values for R1/R2, R3/R4 or R5/R6, start out with a 10k resistor between the + output of the power supply and the + of the gauge (usually the left terminal when looking at the back).
 
 Look at the needle when applying power:
 - If the needle hits the right end point, remove power immediately and retry with a resistor with a _higher_ ohm value;
