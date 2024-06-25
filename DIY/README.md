@@ -68,15 +68,15 @@ Other connectors (green numbers):
 
 Hardware configuration for "analog" gauges (purple numbers):
 - Left gauge ("Primary"):
-  - Purple_3: Resistors R3, R4: Populate depending on gauge and supply voltage; see below
+  - Purple_3: Resistors R3, R4: Populate depending on gauge and supply voltage; see [here](#appendix-a-resistors-for-gauges).
   - Purple_4: Close ANA4 solder jumper; DIG4 (blue_4) must be open
   - Leave "DIG3" (blue_3) unconnected/open
 - Center Gauge ("Percent Power"):
-  - Purple_1: Resistors R1, R2: Populate depending on gauge and supply voltage; see below
+  - Purple_1: Resistors R1, R2: Populate depending on gauge and supply voltage; see [here](#appendix-a-resistors-for-gauges).
   - Purple_2: Close ANA2 solder jumper; DIG2 (blue_2) must be open
   - Leave "DIG1" (blue_1) unconnected/open
 - "Roentgens" gauge, connected to "Analog Roentgens" connector [green_3]:
-  - Purple_5: Resistors R5, R6: Populate depending on gauge and supply voltage;
+  - Purple_5: Resistors R5, R6: Populate depending on gauge and supply voltage; see [here](#appendix-a-resistors-for-gauges).
   - (DIG5 [blue_5]: Does not matter, has no influence on this connector)
  
 Example for configuration for three analog gauges:
@@ -172,7 +172,7 @@ Unusable:
 
 It is hard to tell what a meter has inside and whether it's usable. Many meters have scales that don't match their actual input, and require an external "multiplier" (such as the 5KV voltmeter I tested). Avoid ammeters (Ampere meters) for currents >250mA, and AC voltmeters for high voltages (>50V); those often have stronger coils that cannot be used with low voltages. Otherwise, ammeters (especially if the scale is in the mA or uA range) can most likely be used after removing shunts, resistors or anything else that is between the two input terminals. 
 
-To find out suitable resistor values for R1/R2 and/or R3/R4 on the Control Board, please see [here](#appendix-a-restistors-for-gauges).
+To find out suitable resistor values for R1/R2 and/or R3/R4 on the Control Board, please see [here](#appendix-a-resistors-for-gauges).
 
 Movie-accurate dials for those gauges are available in the [DIY/faces-labels](/DIY/faces-labels) folder. To apply them properly, cut them precisely at the bottom and the right hand side (leave some extra at the top and the left hand side; the template's top and left hand side lines account for that extra), then place the dial in the corner of a 90 deg angled ruler, and align the sticker at the bottom and right hand side. Slowly apply the sticker from the bottom up to avoid bubbles, and in the end, with the sticker facing down, use an Exacto knife to cut off the surplus.
 
