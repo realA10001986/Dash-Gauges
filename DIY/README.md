@@ -198,7 +198,7 @@ The "Roentgens" gauge is more of a challenge. The original in the movie was a re
 
 There are a lot of Simpson meters that look similar - yet not identical - to what was seen in the movies. However: One - quite important - issue is that hardly any Simpson meters are illuminated. Non-illuminated meters have a front that is 7mm thinner than the fronts of illuminated models, the glass is closer to the dial, and, as a result, the movie-accurate "Empty" light won't fit.
 
-A word on Simpson model numbers: Their main model number means "case dimension", not "type of meter". "Model 49" therefore only means "4.5 inch case", but not whether this is a VU meter, a voltmeter, or what not:
+A word on Simpson model numbers: Their main model number means mainly "case dimension", not "specific type of meter". "Model 49" therefore only means "4.5 inch case", but not whether this is a VU meter, a voltmeter, or what not:
 
 <img width="985" alt="Simpson meters" src="img/simpson_catalog.png">
 
@@ -208,19 +208,32 @@ I was lucky to score a **Simpson model 49L VU-meter** and a **Simpson model 49MC
 
 The **model 142 VU-meters**, while perfectly usable electronically, are a bit smaller (4.25x3.9" vs 4.66x4.2") and look different on the back; their barrel is thicker (3.25" vs 2.78" in diameter), and the screws are not at the outer corners but closer to the barrel. There are special files in the [DIY/enclosure](/DIY/enclosure) folder for model 142 dimensions. Unfortunately, the barrel is so big that it does not allow for a simple hole for the "Empty" light; this must be done another way.
 
-If you can't find a model 49 VU-meter or consider the 142 too far off, you could try a Simpson voltmeter. Models 29, 39, 49, 59 or 79 fit size-wise; ammeters in principle work but should be in a mA or uA range. Many meters are for voltages/currents beyond what the Control Board can deliver, but often they can be modified: For instance, the **Simpson model 29 0-50V DC voltmeter** has a 50K resistor inside; if this resistor is bridged, the meter shows full scale at 0.0375V. With a 5K6 resistor it shows full scale at approx 5V, which is perfectly usable. But again: You need to compromise on the "Empty" light, since non-illuminated Simpson meters are too thin.
+If you can't find a model 49 VU-meter or consider the 142 too far off, you could try other Simpson meters - if you are ready to improvise on the "Empty" light due to their thin fronts. Models 29, 39, 49, 59 or 79 fit size-wise. 
+
+Many meters are rated for voltages/currents beyond what the Control Board can deliver, but often they can be modified: For instance, the **Simpson model 29 0-50V DC voltmeter** has a 50K resistor inside; if this resistor is bridged, the meter shows full scale at 0.0375V. With a 5K6 resistor it shows full scale at approx 5V, which is perfectly usable. 
+
+The safest bet is a **model 29** DC voltmeter, although I have only tested this up to a 50V meter. Model 29 ammeters in principle should work, too, but my only experience is a 0-250mA ammeter. I don't know if higher rated volt-/ammeters can be modified accordingly. 
+
+**Model 39** meters are RF (radio frequency) ammeters, I have no experience with those.
+
+**Model 49** meters, apart from aforementioned VU meters, are AC meters with a rectifier. Those should work; as regards meter rating, see my statement about model 29.
+
+**Model 59** meters use iron vane meter movement instead of a rectifier appear to be unusable for our purposes.
+
+**Model 79** are wattmeters - no idea if (or how) those can be modified.
 
 Tested meter options and configuration:
 
 <table>
   <tr><td>Meter</td><td>Modification</td><td>R5/R6</td><td>Gauge type setting</td></tr>
+  <tr><td>Simpson model 49 Roentgens meter</td><td>[coming soon]</td><td>[coming soon]</td><td>[coming soon]</td></tr>  
   <tr><td>Simpson models 49, 142 VU meters</td><td>None</td><td>330R/3k3</td><td>Standard VU-Meter</td></tr>
   <tr><td>Simpson model 29 0-50V DC voltmeter</td><td>Internal resistor needs to be bridged</td><td>0R/5k6</td><td>Generic Analog (0-5V)</td></tr>
   <tr><td>Simpson model 29 0-250mA DC ammeter</td><td>Internal coil resistor (looks like wire wrapped around paper) in the rear, close to the bottom, needs to be removed: No need to take the meter apart; just cut the two blank wires leading from the terminals towards the center, the coil resistor will fall out then (be sure to bend down the remaining stubs so that they don't touch anything), the other resistor can remain.</td><td>0R/1k0</td><td>Generic Analog (0-5V)</td></tr>
 </table>
 
 Unusable:
-- Simpson model 59(?) voltmeter 0-250V AC
+- Simpson model 59 voltmeter 0-250V AC. 
 
 >How to take apart a Simpson meter: Those meters are very delicate. They have tiny sprial springs and other parts which need to be handled with outmost care. To take a meter apart in order to access the "electronics" (resistors, caps, diodes, etc), unskrew the two nuts _on the bottom_ of the meter (usually 5.5mm; below the input terminals) and remove nuts and washers from input terminals, then carefully lift the meter's mechanics out of the case. Never unscrew anything on top of the mechanics! Before reassembly, check for washers or other metal parts the magnet might have attracted.
 
