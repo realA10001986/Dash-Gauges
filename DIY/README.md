@@ -235,7 +235,7 @@ Tested meter options and configuration:
 Unusable:
 - Simpson model 59 voltmeter 0-250V AC. 
 
->How to take apart a Simpson meter: Those meters are very delicate. They have tiny sprial springs and other parts which need to be handled with outmost care. To take a meter apart in order to access the "electronics" (resistors, caps, diodes, etc), unskrew the two nuts _on the bottom_ of the meter (usually 5.5mm; below the input terminals) and remove nuts and washers from input terminals, then carefully lift the meter's mechanics out of the case. Never unscrew anything on top of the mechanics! Before reassembly, check for washers or other metal parts the magnet might have attracted.
+>How to take apart a Simpson meter: Those meters are very delicate. They have tiny sprial springs and other parts which need to be handled with outmost care. To take a meter apart in order to access the "electronics" (resistors, caps, diodes, etc), remove nuts and washers from the input terminals and unskrew the two nuts (usually 5.5mm) below the input terminals, then carefully lift the meter's mechanics out of the case. Never unscrew anything on top of the mechanics! Before reassembly, check for washers or other metal parts the magnet might have attracted.
 
 To find out suitable resistor values for R5/R6 on the Control Board, please see [here](#appendix-a-resistors-for-gauges).
 
