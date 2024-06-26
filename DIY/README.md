@@ -278,7 +278,7 @@ What you need:
 
 Is my meter an ammeter or a voltmeter? 
 
-Often the scale/dial doean't say. You need to look inside: Ammeters have resistors, coils, shuts, etc that connect the input terminals _to each other_. Voltmeters only have parts between the input terminal and the coil.
+Often the scale/dial doean't say. You need to look inside: Ammeters have resistors, coils, shunts, etc that connect the input terminals _to each other_. Voltmeters only have parts between the input terminal and the coil.
 
 For our purposes, however, the difference is unimportant. In order to make the meter work with the Dash Gauges Control Board, all built-in resistors, coils, capacitors, shuts, etc need to be removed. The input terminals need to be connected to the coil with nothing in between.
 
