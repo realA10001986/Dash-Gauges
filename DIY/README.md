@@ -202,7 +202,7 @@ A word on Simpson model numbers: Their main model number means mainly "case styl
 
 <img width="985" alt="Simpson meters" src="img/simpson_catalog.png">
 
-The only illuminated Simpson meters - apart from the Roentgens meters - were apparently their VU meters, models 49 (not listed above as they pre-date the catalog) and 142 (10470, 10540). Model 49 has the movie-accurate front - as long as its build date is something around the 1950s or earlier; later models, unfortunately using the same model number, look entirely different. (They added design groups like "Rectangular" or "Wide Vue" over time, and re-used their model numbers together with this design groups. It's all a bit confusing.)
+The only illuminated Simpson meters - apart from the Roentgens meters - were apparently their VU meters, models 49 (not listed above as they pre-date the catalog) and 142 (10470, 10540). Model 49 has the movie-accurate front - as long as its build date is something around the 1950s or earlier; later models, unfortunately using the same model number, look entirely different. (They added design groups like "Rectangular" or "Wide Vue" over time, and re-used their model numbers together with these design groups. It's all a bit confusing.)
 
 I was lucky to score a **Simpson model 49L VU-meter** and a **Simpson model 49MC VU-meter**. both with the movie-accurate front. They are illuminated through two 6V incandescent light bulbs. 
 
