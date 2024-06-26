@@ -44,13 +44,13 @@ In order to make the Control Board as versatile as possible, there are some sold
 |:--:| 
 | *Click for hi-res image* |
 
-####Main connectors (red numbers):
+#### Main connectors (red numbers):
 - Red_1: 5V input for analog gauges and electronics
 - Red_2: 12V input for electronics ("+"/"-" pins) and for digital gauges ("DG+"/"-" pins)
 - Red_3: Time Travel button: To trigger a time travel, the button must connect "TT" to "3V3". Also used to connect the Dash Gauges to a TCD by wire.
 - Red_4: Door switches: Switches need to connect "C" and "1" for door 1, and "C" and "2" for door 2.
 
-####Power supply:
+#### Power supply:
 
 The electronics can be run off 5V or 12V ("+"/"-" pins of connectors red_1 or red_2). If you are using analog gauges only, the choice is yours.
 
@@ -58,7 +58,7 @@ Digital gauges, as well as connecting anything to connector green_6, require 12V
 
 >For experts: To power the electronics with 5V, but the digital gauges with 12V, put 12V on "DG+" and "-" of the 12V connector red_2, and 5V on the 5V connector red_1 or on the ESP32 via USB.
 
-Other connectors (green numbers):
+#### Other connectors (green numbers):
 - Green_1: Speaker for audio output
 - Green_2: Backlight for Roentgens gauge
 - Green_3: Analog Roentgens meter
@@ -66,7 +66,7 @@ Other connectors (green numbers):
 - Green_5: Side switch for triggering empty/refill sequences
 - Green_6: Digital Roentgens meter, 12V Roetgens backlight, 12V empty light
 
-Hardware configuration for "analog" gauges (purple numbers):
+#### Hardware configuration for "analog" gauges (purple numbers):
 - Left gauge ("Primary"):
   - Purple_3: Resistors R3, R4: Populate depending on gauge and supply voltage; see [here](#appendix-a-resistors-for-gauges).
   - Purple_4: Close ANA4 solder jumper; DIG4 (blue_4) must be open
@@ -85,7 +85,7 @@ Example for configuration for three analog gauges:
 |:--:| 
 | *Click for hi-res image* |
 
-Configuration for digital gauges (blue numbers):
+#### Configuration for digital gauges (blue numbers):
 - Left gauge:
   - Blue_3: Bridge DIG3 by wire
   - Blue_4: Close DIG4 solder jumper (ANA4 [purple 4] must be open)
@@ -106,7 +106,7 @@ Example for configuration for three digital gauges:
 
 You can mix different types of analog and digital gauges; the firmware provides a type selection for each single gauge. In "full digital" configuration, as depticted above, the board can replace OEM ("legacy") boards from another manufacturer in order to make the otherwise "alien" Dash Gauges integrate with other CircuitSetup props.
 
-Gauge illumination [yellow numbers]:
+#### Gauge illumination [yellow numbers]:
 
 The gauges can be illuminated
 - using "internal" power ("INT", always 5V), or
