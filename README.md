@@ -9,7 +9,7 @@ This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](ht
 [<img src="img/mydg1.jpg">](img/mydg1_l.jpg)
 [<img src="img/mydg2.jpg">](img/mydg2_l.jpg)
 
-For instructions on the A10001986/CS hardware, please see [here](/hardware/).
+For information on the hardware, please see [here](/hardware/).
 
 Firmware features include
 - support for analog gauges (with software-controlled arbitrary pointer position) and digital gauges (Empty/Full, without arbitrary pointer position)
