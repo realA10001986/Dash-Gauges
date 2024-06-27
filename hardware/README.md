@@ -294,7 +294,7 @@ Look at the needle when applying power:
 
 There is room for two resistors per gauge on the Control Board to allow combinations, for instance 3k3 + 330R to achieve 3k6. So you can try daisy-chaining two resistors if you don't find one that makes the needle go nicely close to the right end of the scale.
 
-When you found (a) value(s) that make(s) the needle go exactly to the end point (or slightly below), that is what you put in 
+When you found (a) value(s) that make(s) the needle go exactly to the end point (or slightly below), that is what you put in as
 - R1/R2 for the "Percent Power" gauge (center),
 - R3/R4 for the "Primary" gauge (left),
 - R5/F6 for the "Roentgens" gauge.
@@ -303,7 +303,12 @@ If a single resistor does the job, bridge the other position with a wire.
 
 In the Config Portal, set the gauge type to "Generic 0-5V".
 
->For experts: For meters with a very low rating (uA, mV), the same procedure could be done using 2.048V instead of 5V, on the Control Board directly. In the Config Portal, set the "full" percentage to 100 and select "Generic 0-2.048V" as gauge type, then connect the gauge to the Control Board and find the resistor value by putting the resistors on the Control Board.
-
+>For experts: The same procedure could be done on the Control Board directly:
+>- In the Config Portal, set the "full" percentage of the gauge to 100, and
+>- select "Generic 0-5V" as Gauge Type.
+>- Connect the gauge to the Control Board, power-up and
+>- try to find the correct value by putting resistors (or wire bridges) loosely at the resistor positions on the Control Board.
+>  
+>For meters with a very low rating (uA, mV), the procedure could be done using 2.048V instead of 5V. In the Config Portal, select "Generic 0-2.048V" as Gauge Type, and do as described above.
 
 
