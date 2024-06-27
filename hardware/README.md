@@ -1,17 +1,13 @@
-# The DIY Dash Gauges
-
-This is a custom built prop; there is no complete kit available. 
-
-CircuitSetup at this point only offers the [bezel](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/); production data for a Control Board which allows using a wide range of meters is in the ["electronics"](/DIY/electronics) folder. 
-
-This prop was made to be compatible with the CircuitSetup line of movie props ([Time Circuits Display](https://tcd.out-a-ti.me), [Flux Capacitor](https://fc.out-a-ti.me), [SID](https://sid.out-a-ti.me)).
+# The Dash Gauges Hardware
 
 [<img src="img/mydg3.jpg">](img/mydg3_l.jpg)
 
-The Panel consists of several parts:
-- A Control Board
-- The gauges: In the picture above you see two Phaostron 631-15099 "Cyclic Trim" meters, and a Simpson model 49MC VU Meter disguised as the "Roentgens" gauge. Many other types of meters can be used.
-- Aluminium (Aluminum) bezel; can be purchased at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/). The measurements are in the ["enclosure"](/DIY/enclosure) folder of this repository. 
+The Dash Gauges consist of several parts:
+- A **Control Board**: Production data for a Control Board which allows using a wide range of meters is in the ["electronics"](/hardware/electronics) folder.
+- The **gauges**: These are vintage meters made by Phaostron and Simpson and need to be sourced by the prop builder. In the picture above you see two Phaostron 631-15099 "Cyclic Trim" meters, and a Simpson model 49MC VU Meter disguised as the "Roentgens" gauge. Many other types of meters can be used.
+- Aluminium (Aluminum) **bezel**; can be purchased at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/). The measurements are in the ["enclosure"](/hardware/enclosure) folder of this repository. 
+
+This prop was made to be compatible with the CircuitSetup line of movie props ([Time Circuits Display](https://tcd.out-a-ti.me), [Flux Capacitor](https://fc.out-a-ti.me), [SID](https://sid.out-a-ti.me)).
 
 ## Control board
 
@@ -174,7 +170,7 @@ It is hard to tell what a meter has inside and whether it's usable. Many meters 
 
 To find out suitable resistor values for R1/R2 and/or R3/R4 on the Control Board, please see [here](#appendix-a-resistors-for-gauges).
 
-Movie-accurate dials for those gauges are available in the [DIY/faces-labels](/DIY/faces-labels) folder. To apply them properly, cut them precisely at the bottom and the right hand side (leave some extra at the top and the left hand side; the template's top and left hand side lines account for that extra), then place the dial in the corner of a 90 deg angled ruler, and align the sticker at the bottom and right hand side. Slowly apply the sticker from the bottom up to avoid bubbles, and in the end, with the sticker facing down, use an Exacto knife to cut off the surplus.
+Movie-accurate dials for those gauges are available in the [hardware/faces-labels](/hardware/faces-labels) folder. To apply them properly, cut them precisely at the bottom and the right hand side (leave some extra at the top and the left hand side; the template's top and left hand side lines account for that extra), then place the dial in the corner of a 90 deg angled ruler, and align the sticker at the bottom and right hand side. Slowly apply the sticker from the bottom up to avoid bubbles, and in the end, with the sticker facing down, use an Exacto knife to cut off the surplus.
 
 ![Alignment](img/phaostron_align.jpg)
 
@@ -206,7 +202,7 @@ The only illuminated Simpson meters - apart from the Roentgens meters - were app
 
 I was lucky to score a **Simpson model 49L VU-meter** and a **Simpson model 49MC VU-meter**. both with the movie-accurate front. They are illuminated through two 6V incandescent light bulbs. 
 
-The **model 142 VU-meters**, while perfectly usable electronically, are a bit smaller (4.25x3.9" vs 4.66x4.2") and look different on the back; their barrel is thicker (3.25" vs 2.78" in diameter), and the screws are not at the outer corners but closer to the barrel. There are special files in the [DIY/enclosure](/DIY/enclosure) folder for model 142 dimensions. Unfortunately, the barrel is so big that it does not allow for a simple hole for the "Empty" light; this must be done another way.
+The **model 142 VU-meters**, while perfectly usable electronically, are a bit smaller (4.25x3.9" vs 4.66x4.2") and look different on the back; their barrel is thicker (3.25" vs 2.78" in diameter), and the screws are not at the outer corners but closer to the barrel. There are special files in the [hardware/enclosure](/hardware/enclosure) folder for model 142 dimensions. Unfortunately, the barrel is so big that it does not allow for a simple hole for the "Empty" light; this must be done another way.
 
 If you can't find a model 49 VU-meter or consider the 142 too far off, you could try other Simpson meters - if you are ready to improvise on the "Empty" light due to their thin fronts. Models 29, 39, 49, 59 or 79 fit size-wise. 
 
@@ -253,7 +249,7 @@ There are also buttons that look identical and can be used instead:
 
 ![emptybutton](img/emptybutton.png)
 
-A movie-accurate "Empty" label is in the [DIY/faces-labels](/DIY/faces-labels) folder.
+A movie-accurate "Empty" label is in the [hardware/faces-labels](/hardware/faces-labels) folder.
 
 The LED in those lights/buttons requires 12V. The Control Board has two connectors for the Empty LED:
 - When using the "Empty Light" [green_4] connector, the light/button's built-in resistor needs to be removed: Pull up the red cover and pull out the LED; then desolder the LED (ie desolder the two metal tops, and push the LED out) and bridge the resistor, or replace it with a wire. Reassemble.
@@ -265,7 +261,7 @@ Above light/button requires a 16mm hole. The vertical center of this hole is, lo
 
 ## Bezel
 
-The bezel consists of three parts: The front and two side pieces. Measurements are in the [DIY/enclosure](/DIY/enclosure) folder of this repository.
+The bezel consists of three parts: The front and two side pieces. Measurements are in the [hardware/enclosure](/hardware/enclosure) folder of this repository.
 
 You can purchase a bezel at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/); note that it is for a model 49 panel meter ('Roentgens'); a model 142 won't fit.
 
