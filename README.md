@@ -435,7 +435,7 @@ The "empty" alarm's sound can be annoying if played for longer periods. This tim
 
 Enter the number of minutes until the Screen Saver should become active when the Dash Gauges are idle.
 
-The Screen Saver, when active, stops the "empty" alarm sound and disables all LEDs, until 
+The Screen Saver, when active, stops the "empty" alarm sound and disables all gauges and lights, until 
 - the time travel button is briefly pressed (the first press when the screen saver is active will not trigger a time travel),
 - on a connected TCD, a destination date is entered (only if TCD is wirelessly connected) or a time travel event is triggered (also when wired).
 
