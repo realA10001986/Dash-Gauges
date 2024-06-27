@@ -166,7 +166,7 @@ Tested meter options and configuration:
 Unusable:
 - Phaostron 0-50/100/250/500A AC ammeter (**639-16341**).
 
-It is hard to tell what a meter has inside and whether it's usable. Many meters have scales that don't match their actual input, and require an external "multiplier" (such as the 5KV voltmeter I tested). Avoid ammeters (Ampere meters) for currents >250mA, and AC voltmeters for high voltages (>50V); those often have stronger coils that cannot be used with low voltages. Otherwise, ammeters (especially if the scale is in the mA or uA range) can most likely be used after removing shunts, resistors or anything else that is between the two input terminals. 
+It is hard to tell what a meter has inside and whether it's usable. Many meters have scales that don't match their actual input, and require an external "multiplier" (such as the 5KV voltmeter I tested). Ammeters (especially if the scale is in the mA or uA range) can most likely be used after removing shunts, resistors or anything else that is between the two input terminals. 
 
 To find out suitable resistor values for R1/R2 and/or R3/R4 on the Control Board, please see [here](#appendix-a-resistors-for-gauges).
 
@@ -249,8 +249,6 @@ There are also buttons that look identical and can be used instead:
 
 ![emptybutton](img/emptybutton.png)
 
-A movie-accurate "Empty" label is in the [hardware/faces-labels](/hardware/faces-labels) folder.
-
 The LED in those lights/buttons requires 12V. The Control Board has two connectors for the Empty LED:
 - When using the "Empty Light" [green_4] connector, the light/button's built-in resistor needs to be removed: Pull up the red cover and pull out the LED; then desolder the LED (ie desolder the two metal tops, and push the LED out) and bridge the resistor, or replace it with a wire. Reassemble.
 - When using the LED pins of the Digital Roetgens connector [6]: No modification of light/button needed, but the Control Board must be fed 12V on the "DG+" pin of the 12V connector [red_2].
@@ -259,12 +257,15 @@ Above light/button requires a 16mm hole. The vertical center of this hole is, lo
 
 ![emptyhole](img/empty_hole.jpg)
 
+A movie-accurate dial as well as "Empty" label is in the [hardware/faces-labels](/hardware/faces-labels) folder. To apply the dial properly, follow the instructions above for the Phaostron meters.
+
 ## Bezel
 
 The bezel consists of three parts: The front and two side pieces. Measurements are in the [hardware/enclosure](/hardware/enclosure) folder of this repository.
 
-You can purchase a bezel at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/); note that it is for a model 49 panel meter ('Roentgens'); a model 142 won't fit.
+You can purchase a bezel at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/); note that it is for a model 29/39/49/59/79 panel meter ('Roentgens'); a model 142 won't fit.
 
+You additionally need a lever switch (single pole, ON-OFF), which is mounted on the right hand side piece. This switch is called "side switch" in the other documents.
 
 # Appendix A: Resistors for Gauges
 
