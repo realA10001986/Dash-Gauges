@@ -1,7 +1,7 @@
 # Dash Gauges
 
 This repository holds 
-- some [instructions](/DIY/) for building a Dash Gauge panel, as seen in the Delorean Time Machine,
+- some [instructions](/hardware/) for building a Dash Gauge panel, as seen in the Delorean Time Machine,
 - and a suitable firmware.
 
 This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](https://tcd.out-a-ti.me) as it relies on the TCD's keypad to control many of its functions.
@@ -9,7 +9,7 @@ This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](ht
 [<img src="img/mydg1.jpg">](img/mydg1_l.jpg)
 [<img src="img/mydg2.jpg">](img/mydg2_l.jpg)
 
-For instructions on the A10001986/CS hardware, please see [here](/DIY/).
+For instructions on the A10001986/CS hardware, please see [here](/hardware/).
 
 Firmware features include
 - support for analog gauges (with software-controlled arbitrary pointer position) and digital gauges (Empty/Full, without arbitrary pointer position)
@@ -241,7 +241,7 @@ The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as 
 
 ## Time travel
 
-To trigger a "time travel" stand-alone, you need to install a "Time Travel" button. Pressing that button briefly will let the Dash Gauges play their time travel sequence. For the A10001986/CS Control Board, please see [here](https://github.com/realA10001986/Dash-Gauges/blob/main/DIY/README.md#connecting-a-time-travel-button) for how to wire that button.
+To trigger a "time travel" stand-alone, you need to install a "Time Travel" button. Pressing that button briefly will let the Dash Gauges play their time travel sequence. Please see [here](https://github.com/realA10001986/Dash-Gauges/blob/main/hardware/README.md#connecting-a-time-travel-button) for how to wire that button.
 
 Other ways of triggering a time travel are available if a [Time Circuits Display](#connecting-a-time-circuits-display) is connected.
 
@@ -298,7 +298,7 @@ While the music player is playing music, other sound effects are disabled/muted.
 
 >Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place, and there is no way to remote-control the Gauges through the TCD by wire. A wireless connection over BTTFN/WiFi is much more powerful and therefore recommended over a wired connection.
 
-For wiring information of the A10001986/CS hardware, please see [here](https://github.com/realA10001986/Dash-Gauges/blob/main/DIY/README.md#connecting-a-tcd-to-the-dash-gauges-by-wire).
+For wiring information, please see [here](https://github.com/realA10001986/Dash-Gauges/blob/main/hardware/README.md#connecting-a-tcd-to-the-dash-gauges-by-wire).
 
 With the wiring in place, head to the Config Portal and set the option **_TCD connected by wire_**. On the TCD, the option "Control props connected by wire" must be set.
 
