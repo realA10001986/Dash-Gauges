@@ -301,5 +301,9 @@ When you found (a) value(s) that make(s) the needle go exactly to the end point 
 
 If a single resistor does the job, bridge the other position with a wire.
 
+In the Config Portal, set the gauge type to "Generic 0-5V".
+
+>For experts: For meters with a very low rating (uA, mV), the same procedure could be done using 2.048V instead of 5V, on the Control Board directly. In the Config Portal, set the "full" percentage to 100 and select "Generic 0-2.048V" as gauge type, then connect the gauge to the Control Board and find the resistor value by putting the resistors on the Control Board.
+
 
 
