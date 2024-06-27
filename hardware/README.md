@@ -297,7 +297,7 @@ There is room for two resistors per gauge on the Control Board to allow combinat
 When you found (a) value(s) that make(s) the needle go exactly to the end point (or slightly below), that is what you put in as
 - R1/R2 for the "Percent Power" gauge (center),
 - R3/R4 for the "Primary" gauge (left),
-- R5/F6 for the "Roentgens" gauge.
+- R5/R6 for the "Roentgens" gauge.
 
 If a single resistor does the job, bridge the other position with a wire.
 
