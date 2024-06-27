@@ -463,7 +463,16 @@ By default, if the Dash Gauges create a WiFi network of its own ("AP-mode"), thi
 
 By default, and if this field is empty, the Dash Gauges's own WiFi network ("AP-mode") will be unprotected. If you want to protect your access point, enter your password here. It needs to be 8 characters in length and only characters A-Z, a-z, 0-9 and - are allowed.
 
-If you forget this password and are thereby locked out of your Dash Gauges, .. TODO FIXME ...; this deletes the WiFi password. Then power-down and power-up your Dash Gauges and the access point will start unprotected.
+If you forget this password and are thereby locked out of your Dash Gauges, 
+- power-down the device,
+- hold the Time Travel button,
+- power-up the device (while still holding the Time Travel button)
+- wait until the "Empty" LED flashes briefly,
+- flip the Side Switch twice within 10 seconds,
+- wait until the "Empty" LED lights up,
+- then release the Time Travel button.
+
+This procedure temporarily (until a reboot) clears the WiFi password, allowing unprotected access to the Config Portal. (Note that this procedure also deletes static IP addres data; the device will return to using DHCP after a reboot.)
 
 ##### &#9654; WiFi connection attempts
 
