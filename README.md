@@ -55,7 +55,7 @@ After installation, the SD card can be re-used for [other purposes](#sd-card).
 
 ## Initial Configuration
 
->The following instructions only need to be followed once, on fresh TCDs. They do not need to be repeated after a firmware update.
+>The following instructions only need to be followed once, on fresh Dash Gauges. They do not need to be repeated after a firmware update.
 
 The first step is to establish access to the configuration web site ("Config Portal") in order to configure your Dash Gauges:
 
@@ -84,7 +84,7 @@ In order to connect your Dash Gauges to a WiFi network, click on "Configure WiFi
 
 After saving the WiFi network settings, the device reboots and tries to connect to your configured WiFi network. If that fails, it will again start in access point mode.
 
-After completing this step, your Dash Gauges are basically ready for use; you can also continue configuring them to your personal preferences through the Config Portal.
+After completing this step, your Dash Gauges are ready to be configured through the "Config Portal".
 
 ## The Config Portal
 
@@ -117,6 +117,18 @@ In the main menu, click on "Setup" to configure your Dash Gauges.
 | *Click for full screenshot* |
 
 A full reference of the Config Portal is [here](#appendix-a-the-config-portal).
+
+## Gauge Hardware Configuration
+
+The firmware needs to know the type of gauges installed; by default, power output to the gauges is disabled.
+
+In order to configure the Dash Gauges for your specific hardware,
+- hold the "Time Travel" button for 5 seconds (until a beep is emitted),
+- then enter the Config Portal as described above, and click on "Setup".
+
+Near the bottom of this page, there are three drop-down widgets, one for each gauge. Carefully select the type for each of your gauges, and click on "Save".
+
+After this step, your Dash Gauges are ready to be used.
 
 ## Basic Operation
 
