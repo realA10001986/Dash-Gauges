@@ -82,7 +82,7 @@ In order to connect your Dash Gauges to a WiFi network, click on "Configure WiFi
 >
 >This procedure causes static IP data to be deleted; the device will return to DHCP after a reboot.
 
-After saving the WiFi network settings, the FC reboots and tries to connect to your configured WiFi network. If that fails, it will again start in access point mode.
+After saving the WiFi network settings, the device reboots and tries to connect to your configured WiFi network. If that fails, it will again start in access point mode.
 
 After completing this step, your Dash Gauges are basically ready for use; you can also continue configuring them to your personal preferences through the Config Portal.
 
