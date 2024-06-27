@@ -190,7 +190,7 @@ Phaostron meters have either 6mm (1/4"-28 UNF) or 4mm (8-32 UNC) screw terminals
 [<img src="img/Roe250mADC.jpg">](img/Roe250mADC_l.jpg)
 [<img src="img/roentgens_s.jpg">](img/roentgens_l.jpg)
 
-The "Roentgens" gauge is more of a challenge. The original in the movie was a real Roentgens meter from a CP95 radiac. Such devices are hard to find, let alone one with the correct Simpson meter. The CP95 was built over a long period of time and they used meters from different manufacturers (OVS, Specialty Assy, etc).
+The "Roentgens" gauge is more of a challenge. The original in the movie was a real Roentgens meter from a CP95 radiac. Such devices are hard to find, let alone one with the correct Simpson meter. The CP95 was built over a long period of time and they used meters from different manufacturers (QVS, Specialty Assy, etc).
 
 There are a lot of Simpson meters that look similar - yet not identical - to what was seen in the movies. However: One - quite important - issue is that hardly any Simpson meters are illuminated. Non-illuminated meters have a front that is 7mm thinner than the fronts of illuminated models, the glass is closer to the dial, and, as a result, the movie-accurate "Empty" light won't fit.
 
