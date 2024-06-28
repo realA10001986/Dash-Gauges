@@ -273,7 +273,7 @@ The goal of this procedure is to find resistor values that allow to drive the me
 
 What you need:
 - A 5V power supply. If you plan on running the Dash Gauges with a 5V power supply, use that one for the following steps. 
-- a set of axial resistors of different values in the range of 0-10k.
+- a set of axial resistors of different values in the range of 0-20k.
 
 Is my meter an ammeter or a voltmeter? 
 
@@ -281,7 +281,7 @@ Often the scale/dial doean't say. You need to look inside: Ammeters have resisto
 
 For our purposes, however, the difference is unimportant. In order to make the meter work with the Dash Gauges Control Board, all built-in resistors, coils, capacitors, shuts, etc need to be removed. The input terminals need to be connected to the coil with nothing inbetween.
 
-In case of the Roentgens meter, align the pointer's "zero position" to the "green zero" on the "Roentgens" dial at this point.
+In case of the "Roentgens" meter, align the pointer's "zero position" to the "green zero" on the "Roentgens" dial at this point.
 
 Now build your testing "circuit":
 
