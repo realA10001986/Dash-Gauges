@@ -302,14 +302,14 @@ When you found (a) value(s) that make(s) the needle go exactly to the end point 
 
 If a single resistor does the job, bridge the other position with a wire.
 
-In the Config Portal, set the gauge type to "Generic 0-5V".
+In the Config Portal, set the gauge type to "Generic Analog (0-5V)".
 
 >For experts: The same procedure could be done on the Control Board directly:
->- In the Config Portal, set the "full" percentage of the gauge to 100, and
->- select "Generic 0-5V" as Gauge Type.
+>- In the Config Portal, set the ["full" percentage](https://github.com/realA10001986/Dash-Gauges#-primary-full-percentage) of the gauge to 100, and
+>- select "Generic Analog (0-5V)" as Gauge Type.
 >- Connect the gauge to the Control Board, power-up and
 >- try to find the correct value by putting resistors (or wire bridges) loosely at the resistor positions on the Control Board.
 >  
->For meters with a very low rating (uA, mV), the procedure could be done using 2.048V instead of 5V. In the Config Portal, select "Generic 0-2.048V" as Gauge Type, and do as described above.
+>For meters with a very low rating (uA, mV), the procedure could be done using 2.048V instead of 5V. In the Config Portal, select "Generic Analog (0-2.048V)" as Gauge Type, and do as described above.
 
 
