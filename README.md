@@ -194,7 +194,7 @@ The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as 
      <td align="left">9008&#9166;</td>
     </tr>
     <tr>
-     <td align="left"><a href="#the-music-player">Music Player</a>: Select music folder (0-99)</td>
+     <td align="left"><a href="#the-music-player">Music Player</a>: Select music folder (0-9)</td>
      <td align="left">9050&#9166; - 9059&#9166;</td>
     </tr>
     <tr>
