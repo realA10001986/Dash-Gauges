@@ -154,7 +154,7 @@ The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as 
      <td>009&#9166;</td>
     </tr>
    <tr>
-     <td align="left">Set "full" percentage of "Primary" gauge (1-99%)</td>
+     <td align="left">Set "full" percentage of "Primary" gauge (01-99%)</td>
      <td>9101&#9166; - 9199&#9166;</td>
     </tr>
     <tr>
@@ -162,7 +162,7 @@ The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as 
      <td align="left">9100&#9166;</td>
     </tr>
     <tr>
-     <td align="left">Set "full" percentage of "Percent Power" gauge (1-99%)</td>
+     <td align="left">Set "full" percentage of "Percent Power" gauge (01-99%)</td>
      <td align="left">9401&#9166; - 9499&#9166;</td>
     </tr>
     <tr>
@@ -170,7 +170,7 @@ The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as 
      <td align="left">9400&#9166;</td>
     </tr>
     <tr>
-     <td align="left">Set "full" percentage of "Roentgens" gauge (1-99%)</td>
+     <td align="left">Set "full" percentage of "Roentgens" gauge (01-99%)</td>
      <td align="left">9701&#9166; - 9799&#9166;</td>
     </tr>
     <tr>
@@ -194,7 +194,7 @@ The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as 
      <td align="left">9008&#9166;</td>
     </tr>
     <tr>
-     <td align="left"><a href="#the-music-player">Music Player</a>: Select music folder</td>
+     <td align="left"><a href="#the-music-player">Music Player</a>: Select music folder (0-99)</td>
      <td align="left">9050&#9166; - 9059&#9166;</td>
     </tr>
     <tr>
