@@ -151,7 +151,7 @@ _Do not connect 3V3 to the TCD!_
 
 ### The "Primary" and "Percent Power" Gauges
 
-In the Original, these were Phaostron 631 series meters. There are many different types/models of vintage Phaostron meters available; anything that starts with 63x fits size-wise; some older 300 series meters also fit. Not all 63x meters are usable though. I haven't seen a complete list, but what I came accross leads to some conclusions: 634 are wattmeters, which cannot be used. 639 are apparently highly rated AC meters (with iron wane movement), to be avoided. Some meters have their zero position in the center of the scale, so avoid those, too. In my (limited) experience, the 631 series is the safest bet.
+In the Original, these were Phaostron 631 series meters. There are many different types/models of vintage Phaostron meters available; anything that starts with 63x fits size-wise; some older 300 series meters also fit. Not all 63x meters are usable though. I haven't seen a complete list, but what I came accross leads to some conclusions: 631 use a pivot-and-jewel design, while the 634 series use a taut band. Both should be usable; due to their lower moving-element resistance the 634 series have a lower sensitivity rating (ie they will require higher restistors values). 639 are apparently highly rated AC meters (with iron wane movement), to be avoided. Some meters have their zero position in the center of the scale, so avoid those, too. In my (limited) experience, the 631 series is the safest bet. Due to the problems the "pivot-and-jewel" design causes (worn jewel, thereby incorrect readings), try to find a NOS one.
 
 Tested meter options and configuration:
 
