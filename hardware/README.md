@@ -59,7 +59,7 @@ Digital gauges, as well as connecting anything to connector green_6, require 12V
 - Green_2: Backlight for Roentgens gauge
 - Green_3: Analog Roentgens meter
 - Green_4: Empty LED (for direct connection of white LED, forward voltage 3.3V)
-- Green_5: Side switch for triggering empty/refill sequences
+- Green_5: Side switch for triggering empty/refill sequences (maintained on/off)
 - Green_6: Digital Roentgens meter, 12V Roetgens backlight, 12V empty light
 
 #### Hardware configuration for "analog" gauges (purple numbers):
