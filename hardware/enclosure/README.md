@@ -2,4 +2,4 @@
 
 Files in "Model 142" folder are for bezels for Model 142 VU meters as "Roentgens" meter.
 
-&#9888; The "templates" for the Roentgens meter are scanned from two different model 49 packages. For unknown reasons they differ. Use "roentgens_dimensions.png" for reference, this is official Simpson data.
+&#9888; The "templates" for the Roentgens meter are scanned from two different model 29 packages. For unknown reasons they differ. Use "roentgens_dimensions.png" for reference, this is official Simpson data.
