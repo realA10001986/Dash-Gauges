@@ -100,7 +100,7 @@ Example for configuration for three digital gauges:
 |:--:| 
 | *Click for hi-res image* |
 
-You can mix different types of analog and digital gauges; the firmware provides a type selection for each single gauge. In "full digital" configuration, as depticted above, the board can replace OEM ("legacy") boards from another manufacturer in order to make the otherwise "alien" Dash Gauges integrate with other CircuitSetup props.
+You can mix different types of analog and digital gauges; the firmware provides a type selection for each single gauge. In "full digital" configuration, as depticted above, the board can replace OEM ("legacy") boards from another manufacturer in order to make the otherwise "alien" Dash Gauges integrate with other CircuitSetup props. Videos for seeing the board in action with various gauges are [here](https://www.facebook.com/61553801874212/videos/pcb.122144723798126729/1554617305398184) (Phaostron 631-14672(H&P), 300-07970; digital Roentgens replica) and [here](https://www.facebook.com/61553801874212/videos/pcb.122144723798126729/974052394455407) (digital Phaostron replicas, Simpson model 49 0-50mA.
 
 #### Gauge illumination [yellow numbers]:
 
