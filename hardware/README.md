@@ -269,7 +269,7 @@ The bezel consists of three parts: The front and two side pieces. Measurements a
 
 You can purchase a bezel at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/); note that it is for a model 29/39/49/59/79 panel meter ('Roentgens'); a model 142 won't fit.
 
-You additionally need a lever switch (single pole, ON-OFF), which is mounted on the right hand side piece (see [here](/hardware/enclosure/measurements_side.png) for its position). This switch is called "side switch" hereinafter.
+You additionally need a lever switch (single pole, maintained, ON-OFF), which is mounted on the right hand side piece (see [here](/hardware/enclosure/measurements_side.png) for its position). This switch is called "side switch" hereinafter.
 
 # Appendix A: Resistors for Gauges
 
