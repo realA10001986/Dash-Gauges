@@ -128,11 +128,11 @@ The Control Board has a Time Travel button (marked "TT"). If you want to connect
 If you want to connect a TCD to the Dash Gauges (for synchronized time travel sequences), wire as follows:
 
 <table>
-    <th>
-     <td align="center">Dash Gauges:<br>"Time Travel" connector (red_3)</td>
-     <td align="center">TCD with control board >=1.3</td>
-     <td align="center">TCD with control board 1.2</td> 
-    </th>
+    <tr>
+     <td align="center"><b>Dash Gauges:<br>"Time Travel" connector (red_3)</b></td>
+     <td align="center"><b>TCD with control board >=1.3</b></td>
+     <td align="center"><b>TCD with control board 1.2</b></td> 
+    </tr>
    <tr>
      <td align="center">GND</td>
      <td align="center">GND of "Time Travel" connector</td>
