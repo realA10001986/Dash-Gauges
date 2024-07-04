@@ -151,6 +151,8 @@ _Do not connect 3V3 to the TCD!_
 
 ### The "Primary" and "Percent Power" Gauges
 
+[<img src="img/Phaos.jpg">](img/Phaos_l.jpg)
+
 In the Original, these were Phaostron 631 series meters. There are many different types/models of vintage Phaostron meters available; anything that starts with 63x fits size-wise; some older 300 series meters also fit. Not all 63x meters are usable though. I haven't seen a complete list, but what I came accross leads to some conclusions: 631 and 634 differ in the method used for movement suspension (pivot-and-jewel vs taut band). Both should be usable; due to their lower moving-element resistance the 634 series might have a lower sensitivity rating (ie they will require higher restistors values). The 633 series appears to look different (360° scale, no faceted glass). Many of the meters in the 637 series and presumably the entire 639 series are highly rated AC meters with iron wane movement, these are probably unusable. I could not find out enough about the 638 series to draw any conclusions. Some meters have their zero position in the center of the scale, so avoid those, too. 
 
 In my (limited) experience the 631 series is the safest bet. Due to the problems the "pivot-and-jewel" design causes (worn jewel, thereby hindered pointer movement), try to find a NOS one.
