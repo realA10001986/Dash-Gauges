@@ -52,7 +52,7 @@ The electronics can be run off 5V or 12V ("+"/"-" pins of connectors red_1 or re
 
 Digital gauges, as well as connecting anything to connector green_6, require 12V on the "DG+" pin of the 12V power connector [red_2]. If you want to power everything with 12V, connect the power supply to connector red_2 ("+"/"-" pins), and bridge the "+" and "DG+" pins with a short wire, as indicated by the arc printed on the board.
 
->For experts: To power the electronics with 5V, but the digital gauges with 12V, put 12V on "DG+" and "-" of the 12V connector red_2, and 5V on the 5V connector red_1 or on the ESP32 via USB.
+>For experts: To power the electronics with 5V, but the digital gauges with 12V, put 12V on "DG+" and "-" of the 12V connector red_2, and 5V on the 5V connector red_1 or on the ESP32 via USB. Do NOT bridge the "+" and "DG+" pins on red_2.
 
 #### Other connectors (green numbers):
 - Green_1: Speaker for audio output
@@ -60,7 +60,7 @@ Digital gauges, as well as connecting anything to connector green_6, require 12V
 - Green_3: Analog Roentgens meter
 - Green_4: Empty LED (for direct connection of white LED, forward voltage 3.3V)
 - Green_5: Side switch for triggering empty/refill sequences (maintained on/off)
-- Green_6: Digital Roentgens meter, 12V Roentgens backlight, 12V empty light
+- Green_6: Digital Roentgens meter, 12V Roentgens backlight, 12V "Empty" light
 
 #### Hardware configuration for "analog" gauges (purple numbers):
 - Left gauge ("Primary"):
