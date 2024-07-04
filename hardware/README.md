@@ -212,7 +212,7 @@ If you can't find a model 49 VU-meter or consider the 142 too far off, you could
 
 Many meters are rated for voltages/currents beyond what the Control Board can deliver, but often they can be modified: For instance, the **Simpson model 29 0-50V DC voltmeter** has a 50K resistor inside; if this resistor is bridged, the meter shows full scale at 0.0375V. With a 5K6 resistor it shows full scale at approx 5V, which is perfectly usable. 
 
-The safest bet is a **model 29** DC voltmeter, although I have only tested this up to a 50V meter. Model 29 ammeters in principle should work, too, but my only experience is a 0-50mA ammeter. I don't know if higher rated volt-/ammeters can be modified accordingly. 
+The safest bet is a **model 29** DC voltmeter, although I have only tested this up to a 100V meter. Model 29 ammeters in principle should work, too, but my only experience is a 0-50mA ammeter. I don't know if higher rated volt-/ammeters can be modified accordingly. 
 
 **Model 39** meters are RF (radio frequency) ammeters, I have no experience with those.
 
@@ -231,6 +231,7 @@ Tested meter options and configuration:
   <tr><td>Simpson Roentgens meter</td><td>Internal resistors (one axial, one that looks like a wire wrapped around paper) need to be removed, black wire from meter coil leading to v-shaped terminal in center needs to be attached to input terminal directly.</td><td>8k2/10k</td><td>Generic Analog (0-2.048V)</td></tr>  
   <tr><td>Simpson models 49, 142 VU meters</td><td>None</td><td>330R/3k3</td><td>Standard VU-Meter</td></tr>
   <tr><td>Simpson model 29 0-50V DC voltmeter</td><td>Internal resistor needs to be bridged</td><td>0R/5k6</td><td>Generic Analog (0-5V)</td></tr>
+  <tr><td>Simpson model 29 0-100V DC voltmeter</td><td>Internal resistor needs to be bridged</td><td>680R/4k7</td><td>Generic Analog (0-5V)</td></tr>
   <tr><td>Simpson model 29 0-50mA DC ammeter</td><td>Internal coil resistor (looks like wire wrapped around paper) in the rear, close to the bottom, needs to be removed: No need to take the meter apart; just cut the two blank wires leading from the terminals towards the center, the coil resistor will fall out then (be sure to bend down the remaining stubs so that they don't touch anything), the other resistor can remain.</td><td>0R/1k0</td><td>Generic Analog (0-5V)</td></tr>
 </table>
 
