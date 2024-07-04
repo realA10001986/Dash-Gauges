@@ -4,3 +4,7 @@ The cut lines on all templates are _outside_ of the area to cut out. The labels 
 - Empty: Cut all four sides as close as possible to to the cut lines.
 
 Roentgens: Model 49 meters have two upper screw positions. Choose the "upper screws" version if the screws holding the dial are near the top edge.
+
+
+
+The graphics in this folder are part of the "Software" as per the LICENSE.
