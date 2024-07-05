@@ -260,7 +260,11 @@ The LED in those lights/buttons requires 12V. The Control Board has two connecto
 
 Above light/button requires a 16mm hole. The vertical center of this hole is, looking at the meter from the front, at 12.5mm below the enclosure's edge, horizontally centered (relative to the enclosure, not the dial; the dial might be not accurately centered). In order to make the hole into the enclosure and the dial at exactly the same spot, drill the hole with the dial mounted. I used a step drill and drilled from the dial's side. Cover the meter's mechanism and have a vacuum ready, the Bakelite makes a lot of dirt (which could cause problems if it gets into the mechanism). If the steps on your step drill aren't high enough to go through the dial and the back of the enclosure, drill until the hole in the dial is of correct size (16mm), then remove the dial and finish drilling the enclosure. Do not attach your new dial label sticker before drilling, it's better to do this afterwards.
 
-![emptyhole](img/empty_hole.jpg)
+![emptyhole](img/empty_hole_new.jpg)
+
+[<img src="img/roeitw1.jpg">](img/roeitw1_l.jpg)
+[<img src="img/roeitw2.jpg">](img/roeitw2_l.jpg)
+[<img src="img/roeitw3.jpg">](img/roeitw3_l.jpg)
 
 A movie-accurate dial as well as "Empty" label is in the [hardware/faces-labels](/hardware/faces-labels) folder. To apply the dial properly, follow the instructions above for the Phaostron meters.
 
