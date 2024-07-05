@@ -385,6 +385,14 @@ Using this setup enables the Dash Gauges to receive notifications about time tra
 
 In order to access the Dash Gauges's Config Portal in your car, connect your hand held or computer to the TCD's WiFi access point ("TCD-AP"), and direct your browser to http://gauges.local ; if that does not work, go to the TCD's keypad menu, press ENTER until "BTTFN CLIENTS" is shown, hold ENTER, and look for the Dash Gauges's IP address there; then direct your browser to that IP by using the URL http://a.b.c.d (a-d being the IP address displayed on the TCD display).
 
+### Door Switches
+
+The Dash Gauges have a connector for two door switches. These switches trigger door open/close sounds.
+
+By default, the "Door Open" sound is played when the switch is closed; "Door close" is played when the switch opens.
+
+In the Config Portal, you can invert this setting, so that the "Door Open" sound is played when the switch is closed.
+
 ## Flash Wear
 
 Flash memory has a somewhat limited life-time. It can be written to only between 10.000 and 100.000 times before becoming unreliable. The firmware writes to the internal flash memory when saving settings and other data. Every time you change settings, data is written to flash memory.
