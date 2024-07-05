@@ -574,7 +574,7 @@ The Control Board has a connector for two door switches; these switches change s
 
 ##### &#9654; Switch closes when door is closed
 
-This selects what type of door switch is being used. Check this, if the switch closes contact when the door closes. Leave uncheck if the switch opens when the door closes.
+This selects what type of door switch is being used. Check this, if the switch closes contact when the door closes. Leave unchecked if the switch opens when the door closes.
 
 ##### &#9654; Door sound delay
 
