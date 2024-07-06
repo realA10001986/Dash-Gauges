@@ -276,7 +276,7 @@ A movie-accurate dial as well as "Empty" label is in the [hardware/faces-labels]
 
 The bezel consists of three parts: The front and two side pieces. Measurements are in the [hardware/enclosure](/hardware/enclosure) folder of this repository.
 
-You can purchase a bezel at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/); note that it is for a model 29/39/49/59/79 panel meter ('Roentgens'); a model 142 won't fit.
+You can purchase a bezel at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/); note that it is made for a model 29/39/49/59/79 panel meter as 'Roentgens'; a model 142 meter won't fit.
 
 You additionally need a lever switch (single pole, maintained, ON-OFF), which is mounted on the right hand side piece (see [here](/hardware/enclosure/measurements_side.png) for its position). This switch is called "side switch" hereinafter.
 
