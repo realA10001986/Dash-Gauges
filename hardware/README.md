@@ -279,6 +279,9 @@ In order to avoid the old dial shining through your new label, use the back-side
 
 A movie-accurate dial as well as "Empty" label is in the [hardware/faces-labels](/hardware/faces-labels) folder. To apply the dial properly, follow the instructions above for the Phaostron meters.
 
+[<img src="img/roeitw4.jpg">](img/roeitw4_l.jpg)
+[<img src="img/roeitw5.jpg">](img/roeitw5_l.jpg)
+
 ## Bezel
 
 The bezel consists of three parts: The front and two side pieces. Measurements are in the [hardware/enclosure](/hardware/enclosure) folder of this repository.
