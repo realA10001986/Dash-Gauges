@@ -188,6 +188,8 @@ Phaostron meters have either 6mm (1/4"-28 UNF) or 4mm (8-32 UNC) screw terminals
 
 ![MountingOrder](img/mo_6mm.jpg)
 
+The "Primary" and "Percent Power" labels are made with a Rotex 880 label maker; the "Primary" is on 1/2" (12mm) tape, the "Percent Power" on 3/8" (9mm).
+
 ### The "Roentgens" Gauge
 
 [<img src="img/RoeVU.jpg">](img/RoeVU_l.jpg)
