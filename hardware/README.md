@@ -248,8 +248,8 @@ Most Simpson meters have a **drop-shaped pointer** top which is glued to the end
 
 The additional **red pointer** was added by drilling a hole into the front (which should be in the center of the original pointer's turning circle; on models x9 this is approx. 1mm above the edge of the adjustment screw; with the meter assembled, put a ruler along the pointer and mark the spot where the ruler crosses the center stripe of the pattern; start with a 1mm drill to avoid slipping when drilling onto this stripe), bending and painting some steel spring wire (0.4mm) and attaching this wire with a screw. The non-illuminated meters' front part is thinner, so be careful when enlarging the hole for the screw head.
 
-![emptylight](img/redpointer1.png)
-![emptylight](img/rphole.png)
+![wirepointer](img/redpointer1.jpg)
+![red_pointer_hole](img/rphole.jpg)
 
 Regarding the **"Empty" light**: I used a light like this one (12V version), available from aliexpress and ebay:
 
