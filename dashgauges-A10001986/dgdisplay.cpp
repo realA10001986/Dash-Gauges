@@ -614,7 +614,9 @@ void Gauges::UpdateAll()
             Wire.write(0b01000000 | ((i << 1) & 0x06));    // Multi-write
             Wire.write((_values[i] >> 8) | _vrefGain[i]);
             Wire.write(_values[i] & 0xff);
+            #ifdef DG_DBG
             Serial.printf("i %d: %x %x\n", i, (_values[i] >> 8) | _vrefGain[i], _values[i] & 0xff);
+            #endif
         }
         Wire.endTransmission(true);
     } else {
