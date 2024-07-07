@@ -561,7 +561,7 @@ Same as [this](#-primary-empty-percentage), but for the 'Roentgens' gauge
 
 For digital gauges only. 
 
-This defines the "virtual percentage" (0% being the left end of the scale, 100% being the right end of the scale) at which the gauge should switch from "full" to "empty" in animations. This value depends on the speed of pointer movement: In the time travel sequence, the pointers are slowly moved towards "Empty" in sync with the length of the sequence. If your pointers "jump" to zero quickly, a threshold of 0 is ok. If the pointers move more slowly, the threshold should by adjusted so that the pointers are at "empty" at the end of the sequence, when the "Empty" alarm goes off. Start with "50" and work your way from there.
+This defines the "virtual percentage" (0% being the left end of the scale, 100% being the right end of the scale) at which the digital gauge should switch from "full" to "empty" in animations. This value depends on the speed of pointer movement: In the time travel sequence, the pointers are virtually slowly moved towards "Empty" in sync with the length of the sequence. If your pointers "jump" to zero quickly, a threshold of 0 is ok. If the pointers move more slowly, the threshold should by adjusted so that the pointers are at "empty" at the end of the sequence, when the "Empty" alarm goes off. Start with "50" and work your way from there.
 
 _Note_: The current OEM control board only supports one digital output for all connected digital gauges. Therefore, they can only _all_ be "full", or _all_ be "empty", and as a result, there can only be one Threshold for all digital gauges. If you have three digital gauges connected, the Threshold configured for "Primary" has priority.
 
