@@ -247,15 +247,15 @@ To find out suitable resistor values for R5/R6 on the Control Board, please see 
 Most Simpson meters have a **drop-shaped pointer top** which is glued to the end of the pointer, and causes the pointer to collide with the Empty light. Pointer lenghts vary; in some cases, the pointer is long enough to just cut off the "drop" without the remaining bit appearing too short. In most cases, however, the pointer would be too short without the "drop". I managed to cut the "drop" vertically in half and peel off its remains from the pointer, thereby saving an extra 2-3mm of pointer length. Be careful when attempting that, the pointer bends easily. _Warning_: The pointer has a counter-weight on the opposite end and is perfectly balanced. This counter-weight consists of wire wrapped around the opposite end of the pointer, looking like a spring. When unbalanced, the pointer wanders around when tilting the meter, and doesn't return to its zero position. If you decide to cut off the entire or a piece of the "drop", you need to adjust the counter-weight by pushing/shifting that "spring" a bit towards the center; when the pointer, after softly pushing it to the right, returns to its zero position by itself, and doesn't wander around when tilting the meter, it's balanced. 
 
 The additional **red pointer** was added by 
-- drilling a hole into the front (which should be in the center of the original pointer's turning circle; on non-illuminated models x9 this is approx. 1mm above the edge of the flat area with the adjustment screw; with the meter assembled, put a ruler along the pointer and mark the spot where the ruler crosses the center stripe of the pattern; start with a 1mm drill to avoid slipping when drilling onto this stripe; on the picture below, I missed the center by about .25mm - which does not matter because a) the screw will be covered by the  "Plutonium chamber" label, and b) the red pointer can compensate that by bending it a bit),
-- bending and painting some steel spring wire (0.4mm) and attaching this wire with a screw.
+- drilling a hole into the front (which should be in the center of the original pointer's turning circle; on non-illuminated models x9 this is approx. 1mm above the edge of the flat area with the adjustment screw; with the meter assembled, put a ruler along the pointer and mark the spot where the ruler crosses the center stripe of the pattern; start with a 1mm drill to avoid slipping when drilling onto this stripe),
+- bending and painting some steel spring wire (0.4mm) and attaching this wire with a screw. I used an M2 screw, through a 2.5mm hole.
 
 The non-illuminated meters' front part is thinner, so be careful when enlarging the hole for the screw head. Also, for this pointer to fit, you need the aforementioned adapter to elevate the front part. Without this adapter, there is no room for the red pointer.
 
 ![wirepointer](img/redpointer1.jpg)
 ![red_pointer_hole](img/rphole.jpg)
 
-Regarding the **"Empty" light**: I used a light like this one (12V version), available from aliexpress and ebay:
+Regarding the **"Empty" light**: I used a light like this one (12V version), available on aliexpress and ebay:
 
 ![emptylight](img/emptylight.png)
 
