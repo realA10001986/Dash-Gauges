@@ -257,12 +257,9 @@ The non-illuminated meters' front part is thinner, so be careful when enlarging 
 ![wirepointer](img/redpointer1.jpg)
 ![red_pointer_hole](img/rphole.jpg)
 
-Regarding the **"Empty" light**: I used a light like this one (12V version), available on aliexpress and ebay:
+Regarding the **"Empty" light**: I used a light like this one (12V version), available on aliexpress and ebay. There are also buttons that look identical and can be used instead.
 
 ![emptylight](img/emptylight.png)
-
-There are also buttons that look identical and can be used instead:
-
 ![emptybutton](img/emptybutton.png)
 
 The LED in those lights/buttons requires 12V. The Control Board has two connectors for the Empty LED:
