@@ -196,7 +196,7 @@ The "Primary" and "Percent Power" labels are made with a Rotex 880 label maker; 
 [<img src="img/Roe250mADC.jpg">](img/Roe250mADC_l.jpg)
 [<img src="img/roentgens_s.jpg">](img/roentgens_l.jpg)
 
-The "Roentgens" gauge is more of a challenge. The original in the movie was a real Roentgens meter from a CP95 radiac. Such devices are hard to find, let alone one with the correct Simpson meter. The CP95 was built over a long period of time and they used meters from different manufacturers (QVS, Specialty Assy, etc).
+The "Roentgens" gauge is more of a challenge. The pictures above show my modified Simpson model 49 VU meters. The original in the movie was a real Roentgens meter from a CP95 radiac. Such devices are hard to find, let alone one with the correct Simpson meter. The CP95 was built over a long period of time and they used meters from different manufacturers (QVS, Specialty Assy, etc).
 
 There are a lot of Simpson meters that look similar - yet not identical - to what was seen in the movies. However: One - quite important - issue is that hardly any Simpson meters are illuminated. Non-illuminated meters have a front that is 7mm thinner than the fronts of illuminated models, the glass is closer to the dial, and, as a result, the movie-accurate "Empty" light and the red pointer won't fit. _A solution for this problem - in shape of an "adapter" that is put between the case and the original front, elevating the front by 7mm - is in the works and will be available soon. This adapter is required to fit the "Empty" light and the red pointer as described below. It will also allow for easily illuminating a non-illumimated Simpson meter model x9._
 
@@ -206,7 +206,7 @@ A word on Simpson model numbers: Their main model number means mainly "case styl
 
 The only illuminated Simpson meters - apart from the Roentgens meters - were apparently their VU meters, models 49 (not listed above as they pre-date the catalog) and 142 (10470, 10540). Model 49 has the movie-accurate front - as long as its build date is something around the 1950s or earlier; later models, unfortunately using the same model number, look entirely different. (They added design groups like "Rectangular" or "Wide Vue" over time, and re-used their model numbers together with these design groups. It's all a bit confusing.)
 
-I was lucky to score a **Simpson model 49L VU-meter** and a **Simpson model 49MC VU-meter**. both with the movie-accurate front. They are illuminated through two 6V incandescent light bulbs. 
+I was lucky to score a **Simpson model 49L VU-meter** and a **Simpson model 49MC VU-meter**. both with the movie-accurate front. They are illuminated through two incandescent light bulbs. 
 
 The **model 142 VU-meters**, while perfectly usable electronically, are a bit smaller (4.25x3.9" vs 4.66x4.2") and look different on the back; their barrel is thicker (3.25" vs 2.78" in diameter), and the screws are not at the outer corners but closer to the barrel. There are special files in the [hardware/enclosure](/hardware/enclosure) folder for model 142 dimensions. Unfortunately, the barrel is so big that it does not allow for a simple hole for the "Empty" light; this must be done another way.
 
