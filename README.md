@@ -276,7 +276,7 @@ Those files are not provided here. You can use any mp3, with a bitrate of 128kpb
 
 The firmware contains a simple music player to play mp3 files located on the SD card. This player requires a TCD connected through BTTFN for control.
 
-In order to be recognized, your mp3 files need to be organized in music folders named *music0* through *music9*. The folder number is 0 by default, ie the player starts searching for music in folder *music0*. This folder number can be changed using the remote control.
+In order to be recognized, your mp3 files need to be organized in music folders named *music0* through *music9*. The folder number is 0 by default, ie the player starts searching for music in folder *music0*. This folder number can be changed through the TCD keypad (905x).
 
 The names of the audio files must only consist of three-digit numbers, starting at 000.mp3, in consecutive order. No numbers should be left out. Each folder can hold up to 1000 files (000.mp3-999.mp3). *The maximum bitrate is 128kpbs.*
 
