@@ -96,6 +96,10 @@
 
 /*  Changelog
  *  
+ *  2024/07/07 (A10001986) [1.0]
+ *    - Fix MQTT commands
+ *    - MQTT: Add MP_FOLDER_x commands to set music folder number
+ *    - Fine tune pointer movement during Time Travel
  *  2024/06/05 (A10001986)
  *    - Minor fixes for WiFiManager
  *    * Switched to esp32-arduino 2.0.17 for pre-compiled binary.

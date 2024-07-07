@@ -136,15 +136,15 @@ static const struct ga_types gaugeTypesLarge[] = {
       {   28, MCP4728_VREF_INT|MCP4728_GAIN_LOW }, {} },
     
     // Type 2: Analog gauge: 0-1.6V through MCP4728
-    //         Simpson 49L VU meter with 3k6 resistor in series
-    //         Using MCP4728's built-in Vref (2.048V), limited by "maxV" parameter to 1.6V (3200/4095*2.048)
-    { 2, "Standard VU-Meter (0-1.6V)", DGD_TYPE_MCP4728,
-      { 3200, MCP4728_VREF_INT|MCP4728_GAIN_LOW }, {} },
+    //         Simpson model 49 VU meter with 3k6 resistor in series, and zero adjusted to "green" zero on scale
+    //         Using MCP4728's built-in Vref (2.048V), limited by "maxV" parameter to 1.66V (3200/4095*2.048)
+    { 2, "Standard VU-Meter (0-1.66V)", DGD_TYPE_MCP4728,
+      { 3300, MCP4728_VREF_INT|MCP4728_GAIN_LOW }, {} },
 
     // Type 3: Digital gauge: 0 or 12V, switched through DIGITAL_GAUGE_PIN. On the OEM control
     // board, the output voltage is 12V, but can be adjusted by putting a resistor
     // instead of a bridge at DIG5. A digital "Roentgens" meter must be connected to the 
-    // "Digital/Legacy" connector, pins 1 (+) and 2 (-).
+    // "Digital Roentgens" connector, pins 1 (+) and 2 (-).
     { 3, "Digital / Legacy (0/12V)", DGD_TYPE_DIGITAL,
       {}, { DIGITAL_GAUGE_PIN } },
 
@@ -614,6 +614,7 @@ void Gauges::UpdateAll()
             Wire.write(0b01000000 | ((i << 1) & 0x06));    // Multi-write
             Wire.write((_values[i] >> 8) | _vrefGain[i]);
             Wire.write(_values[i] & 0xff);
+            Serial.printf("i %d: %x %x\n", i, (_values[i] >> 8) | _vrefGain[i], _values[i] & 0xff);
         }
         Wire.endTransmission(true);
     } else {

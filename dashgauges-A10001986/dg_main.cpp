@@ -370,7 +370,7 @@ void main_boot()
     // Init side switch
     if(!sbv2) {
         sideSwitch.begin();
-        sideSwitch.setTicks(50, 10, 50);
+        sideSwitch.setTiming(50, 10, 50);
         sideSwitch.attachLongPressStart(sideSwitchLongPress);
         sideSwitch.attachLongPressStop(sideSwitchLongPressStop);
     }
@@ -380,12 +380,12 @@ void main_boot()
     #ifdef DG_HAVEDOORSWITCH
     if(!sbv2) {
         doorSwitch.begin();
-        doorSwitch.setTicks(50, 10, 50);
+        doorSwitch.setTiming(50, 10, 50);
         doorSwitch.attachLongPressStart(doorSwitchLongPress);
         doorSwitch.attachLongPressStop(doorSwitchLongPressStop);
         #ifdef DG_HAVEDOORSWITCH2
         door2Switch.begin();
-        door2Switch.setTicks(50, 10, 50);
+        door2Switch.setTiming(50, 10, 50);
         door2Switch.attachLongPressStart(door2SwitchLongPress);
         door2Switch.attachLongPressStop(door2SwitchLongPressStop);
         #endif
@@ -489,11 +489,11 @@ void main_setup()
     if(!TCDconnected) {
         // If we have a physical button, we need
         // reasonable values for debounce and press
-        TTKey.setTicks(TT_DEBOUNCE, TT_PRESS_TIME, TT_HOLD_TIME);
+        TTKey.setTiming(TT_DEBOUNCE, TT_PRESS_TIME, TT_HOLD_TIME);
         TTKey.attachLongPressStart(TTKeyHeld);
     } else {
         // If the TCD is connected, we can go more to the edge
-        TTKey.setTicks(5, 50, 100000);
+        TTKey.setTiming(5, 50, 100000);
         // Long press ignored when TCD is connected
     }
 
@@ -501,7 +501,7 @@ void main_setup()
     Button1.begin();
     Button1.attachPress(Button1Pressed);
     Button1.attachLongPressStart(Button1Held);
-    Button1.setTicks(B1_DEBOUNCE, B1_PRESS_TIME, B1_HOLD_TIME);
+    Button1.setTiming(B1_DEBOUNCE, B1_PRESS_TIME, B1_HOLD_TIME);
 
     // Invoke audio file installer if SD content qualifies
     #ifdef DG_DBG
@@ -1134,17 +1134,17 @@ static void timeTravel(bool TCDtriggered, uint16_t P0Dur, uint16_t P1Dur)
     TTFIntL = gauges.getValuePercent(0);
     if(TTFIntL < left_gauge_empty + (TTStepL * 2)) TTFIntL = 0;
     else {
-        TTFIntL = P1Dur / (((TTFIntL - left_gauge_empty) / TTStepL) + 1);
+        TTFIntL = P1Dur / (((TTFIntL - left_gauge_empty) / TTStepL) + 2);
     }
     TTFIntC = gauges.getValuePercent(1);
     if(TTFIntC < center_gauge_empty + (TTStepC * 2)) TTFIntC = 0;
     else {
-        TTFIntC = P1Dur / (((TTFIntC - center_gauge_empty) / TTStepC) + 1);
+        TTFIntC = P1Dur / (((TTFIntC - center_gauge_empty) / TTStepC) + 2);
     }
     TTFIntR = gauges.getValuePercent(2);
     if(TTFIntR < right_gauge_empty + (TTStepR * 2)) TTFIntR = 0;
     else {
-        TTFIntR = P1Dur / (((TTFIntR - right_gauge_empty) / TTStepR) + 1);
+        TTFIntR = P1Dur / (((TTFIntR - right_gauge_empty) / TTStepR) + 2);
     }
     
     if(TCDtriggered) {    // TCD-triggered TT (GPIO, BTTFN, MQTT-pub) (synced with TCD)
@@ -1331,35 +1331,11 @@ static void execute_remote_command()
             say_ip_address();
           
         } else if(command >= 50 && command <= 59) {
+
             if(haveSD) {
-                bool wasActive = false;
-                bool waitShown = false;
-                uint8_t nmf = (uint8_t)command - 50;
-                if(musFolderNum != nmf) {
-                    musFolderNum = nmf;
-                    // Initializing the MP can take a while;
-                    // need to stop all audio before calling
-                    // mp_init()
-                    if(haveMusic && mpActive) {
-                        mp_stop();
-                        wasActive = true;
-                    }
-                    stopAudio();
-                    if(mp_checkForFolder(musFolderNum) == -1) {
-                        flushDelayedSave();
-                        showWaitSequence();
-                        waitShown = true;
-                        play_file("/renaming.mp3", PA_INTRMUS|PA_ALLOWSD);
-                        waitAudioDone();
-                    }
-                    saveMusFoldNum();
-                    updateConfigPortalMFValues();
-                    mp_init(false);
-                    if(waitShown) {
-                        endWaitSequence();
-                    }
-                }
+                switchMusicFolder((uint8_t)command - 50);
             }
+
         }
         
     } else if (command < 1000) {                      // 9xxx
@@ -1519,6 +1495,37 @@ static void say_ip_address()
         mp_play();
     }
 }
+
+void switchMusicFolder(uint8_t nmf)
+{                
+    bool wasActive = false;
+    bool waitShown = false;
+    
+    if(musFolderNum != nmf) {
+        musFolderNum = nmf;
+        // Initializing the MP can take a while;
+        // need to stop all audio before calling
+        // mp_init()
+        if(haveMusic && mpActive) {
+            mp_stop();
+            wasActive = true;
+        }
+        stopAudio();
+        if(mp_checkForFolder(musFolderNum) == -1) {
+            flushDelayedSave();
+            showWaitSequence();
+            waitShown = true;
+            play_file("/renaming.mp3", PA_INTRMUS|PA_ALLOWSD);
+            waitAudioDone();
+        }
+        saveMusFoldNum();
+        updateConfigPortalMFValues();
+        mp_init(false);
+        if(waitShown) {
+            endWaitSequence();
+        }
+    }
+}  
 
 /*
  * Helpers

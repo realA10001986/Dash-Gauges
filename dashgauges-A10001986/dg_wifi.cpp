@@ -192,9 +192,9 @@ WiFiManagerParameter custom_dsPlay("dsPlay", "Play door sounds (0=no, 1=yes)", s
 WiFiManagerParameter custom_dsPlay("dsPlay", "Play door sounds", settings.dsPlay, 1, "autocomplete='off' title='Check to have the device play a sound when door switch changes state' type='checkbox' style='margin-top:8px;'", WFM_LABEL_AFTER);
 #endif // -------------------------------------------------
 #ifdef TC_NOCHECKBOXES  // --- Standard text boxes: -------
-WiFiManagerParameter custom_dsCOnC("dsCOnC", "Switch closes when door is closed (0=no, 1=yes)", settings.dsCOnC, 1, "autocomplete='off' title='Enable to play the door open sound when switch closes'");
+WiFiManagerParameter custom_dsCOnC("dsCOnC", "Switch closes when door is closed (0=no, 1=yes)", settings.dsCOnC, 1, "autocomplete='off' title='Enable to play the door open sound when switch opens'");
 #else // -------------------- Checkbox hack: --------------
-WiFiManagerParameter custom_dsCOnC("dsCOnC", "Switch closes when door is closed", settings.dsCOnC, 1, "autocomplete='off' title='Check to play the door open sound when switch closes' type='checkbox' style='margin-top:5px;'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_dsCOnC("dsCOnC", "Switch closes when door is closed", settings.dsCOnC, 1, "autocomplete='off' title='Check to play the door open sound when switch opens' type='checkbox' style='margin-top:5px;'", WFM_LABEL_AFTER);
 #endif // -------------------------------------------------
 WiFiManagerParameter custom_dsDelay("dsDelay", "<br>Door sound delay (0-5000[milliseconds])", settings.dsDelay, 4, "type='number' min='0' max='5000'");
 #endif
@@ -1665,6 +1665,7 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
       "MP_STOP",          // 6
       "MP_NEXT",          // 7
       "MP_PREV",          // 8
+      "MP_FOLDER_",       // 9  MP_FOLDER_0..MP_FOLDER_9
       NULL
     };
     static const char *cmdList2[] = {
@@ -1753,7 +1754,7 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
             break;
         }
        
-    } else if(!strcmp(topic, "bttf/fc/cmd")) {
+    } else if(!strcmp(topic, "bttf/dg/cmd")) {
 
         // User commands
 
@@ -1801,6 +1802,13 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
             break;
         case 8:
             if(haveMusic) mp_prev(mpActive);
+            break;
+        case 9:
+            if(haveSD) {
+                if(strlen(tempBuf) > j && tempBuf[j] >= '0' && tempBuf[j] <= '9') {
+                    switchMusicFolder((uint8_t)(tempBuf[j] - '0'));
+                }
+            }
             break;
         }
             

@@ -52,7 +52,7 @@ class DGButton {
 
         void begin();
         
-        void setTicks(const int dticks, const int pticks, const int lticks);
+        void setTiming(const int dticks, const int pticks, const int lticks);
       
         void attachPress(void (*newFunction)(void));
         void attachLongPressStart(void (*newFunction)(void));
@@ -72,9 +72,9 @@ class DGButton {
         int _pin;
         bool _pullupActive;
         
-        unsigned int _debounceTicks = 50;
-        unsigned int _pressTicks = 400;
-        unsigned int _longPressTicks = 800;
+        unsigned int _debounceDur = 50;
+        unsigned int _pressDur = 400;
+        unsigned int _longPressDur = 800;
       
         int _buttonPressed;
       

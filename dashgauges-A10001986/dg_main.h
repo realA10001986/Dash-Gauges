@@ -77,6 +77,8 @@ void refill_plutonium();
 void set_empty();
 void wakeup();
 
+void switchMusicFolder(uint8_t nmf);
+
 void sideSwitch_scan();
 void doorSwitch_scan();
 
