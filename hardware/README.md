@@ -198,7 +198,7 @@ The "Primary" and "Percent Power" labels are made with a Rotex 880 label maker; 
 
 The "Roentgens" gauge is more of a challenge. The pictures above show my modified Simpson model 49 VU meters. The original in the movie was a real Roentgens meter from a CP95 radiac. Such devices are hard to find, let alone one with the correct Simpson meter. The CP95 was built over a long period of time and they used meters from different manufacturers (QVS, Specialty Assy, etc).
 
-There are a lot of Simpson meters that look similar - yet not identical - to what was seen in the movies. However: One - quite important - issue is that hardly any Simpson meters are illuminated. Non-illuminated meters have a front that is 7mm thinner than the fronts of illuminated models, the glass is closer to the dial, and, as a result, the movie-accurate "Empty" light and the red pointer won't fit. _A solution for this problem - in shape of an "adapter" that is put between the case and the original front, elevating the front by 7mm - is in the works and will be available soon. This adapter is required to fit the "Empty" light and the red pointer as described below. It will also allow for easily illuminating a non-illumimated Simpson meter model x9._
+There are a lot of Simpson meters that look similar - yet not identical - to what was seen in the movies. However: One - quite important - issue is that hardly any Simpson meters are illuminated. Non-illuminated meters have a front that is 7mm thinner than the fronts of illuminated models, the glass is closer to the dial, and, as a result, the movie-accurate "Empty" light and the red pointer won't fit. _A solution for this problem - in shape of an "extension ring" that is put between the case and the original front, elevating the front by 7mm - is in the works and will be available soon (possibly fall 2024). This extension is required to fit the "Empty" light and the red pointer as described below. It will also allow for easily illuminating a non-illumimated Simpson meter model x9._
 
 A word on Simpson model numbers: Their main model number means mainly "case style", not "specific type of meter". "Model 49" therefore only means "4.5 inch case", but not whether this is a VU meter, a voltmeter, or what not:
 
@@ -212,7 +212,7 @@ The **model 142 VU-meters**, while perfectly usable electronically, are a bit sm
 
 ![model142pointers](img/mod142pl.jpg)
 
-If you can't find a model 49 VU-meter or consider the 142 too far off, you could try other Simpson meters - if you are ready, for the time being, to improvise on the "Empty" light and the red pointer, due to their thin fronts. Models 29, 39, 49, 59 or 79 fit size-wise. 
+If you can't find a model 49 VU-meter or consider the 142 too far off, you could try other Simpson meters; models 29, 39, 49, 59 or 79 fit size-wise. _As mentioned above, these meters have fronts too thin to fit the "Empty" light and the red pointer; you will either need the aforementioned "extension ring" or be ready to compromise._
 
 Many meters are rated for voltages/currents beyond what the Control Board can deliver, but often they can be modified: For instance, the **Simpson model 29 0-50V DC voltmeter** has a 50K resistor inside; bridging this resistor and putting a combination of 680R/4k7 on the Control Board makes the meter show full scale at 5V.
 
@@ -248,16 +248,16 @@ To find out suitable resistor values for R5/R6 on the Control Board, please see 
 
 Most Simpson meters have a **drop-shaped pointer top** which is glued to the end of the pointer, and causes the pointer to collide with the Empty light. Pointer lenghts vary; in some cases, the pointer is long enough to just cut off the "drop" without the remaining bit appearing too short. In most cases, however, the pointer would be too short without the "drop". I managed to cut the "drop" vertically in half and peel off its remains from the pointer, thereby saving an extra 2-3mm of pointer length. Be careful when attempting that, the pointer bends easily. _Warning_: The pointer has a counter-weight on the opposite end and is perfectly balanced. This counter-weight consists of wire wrapped around the opposite end of the pointer, looking like a spring. When unbalanced, the pointer wanders around when tilting the meter, and doesn't return to its zero position. If you decide to cut off the entire or a piece of the "drop", you need to adjust the counter-weight by pushing/shifting that "spring" a bit towards the center; when the pointer, after softly pushing it to the right, returns to its zero position by itself, and doesn't wander around when tilting the meter, it's balanced. 
 
-The additional **red pointer** was added by 
+The additional **red pointer** is added by 
 - drilling a hole into the front (which should be in the center of the original pointer's turning circle; on non-illuminated models x9 this is approx. 1mm above the edge of the flat area with the adjustment screw; with the meter assembled, put a ruler along the pointer and mark the spot where the ruler crosses the center stripe of the pattern; start with a 1mm drill to avoid slipping when drilling onto this stripe),
 - bending and painting some steel spring wire (0.4mm) and attaching this wire with a screw. I used an M2 screw, through a 2.5mm hole.
 
-The non-illuminated meters' front part is thinner, so be careful when enlarging the hole for the screw head. Also, for this pointer to fit, you need the aforementioned adapter to elevate the front part. Without this adapter, there is no room for the red pointer.
+The non-illuminated meters' front part is thinner, so be careful when enlarging the hole for the screw head. Also, for this pointer to fit, you need the aforementioned extension ring to elevate the front part. Without this extension ring, there is no room for the red pointer.
 
 ![wirepointer](img/redpointer1.jpg)
 ![red_pointer_hole](img/rphole.jpg)
 
-Regarding the **"Empty" light**: I used a light like this one (12V version), available on aliexpress and ebay. There are also buttons that look identical and can be used instead.
+Regarding the **"Empty" light**: I recommend a light like this one (12V version), available on aliexpress and ebay. There are also buttons that look identical and can be used instead.
 
 ![emptylight](img/emptylight.png)
 ![emptybutton](img/emptybutton.png)
