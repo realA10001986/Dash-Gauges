@@ -62,7 +62,7 @@ Digital gauges, as well as connecting anything to connector green_6, require 12V
 - Green_5: Side switch for triggering empty/refill sequences (maintained on/off)
 - Green_6: Digital Roentgens meter, 12V Roentgens backlight, 12V "Empty" light
 
-#### Hardware configuration for "analog" gauges (purple numbers):
+#### Configuration for analog gauges (purple numbers):
 - Left gauge ("Primary"):
   - Purple_3: Resistors R3, R4: Populate depending on gauge and supply voltage; see [here](#appendix-a-resistors-for-gauges).
   - Purple_4: Close ANA4 solder jumper; DIG4 (blue_4) must be open
