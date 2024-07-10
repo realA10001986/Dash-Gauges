@@ -335,5 +335,5 @@ In the Config Portal, set the gauge type to "Generic Analog (0-5V)".
 >For meters with a very low rating (uA, mV), the procedure could be done using 2.048V instead of 5V. In the Config Portal, select "Generic Analog (0-2.048V)" as Gauge Type, and do as described above.
 
 
-_Text written by Thomas Winischhofer ("A10001986"). See LICENSE._
+_Text & images: (C) Thomas Winischhofer ("A10001986"). See LICENSE._
 
