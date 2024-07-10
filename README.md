@@ -641,7 +641,7 @@ then reload the page in your browser.
 
 
 
-_Text written by Thomas Winischhofer (A10001986). See license._
+_Text written by Thomas Winischhofer ("A10001986"). See LICENSE._
 
 
 
