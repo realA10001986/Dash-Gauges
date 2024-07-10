@@ -605,6 +605,10 @@ The username (and optionally the password) to be used when connecting to the bro
 
 #### Music Player settings
 
+##### &#9654; Music folder
+
+Selects the current music folder, can be 0 through 9. This can also be set/changed through a TCD keypad via BTTFN.
+
 ##### &#9654; Shuffle at startup
 
 When checked, songs are shuffled when the device is booted. When unchecked, songs will be played in order.
