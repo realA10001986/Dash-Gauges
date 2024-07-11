@@ -115,6 +115,8 @@
 
 /*  Changelog
  *  
+ *  2024/07/07 (A10001986)
+ *    - Fix filename sorting
  *  2024/07/07 (A10001986) [1.0]
  *    - Fix MQTT commands
  *    - MQTT: Add MP_FOLDER_x commands to set music folder number

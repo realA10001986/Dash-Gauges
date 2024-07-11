@@ -1130,7 +1130,7 @@ static void mpren_quickSort(char **a, int s, int e)
         int p = mpren_partition(a, s, e);
         mpren_quickSort(a, s, p - 1);
         mpren_quickSort(a, p + 1, e);
-    } else if(s > e) {
+    } else if(s < 0) {
         mpren_renOrder((uint8_t*)*a, s, e);
     }
 }
