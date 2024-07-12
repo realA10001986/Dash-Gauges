@@ -345,11 +345,11 @@ In the Config Portal, set the gauge type to "Generic Analog (0-5V)".
 CircuitSetup-produced boards have pre-installed trimpots (trimmer potentiometers). In order to adjust those for your very gauges, proceed as follows:
 
 - Remove all built-in resistors, caps etc from the meter. The meter's input terminals must be directly connected to the meter's coil.
-- Install the Control Board on the Phaostron gauges, and connect your "Roentgens".
 - Check that the trimpots (purple_3, purple_1, purple_5) are at their maximum resistance.
-- Power up.
-- Select gauge types in Config Portal, set the "Full percentage" of all the gauges to 100, click "SAVE".
-- Wait until the startup-sequene has finished.
+- Install the meter on Control Board.
+- Power up; after the startup-sequence, hold the "Time Travel" button for 5 seconds.
+- Navigate your browser to the Config Portal; set the Gauge Type to "Generic analog (0-5V)", and the "Full percentage" of the gauge to 100; click "SAVE". The device reboots.
+- Wait until the startup-sequence has finished. (If the pointer shoots to the end of the scale, power off, disconnect the meter(s) and change the Gauge Type to "Generic Analog (0-2.048V)")
 - Turn the screws on the trimpots until the pointer points to the end of the scale.
 - Enter the Config Portal and re-set the "Full Percentages" to your desired values (by default 28 for the Phaostron gauges, 65 for the "Roentgens").
 
