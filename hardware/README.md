@@ -81,6 +81,8 @@ Example for configuration for three analog gauges:
 |:--:| 
 | *Click for hi-res image* |
 
+_Note: CircuitSetup-produced boards have trimpots pre-installed at positions purple_3, purple_1 and purple_5, and solder-joints purple_4 and purple_2 are closed._
+
 #### Configuration for digital gauges (blue numbers):
 - Left gauge:
   - Blue_3: Bridge DIG3 by wire
@@ -100,6 +102,8 @@ Example for configuration for three digital gauges:
 |:--:| 
 | *Click for hi-res image* |
 
+_Note: CircuitSetup-produced boards have trimpots pre-installed at positions purple_3, purple_1 and purple_5. These must to be removed in order to use digital gauges! Also, ANAx solder-joints must be changed for using digital gauges!_
+
 You can mix different types of analog and digital gauges; the firmware provides a type selection for each single gauge. In "full digital" configuration, as depicted above, the Control Board can directly replace a 3rd party manufacturer's board in order to integrate "alien" Dash Gauges with other CircuitSetup props. Videos of the board in action with various meters are [here](https://www.facebook.com/61553801874212/videos/pcb.122144723798126729/1554617305398184) (Phaostron 631-14672(H&P), 300-07970; 3rd party digital Roentgens replica) and [here](https://www.facebook.com/61553801874212/videos/pcb.122144723798126729/974052394455407) (3rd party digital Phaostron replicas, Simpson model 29 0-50mA).
 
 #### Gauge illumination [yellow numbers]:
@@ -108,7 +112,7 @@ The gauges can be illuminated
 - using "internal" power ("INT", always 5V), or
 - using "external" power ("EXT"), fed through connector yellow_5.
 
-Solder jumper yellow_4 selects whether INT or EXT is to be used; in case of EXT, connect your power supply to connector yellow_5.
+Solder jumper yellow_4 selects whether INT or EXT is to be used; in case of EXT, connect your power supply to connector yellow_5. 
 
 INT is probably sufficient for most setups. The panel depicted above is running on INT with LEDs for the smaller gauges and 6V incandescent light bulbs for the Roentgens gauge. 
 
@@ -293,6 +297,8 @@ You additionally need a lever switch (single pole, maintained, ON-OFF), which is
 
 The goal of this procedure is to find resistor values that allow to drive the meter with a voltage of 0-5V.
 
+_Note: CurcuitSetup-produced Control Boards have pre-installed trimpots. See below on how to perform adjustment for your gauges._
+
 What you need:
 - A 5V power supply. If you plan on running the Dash Gauges with a 5V power supply, use that one for the following steps. 
 - a set of axial resistors of different values in the range of 10R-20k.
@@ -333,6 +339,19 @@ In the Config Portal, set the gauge type to "Generic Analog (0-5V)".
 >- try to find the correct value by putting resistors (or wire bridges) loosely at the resistor positions on the Control Board.
 >  
 >For meters with a very low rating (uA, mV), the procedure could be done using 2.048V instead of 5V. In the Config Portal, select "Generic Analog (0-2.048V)" as Gauge Type, and do as described above.
+
+### Adjustment on CircuitSetup Control Boards
+
+CircuitSetup-produced boards have pre-installed trimpots (trimmer potentiometers). In order to adjust those for your very gauges, proceed as follows:
+
+- Remove all built-in resistors, caps etc from the meter. The meter's input terminals must be directly connected to the meter's coil.
+- Install the Control Board on the Phaostron gauges, and connect your "Roentgens".
+- Check that the trimpots (purple_3, purple_1, purple_5) are at their maximum resistance.
+- Power up.
+- Select gauge types in Config Portal, set the "Full percentage" of all the gauges to 100, click "SAVE".
+- Wait until the startup-sequene has finished.
+- Turn the screws on the trimpots until the pointer points to the end of the scale.
+- Enter the Config Portal and re-set the "Full Percentages" to your desired values (by default 28 for the Phaostron gauges, 65 for the "Roentgens").
 
 
 _Text & images: (C) Thomas Winischhofer ("A10001986"). See LICENSE._
