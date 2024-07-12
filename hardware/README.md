@@ -346,7 +346,7 @@ CircuitSetup-produced boards have pre-installed trimpots (trimmer potentiometers
 
 - Remove all built-in resistors, caps etc from the meter. The meter's input terminals must be directly connected to the meter's coil.
 - Check that the trimpots (purple_3, purple_1, purple_5) are at their maximum resistance.
-- Install the meter on Control Board.
+- Connect the meter to the Control Board.
 - Power up; after the startup-sequence, hold the "Time Travel" button for 5 seconds.
 - Navigate your browser to the Config Portal; set the Gauge Type to "Generic analog 0-5V", and the "Full percentage" of the gauge to 100; click "SAVE". The device reboots.
 - Wait until the startup-sequence has finished. (If the pointer shoots to the end of the scale, power off, and repeat above steps but set the Gauge Type to "Generic Analog 0-2.048V")
