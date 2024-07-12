@@ -348,8 +348,8 @@ CircuitSetup-produced boards have pre-installed trimpots (trimmer potentiometers
 - Check that the trimpots (purple_3, purple_1, purple_5) are at their maximum resistance.
 - Install the meter on Control Board.
 - Power up; after the startup-sequence, hold the "Time Travel" button for 5 seconds.
-- Navigate your browser to the Config Portal; set the Gauge Type to "Generic analog (0-5V)", and the "Full percentage" of the gauge to 100; click "SAVE". The device reboots.
-- Wait until the startup-sequence has finished. (If the pointer shoots to the end of the scale, power off, disconnect the meter(s) and change the Gauge Type to "Generic Analog (0-2.048V)")
+- Navigate your browser to the Config Portal; set the Gauge Type to "Generic analog 0-5V", and the "Full percentage" of the gauge to 100; click "SAVE". The device reboots.
+- Wait until the startup-sequence has finished. (If the pointer shoots to the end of the scale, power off, and repeat above steps but set the Gauge Type to "Generic Analog 0-2.048V")
 - Turn the screws on the trimpots until the pointer points to the end of the scale.
 - Enter the Config Portal and re-set the "Full Percentages" to your desired values (by default 28 for the Phaostron gauges, 65 for the "Roentgens").
 
