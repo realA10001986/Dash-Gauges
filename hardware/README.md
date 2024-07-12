@@ -297,7 +297,7 @@ You additionally need a lever switch (single pole, maintained, ON-OFF), which is
 
 The goal of this procedure is to find resistor values that allow to drive the meter with a voltage of 0-5V.
 
-_Note: CurcuitSetup-produced Control Boards have pre-installed trimpots. See below on how to perform adjustment for your gauges._
+_Note: CircuitSetup-produced Control Boards have pre-installed trimpots. See below on how to perform adjustment for your gauges._
 
 What you need:
 - A 5V power supply. If you plan on running the Dash Gauges with a 5V power supply, use that one for the following steps. 
