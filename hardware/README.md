@@ -350,9 +350,11 @@ CircuitSetup-produced boards have pre-installed trimpots (trimmer potentiometers
 - Power up; after the startup-sequence, hold the "Time Travel" button for 5 seconds.
 - Navigate your browser to the Config Portal.
 - Set the Gauge Type to "Generic analog 0-5V"
-  ![gaugetype](img/adjgaugetype.png)
+  
+    ![gaugetype](img/adjgaugetype.png)
 - Set the "Full percentage" of the gauge to 100
-  ![perc100](img/adjfullpercent.png)
+  
+    ![perc100](img/adjfullpercent.png)
 - Click "SAVE". The device reboots.
 - Wait until the startup-sequence has finished. (If the pointer shoots to the end of the scale, power off, and repeat above steps but set the Gauge Type to "Generic Analog 0-2.048V")
 - Turn the screws on the trimpots until the pointer points to the end of the scale.
