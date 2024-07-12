@@ -9,6 +9,10 @@ This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](ht
 [<img src="img/mydg1.jpg">](img/mydg1_l.jpg)
 [<img src="img/mydg2.jpg">](img/mydg2_l.jpg)
 
+| [![Watch the video](https://img.youtube.com/vi/R2M2wp6kowQ/0.jpg)](https://youtu.be/R2M2wp6kowQ) |
+|:--:|
+| Click to watch the video |
+
 For information on the hardware, please see [here](/hardware/).
 
 Firmware features include
