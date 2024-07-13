@@ -115,6 +115,8 @@
 
 /*  Changelog
  *  
+ *  2024/07/13 (A10001986)
+ *    - Make slow drain during Time Travel optional for each meter (analog gauges only)
  *  2024/07/07 (A10001986)
  *    - Fix filename sorting
  *  2024/07/07 (A10001986) [1.0]

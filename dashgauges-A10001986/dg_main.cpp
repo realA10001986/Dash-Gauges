@@ -224,6 +224,7 @@ static unsigned long TTFIntL = 0;
 static unsigned long TTFIntC = 0;
 static unsigned long TTFIntR = 0;
 static int           TTStepL = 1, TTStepC = 1, TTStepR = 1;
+static bool          TTdrPri = true, TTdrPPo = true, TTdrRoe = true;
 
 // Durations of tt phases for internal tt
 #define P0_DUR          5000    // acceleration phase
@@ -442,28 +443,34 @@ void main_setup()
     if(gauges.supportVariablePercentage(0)) {
         left_gauge_idle = restrict_gauge_idle(atoi(settings.lIdle), 0, 100, DEF_L_GAUGE_IDLE);
         left_gauge_empty = restrict_gauge_empty(atoi(settings.lEmpty), 0, left_gauge_idle, DEF_L_GAUGE_EMPTY);
-        if(left_gauge_empty >= left_gauge_idle) { left_gauge_idle = DEF_L_GAUGE_IDLE; left_gauge_empty = DEF_L_GAUGE_EMPTY; } 
+        if(left_gauge_empty >= left_gauge_idle) { left_gauge_idle = DEF_L_GAUGE_IDLE; left_gauge_empty = DEF_L_GAUGE_EMPTY; }
+        TTdrPri = (atoi(settings.drPri) > 0);
     } else {
         left_gauge_idle = 100;
         left_gauge_empty = 0;
+        TTdrPri = true;
     }
 
     if(gauges.supportVariablePercentage(1)) {
         center_gauge_idle = restrict_gauge_idle(atoi(settings.cIdle), 0, 100, DEF_C_GAUGE_IDLE);
         center_gauge_empty = restrict_gauge_empty(atoi(settings.cEmpty), 0, center_gauge_idle, DEF_C_GAUGE_EMPTY);
-        if(center_gauge_empty >= center_gauge_idle) { center_gauge_idle = DEF_C_GAUGE_IDLE; center_gauge_empty = DEF_C_GAUGE_EMPTY; } 
+        if(center_gauge_empty >= center_gauge_idle) { center_gauge_idle = DEF_C_GAUGE_IDLE; center_gauge_empty = DEF_C_GAUGE_EMPTY; }
+        TTdrPPo = (atoi(settings.drPPo) > 0);
     } else {
         center_gauge_idle = 100;
         center_gauge_empty = 0;
+        TTdrPPo = true;
     }
 
     if(gauges.supportVariablePercentage(2)) {
         right_gauge_idle = restrict_gauge_idle(atoi(settings.rIdle), 0, 100, DEF_R_GAUGE_IDLE);
         right_gauge_empty = restrict_gauge_empty(atoi(settings.rEmpty), 0, right_gauge_idle, DEF_R_GAUGE_EMPTY);
-        if(right_gauge_empty >= right_gauge_idle) { right_gauge_idle = DEF_R_GAUGE_IDLE; right_gauge_empty = DEF_R_GAUGE_EMPTY; } 
+        if(right_gauge_empty >= right_gauge_idle) { right_gauge_idle = DEF_R_GAUGE_IDLE; right_gauge_empty = DEF_R_GAUGE_EMPTY; }
+        TTdrRoe = (atoi(settings.drRoe) > 0);
     } else {
         right_gauge_idle = 100;
         right_gauge_empty = 0;
+        TTdrRoe = true;
     }
 
     // Thresholds for digital gauges
@@ -866,7 +873,7 @@ void main_loop()
 
                     bool doUpd = false;
                     
-                    if(TTFIntL && (now - TTfUpdLNow >= TTFIntL)) {
+                    if(TTdrPri && TTFIntL && (now - TTfUpdLNow >= TTFIntL)) {
                         int t = gauges.getValuePercent(0);
                         if(t >= left_gauge_empty + TTStepL) t -= TTStepL;
                         else t = left_gauge_empty;
@@ -874,7 +881,7 @@ void main_loop()
                         TTfUpdLNow = now;
                         doUpd = true;
                     }
-                    if(TTFIntC && (now - TTfUpdCNow >= TTFIntC)) {
+                    if(TTdrPPo && TTFIntC && (now - TTfUpdCNow >= TTFIntC)) {
                         int t = gauges.getValuePercent(1);
                         if(t >= center_gauge_empty + TTStepC) t -= TTStepC;
                         else t = center_gauge_empty;
@@ -882,7 +889,7 @@ void main_loop()
                         TTfUpdCNow = now;
                         doUpd = true;
                     }
-                    if(TTFIntR && (now - TTfUpdRNow >= TTFIntR)) {
+                    if(TTdrRoe && TTFIntR && (now - TTfUpdRNow >= TTFIntR)) {
                         int t = gauges.getValuePercent(2);
                         if(t >= right_gauge_empty + TTStepR) t -= TTStepR;
                         else t = right_gauge_empty;
@@ -958,7 +965,7 @@ void main_loop()
 
                     bool doUpd = false;
                     
-                    if(TTFIntL && (now - TTfUpdLNow >= TTFIntL)) {
+                    if(TTdrPri && TTFIntL && (now - TTfUpdLNow >= TTFIntL)) {
                         int t = gauges.getValuePercent(0);
                         if(t >= left_gauge_empty + TTStepL) t -= TTStepL;
                         else t = left_gauge_empty;
@@ -966,7 +973,7 @@ void main_loop()
                         TTfUpdLNow = now;
                         doUpd = true;
                     }
-                    if(TTFIntC && (now - TTfUpdCNow >= TTFIntC)) {
+                    if(TTdrPPo && TTFIntC && (now - TTfUpdCNow >= TTFIntC)) {
                         int t = gauges.getValuePercent(1);
                         if(t >= center_gauge_empty + TTStepC) t -= TTStepC;
                         else t = center_gauge_empty;
@@ -974,7 +981,7 @@ void main_loop()
                         TTfUpdCNow = now;
                         doUpd = true;
                     }
-                    if(TTFIntR && (now - TTfUpdRNow >= TTFIntR)) {
+                    if(TTdrRoe && TTFIntR && (now - TTfUpdRNow >= TTFIntR)) {
                         int t = gauges.getValuePercent(2);
                         if(t >= right_gauge_empty + TTStepR) t -= TTStepR;
                         else t = right_gauge_empty;
@@ -1516,9 +1523,10 @@ static void say_ip_address()
 }
 
 void switchMusicFolder(uint8_t nmf)
-{                
-    bool wasActive = false;
+{
     bool waitShown = false;
+
+    if(nmf > 9) return;
     
     if(musFolderNum != nmf) {
         musFolderNum = nmf;
@@ -1527,7 +1535,6 @@ void switchMusicFolder(uint8_t nmf)
         // mp_init()
         if(haveMusic && mpActive) {
             mp_stop();
-            wasActive = true;
         }
         stopAudio();
         if(mp_checkForFolder(musFolderNum) == -1) {

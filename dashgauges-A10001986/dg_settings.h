@@ -64,12 +64,6 @@ extern uint8_t musFolderNum;
 #define XMS(s) #s
 
 // Default settings
-#define DEF_L_GAUGE_IDLE    28    // Default "full" percentages of gauges
-#define DEF_C_GAUGE_IDLE    28
-#define DEF_R_GAUGE_IDLE    70
-#define DEF_L_GAUGE_EMPTY   0     // Default "empty" percentages of gauges
-#define DEF_C_GAUGE_EMPTY   0
-#define DEF_R_GAUGE_EMPTY   0
 #define DEF_AUTO_REFILL     0     // Default auto-refill: 0=Never (1-360 seconds)
 #define DEF_AUTO_MUTE       0     // Default audio mute: 0=Never (1-360 seconds)
 #define DEF_SS_TIMER        0     // "Screen saver" timeout in minutes; 0=off
@@ -79,21 +73,30 @@ extern uint8_t musFolderNum;
 #define DEF_WIFI_TIMEOUT    7     // 7-25; Default: 7 seconds
 
 #define DEF_TCD_PRES        0     // 0: No TCD connected, 1: connected via GPIO
-#define DEF_NO_ETTO_LEAD    0     // Default: 0: TCD signals TT with ETTO_LEAD lead time; 1 without
+#define DEF_NO_ETTO_LEAD    0     // 0: TCD signals TT with ETTO_LEAD lead time; 1 without
 
-#define DEF_TCD_IP          ""    // TCD ip address for networked polling
-#define DEF_WAIT_FOR_TCD    0     // 0: Boot normally  1: Delay WiFi setup for a few seconds (to wait for TCD if powered up simultaneously)
+#define DEF_TCD_IP          ""    // TCD ip address for BTTFN
 #define DEF_USE_GPSS        0     // 0: Ignore GPS speed; 1: Use it for chase speed
 #define DEF_USE_NM          0     // 0: Ignore TCD night mode; 1: Follow TCD night mode
 #define DEF_USE_FPO         0     // 0: Ignore TCD fake power; 1: Follow TCD fake power
+#define DEF_BTTFN_TT        1     // 0: '0' TT button triggers stand-alone TT; 1: Button triggers BTTFN-wide TT
 
-#define DEF_BTTFN_TT        1     // 0: '0' on IR remove and TT button trigger stand-alone TT; 1: They trigger BTTFN-wide TT
+#define DEF_L_GAUGE_IDLE    28    // Default "full" percentages of analog gauges
+#define DEF_C_GAUGE_IDLE    28
+#define DEF_R_GAUGE_IDLE    65
+#define DEF_L_GAUGE_EMPTY   0     // Default "empty" percentages of analog gauges
+#define DEF_C_GAUGE_EMPTY   0
+#define DEF_R_GAUGE_EMPTY   0
+
+#define DEF_DR_PRI          1     // 0: Meter jumps to zero after TT; 1: slowly drain during TT
+#define DEF_DR_PPO          1     // 0: Meter jumps to zero after TT; 1: slowly drain during TT
+#define DEF_DR_ROE          1     // 0: Meter jumps to zero after TT; 1: slowly drain during TT
+
+#define DEF_PLAY_ALM_SND    0     // 1: Play TCD-alarm sound, 0: do not
 
 #define DEF_DS_PLAY         1     // 0: don't play door sounds, 1: do
 #define DEF_DS_NC           0     // 0: door switch is NO, 1: door switch is NC
 #define DEF_DS_DELAY        0     // door switch sound delay
-
-#define DEF_PLAY_ALM_SND    0     // 1: Play TCD-alarm sound, 0: do not
 
 #define DEF_SHUFFLE         0     // Music Player: Do not shuffle by default
 
@@ -128,10 +131,13 @@ struct Settings {
     char lEmpty[6]          = MS(DEF_L_GAUGE_EMPTY);
     char cEmpty[6]          = MS(DEF_C_GAUGE_EMPTY);
     char rEmpty[6]          = MS(DEF_R_GAUGE_EMPTY);
+    char drPri[4]           = MS(DEF_DR_PRI);
+    char drPPo[4]           = MS(DEF_DR_PPO);
+    char drRoe[4]           = MS(DEF_DR_ROE);
 
-    char lThreshold[6]      = "20";
-    char cThreshold[6]      = "20";
-    char rThreshold[6]      = "20";
+    char lThreshold[6]      = "0";
+    char cThreshold[6]      = "0";
+    char rThreshold[6]      = "0";
 
     char playALsnd[4]       = MS(DEF_PLAY_ALM_SND);
 

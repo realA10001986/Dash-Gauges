@@ -432,9 +432,11 @@ static bool read_settings(File configFile)
     #endif
 
     if(!error) {
-        
-        wd |= CopyCheckValidNumParm(json["ssTimer"], settings.ssTimer, sizeof(settings.ssTimer), 0, 999, DEF_SS_TIMER);
 
+        wd |= CopyCheckValidNumParm(json["aRef"], settings.autoRefill, sizeof(settings.autoRefill), 0, 360, DEF_AUTO_REFILL);
+        wd |= CopyCheckValidNumParm(json["aMut"], settings.autoMute, sizeof(settings.autoMute), 0, 360, DEF_AUTO_MUTE);
+        wd |= CopyCheckValidNumParm(json["ssTimer"], settings.ssTimer, sizeof(settings.ssTimer), 0, 999, DEF_SS_TIMER);
+        
         if(json["hostName"]) {
             memset(settings.hostName, 0, sizeof(settings.hostName));
             strncpy(settings.hostName, json["hostName"], sizeof(settings.hostName) - 1);
@@ -470,8 +472,10 @@ static bool read_settings(File configFile)
         wd |= CopyCheckValidNumParm(json["lEmpty"], settings.lEmpty, sizeof(settings.lEmpty), 0, 100, DEF_L_GAUGE_EMPTY);
         wd |= CopyCheckValidNumParm(json["cEmpty"], settings.cEmpty, sizeof(settings.cEmpty), 0, 100, DEF_C_GAUGE_EMPTY);
         wd |= CopyCheckValidNumParm(json["rEmpty"], settings.rEmpty, sizeof(settings.rEmpty), 0, 100, DEF_R_GAUGE_EMPTY);
-        wd |= CopyCheckValidNumParm(json["aRef"], settings.autoRefill, sizeof(settings.autoRefill), 0, 360, DEF_AUTO_REFILL);
-        wd |= CopyCheckValidNumParm(json["aMut"], settings.autoMute, sizeof(settings.autoMute), 0, 360, DEF_AUTO_MUTE);
+
+        wd |= CopyCheckValidNumParm(json["drPri"], settings.drPri, sizeof(settings.drPri), 0, 1, DEF_DR_PRI);
+        wd |= CopyCheckValidNumParm(json["drPPo"], settings.drPPo, sizeof(settings.drPPo), 0, 1, DEF_DR_PPO);
+        wd |= CopyCheckValidNumParm(json["drRoe"], settings.drRoe, sizeof(settings.drRoe), 0, 1, DEF_DR_ROE);
 
         wd |= CopyCheckValidNumParm(json["lTh"], settings.lThreshold, sizeof(settings.lThreshold), 0, 99, 0);
         wd |= CopyCheckValidNumParm(json["cTh"], settings.cThreshold, sizeof(settings.cThreshold), 0, 99, 0);
@@ -533,8 +537,10 @@ void write_settings()
     Serial.printf("%s: Writing config file\n", funcName);
     #endif
 
+    json["aRef"] = (const char *)settings.autoRefill;
+    json["aMut"] = (const char *)settings.autoMute;
     json["ssTimer"] = (const char *)settings.ssTimer;
-
+    
     json["hostName"] = (const char *)settings.hostName;
     json["systemID"] = (const char *)settings.systemID;
     json["appw"] = (const char *)settings.appw;
@@ -556,8 +562,9 @@ void write_settings()
     json["lEmpty"] = (const char *)settings.lEmpty;
     json["cEmpty"] = (const char *)settings.cEmpty;
     json["rEmpty"] = (const char *)settings.rEmpty;
-    json["aRef"] = (const char *)settings.autoRefill;
-    json["aMut"] = (const char *)settings.autoMute;
+    json["drPri"] =  (const char *)settings.drPri;
+    json["drPPo"] =  (const char *)settings.drPPo;
+    json["drRoe"] =  (const char *)settings.drRoe;
 
     json["lTh"] = (const char *)settings.lThreshold;
     json["cTh"] = (const char *)settings.cThreshold;

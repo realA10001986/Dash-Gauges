@@ -135,7 +135,7 @@ WiFiManagerParameter custom_ssDelay("ssDel", "Screen saver timer (minutes; 0=off
 #ifdef DG_NOCHECKBOXES  // --- Standard text boxes: -------
 WiFiManagerParameter custom_FixV("FixV", "Disable volume knob (0=no, 1=yes)", settings.FixV, 1, "autocomplete='off' title='Enable this if the audio volume should be set by software; if disabled, the volume knob is used' style='margin-top:5px;'");
 #else // -------------------- Checkbox hack: --------------
-WiFiManagerParameter custom_FixV("FixV", "Disable volume knob", settings.FixV, 1, "autocomplete='off' title='Check this if the audio volume should be set by software; if unchecked, the volume knob is used' type='checkbox' style='margin-top:5px;'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_FixV("FixV", "Disable volume knob", settings.FixV, 1, "autocomplete='off' title='Check this if the audio volume should be set by software; if unchecked, the volume knob is used' type='checkbox' class='mt5'", WFM_LABEL_AFTER);
 #endif // -------------------------------------------------
 WiFiManagerParameter custom_Vol("Vol", "<br>Software volume level (0-19)", settings.Vol, 2, "type='number' min='0' max='19' autocomplete='off'", WFM_LABEL_BEFORE);
 #else
@@ -156,7 +156,7 @@ WiFiManagerParameter custom_wifiConTimeout("wificon", "WiFi connection timeout (
 #ifdef DG_NOCHECKBOXES  // --- Standard text boxes: -------
 WiFiManagerParameter custom_TCDpresent("TCDpres", "TCD connected by wire (0=no, 1=yes)", settings.TCDpresent, 1, "autocomplete='off' title='Enable this if you have a Time Circuits Display connected via wire' style='margin-top:5px;'");
 #else // -------------------- Checkbox hack: --------------
-WiFiManagerParameter custom_TCDpresent("TCDpres", "TCD connected by wire", settings.TCDpresent, 1, "autocomplete='off' title='Check this if you have a Time Circuits Display connected via wire' type='checkbox' style='margin-top:5px;'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_TCDpresent("TCDpres", "TCD connected by wire", settings.TCDpresent, 1, "autocomplete='off' title='Check this if you have a Time Circuits Display connected via wire' type='checkbox' class='mt5'", WFM_LABEL_AFTER);
 #endif // -------------------------------------------------
 #ifdef TC_NOCHECKBOXES  // --- Standard text boxes: -------
 WiFiManagerParameter custom_noETTOL("uEtNL", "TCD signals Time Travel without 5s lead (0=no, 1=yes)", settings.noETTOLead, 1, "autocomplete='off'");
@@ -187,11 +187,22 @@ WiFiManagerParameter custom_bttfnTT("bttfnTT", "TT button triggers BTTFN-wide TT
 #endif // -------------------------------------------------
 
 WiFiManagerParameter custom_lIdle("lIdle", "'Primary' full percentage (0-100; 0=use default)", settings.lIdle, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
-WiFiManagerParameter custom_cIdle("cIdle", "'Percent Power' full percentage (0-100; 0=use default)", settings.cIdle, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
-WiFiManagerParameter custom_rIdle("rIdle", "'Roentgens' full percentage (0-100; 0=use default)", settings.rIdle, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
+WiFiManagerParameter custom_cIdle("cIdle", "<br>'Percent Power' full percentage (0-100; 0=use default)", settings.cIdle, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
+WiFiManagerParameter custom_rIdle("rIdle", "<br>'Roentgens' full percentage (0-100; 0=use default)", settings.rIdle, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
 WiFiManagerParameter custom_lEmpty("lEmpty", "'Primary' empty percentage (0-100)", settings.lEmpty, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
 WiFiManagerParameter custom_cEmpty("cEmpty", "'Percent Power' empty percentage (0-100)", settings.cEmpty, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
 WiFiManagerParameter custom_rEmpty("rEmpty", "'Roentgens' empty percentage (0-100)", settings.rEmpty, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
+
+#ifdef TC_NOCHECKBOXES  // --- Standard text boxes: -------
+WiFiManagerParameter custom_drPri("drPri", "Drain Primary during TT (0=no, 1=yes)", settings.drPri, 1, "autocomplete='off' title='Enable to to slowly drain meter during time travel.'");
+WiFiManagerParameter custom_drPPo("drPPo", "Drain Percent Power during TT (0=no, 1=yes)", settings.drPPo, 1, "autocomplete='off' title='Enable to to slowly drain meter during time travel.'");
+WiFiManagerParameter custom_drRoe("drRoe", "Drain Roentgens during TT (0=no, 1=yes)", settings.drRoe, 1, "autocomplete='off' title='Enable to to slowly drain meter during time travel.'");
+#else // -------------------- Checkbox hack: --------------
+WiFiManagerParameter custom_drPri("drPri", "Slowly drain Primary during TT", settings.drPri, 1, "autocomplete='off' title='Check to to slowly drain meter during time travel.' type='checkbox' style='margin-top:5px;margin-bottom:15px;'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_drPPo("drPPo", "Slowly drain Percent Power during TT", settings.drPPo, 1, "autocomplete='off' title='Check to to slowly drain meter during time travel.' type='checkbox' style='margin-top:5px;margin-bottom:15px;'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_drRoe("drRoe", "Slowly drain Roentgens during TT", settings.drRoe, 1, "autocomplete='off' title='Check to to slowly drain meter during time travel.' type='checkbox' style='margin-top:5px;'", WFM_LABEL_AFTER);
+#endif // -------------------------------------------------
+
 
 WiFiManagerParameter custom_lTh("lTh", "'Primary' empty threshold (0-99)", settings.lThreshold, 2, "type='number' min='0' max='99' autocomplete='off'", WFM_LABEL_BEFORE);
 WiFiManagerParameter custom_cTh("cTh", "'Percent Power' empty threshold (0-99)", settings.cThreshold, 2, "type='number' min='0' max='99' autocomplete='off'", WFM_LABEL_BEFORE);
@@ -201,7 +212,7 @@ WiFiManagerParameter custom_rHint(gaThresholdHintHTML);
 #ifdef TC_NOCHECKBOXES  // --- Standard text boxes: -------
 WiFiManagerParameter custom_playALSnd("plyALS", "Play TCD-alarm sounds (0=no, 1=yes)", settings.playALsnd, 1, "autocomplete='off' title='Enable to have the device play a sound when the TCD alarm sounds.'");
 #else // -------------------- Checkbox hack: --------------
-WiFiManagerParameter custom_playALSnd("plyALS", "Play TCD-alarm sound", settings.playALsnd, 1, "autocomplete='off' title='Check to have the device play a sound when the TCD alarm sounds.' type='checkbox' style='margin-top:5px;'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_playALSnd("plyALS", "Play TCD-alarm sound", settings.playALsnd, 1, "autocomplete='off' title='Check to have the device play a sound when the TCD alarm sounds.' type='checkbox' class='mt5'", WFM_LABEL_AFTER);
 #endif // -------------------------------------------------
 
 #ifdef DG_HAVEDOORSWITCH
@@ -213,7 +224,7 @@ WiFiManagerParameter custom_dsPlay("dsPlay", "Play door sounds", settings.dsPlay
 #ifdef TC_NOCHECKBOXES  // --- Standard text boxes: -------
 WiFiManagerParameter custom_dsCOnC("dsCOnC", "Switch closes when door is closed (0=no, 1=yes)", settings.dsCOnC, 1, "autocomplete='off' title='Enable to play the door open sound when switch opens'");
 #else // -------------------- Checkbox hack: --------------
-WiFiManagerParameter custom_dsCOnC("dsCOnC", "Switch closes when door is closed", settings.dsCOnC, 1, "autocomplete='off' title='Check to play the door open sound when switch opens' type='checkbox' style='margin-top:5px;'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_dsCOnC("dsCOnC", "Switch closes when door is closed", settings.dsCOnC, 1, "autocomplete='off' title='Check to play the door open sound when switch opens' type='checkbox' class='mt5'", WFM_LABEL_AFTER);
 #endif // -------------------------------------------------
 WiFiManagerParameter custom_dsDelay("dsDelay", "<br>Door sound delay (0-5000[milliseconds])", settings.dsDelay, 4, "type='number' min='0' max='5000'");
 #endif
@@ -238,7 +249,7 @@ WiFiManagerParameter custom_shuffle("musShu", "Shuffle mode enabled at startup",
 #ifdef DG_NOCHECKBOXES  // --- Standard text boxes: -------
 WiFiManagerParameter custom_CfgOnSD("CfgOnSD", "Save secondary settings on SD (0=no, 1=yes)<br><span style='font-size:80%'>Enable this to avoid flash wear</span>", settings.CfgOnSD, 1, "autocomplete='off'");
 #else // -------------------- Checkbox hack: --------------
-WiFiManagerParameter custom_CfgOnSD("CfgOnSD", "Save secondary settings on SD<br><span style='font-size:80%'>Check this to avoid flash wear</span>", settings.CfgOnSD, 1, "autocomplete='off' type='checkbox' style='margin-top:5px'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_CfgOnSD("CfgOnSD", "Save secondary settings on SD<br><span style='font-size:80%'>Check this to avoid flash wear</span>", settings.CfgOnSD, 1, "autocomplete='off' type='checkbox' class='mt5'", WFM_LABEL_AFTER);
 #endif // -------------------------------------------------
 //#ifdef DG_NOCHECKBOXES  // --- Standard text boxes: -------
 //WiFiManagerParameter custom_sdFrq("sdFrq", "SD clock speed (0=16Mhz, 1=4Mhz)<br><span style='font-size:80%'>Slower access might help in case of problems with SD cards</span>", settings.sdFreq, 1, "autocomplete='off'");
@@ -439,13 +450,16 @@ void wifi_setup()
     wm.addParameter(&custom_uFPO);
     wm.addParameter(&custom_bttfnTT);
 
-    wm.addParameter(&custom_sectstart_ag);  // 7
+    wm.addParameter(&custom_sectstart_ag);  // 10
     wm.addParameter(&custom_lIdle);
     wm.addParameter(&custom_lEmpty);
+    wm.addParameter(&custom_drPri);
     wm.addParameter(&custom_cIdle);
     wm.addParameter(&custom_cEmpty);
+    wm.addParameter(&custom_drPPo);
     wm.addParameter(&custom_rIdle);
     wm.addParameter(&custom_rEmpty);
+    wm.addParameter(&custom_drRoe);
 
     wm.addParameter(&custom_sectstart_dg);  // 5
     wm.addParameter(&custom_lTh);
@@ -797,6 +811,10 @@ void wifi_loop()
             mystrcpy(settings.useFPO, &custom_uFPO);
             mystrcpy(settings.bttfnTT, &custom_bttfnTT);
 
+            mystrcpy(settings.drPri, &custom_drPri);
+            mystrcpy(settings.drPPo, &custom_drPPo);
+            mystrcpy(settings.drRoe, &custom_drRoe);
+
             mystrcpy(settings.playALsnd, &custom_playALSnd);
 
             #ifdef DG_HAVEDOORSWITCH
@@ -822,6 +840,10 @@ void wifi_loop()
             strcpyCB(settings.useNM, &custom_uNM);
             strcpyCB(settings.useFPO, &custom_uFPO);
             strcpyCB(settings.bttfnTT, &custom_bttfnTT);
+
+            strcpyCB(settings.drPri, &custom_drPri);
+            strcpyCB(settings.drPPo, &custom_drPPo);
+            strcpyCB(settings.drRoe, &custom_drRoe);
 
             strcpyCB(settings.playALsnd, &custom_playALSnd);
 
@@ -1288,6 +1310,10 @@ void updateConfigPortalValues()
     custom_uFPO.setValue(settings.useFPO, 1);
     custom_bttfnTT.setValue(settings.bttfnTT, 1);
 
+    custom_drPri.setValue(settings.drPri, 1);
+    custom_drPPo.setValue(settings.drPPo, 1);
+    custom_drRoe.setValue(settings.drRoe, 1);
+
     custom_playALSnd.setValue(settings.playALsnd, 1);
 
     #ifdef DG_HAVEDOORSWITCH
@@ -1312,6 +1338,10 @@ void updateConfigPortalValues()
     setCBVal(&custom_uNM, settings.useNM);
     setCBVal(&custom_uFPO, settings.useFPO);
     setCBVal(&custom_bttfnTT, settings.bttfnTT);
+
+    setCBVal(&custom_drPri, settings.drPri);
+    setCBVal(&custom_drPPo, settings.drPPo);
+    setCBVal(&custom_drRoe, settings.drRoe);
 
     setCBVal(&custom_playALSnd, settings.playALsnd);
 
