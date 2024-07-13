@@ -43,7 +43,7 @@ In order to make the Control Board as versatile as possible, there are some sold
 #### Main connectors (red numbers):
 - Red_1: 5V input for analog gauges and electronics
 - Red_2: 12V input for electronics ("+"/"-" pins) and for digital gauges ("DG+"/"-" pins)
-- Red_3: Time Travel button: To trigger a time travel, the button must connect "TT" to "3V3". The connector is also used to connect the Dash Gauges to a TCD by wire.
+- Red_3: [Time Travel button](#connecting-a-time-travel-button): To trigger a time travel, the button must connect "TT" to "3V3". The connector is also used to connect the Dash Gauges to a TCD [by wire]().
 - Red_4: Door switches: Switches need to connect "C" and "1" for door 1, and "C" and "2" for door 2.
 
 #### Power supply:
