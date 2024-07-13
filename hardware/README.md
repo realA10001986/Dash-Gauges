@@ -81,7 +81,7 @@ Example for configuration for three analog gauges:
 |:--:| 
 | *Click for hi-res image* |
 
-_Note: CircuitSetup-produced boards have trimpots pre-installed at positions purple_3, purple_1 and purple_5, and solder-joints purple_4 and purple_2 are closed._
+_Note: CircuitSetup-produced boards are pre-configured for analog gauges; they have trimpots pre-installed at positions purple_3, purple_1 and purple_5, and solder-joints purple_4 and purple_2 are closed._
 
 #### Configuration for digital gauges (blue numbers):
 - Left gauge:
@@ -102,7 +102,7 @@ Example for configuration for three digital gauges:
 |:--:| 
 | *Click for hi-res image* |
 
-_Note: CircuitSetup-produced boards have trimpots pre-installed at positions purple_3, purple_1 and purple_5. These must to be removed in order to use digital gauges! Also, ANAx solder-joints must be changed for using digital gauges!_
+_Note: CircuitSetup-produced boards have trimpots pre-installed at positions purple_3, purple_1 and purple_5. These must be removed in order to use digital gauges! Also, ANAx solder-joints must be opened, and the DIGx solder-joints must be closed for using digital gauges!_
 
 You can mix different types of analog and digital gauges; the firmware provides a type selection for each single gauge. In "full digital" configuration, as depicted above, the Control Board can directly replace a 3rd party manufacturer's board in order to integrate "alien" Dash Gauges with other CircuitSetup props. Videos of the board in action with various meters are [here](https://www.facebook.com/61553801874212/videos/pcb.122144723798126729/1554617305398184) (Phaostron 631-14672(H&P), 300-07970; 3rd party digital Roentgens replica) and [here](https://www.facebook.com/61553801874212/videos/pcb.122144723798126729/974052394455407) (3rd party digital Phaostron replicas, Simpson model 29 0-50mA).
 
