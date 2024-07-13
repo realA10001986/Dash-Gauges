@@ -48,11 +48,11 @@ In order to make the Control Board as versatile as possible, there are some sold
 
 #### Power supply:
 
-The electronics can be run off 5V or 12V ("+"/"-" pins of connectors red_1 or red_2). If you are using analog gauges only, the choice is yours.
+The electronics can be run off 5V or 12V ("+"/"-" pins of connectors [red_1] or [red_2]). If you are using analog gauges only, the choice is yours.
 
-Digital gauges, as well as connecting anything to connector green_6, require 12V on the "DG+" pin of the 12V power connector [red_2]. If you want to power everything with 12V, connect the power supply to connector red_2 ("+"/"-" pins), and bridge the "+" and "DG+" pins with a short wire, as indicated by the arc printed on the board.
+Digital gauges, as well as connecting anything to connector [green_6], require 12V on the "DG+" pin of the 12V power connector [red_2]. If you want to power everything with 12V, connect the power supply to connector [red_2] ("+"/"-" pins), and bridge the "+" and "DG+" pins with a short wire, as indicated by the arc printed on the board.
 
->For experts: To power the electronics with 5V, but the digital gauges with 12V, put 12V on "DG+" and "-" of the 12V connector red_2, and 5V on the 5V connector red_1 or on the ESP32 via USB. Do NOT bridge the "+" and "DG+" pins on red_2.
+>For experts: To power the electronics with 5V, but the digital gauges with 12V, put 12V on "DG+" and "-" of the 12V connector [red_2], and 5V on the 5V connector [red_1] or on the ESP32 via USB. Do NOT bridge the "+" and "DG+" pins on [red_2].
 
 #### Other connectors (green numbers):
 - Green_1: Speaker for audio output
@@ -65,12 +65,12 @@ Digital gauges, as well as connecting anything to connector green_6, require 12V
 #### Configuration for analog gauges (purple numbers):
 - Left gauge ("Primary"):
   - Purple_3: Resistors R3, R4: Populate depending on gauge and supply voltage; see [here](#appendix-a-resistors-for-gauges).
-  - Purple_4: Close ANA4 solder jumper; DIG4 (blue_4) must be open
-  - Leave "DIG3" (blue_3) unconnected/open
+  - Purple_4: Close ANA4 solder jumper; DIG4 [blue_4] must be open
+  - Leave "DIG3" [blue_3] unconnected/open
 - Center Gauge ("Percent Power"):
   - Purple_1: Resistors R1, R2: Populate depending on gauge and supply voltage; see [here](#appendix-a-resistors-for-gauges).
-  - Purple_2: Close ANA2 solder jumper; DIG2 (blue_2) must be open
-  - Leave "DIG1" (blue_1) unconnected/open
+  - Purple_2: Close ANA2 solder jumper; DIG2 [blue_2] must be open
+  - Leave "DIG1" [blue_1] unconnected/open
 - "Roentgens" gauge, connected to "Analog Roentgens" connector [green_3]:
   - Purple_5: Resistors R5, R6: Populate depending on gauge and supply voltage; see [here](#appendix-a-resistors-for-gauges).
   - (DIG5 [blue_5]: Does not matter, has no influence on this connector)
@@ -81,7 +81,7 @@ Example for configuration for three analog gauges:
 |:--:| 
 | *Click for hi-res image* |
 
-_Note: CircuitSetup-produced boards are pre-configured for analog gauges; they have trimpots pre-installed at positions purple_3, purple_1 and purple_5, and solder-joints purple_4 and purple_2 are closed._
+_Note: CircuitSetup-produced boards are pre-configured for analog gauges; they have trimpots pre-installed at positions [purple_3], [purple_1] and [purple_5], and solder-joints [purple_4] and [purple_2] are closed._
 
 #### Configuration for digital gauges (blue numbers):
 - Left gauge:
@@ -102,7 +102,7 @@ Example for configuration for three digital gauges:
 |:--:| 
 | *Click for hi-res image* |
 
-_Note: CircuitSetup-produced boards have trimpots pre-installed at positions purple_3, purple_1 and purple_5. These must be removed in order to use digital gauges! Also, ANAx solder-joints must be opened, and the DIGx solder-joints must be closed for using digital gauges!_
+_Note: CircuitSetup-produced boards have trimpots pre-installed at positions [purple_3], [purple_1] and [purple_5]. These must be removed in order to use digital gauges! Also, ANAx [purple_4, purple_2] solder-joints must be opened, and the DIGx solder-joints [blue_4, blue_2] must be closed for using digital gauges!_
 
 You can mix different types of analog and digital gauges; the firmware provides a type selection for each single gauge. In "full digital" configuration, as depicted above, the Control Board can directly replace a 3rd party manufacturer's board in order to integrate "alien" Dash Gauges with other CircuitSetup props. Videos of the board in action with various meters are [here](https://www.facebook.com/61553801874212/videos/pcb.122144723798126729/1554617305398184) (Phaostron 631-14672(H&P), 300-07970; 3rd party digital Roentgens replica) and [here](https://www.facebook.com/61553801874212/videos/pcb.122144723798126729/974052394455407) (3rd party digital Phaostron replicas, Simpson model 29 0-50mA).
 
@@ -110,22 +110,22 @@ You can mix different types of analog and digital gauges; the firmware provides 
 
 The gauges can be illuminated
 - using "internal" power ("INT", always 5V), or
-- using "external" power ("EXT"), fed through connector yellow_5.
+- using "external" power ("EXT"), fed through connector [yellow_5].
 
-Solder jumper yellow_4 selects whether INT or EXT is to be used; in case of EXT, connect your power supply to connector yellow_5. 
+Solder jumper [yellow_4] selects whether INT or EXT is to be used; in case of EXT, connect your power supply to connector [yellow_5]. 
 
 INT is probably sufficient for most setups. The panel depicted above is running on INT with LEDs for the smaller gauges and 6V incandescent light bulbs for the Roentgens gauge. 
 
 Legend:
-- Yellow_1 (R7), yellow_2 (R8): Resistors for backlight LEDs of left and center gauge. The supply voltage is either 5V (INT), or whatever you connect to "Ext. Light Power" (yellow_5) (EXT). The resistor value depends on LED type and desired brightness. Example: 150R for yellow LEDs at 5V (INT). A calculator for the resistor value is [here](https://www.digikey.at/en/resources/conversion-calculators/conversion-calculator-led-series-resistor).
-- Yellow_3 (R11): Resistor for Roentgens backlight on "Roentgens Light" connector [green 2]. In case of using incandescent light bulbs, just bridge this with a wire. The supply voltage is either 5V (INT), or whatever you connect to "Ext. Light Power" (yellow_5) (EXT). _Note: Connector green_6 is independent, only 12V lights can be connected there, regardless of INT/EXT._
+- Yellow_1 (R7), yellow_2 (R8): Resistors for backlight LEDs of left and center gauge. The supply voltage is either 5V (INT), or whatever you connect to "Ext. Light Power" [yellow_5] (EXT). The resistor value depends on LED type and desired brightness. Example: 150R for yellow LEDs at 5V (INT). A calculator for the resistor value is [here](https://www.digikey.at/en/resources/conversion-calculators/conversion-calculator-led-series-resistor).
+- Yellow_3 (R11): Resistor for Roentgens backlight on "Roentgens Light" connector [green 2]. In case of using incandescent light bulbs, just bridge this with a wire. The supply voltage is either 5V (INT), or whatever you connect to "Ext. Light Power" [yellow_5] (EXT). _Note: Connector [green_6] is independent, only 12V lights can be connected there, regardless of INT/EXT._
 - Yellow_4 ("Light Power"): Solder jumpers for selecting internal or external gauge illumination power: Connect either INT or EXT. For 5V lighting, close INT. To use external power (max. 12V), close EXT and connect the power supply to "Ext. Light Power" [yellow 5]. 
 - Yellow_5 ("Ext. light power" connector): Connector for power supply for "EXT" setting.
 - LED1, LED2: Backlight LEDs for left and center gauge. These are soldered to the back of the Control Board so they directly reach into the gauge's enclosure.
 
 #### Connecting a Time Travel button
 
-The Control Board has a Time Travel button (marked "TT"). If you want to connect an external Time Travel button, connect it to the "TT" and "3V3" pins of the "Time Travel" connector (red_3).
+The Control Board has a Time Travel button (marked "TT"). If you want to connect an external Time Travel button, connect it to the "TT" and "3V3" pins of the "Time Travel" connector [red_3].
 
 #### Connecting a TCD to the Dash Gauges by wire
 
@@ -133,7 +133,7 @@ If you want to connect a TCD to the Dash Gauges (for synchronized time travel se
 
 <table>
     <tr>
-     <td align="center"><b>Dash Gauges:<br>"Time Travel" connector (red_3)</b></td>
+     <td align="center"><b>Dash Gauges:<br>"Time Travel" connector [red_3]</b></td>
      <td align="center"><b>TCD with control board >=1.3</b></td>
      <td align="center"><b>TCD with control board 1.2</b></td> 
     </tr>
@@ -268,7 +268,7 @@ Regarding the **"Empty" light**: I recommend a light like this one (12V version)
 
 The LED in those lights/buttons requires 12V. The Control Board has two connectors for the "Empty" LED:
 - When using the "Empty Light" [green_4] connector, the light/button's built-in resistor needs to be removed: Pull up the red cover and pull out the LED; then desolder the LED (ie desolder the two metal tops, and push the LED out) and bridge the resistor, or replace it with a wire. Reassemble.
-- When using the LED pins of the Digital Roetgens connector [6]: No modification of light/button needed, but the Control Board must be fed 12V on the "DG+" pin of the 12V connector [red_2].
+- When using the LED pins of the Digital Roentgens connector [green_6]: No modification of light/button needed, but the Control Board must be fed 12V on the "DG+" pin of the 12V connector [red_2].
 
 Above light/button requires a 16mm hole. The vertical center of this hole is, looking at the meter from the front, at 12.5mm below the enclosure's edge, horizontally centered (relative to the enclosure, not the dial; the dial might be not accurately centered). In order to make the hole into the enclosure and the dial at exactly the same spot, drill the hole with the dial mounted. I used a step drill and drilled from the dial's side. Cover the meter's mechanism and have a vacuum ready, the Bakelite makes a lot of dirt (which could cause problems if it gets into the mechanism). If the steps on your step drill aren't high enough to go through the dial and the back of the enclosure, drill until the hole in the dial is of correct size (16mm), then remove the dial and finish drilling the enclosure. 
 
@@ -324,9 +324,9 @@ Look at the needle when applying power:
 There is room for two resistors per gauge on the Control Board to allow combinations, for instance 3k3 + 330R to achieve 3k6. So you can try daisy-chaining two resistors if you don't find one that makes the needle go nicely close to the right end of the scale.
 
 When you found (a) value(s) that make(s) the needle go exactly to the end point (or slightly below), that is what you put in as
-- R1/R2 for the "Percent Power" gauge (center),
-- R3/R4 for the "Primary" gauge (left),
-- R5/R6 for the "Roentgens" gauge.
+- R3/R4 [purple_3] for the "Primary" gauge (left),
+- R1/R2 [purple_1] for the "Percent Power" gauge (center),
+- R5/R6 [purple_5] for the "Roentgens" gauge.
 
 If a single resistor does the job, bridge the other position with a wire.
 
@@ -334,18 +334,18 @@ In the Config Portal, set the gauge type to "Generic Analog (0-5V)".
 
 >For experts: The same procedure could be done on the Control Board directly:
 >- In the Config Portal, set the ["full" percentage](https://github.com/realA10001986/Dash-Gauges#-primary-full-percentage) of the gauge to 100, and
->- select "Generic Analog (0-5V)" as Gauge Type.
+>- select "Generic Analog 0-5V" as Gauge Type.
 >- Connect the gauge to the Control Board, power-up and
 >- try to find the correct value by putting resistors (or wire bridges) loosely at the resistor positions on the Control Board.
 >  
->For meters with a very low rating (uA, mV), the procedure could be done using 2.048V instead of 5V. In the Config Portal, select "Generic Analog (0-2.048V)" as Gauge Type, and do as described above.
+>For meters with a very low rating (uA, mV), the procedure could be done using 2.048V instead of 5V. In the Config Portal, select "Generic Analog 0-2.048V" as Gauge Type, and do as described above.
 
 ### Adjustment on CircuitSetup Control Boards
 
 CircuitSetup-produced boards have pre-installed trimpots (trimmer potentiometers). In order to adjust those for your very gauges, proceed as follows, for each meter:
 
 - Remove all built-in resistors, caps etc from the meter. The meter's input terminals must be directly connected to the meter's coil.
-- Check that the trimpot of the meter (purple_3, purple_1, purple_5) is at its maximum resistance.
+- Check that the trimpot for the meter [purple_3, purple_1, purple_5] is at its maximum resistance.
 - Connect the meter to the Control Board.
 - Power up; after the startup-sequence, hold the "Time Travel" button for 5 seconds.
 - Navigate your browser to the Config Portal.
