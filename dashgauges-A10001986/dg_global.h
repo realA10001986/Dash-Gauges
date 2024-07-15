@@ -12,8 +12,8 @@
 #define _DG_GLOBAL_H
 
 // Version strings
-#define DG_VERSION       "V1.02"
-#define DG_VERSION_EXTRA "JUL132024"
+#define DG_VERSION       "V1.03"
+#define DG_VERSION_EXTRA "JUL152024"
 
 //#define DG_DBG              // debug output on Serial
 

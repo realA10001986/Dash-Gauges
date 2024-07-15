@@ -100,7 +100,7 @@ extern uint8_t musFolderNum;
 
 #define DEF_SHUFFLE         0     // Music Player: Do not shuffle by default
 
-#define DEF_CFG_ON_SD       1     // Default: Save vol/spd/IR/mbl settings on SD card
+#define DEF_CFG_ON_SD       1     // Default: Save secondary settings on SD card
 #define DEF_SD_FREQ         0     // SD/SPI frequency: Default 16MHz
 
 #define DEF_GAUGE_TYPE      0     // Default gauge type; to protect the hardware, this is zero by default (=NONE)

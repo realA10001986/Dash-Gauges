@@ -195,7 +195,7 @@ void audio_loop()
     if(mp3->isRunning()) {
         if(!mp3->loop()) {
             mp3->stop();
-            playingEmpty = false;
+            playingEmpty = playingDoor = false;
             if(appendFile) {
                 play_file(append_audio_file, append_flags, append_vol);
             } else if(mpActive) {
@@ -211,7 +211,7 @@ void audio_loop()
     } else if(wav->isRunning()) {
         if(!wav->loop()) {
             wav->stop();
-            playingEmpty = false;
+            playingEmpty = playingDoor = false;
             if(appendFile) {
                 play_file(append_audio_file, append_flags, append_vol);
             } else if(mpActive) {
@@ -489,11 +489,11 @@ void stopAudio()
 {
     if(mp3->isRunning()) {
         mp3->stop();
-        playingEmpty = false;
+        playingEmpty = playingDoor = false;
     }
     if(wav->isRunning()) {
         wav->stop();
-        playingEmpty = false;
+        playingEmpty = playingDoor = false;
     }
     appendFile = false;   // Clear appended, stop means stop.
 }

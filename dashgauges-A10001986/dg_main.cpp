@@ -153,7 +153,7 @@ static int           door2SwitchStatus = -1;
 static unsigned long isD2SwitchChangeNow = 0;
 #endif
 // Doorswitch sequence
-static bool          dsPlay = false;
+bool                 dsPlay = false;
 static unsigned long dsNow = 0;
 static bool          dsTimer = false;
 static unsigned long dsDelay = 0;
@@ -320,7 +320,6 @@ static void start_blink_empty();
 static void sideSwitchLongPress();
 static void sideSwitchLongPressStop();
 #ifdef DG_HAVEDOORSWITCH
-static void play_door_open(int doorNum, bool isOpen);
 static void dsScan();
 static void doorSwitchLongPress();
 static void doorSwitchLongPressStop();
@@ -572,7 +571,9 @@ void main_setup()
     #ifdef DG_HAVEDOORSWITCH
     doorSwitch_scan();
     isDSwitchChange = false;
+    #ifdef DG_HAVEDOORSWITCH2
     isD2SwitchChange = false;
+    #endif
     #endif
 
     #ifdef DG_DBG
@@ -645,10 +646,11 @@ void main_loop()
             gauge_lights_off();
 
             mp_stop();
-            stopAudio();
+            if(!playingDoor) {
+                stopAudio();
+                flushDelayedSave();
+            }
 
-            flushDelayedSave();
-            
             // FIXME - anything else?
             
         } else {
@@ -1660,7 +1662,7 @@ void play_door_open(int doorNum, bool isOpen)
     // other door is to be played while first door's is running, we 
     // only interrupt if resonable part of the first door's sound is already 
     // played back.
-    if(lastDoorNum == doorNum || (millis() - lastDoorSoundNow > 750)) {
+    if((!lastDoorNum || lastDoorNum == doorNum) || (millis() - lastDoorSoundNow > 750)) {
         if(playingDoor || checkAudioDone()) {
             play_file(isOpen ? "/dooropen.mp3" : "/doorclose.mp3", PA_ALLOWSD|PA_DOOR, 1.0);
             lastDoorSoundNow = millis();

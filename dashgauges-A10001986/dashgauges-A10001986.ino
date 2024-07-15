@@ -115,6 +115,9 @@
 
 /*  Changelog
  *  
+ *  2024/07/15 (A10001986)
+ *    - Add "PLAY_DOOR_OPEN"/"_CLOSE" MQTT commands; honored only when "Play door sounds" is 
+ *      disabled in CP, as those would interfere with the door switch logic.
  *  2024/07/13 (A10001986)
  *    - Make slow drain during Time Travel optional for each meter (analog gauges only)
  *  2024/07/07 (A10001986)

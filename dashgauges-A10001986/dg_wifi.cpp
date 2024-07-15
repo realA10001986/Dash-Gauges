@@ -203,7 +203,6 @@ WiFiManagerParameter custom_drPPo("drPPo", "Slowly drain Percent Power during TT
 WiFiManagerParameter custom_drRoe("drRoe", "Slowly drain Roentgens during TT", settings.drRoe, 1, "autocomplete='off' title='Check to to slowly drain meter during time travel.' type='checkbox' style='margin-top:5px;'", WFM_LABEL_AFTER);
 #endif // -------------------------------------------------
 
-
 WiFiManagerParameter custom_lTh("lTh", "'Primary' empty threshold (0-99)", settings.lThreshold, 2, "type='number' min='0' max='99' autocomplete='off'", WFM_LABEL_BEFORE);
 WiFiManagerParameter custom_cTh("cTh", "'Percent Power' empty threshold (0-99)", settings.cThreshold, 2, "type='number' min='0' max='99' autocomplete='off'", WFM_LABEL_BEFORE);
 WiFiManagerParameter custom_rTh("rTh", "'Roentgens' empty threshold (0-99)", settings.rThreshold, 2, "type='number' min='0' max='99' autocomplete='off'", WFM_LABEL_BEFORE);
@@ -1715,6 +1714,8 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
       "MP_NEXT",          // 7
       "MP_PREV",          // 8
       "MP_FOLDER_",       // 9  MP_FOLDER_0..MP_FOLDER_9
+      "PLAY_DOOR_OPEN",   // 10
+      "PLAY_DOOR_CLOSE",  // 11
       NULL
     };
     static const char *cmdList2[] = {
@@ -1755,8 +1756,7 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
             // Prepare for TT. Comes at some undefined point,
             // an undefined time before the actual tt, and may
             // now come at all.
-            // We disable our Screen Saver and start the flux
-            // sound (if to be played)
+            // We disable our Screen Saver.
             // We don't ignore this if TCD is connected by wire,
             // because this signal does not come via wire.
             if(!TTrunning) {
@@ -1772,7 +1772,7 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
                 networkReentry = false;
                 networkAbort = false;
                 networkLead = ETTO_LEAD;
-                networkP1 = 8000;         // Assumption
+                networkP1 = 6600;         // Assumption
             }
             break;
         case 2:   // Re-entry
@@ -1807,8 +1807,8 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
 
         // User commands
 
-        // Not taking commands under these circumstances:
-        if(TTrunning || !FPBUnitIsOn)
+        // Not taking commands under these circumstances: (FPBUnitOn checked further down)
+        if(TTrunning)
             return;
 
         while(cmdList[i]) {
@@ -1820,6 +1820,12 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
         }
 
         if(!cmdList[i]) return;
+
+        if(!FPBUnitIsOn) {
+            // Allow door sounds even if fake-power is off
+            if(i != 10 && i != 11)
+                return;
+        }
 
         switch(i) {
         case 0:
@@ -1858,6 +1864,16 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
                     switchMusicFolder((uint8_t)(tempBuf[j] - '0'));
                 }
             }
+            break;
+        case 10:
+        case 11:
+            #ifdef DG_HAVEDOORSWITCH
+             // Commands ignored if "play door sounds" enabled in CP
+             // (would interfere with switch logic otherwise)
+            if(!dsPlay) {
+                play_door_open(1, (i == 10));
+            }
+            #endif
             break;
         }
             

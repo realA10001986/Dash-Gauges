@@ -61,6 +61,9 @@ extern Gauges gauges;
 extern bool sbv2;
 
 extern bool TCDconnected;
+#ifdef DG_HAVEDOORSWITCH
+extern bool dsPlay;
+#endif
 
 extern bool FPBUnitIsOn;
 extern bool dgNM;
@@ -99,7 +102,10 @@ void wakeup();
 void switchMusicFolder(uint8_t nmf);
 
 void sideSwitch_scan();
+#ifdef DG_HAVEDOORSWITCH
 void doorSwitch_scan();
+void play_door_open(int doorNum, bool isOpen);
+#endif
 
 uint8_t read_port();
 uint8_t read_port_debounce();
