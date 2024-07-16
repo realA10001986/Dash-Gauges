@@ -598,6 +598,8 @@ If a TCD is connected via BTTFN or MQTT, the Dash Gauges visually signals when t
 
 The Control Board has a connector for two door switches; these switches change state whenever a door is opened or closed. The firmware can play a sound for each such event. To enable door sounds, check this.
 
+This option must be unchecked in order to use the MQTT commands PLAY_DOOR_OPEN and PLAY_DOOR_CLOSED.
+
 ##### &#9654; Switch closes when door is closed
 
 This selects what type of door switch is being used. Check this, if the switch closes contact when the door closes. Leave unchecked if the switch opens when the door closes.
