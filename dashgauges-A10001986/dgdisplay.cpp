@@ -120,6 +120,15 @@ static const struct ga_types gaugeTypesSmall[] = {
     // None
     { 0, "None", DGD_TYPE_NONE, {}, {} },
 
+    { 3, "Generic Analog 0-5V", DGD_TYPE_MCP4728, 
+      { 4095, MCP4728_VREF_EXT }, {} },
+
+    { 4, "Generic Analog 0-4.095V", DGD_TYPE_MCP4728, 
+      { 4095, (MCP4728_VREF_INT|MCP4728_GAIN_HIGH) }, {} },
+
+    { 5, "Generic Analog 0-2.048V", DGD_TYPE_MCP4728, 
+      { 4095, (MCP4728_VREF_INT|MCP4728_GAIN_LOW) }, {} },
+
     // Type 1: Analog gauge: 0-0.5V through MCP4728
     //         Phaostron/H&P 631-14672 with 8.6K resistors in series
     //         Using MCP4728's built-in Vref (2.048V), limited by "maxV" parameter to 0.5V (1000/4095*2.048).
@@ -130,29 +139,24 @@ static const struct ga_types gaugeTypesSmall[] = {
     // Board, the output voltage is 12V, but can be adjusted by putting a resistor
     // instead of a bridge at DIG1 (for "Percent Power") or DIG2 (for "Primary").
     { 2, "Digital / Legacy (0/12V)", DGD_TYPE_DIGITAL, 
-      {}, { DIGITAL_GAUGE_PIN } },
-
-    { 3, "Generic Analog 0-5V)", DGD_TYPE_MCP4728, 
-      { 4095, MCP4728_VREF_EXT }, {} },
-
-    { 4, "Generic Analog 0-4.095V)", DGD_TYPE_MCP4728, 
-      { 4095, (MCP4728_VREF_INT|MCP4728_GAIN_HIGH) }, {} },
-
-    { 5, "Generic Analog 0-2.048V)", DGD_TYPE_MCP4728, 
-      { 4095, (MCP4728_VREF_INT|MCP4728_GAIN_LOW) }, {} }
+      {}, { DIGITAL_GAUGE_PIN } }
 };
 
 static const struct ga_types gaugeTypesLarge[] = {
     
     // None
-    { 0, "None", DGD_TYPE_NONE, {}, {} },  
+    { 0, "None", DGD_TYPE_NONE, {}, {} },
 
-    // Type 1: Analog gauge: 0-0.014V through MCP4728
-    //         Simpson Roentgens meter (with no resistor) 
-    //         Using MCP4728's built-in Vref (2.048V), limited by "max" parameter to 0.014V (28/4095*2.048)
-    //         FIXME - need a resistor value to keep this within reasonable limits - 14mV is too low
-    { 1, "Simpson Roentgens (0-0.014V)", DGD_TYPE_MCP4728,
-      {   28, MCP4728_VREF_INT|MCP4728_GAIN_LOW }, {} },
+    { 4, "Generic Analog 0-5V", DGD_TYPE_MCP4728, 
+      { 4095, MCP4728_VREF_EXT }, {} },
+
+    { 5, "Generic Analog 0-4.095V", DGD_TYPE_MCP4728, 
+      { 4095, (MCP4728_VREF_INT|MCP4728_GAIN_HIGH) }, {} },
+
+    { 6, "Generic Analog 0-2.048V", DGD_TYPE_MCP4728, 
+      { 4095, (MCP4728_VREF_INT|MCP4728_GAIN_LOW) }, {} },
+
+    // Type 1: Obsolete, do not use
     
     // Type 2: Analog gauge: 0-1.6V through MCP4728
     //         Simpson model 49 VU meter with 3k6 resistor in series, and zero adjusted to "green" zero on scale
@@ -165,16 +169,7 @@ static const struct ga_types gaugeTypesLarge[] = {
     // instead of a bridge at DIG5. A digital "Roentgens" meter must be connected to the 
     // "Digital Roentgens" connector, pins 1 (+) and 2 (-).
     { 3, "Digital / Legacy (0/12V)", DGD_TYPE_DIGITAL,
-      {}, { DIGITAL_GAUGE_PIN } },
-
-    { 4, "Generic Analog (0-5V)", DGD_TYPE_MCP4728, 
-      { 4095, MCP4728_VREF_EXT }, {} },
-
-    { 5, "Generic Analog (0-4.095V)", DGD_TYPE_MCP4728, 
-      { 4095, (MCP4728_VREF_INT|MCP4728_GAIN_HIGH) }, {} },
-
-    { 6, "Generic Analog (0-2.048V)", DGD_TYPE_MCP4728, 
-      { 4095, (MCP4728_VREF_INT|MCP4728_GAIN_LOW) }, {} }
+      {}, { DIGITAL_GAUGE_PIN } }
 
     /*
     // Example:
@@ -232,8 +227,8 @@ static const DRAM_ATTR uint8_t _specialArray[DGSEQ_MAX][64] = {
     },
     {                                               // 3: Alarm (BTTFN/MQTT)
       SS_ONESHOT,
-      1, 50, 0, 50, 1, 50, 0, 50,
-      1, 50, 0, 50, 1, 50, 0, 50,
+      1, 100, 0, 50, 1, 100, 0, 50,
+      1, 100, 0, 50, 1, 100, 0, 50,
       SS_END
     },
     {                                               // 4: Error when copying audio files

@@ -52,7 +52,7 @@
 #ifndef _DG_AUDIO_H
 #define _DG_AUDIO_H
 
-// Default volume (index, or 255 for knob)
+// Default volume (index)
 #ifdef DG_HAVEVOLKNOB
 #define DEFAULT_VOLUME 6
 #else

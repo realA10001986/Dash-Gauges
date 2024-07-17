@@ -115,6 +115,9 @@
 
 /*  Changelog
  *  
+ *  2024/07/16 (A10001986)
+ *    - Remove Gauge Type "Simpson Roentgens Meter"; the Original Simpson meter needs
+ *      10k+8k2 resistors and is run with type "Generic 0-2.048V".
  *  2024/07/15 (A10001986)
  *    - Add "PLAY_DOOR_OPEN"/"_CLOSE" MQTT commands; honored only when "Play door sounds" is 
  *      disabled in CP, as those would interfere with the door switch logic.
@@ -263,7 +266,7 @@
  *  2023/10/05-10 (A10001986)
  *    - Add support for "wakeup" command (BTTFN/MQTT)
  *    - Make "empty" level configurable
- *    - Correct VU meter max voltage to 1.66. VU meter is manually adjusted to "0"
+ *    - Correct VU meter max voltage to 1.66. Meter is manually adjusted to "0"
  *      on the green "Roentgens" scale, which is a bit into the original VU scale.
  *    - Some screen-saver logic fixes
  *  2023/10/04 (A10001986)
