@@ -3,8 +3,8 @@
 [<img src="img/mydg3.jpg">](img/mydg3_l.jpg)
 
 The Dash Gauges consist of several parts:
-- A **Control Board**: Readily available at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-gauge-control-board/). Production data for a Control Board which allows using a wide range of meters is in the ["electronics"](/hardware/electronics) folder. 
-- The **gauges**: These are vintage meters made by Phaostron and Simpson and need to be sourced by the prop builder. In the picture above you see two Phaostron 631-15099 "Cyclic Trim" meters, and a Simpson model 49MC VU Meter disguised as the "Roentgens" gauge. Many other types of meters can be used.
+- A **Control Board**: Readily available at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-gauge-control-board/). If you want to make it yourself, the production data is in the ["electronics"](/hardware/electronics) folder. 
+- The **gauges**: These are vintage meters made by Phaostron and Simpson and need to be sourced by the prop builder. In the picture above you see two modified Phaostron 631-15099 "Cyclic Trim" meters, and a Simpson model 49MC VU Meter disguised as the "Roentgens" gauge. Many other types of meters can be used.
 - Aluminium (Aluminum) **bezel**; can be purchased at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/). The measurements are in the ["enclosure"](/hardware/enclosure) folder of this repository. 
 
 This prop was made to be compatible with the CircuitSetup line of movie props ([Time Circuits Display](https://tcd.out-a-ti.me), [Flux Capacitor](https://fc.out-a-ti.me), [SID](https://sid.out-a-ti.me)).
@@ -18,19 +18,19 @@ This prop was made to be compatible with the CircuitSetup line of movie props ([
 The Control board is mounted on the smaller gauges. Its features include
 - 5V or 12V power supply
 - audio, with speaker connector
-- SD card slot
-- a DAC for driving "analog" gauges with arbitrary voltages between 0 and 5V, and support for "digital" gauges (0/12V); room for user-mountable resistors to adjust board to very gauge type used
-- "Legacy" connector with pins for 12V digital Roentgens gauge, 12V Roentgens backlight, 12V "Empty" LED,
+- support for "analog" gauges with arbitrary voltages between 0 and 5V, and support for "digital" gauges (0/12V); room for user-mountable resistors to adjust the Control Board to very gauge type used
+- "Legacy" connector with pins for 12V digital Roentgens gauge, 12V Roentgens backlight, 12V "Empty" LED
 - Time Travel button, plus an additional multi-purpose button ("Button 1"); Time Travel connector for external button
-- Connector for two Door Switches, for Door-Sound play back.
+- Connector for two Door Switches, for Door-Sound play-back.
+- SD card slot
 
 ### "Analog" vs. "Digital" gauges
 
 The terms "analog" and "digital" have the following meaning in this document:
 
-"Analog" gauges are ones that can show arbitrary values, ie move their pointers to arbitrary positions by using variable voltages. Best suited are voltmeters, (modified) ammeters or - for the Roentgens gauge: - VU-meters. Meters can be usually driven with minimal voltages, even if their scale is far beyond that. It is mostly a matter of removing the meter's internal resistor(s), and putting suitable resistors on the Control Board. The Control Board can provide up to 5V and has room for two through-the-hole resistors per gauge. The firmware can easily be extended to define custom analog gauge types as regards their voltage range.
+"Analog" gauges are ones that the Control Board can control to show arbitrary values, ie move their pointers to arbitrary positions by using variable voltages. Real Phaostron/Simpson meters will most likely be run as analog meters; best suited are voltmeters, (modified) ammeters or - for the Roentgens gauge: - VU-meters. Meters can be usually driven with minimal voltages, even if their scale is far beyond that. It is mostly a matter of removing the meter's internal resistor(s)/caps/etc, and putting suitable resistors on the Control Board. The Control Board can provide up to 5V and has room for two through-the-hole resistors per meter.
 
-"Digital" gauges are ones that can only be controlled by power-on and power-off for "full" and "empty" pointer positions, respectively; this is useful if the gauge needs voltages beyond what the Control Board can provide (which is, as said, 5V), and is driven using external power and through a relay. Alternatively, one might also come up with the idea to create a gauge replica using a stepper motor and some logic to move the pointer to a fixed position on power-on, and move it back to the "empty" position on power-loss, using a large capacitor to power the motor after power-loss.
+"Digital" gauges are ones that can only be controlled by power-on and power-off for "full" and "empty" pointer positions, respectively; this is useful if the meter needs voltages beyond what the Control Board can provide (which is, as said, 5V), and is driven using external power and through a relay. Alternatively, one might also come up with the idea to create a gauge replica using a stepper motor and some logic to move the pointer to a fixed position on power-on, and move it back to the "empty" position on power-loss, using a large capacitor to power the motor after power-loss.
 
 ### Control Board Hardware Configuration
 
@@ -102,9 +102,9 @@ Example for configuration for three digital gauges:
 |:--:| 
 | *Click for hi-res image* |
 
-_Note: CircuitSetup-produced boards have trimpots pre-installed at positions [purple_3], [purple_1] and [purple_5]. These must be removed in order to use digital gauges! Also, ANAx [purple_4, purple_2] solder-joints must be opened, and the DIGx solder-joints [blue_4, blue_2] must be closed for using digital gauges!_
+_Note: CircuitSetup-produced boards have trimpots pre-installed at positions [purple_3], [purple_1] and [purple_5]. These must be removed in order to use digital gauges. Also, ANAx [purple_4, purple_2] solder-joints must be opened, and the DIGx solder-joints [blue_4, blue_2] must be closed for using digital gauges._
 
-You can mix different types of analog and digital gauges; the firmware provides a type selection for each single gauge. In "full digital" configuration, as depicted above, the Control Board can directly replace a 3rd party manufacturer's board in order to integrate "alien" Dash Gauges with other CircuitSetup props. Videos of the board in action with various meters are [here](https://www.facebook.com/61553801874212/videos/pcb.122144723798126729/1554617305398184) (Phaostron 631-14672(H&P), 300-07970; 3rd party digital Roentgens replica) and [here](https://www.facebook.com/61553801874212/videos/pcb.122144723798126729/974052394455407) (3rd party digital Phaostron replicas, Simpson model 29 0-50mA).
+You can mix different types of analog and digital gauges; the firmware provides a type selection for each single gauge. In "full digital" configuration, as depicted above, the Control Board can directly replace a 3rd party manufacturer's board in order to integrate "alien" Dash Gauges with other CircuitSetup props. Videos of the board in action with various meters are [here](https://www.facebook.com/61553801874212/videos/pcb.122144723798126729/1554617305398184) (Phaostron 631-14672(H&P), 300-07970; 3rd party digital Roentgens replica) and [here](https://www.facebook.com/61553801874212/videos/pcb.122144723798126729/974052394455407) (3rd party digital Phaostron replicas, Simpson model 29 0-50mA ammeter).
 
 #### Gauge illumination [yellow numbers]:
 
@@ -118,10 +118,12 @@ INT is probably sufficient for most setups. The panel depicted above is running 
 
 Legend:
 - Yellow_1 (R7), yellow_2 (R8): Resistors for backlight LEDs of left and center gauge. The supply voltage is either 5V (INT), or whatever you connect to "Ext. Light Power" [yellow_5] (EXT). The resistor value depends on LED type and desired brightness. Example: 150R for yellow LEDs at 5V (INT). A calculator for the resistor value is [here](https://www.digikey.at/en/resources/conversion-calculators/conversion-calculator-led-series-resistor).
-- Yellow_3 (R11): Resistor for Roentgens backlight on "Roentgens Light" connector [green 2]. In case of using incandescent light bulbs, just bridge this with a wire. The supply voltage is either 5V (INT), or whatever you connect to "Ext. Light Power" [yellow_5] (EXT). _Note: Connector [green_6] is independent, only 12V lights can be connected there, regardless of INT/EXT._
+- Yellow_3 (R11): Resistor for Roentgens backlight on "Roentgens Light" connector [green 2]. In case of using incandescent light bulbs, just bridge this with a wire. The supply voltage is either 5V (INT), or whatever you connect to "Ext. Light Power" [yellow_5] (EXT).
 - Yellow_4 ("Light Power"): Solder jumpers for selecting internal or external gauge illumination power: Connect either INT or EXT. For 5V lighting, close INT. To use external power (max. 12V), close EXT and connect the power supply to "Ext. Light Power" [yellow 5]. 
 - Yellow_5 ("Ext. light power" connector): Connector for power supply for "EXT" setting.
 - LED1, LED2: Backlight LEDs for left and center gauge. These are soldered to the back of the Control Board so they directly reach into the gauge's enclosure.
+
+Note: The "Digital Roentgens" connector [green 6] also has pins for illuminating the Roentgens gauge. These are always 12V, regardless of INT/EXT, and require 12V input on the DG+/- pins of power connector [red_2].
 
 #### Connecting a Time Travel button
 
