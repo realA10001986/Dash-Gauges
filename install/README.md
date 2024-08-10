@@ -1,7 +1,7 @@
 This folder holds all files necessary for immediate installation on your Time Circuits Display. Here you'll find
 - a binary of the current firmware, ready for upload to the device;
 - the latest audio data
-- 
+
 ## Firmware Installation
 
 If a previous version of the Dash Gauges firmware is installed on your device's ESP32, you can update easily using the pre-compiled binary. Enter the [Config Portal](#the-config-portal), click on "Update" and select the pre-compiled binary file provided in this repository ([install/dashgauges-A10001986.ino.nodemcu-32s.bin](https://github.com/realA10001986/Dash-Gauges/blob/main/install/dashgauges-A10001986.ino.nodemcu-32s.bin)).
@@ -10,7 +10,7 @@ If you are using a fresh ESP32 board, please see [dashgauges-A10001986.ino](http
 
  *Important: After a firmware update, the "empty" LED might blink for short while after reboot. Do NOT unplug the device during this time.*
 
-### Audio data installation
+## Audio data installation
 
 The audio data is not updated as often as the firmware itself. If you have previously installed the latest version of the sound-pack, you normally don't have to re-install the audio data when you update the firmware. Only if either a new version of the sound-pack is released, or your device is quiet after a firmware update, a re-installation is needed.
 
