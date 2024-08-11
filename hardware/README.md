@@ -159,7 +159,7 @@ _Do not connect 3V3 to the TCD!_
 
 [<img src="img/Phaos.jpg">](img/Phaos_l.jpg)
 
-In the Original, these were Phaostron 631 series meters. There are many different types/models of those vintage Phaostron meters; anything that starts with 63x fits size-wise; some 300 series meters also fit. Not all 63x meters are usable though. I haven't seen a complete list, but what I came accross leads to some conclusions: 631 and 634 differ in the method used for movement suspension (pivot-and-jewel vs taut band). Both should be usable; due to their lower moving-element resistance the 634 series might have a lower sensitivity rating (ie they will require higher restistors values). The 633 series appears to look different (360° scale, no faceted glass). Many of the meters in the 637 series and presumably the entire 639 series are highly rated AC meters with iron wane movement, these are probably unusable. I could not find out enough about the 638 series to draw any conclusions. Some meters have their zero position in the center of the scale, so avoid those, too. 
+In the Original, these were Phaostron 631 series meters. There are many different types/models of those vintage Phaostron meters; anything that starts with 63x fits size-wise; some 300 series meters also fit. Not all 63x meters are usable though. I haven't seen a complete list, but what I came across leads to some conclusions: 631 and 634 differ in the method used for movement suspension (pivot-and-jewel vs taut band). Both should be usable; due to their lower moving-element resistance the 634 series might have a lower sensitivity rating (ie they will require higher resistors values). The 633 series appears to look different (360° scale, no faceted glass). Many of the meters in the 637 series and presumably the entire 639 series are highly rated AC meters with iron wane movement, these are probably unusable. I could not find out enough about the 638 series to draw any conclusions. Some meters have their zero position in the center of the scale, so avoid those, too. 
 
 In my (limited) experience the 631 series is the safest bet. Due to the problems the "pivot-and-jewel" design causes (worn jewel, thereby hindered pointer movement), try to find a NOS one.
 
@@ -204,7 +204,7 @@ The "Primary" and "Percent Power" labels are made with a Rotex 880 label maker; 
 
 The "Roentgens" gauge is more of a challenge. The pictures above show my modified Simpson model 49 VU meters. The original in the movie was a real Roentgens meter from a CP95 radiac. Such devices are hard to find, let alone one with the correct Simpson meter. The CP95 was built over a long period of time and they used meters from different manufacturers (QVS, Specialty Assy, etc).
 
-There are a lot of Simpson meters that look similar - yet not identical - to what was seen in the movies. However: One - quite important - issue is that hardly any Simpson meters are illuminated. Non-illuminated meters have a front that is 7mm thinner than the fronts of illuminated models, the glass is closer to the dial, and, as a result, the movie-accurate "Empty" light and the red pointer won't fit. _A solution for this problem - in shape of an "extension ring" that is put between the case and the original front, elevating the front by 7mm - is in the works and will be available soon (possibly fall 2024). This extension is required to fit the "Empty" light and the red pointer as described below. It will also allow for easily illuminating a non-illumimated Simpson meter model x9._
+There are a lot of Simpson meters that look similar - yet not identical - to what was seen in the movies. However: One - quite important - issue is that hardly any Simpson meters are illuminated. Non-illuminated meters have a front that is 7mm thinner than the fronts of illuminated models, the glass is closer to the dial, and, as a result, the movie-accurate "Empty" light and the red pointer won't fit. _A solution for this problem - in shape of an "extension ring" that is put between the case and the original front, elevating the front by 7mm - is in the works and will be available soon (possibly fall 2024). This extension is required to fit the "Empty" light and the red pointer as described below. It will also allow for easily illuminating a non-illuminated Simpson meter model x9._
 
 A word on Simpson model numbers: Their main model number means mainly "case style", not "specific type of meter". "Model 49" therefore only means "4.5 inch case", but not whether this is a VU meter, a voltmeter, or what not:
 
@@ -222,7 +222,7 @@ If you can't find a model 49 VU-meter or consider the 142 too far off, you could
 
 Many meters are rated for voltages/currents beyond what the Control Board can deliver, but often they can be modified: For instance, the **Simpson model 29 0-50V DC voltmeter** has a 50K resistor inside; bridging this resistor and putting a combination of 680R/4k7 on the Control Board makes the meter show full scale at 5V.
 
-The safest bet is a **model 29** DC _voltmeter_, although I have only tested this up to a 0-100V meter; given the simularities betwen the 0-50V and the 0-100V versions, I suspect that meters up to 300V can be modified in the same way. Model 29 _ammeters_ should work, too, but my only experiences are a 0-1mA and a 0-50mA ammeter. I don't know if higher rated meters can be modified accordingly. 
+The safest bet is a **model 29** DC _voltmeter_, although I have only tested this up to a 0-100V meter; given the similarities between the 0-50V and the 0-100V versions, I suspect that meters up to 300V can be modified in the same way. Model 29 _ammeters_ should work, too, but my only experiences are a 0-1mA and a 0-50mA ammeter. I don't know if higher rated meters can be modified accordingly. 
 
 **Model 39** meters are RF (radio frequency) ammeters, I have no experience with those.
 
@@ -250,11 +250,11 @@ Tested meter options and configuration:
 Unusable:
 - Simpson model 59 voltmeter 0-250V AC. 
 
->How to take apart a Simpson meter: Those meters are very delicate. They have tiny sprial springs and other parts which need to be handled with outmost care. To take a meter apart in order to access the "electronics" (resistors, caps, diodes, etc), remove the front (by unscrewing four screws on the back), remove the face. At this point, you can see inside; check if there are any resistors or other stuff below the big magnet. If so, remove nuts and washers from the input terminals and unskrew the two nuts (usually 5.5mm) below the input terminals, then carefully lift the meter's mechanics out of the case. Never unscrew anything on top of the mechanics! Before reassembly, check for washers or other metal parts the magnet might have attracted.
+>How to take apart a Simpson meter: Those meters are very delicate. They have tiny spiral springs and other parts which need to be handled with outmost care. To take a meter apart in order to access the "electronics" (resistors, caps, diodes, etc), remove the front (by unscrewing four screws on the back), remove the face. At this point, you can see inside; check if there are any resistors or other stuff below the big magnet. If so, remove nuts and washers from the input terminals and unscrew the two nuts (usually 5.5mm) below the input terminals, then carefully lift the meter's mechanics out of the case. Never unscrew anything on top of the mechanics! Before reassembly, check for washers or other metal parts the magnet might have attracted.
 
 To find out suitable resistor values for R5/R6 on the Control Board, please see [here](#appendix-a-resistors-for-gauges). The values given in the table above are verified working on my meter samples, but meters might vary, so please verify them for your meters, too.
 
-Most Simpson meters have a **drop-shaped pointer top** which is glued to the end of the pointer, and causes the pointer to collide with the "Empty" light. Pointer lenghts vary; in some cases, the pointer is long enough to just cut off the "drop" without the remaining bit appearing too short. In most cases, however, the pointer would be too short without the "drop". I managed to cut the "drop" vertically in half and peel off its remains from the pointer, thereby saving an extra 2-3mm of pointer length. Be careful when attempting that, the pointer bends easily. _Warning_: The pointer has a counter-weight on the opposite end and is perfectly balanced. This counter-weight consists of wire wrapped around the opposite end of the pointer, looking like a spring. When unbalanced, the pointer wanders around when tilting the meter, and doesn't return to its zero position. If you decide to cut off the entire or a piece of the "drop", you need to adjust the counter-weight by pushing/shifting that "spring" a bit towards the center; when the pointer, after softly pushing it to the right, returns to its zero position by itself, and doesn't wander around when tilting the meter, it's balanced. 
+Most Simpson meters have a **drop-shaped pointer top** which is glued to the end of the pointer, and causes the pointer to collide with the "Empty" light. Pointer lengths vary; in some cases, the pointer is long enough to just cut off the "drop" without the remaining bit appearing too short. In most cases, however, the pointer would be too short without the "drop". I managed to cut the "drop" vertically in half and peel off its remains from the pointer, thereby saving an extra 2-3mm of pointer length. Be careful when attempting that, the pointer bends easily. _Warning_: The pointer has a counter-weight on the opposite end and is perfectly balanced. This counter-weight consists of wire wrapped around the opposite end of the pointer, looking like a spring. When unbalanced, the pointer wanders around when tilting the meter, and doesn't return to its zero position. If you decide to cut off the entire or a piece of the "drop", you need to adjust the counter-weight by pushing/shifting that "spring" a bit towards the center; when the pointer, after softly pushing it to the right, returns to its zero position by itself, and doesn't wander around when tilting the meter, it's balanced. 
 
 The additional **red pointer** is added by 
 - drilling a hole into the front (which should be in the center of the original pointer's turning circle; on non-illuminated models x9 this is approx. 1mm above the edge of the flat area with the adjustment screw; with the meter assembled, put a ruler along the pointer and mark the spot where the ruler crosses the center stripe of the pattern; start with a 1mm drill to avoid slipping when drilling onto this stripe),
@@ -276,7 +276,7 @@ The LED in those lights/buttons requires 12V. The Control Board has two connecto
 
 Above light/button requires a 16mm hole. The vertical center of this hole is, looking at the meter from the front, at 12.5mm below the enclosure's edge, horizontally centered (relative to the enclosure, not the dial; the dial might be not accurately centered). In order to make the hole into the enclosure and the dial at exactly the same spot, drill the hole with the dial mounted. I used a step drill and drilled from the dial's side. Cover the meter's mechanism and have a vacuum ready, the Bakelite makes a lot of dirt (which could cause problems if it gets into the mechanism). If the steps on your step drill aren't high enough to go through the dial and the back of the enclosure, drill until the hole in the dial is of correct size (16mm), then remove the dial and finish drilling the enclosure. 
 
-In order to avoid the old dial shining through your new label, use the back-side of the dial.
+In order to avoid the old dial shining through your new label, use the backside of the dial.
 
 ![emptyhole](img/empty_hole_new.jpg)
 
@@ -309,9 +309,9 @@ What you need:
 
 Is my meter an ammeter or a voltmeter? 
 
-Often the scale/dial doean't say. You need to look inside: Ammeters have resistors, coils, shunts, etc that connect the input terminals _to each other_. Voltmeters only have parts between the input terminal and the coil.
+Often the scale/dial doesn't say. You need to look inside: Ammeters have resistors, coils, shunts, etc that connect the input terminals _to each other_. Voltmeters only have parts between the input terminal and the coil.
 
-For our purposes, however, the difference is unimportant. In order to make the meter work with the Dash Gauges Control Board, _all built-in resistors, coils, capacitors, shuts, etc need to be removed_. The input terminals must to be connected to the meter's coil with nothing inbetween.
+For our purposes, however, the difference is unimportant. In order to make the meter work with the Dash Gauges Control Board, _all built-in resistors, coils, capacitors, shuts, etc need to be removed_. The input terminals must to be connected to the meter's coil with nothing in-between.
 
 In case of the "Roentgens" meter, align the pointer's "zero position" to the "green zero" on the "Roentgens" dial at this point.
 
@@ -325,7 +325,7 @@ Look at the needle when applying power:
 - If the needle hits the right end point, remove power immediately and retry with a resistor with a _higher_ ohm value;
 - If the needle stops on the way, before reaching the right end of the scale, retry with a resistor with a slightly _lower_ ohm value.
 
-There is room for two resistors per gauge on the Control Board to allow combinations, for instance 3k3 + 330R to achieve 3k6. So you can try daisy-chaining two resistors if you don't find one that makes the needle go nicely close to the right end of the scale.
+There is room for two resistors per gauge on the Control Board to allow combinations, for instance 3k3 + 330R to achieve 3k6. Hence, you can try daisy-chaining two resistors if you don't find one that makes the needle go nicely close to the right end of the scale.
 
 When you found (a) value(s) that make(s) the needle go exactly to the end point (or slightly below), that is what you put in as
 - R3/R4 [purple_3] for the "Primary" gauge (left),
