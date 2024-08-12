@@ -290,6 +290,8 @@ The firmware supports some additional user-provided sound effects, which it will
 
 - "key1.mp3", "key3.mp3", "key4.mp3", "key6.mp3", "key7.mp3", "key9.mp3": Will be played when you type 900x (x being 1, 3, 4, 6, 7 or 9) on the TCD (connected through BTTFN).
 
+> The seemingly odd numbering is because of synchronicity with other props, especially the TCD and its keymap where the MusicPlayer occupies keys 2, 5, 8.
+
 Those files are not provided here. You can use any mp3, with a bitrate of 128kpbs or less.
 
 ## The Music Player
