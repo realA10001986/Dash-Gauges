@@ -115,6 +115,10 @@
 
 /*  Changelog
  *  
+ *  2024/08/11 (A10001986)
+ *    - In addition to the custom "key3" and "key6" sounds, now also "key1", 
+ *      "key4", "key7" and "key9" are available/supported; command codes are 
+ *      9001, 9004, 9007, 9009.
  *  2024/07/16 (A10001986)
  *    - Remove Gauge Type "Simpson Roentgens Meter"; the Original Simpson meter needs
  *      10k+8k2 resistors and is run with type "Generic 0-2.048V".
