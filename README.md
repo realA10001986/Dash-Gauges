@@ -218,12 +218,28 @@ The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as 
      <td align="left">9888xxx&#9166;</td>
     </tr>
     <tr>
+     <td align="left">Play "<a href="#additional-custom-sounds">key1.mp3</a>"</td>
+     <td align="left">9001&#9166;</td>
+    </tr>
+    <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key3.mp3</a>"</td>
      <td align="left">9003&#9166;</td>
     </tr>
     <tr>
+     <td align="left">Play "<a href="#additional-custom-sounds">key4.mp3</a>"</td>
+     <td align="left">9004&#9166;</td>
+    </tr>
+    <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key6.mp3</a>"</td>
      <td align="left">9006&#9166;</td>
+    </tr>
+    <tr>
+     <td align="left">Play "<a href="#additional-custom-sounds">key7.mp3</a>"</td>
+     <td align="left">9007&#9166;</td>
+    </tr>
+    <tr>
+     <td align="left">Play "<a href="#additional-custom-sounds">key9.mp3</a>"</td>
+     <td align="left">9009&#9166;</td>
     </tr>
     <tr>
      <td align="left">Say current IP address</td>
@@ -272,7 +288,7 @@ Your replacements need to be put in the root (top-most) directory of the SD card
 
 The firmware supports some additional user-provided sound effects, which it will load from the SD card. If the respective file is present, it will be used. If that file is absent, no sound will be played.
 
-- "key3.mp3"/"key6.mp3": Will be played when you type 9003 / 9006 on the TCD (connected through BTTFN).
+- "key1.mp3", "key3.mp3", "key4.mp3", "key6.mp3", "key7.mp3", "key9.mp3": Will be played when you type 900x (x being 1, 3, 4, 6, 7 or 9) on the TCD (connected through BTTFN).
 
 Those files are not provided here. You can use any mp3, with a bitrate of 128kpbs or less.
 
