@@ -290,6 +290,8 @@ In order to avoid the old dial shining through your new label, use the backside 
 [<img src="img/roeitw2.jpg">](img/roeitw2_l.jpg)
 [<img src="img/roeitw3.jpg">](img/roeitw3_l.jpg)
 
+#### Dial face
+
 A movie-accurate dial as well as "Empty" label is in the [hardware/faces-labels](/hardware/faces-labels) folder. To apply the dial properly, follow the instructions above for the Phaostron meters.
 
 [<img src="img/roeitw4.jpg">](img/roeitw4_l.jpg)
