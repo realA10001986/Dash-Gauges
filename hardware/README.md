@@ -357,7 +357,7 @@ In the Config Portal, set the gauge type to "Generic Analog (0-5V)".
 CircuitSetup-produced boards have pre-installed trimpots (trimmer potentiometers). In order to adjust those for your very gauges, proceed as follows, for each meter:
 
 - Remove all built-in resistors, caps etc from the meter. The meter's input terminals must be directly connected to the meter's coil.
-- Check that the trimpot for the meter [purple_3, purple_1, purple_5] is at its maximum resistance.
+- Check that the trimpot for the meter [purple_3, purple_1, purple_5] is at its maximum resistance; turn it until either you hear a "click" or the screw blocks.
 - Connect the meter to the Control Board.
 - Power up; after the startup-sequence, hold the "Time Travel" button for 5 seconds.
 - Navigate your browser to the Config Portal.
