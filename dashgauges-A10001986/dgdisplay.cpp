@@ -388,6 +388,10 @@ Gauges::Gauges()
     // Set up number of defined types
     num_types_small = sizeof(gaugeTypesSmall) / sizeof(gaugeTypesSmall[0]);
     num_types_large = sizeof(gaugeTypesLarge) / sizeof(gaugeTypesLarge[0]);
+
+    // Find max id
+    max_id_small = findMaxId(gaugeTypesSmall, num_types_small);
+    max_id_large = findMaxId(gaugeTypesLarge, num_types_large);
 }
 
 bool Gauges::begin(uint8_t idA, uint8_t idB, uint8_t idC)
@@ -655,6 +659,17 @@ void Gauges::UpdateAll()
             }
         }
     }
+}
+
+int Gauges::findMaxId(const struct ga_types *gat, int num)
+{ 
+    int mi = 0;
+    
+    for(int i = 0; i < num; i++) {
+        if(gat[i].id > mi) mi = gat[i].id;
+    }
+
+    return mi;
 }
 
 const struct ga_types *Gauges::getGTStruct(bool isSmall, int index)

@@ -115,6 +115,10 @@
 
 /*  Changelog
  *  
+ *  2024/08/29 (A10001986)
+ *    - Fix gauge type selection "0-2.048V" for Roentgens
+ *  2024/08/28 (A10001986)
+ *    - Treat TCD-speed from Remote like speed from RotEnc
  *  2024/08/11 (A10001986)
  *    - In addition to the custom "key3" and "key6" sounds, now also "key1", 
  *      "key4", "key7" and "key9" are available/supported; command codes are 

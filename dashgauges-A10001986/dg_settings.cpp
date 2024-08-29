@@ -506,9 +506,9 @@ static bool read_settings(File configFile)
         wd |= CopyCheckValidNumParm(json["CfgOnSD"], settings.CfgOnSD, sizeof(settings.CfgOnSD), 0, 1, DEF_CFG_ON_SD);
         //wd |= CopyCheckValidNumParm(json["sdFreq"], settings.sdFreq, sizeof(settings.sdFreq), 0, 1, DEF_SD_FREQ);
 
-        wd |= CopyCheckValidNumParm(json["gaugeIDA"], settings.gaugeIDA, sizeof(settings.gaugeIDA), 0, gauges.num_types_small-1, DEF_GAUGE_TYPE);
-        wd |= CopyCheckValidNumParm(json["gaugeIDB"], settings.gaugeIDB, sizeof(settings.gaugeIDB), 0, gauges.num_types_small-1, DEF_GAUGE_TYPE);
-        wd |= CopyCheckValidNumParm(json["gaugeIDC"], settings.gaugeIDC, sizeof(settings.gaugeIDC), 0, gauges.num_types_large-1, DEF_GAUGE_TYPE);
+        wd |= CopyCheckValidNumParm(json["gaugeIDA"], settings.gaugeIDA, sizeof(settings.gaugeIDA), 0, gauges.max_id_small, DEF_GAUGE_TYPE);
+        wd |= CopyCheckValidNumParm(json["gaugeIDB"], settings.gaugeIDB, sizeof(settings.gaugeIDB), 0, gauges.max_id_small, DEF_GAUGE_TYPE);
+        wd |= CopyCheckValidNumParm(json["gaugeIDC"], settings.gaugeIDC, sizeof(settings.gaugeIDC), 0, gauges.max_id_large, DEF_GAUGE_TYPE);
 
     } else {
 
@@ -663,13 +663,13 @@ static bool checkValidNumParmF(char *text, float lowerLim, float upperLim, float
     float f;
 
     if(len == 0) {
-        sprintf(text, "%1.1f", setDefault);
+        sprintf(text, "%.1f", setDefault);
         return true;
     }
 
     for(i = 0; i < len; i++) {
         if(text[i] != '.' && text[i] != '-' && (text[i] < '0' || text[i] > '9')) {
-            sprintf(text, "%1.1f", setDefault);
+            sprintf(text, "%.1f", setDefault);
             return true;
         }
     }
@@ -677,16 +677,16 @@ static bool checkValidNumParmF(char *text, float lowerLim, float upperLim, float
     f = atof(text);
 
     if(f < lowerLim) {
-        sprintf(text, "%1.1f", lowerLim);
+        sprintf(text, "%.1f", lowerLim);
         return true;
     }
     if(f > upperLim) {
-        sprintf(text, "%1.1f", upperLim);
+        sprintf(text, "%.1f", upperLim);
         return true;
     }
 
     // Re-do to get rid of formatting errors (eg "0.")
-    sprintf(text, "%1.1f", f);
+    sprintf(text, "%.1f", f);
 
     return false;
 }

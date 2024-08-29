@@ -95,7 +95,7 @@ struct binGauge {               // DGD_TYPE_DIGITAL:
 };
 
 struct ga_types {
-    int  id;                    // Incremental ID
+    int  id;                    // ID
     const char *name;           // Name to show
     
     uint8_t connectionType;     // Connection type
@@ -146,11 +146,12 @@ class Gauges {
 
         const struct ga_types *getGTStruct(bool isSmall, int index);
 
-        int num_types_small;
-        int num_types_large;
+        int num_types_small, max_id_small;
+        int num_types_large, max_id_large;
                
     private:
         void setMax(int8_t index, uint16_t maxVal);
+        int findMaxId(const struct ga_types *gat, int num);
         const struct ga_types *findGauge(bool isSmall, int id);
 
         void setDigitalPin(uint8_t pin, uint8_t state);
