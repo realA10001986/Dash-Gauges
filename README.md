@@ -1,7 +1,7 @@
 # Dash Gauges
 
 This repository holds 
-- [instructions](/hardware/) for building a Dash Gauge panel, as seen in the Delorean Time Machine,
+- [instructions](hardware/) for building a Dash Gauge panel, as seen in the Delorean Time Machine,
 - and a suitable firmware.
 
 This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](https://tcd.out-a-ti.me) as it relies on the TCD's keypad to control many of its functions.
