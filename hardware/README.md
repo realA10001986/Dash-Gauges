@@ -299,7 +299,7 @@ A movie-accurate dial as well as "Empty" label is in the [hardware/faces-labels]
 
 ## Bezel
 
-The bezel consists of three parts: The front and two side pieces. Measurements are in the [hardware/enclosure](/hardware/enclosure) folder of this repository.
+The bezel consists of three parts: The front and two side pieces. Measurements are in the [hardware/enclosure](enclosure) folder of this repository.
 
 You can purchase a bezel at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/); note that it is made for a model 29/39/49/59/79 panel meter as 'Roentgens'; a model 142 meter won't fit.
 
@@ -345,7 +345,7 @@ If a single resistor does the job, bridge the other position with a wire.
 In the Config Portal, set the gauge type to "Generic Analog (0-5V)".
 
 >For experts: The same procedure could be done on the Control Board directly:
->- In the Config Portal, set the ["full" percentage](https://github.com/realA10001986/Dash-Gauges#-primary-full-percentage) of the gauge to 100, and
+>- In the Config Portal, set the ["full" percentage](/#-primary-full-percentage) of the gauge to 100, and
 >- select "Generic Analog 0-5V" as Gauge Type.
 >- Connect the gauge to the Control Board, power-up and
 >- try to find the correct value by putting resistors (or wire bridges) loosely at the resistor positions on the Control Board.
