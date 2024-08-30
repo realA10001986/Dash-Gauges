@@ -1,6 +1,6 @@
 # Dash Gauges
 
-This repository holds 
+This [repository](https://dg.out-a-ti.me) holds 
 - [instructions](hardware/) for building a Dash Gauge panel, as seen in the Delorean Time Machine,
 - and a suitable firmware.
 
@@ -13,7 +13,7 @@ This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](ht
 |:--:|
 | Click to watch the video |
 
-For information on the hardware, please see [here](/hardware/).
+For information on the hardware, please see [here](hardware/).
 
 Firmware features include
 - support for analog gauges (with software-controlled arbitrary pointer position) and digital gauges (Empty/Full, without arbitrary pointer position)
@@ -261,7 +261,7 @@ The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as 
 
 ## Time travel
 
-To trigger a "time travel" stand-alone, you need to install a "Time Travel" button. Pressing that button briefly will let the Dash Gauges play their time travel sequence. Please see [here](https://github.com/realA10001986/Dash-Gauges/blob/main/hardware/README.md#connecting-a-time-travel-button) for how to wire that button.
+To trigger a "time travel" stand-alone, you need to install a "Time Travel" button. Pressing that button briefly will let the Dash Gauges play their time travel sequence. Please see [here](hardware/#connecting-a-time-travel-button) for how to wire that button.
 
 Other ways of triggering a time travel are available if a [Time Circuits Display](#connecting-a-time-circuits-display) is connected.
 
@@ -320,7 +320,7 @@ While the music player is playing music, other sound effects are disabled/muted.
 
 >Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place, and there is no way to remote-control the Gauges through the TCD by wire. A wireless connection over BTTFN/WiFi is much more powerful and therefore recommended over a wired connection.
 
-For wiring information, please see [here](https://github.com/realA10001986/Dash-Gauges/blob/main/hardware/README.md#connecting-a-tcd-to-the-dash-gauges-by-wire).
+For wiring information, please see [here](hardware/#connecting-a-tcd-to-the-dash-gauges-by-wire).
 
 With the wiring in place, head to the Config Portal and set the option **_TCD connected by wire_**. On the TCD, the option "Control props connected by wire" must be set.
 
