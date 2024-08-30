@@ -180,7 +180,7 @@ It is hard to tell what a meter has inside and whether it's usable. Many meters 
 
 To find out suitable resistor values for R1/R2 and/or R3/R4 on the Control Board, please see [here](#appendix-a-resistors-for-gauges). The values given in the table above are verified working on my meter samples, but meters might vary, so please verify them for your meters, too.
 
-Movie-accurate dials for those gauges are available in the [hardware/faces-labels](/hardware/faces-labels) folder. In order to avoid the old dial shining through the new dial, apply the new label on the back-side of the original dial. To apply the labels properly, cut them precisely at the bottom and the right hand side (leave some extra at the top and the left hand side), then place the dial in the corner of a 90 deg angled ruler, and align the sticker at the bottom and right hand side. Slowly apply the sticker from the bottom up to avoid bubbles, and in the end, with the sticker facing down, use an Exacto knife to cut off the surplus.
+Movie-accurate dials for those gauges are available in the [faces-labels](https://github.com/realA10001986/Dash-Gauges/tree/main/hardware/faces-labels) folder. In order to avoid the old dial shining through the new dial, apply the new label on the back-side of the original dial. To apply the labels properly, cut them precisely at the bottom and the right hand side (leave some extra at the top and the left hand side), then place the dial in the corner of a 90 deg angled ruler, and align the sticker at the bottom and right hand side. Slowly apply the sticker from the bottom up to avoid bubbles, and in the end, with the sticker facing down, use an Exacto knife to cut off the surplus.
 
 ![Alignment](img/phaostron_align.jpg)
 
@@ -292,7 +292,7 @@ In order to avoid the old dial shining through your new label, use the backside 
 
 #### Dial face
 
-A movie-accurate dial as well as "Empty" label is in the [hardware/faces-labels](/hardware/faces-labels) folder. To apply the dial properly, follow the instructions above for the Phaostron meters.
+A movie-accurate dial as well as "Empty" label is in the [faces-labels](https://github.com/realA10001986/Dash-Gauges/tree/main/hardware/faces-labels) folder. To apply the dial properly, follow the instructions above for the Phaostron meters.
 
 [<img src="img/roeitw4.jpg">](img/roeitw4_l.jpg)
 [<img src="img/roeitw5.jpg">](img/roeitw5_l.jpg)
