@@ -115,6 +115,8 @@
 
 /*  Changelog
  *  
+ *  2024/09/09 (A10001986)
+ *    - Tune BTTFN poll interval
  *  2024/08/29 (A10001986)
  *    - Fix gauge type selection "0-2.048V" for Roentgens
  *  2024/08/28 (A10001986)

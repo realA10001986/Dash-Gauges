@@ -258,6 +258,7 @@ static unsigned long FPOffemptyAlarmNow = 0;
 #define BTTFN_VERSION              1
 #define BTTF_PACKET_SIZE          48
 #define BTTF_DEFAULT_LOCAL_PORT 1338
+#define BTTFN_POLL_INT          1100
 #define BTTFN_NOT_PREPARE  1
 #define BTTFN_NOT_TT       2
 #define BTTFN_NOT_REENTRY  3
@@ -2029,7 +2030,7 @@ void bttfn_loop()
         if(!BTTFNWiFiUp && (WiFi.status() == WL_CONNECTED)) {
             BTTFNUpdateNow = 0;
         }
-        if((!BTTFNUpdateNow) || (millis() - BTTFNUpdateNow > 1100)) {
+        if((!BTTFNUpdateNow) || (millis() - BTTFNUpdateNow > BTTFN_POLL_INT)) {
             BTTFNTriggerUpdate();
         }
     }
