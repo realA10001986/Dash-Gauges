@@ -303,6 +303,19 @@ static int      iCmdIdx = 0;
 static int      oCmdIdx = 0;
 static uint32_t commandQueue[16] = { 0 };
 
+#define GET32(a,b)          \
+    (((a)[b])            |  \
+    (((a)[(b)+1]) << 8)  |  \
+    (((a)[(b)+2]) << 16) |  \
+    (((a)[(b)+3]) << 24))
+//#define GET32(a,b)    *((uint32_t *)((a) + (b)))
+#define SET32(a,b,c)                        \
+    (a)[b]       = ((uint32_t)(c)) & 0xff;  \
+    ((a)[(b)+1]) = ((uint32_t)(c)) >> 8;    \
+    ((a)[(b)+2]) = ((uint32_t)(c)) >> 16;   \
+    ((a)[(b)+3]) = ((uint32_t)(c)) >> 24;  
+//#define SET32(a,b,c)   *((uint32_t *)((a) + (b))) = c
+
 // Forward declarations ------
 
 static void timeTravel(bool TCDtriggered, uint16_t P0Dur, uint16_t P1Dur = 0);
@@ -2137,7 +2150,8 @@ static void BTTFNCheckPacket()
 
         // (Possibly) a response packet
     
-        if(*((uint32_t *)(BTTFUDPBuf + 6)) != BTTFUDPID)
+        //if(*((uint32_t *)(BTTFUDPBuf + 6)) != BTTFUDPID)
+        if(GET32(BTTFUDPBuf, 6) != BTTFUDPID)
             return;
     
         // Response marker missing or wrong version, bail
@@ -2213,7 +2227,9 @@ static void BTTFNSendPacket()
     memcpy(BTTFUDPBuf, BTTFUDPHD, 4);
 
     // Serial
-    *((uint32_t *)(BTTFUDPBuf + 6)) = BTTFUDPID = (uint32_t)millis();
+    BTTFUDPID = (uint32_t)millis();
+    SET32(BTTFUDPBuf, 6, BTTFUDPID);
+    //*((uint32_t *)(BTTFUDPBuf + 6)) =
 
     // Tell the TCD about our hostname (0-term., 13 bytes total)
     strncpy((char *)BTTFUDPBuf + 10, settings.hostName, 12);
@@ -2227,7 +2243,8 @@ static void BTTFNSendPacket()
     #ifdef BTTFN_MC
     if(!haveTCDIP) {
         BTTFUDPBuf[5] |= 0x80;
-        memcpy(BTTFUDPBuf + 31, (void *)&tcdHostNameHash, 4);
+        //memcpy(BTTFUDPBuf + 31, (void *)&tcdHostNameHash, 4);
+        SET32(BTTFUDPBuf, 31, tcdHostNameHash);
     }
     #endif
 

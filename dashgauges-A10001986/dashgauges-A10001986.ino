@@ -115,6 +115,8 @@
 
 /*  Changelog
  *  
+ *  2024/09/11 (A10001986)
+ *    - Fix C99-compliance
  *  2024/09/09 (A10001986)
  *    - Tune BTTFN poll interval
  *  2024/08/29 (A10001986)
