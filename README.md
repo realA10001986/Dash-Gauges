@@ -1,4 +1,4 @@
-# Dash Gauges
+# Dash Gauges (Delorean Time Machine)
 
 This [repository](https://dg.out-a-ti.me) holds 
 - [instructions](hardware/) for building a Dash Gauge panel, as seen in the Delorean Time Machine,
