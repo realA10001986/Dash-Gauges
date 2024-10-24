@@ -373,5 +373,5 @@ CircuitSetup-produced boards have pre-installed trimpots (trimmer potentiometers
 - Enter the Config Portal and re-set the "Full Percentages" to your desired values (by default 28 for the Phaostron gauges, 65 for the "Roentgens").
 
 
-_Text & images: (C) Thomas Winischhofer ("A10001986"). See LICENSE._ https://dg.out-a-ti.me
+_Text & images: (C) Thomas Winischhofer ("A10001986"). See LICENSE._ Source: https://dg.out-a-ti.me
 
