@@ -1660,40 +1660,6 @@ static void strcpyutf8(char *dst, const char *src, unsigned int len)
     dst[len - 1] = 0;
 }
 
-static int16_t filterOutUTF8(char *src, char *dst)
-{
-    int i, j, slen = strlen(src);
-    unsigned char c, d, e, f;
-
-    for(i = 0, j = 0; i < slen; i++) {
-        c = (unsigned char)src[i];
-        if(c >= 32 && c < 127) {
-            if(c >= 'a' && c <= 'z') c &= ~0x20;
-            dst[j++] = c;
-        } else if(c >= 194 && c < 224 && (i+1) < slen) {
-            d = (unsigned char)src[i+1];
-            if(d > 127 && d < 192) i++;
-        } else if(c < 240 && (i+2) < slen) {
-            d = (unsigned char)src[i+1];
-            e = (unsigned char)src[i+2];
-            if(d > 127 && d < 192 && 
-               e > 127 && e < 192) 
-                i+=2;
-        } else if(c < 245 && (i+3) < slen) {
-            d = (unsigned char)src[i+1];
-            e = (unsigned char)src[i+2];
-            f = (unsigned char)src[i+3];
-            if(d > 127 && d < 192 && 
-               e > 127 && e < 192 && 
-               f > 127 && f < 192)
-                i+=3;
-        }
-    }
-    dst[j] = 0;
-
-    return j;
-}
-
 static void mqttLooper()
 {
     audio_loop();

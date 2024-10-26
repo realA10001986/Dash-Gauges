@@ -115,6 +115,11 @@
 
 /*  Changelog
  *  
+ *  2024/10/26 (A10001986) [1.10]
+ *    - Add support for TCD multicast notifications: This brings more immediate speed 
+ *      updates (no more polling; TCD sends out speed info when appropriate), and 
+ *      less network traffic in time travel sequences.
+ *      The TCD supports this since Oct 26, 2024.
  *  2024/09/11 (A10001986)
  *    - Fix C99-compliance
  *  2024/09/09 (A10001986)

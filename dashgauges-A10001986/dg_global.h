@@ -11,9 +11,12 @@
 #ifndef _DG_GLOBAL_H
 #define _DG_GLOBAL_H
 
-// Version strings
-#define DG_VERSION       "V1.08"
-#define DG_VERSION_EXTRA "SEP112024"
+/*************************************************************************
+ ***                          Version Strings                          ***
+ *************************************************************************/
+
+#define DG_VERSION       "V1.10"
+#define DG_VERSION_EXTRA "OCT262024"
 
 //#define DG_DBG              // debug output on Serial
 
@@ -42,29 +45,27 @@
 // Uncomment for HomeAssistant MQTT protocol support
 #define DG_HAVEMQTT
 
-// Uncomment if hardware has a volume knob
-//#define DG_HAVEVOLKNOB
-
 // Version of Control Board
 #define CB_VERSION 4
 
-// --- end of config options
+// Uncomment if hardware has a volume knob
+//#define DG_HAVEVOLKNOB
 
 /*************************************************************************
  ***                           Miscellaneous                           ***
  *************************************************************************/
 
-// Use SPIFFS (if defined) or LittleFS (if undefined; esp32-arduino >= 2.x)
-//#define USE_SPIFFS
-
 // External time travel lead time, as defined by TCD firmware
-// If DG are connected by wire, and the option "Signal Time Travel without 5s 
-// lead" is set on the TCD, the DG option "TCD signals without lead" must
+// If DG are connected by wire, and the option "Signal Time Travel without 
+// 5s lead" is set on the TCD, the DG option "TCD signals without lead" must
 // be set, too.
 #define ETTO_LEAD 5000
 
 // Uncomment to include BTTFN discover support (multicast)
 #define BTTFN_MC
+
+// Use SPIFFS (if defined) or LittleFS (if undefined; esp32-arduino >= 2.x)
+//#define USE_SPIFFS
 
 /*************************************************************************
  ***                  esp32-arduino version detection                  ***
