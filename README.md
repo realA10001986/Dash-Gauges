@@ -316,16 +316,6 @@ While the music player is playing music, other sound effects are disabled/muted.
 
 ## Connecting a Time Circuits Display
 
-### Connecting a TCD by wire
-
->Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place, and there is no way to remote-control the Gauges through the TCD by wire. A wireless connection over BTTFN/WiFi is much more powerful and therefore recommended over a wired connection.
-
-For wiring information, please see [here](hardware/#connecting-a-tcd-to-the-dash-gauges-by-wire).
-
-With the wiring in place, head to the Config Portal and set the option **_TCD connected by wire_**. On the TCD, the option "Control props connected by wire" must be set.
-
->You can connect both the TCD and a Time Travel button to the Dash Gauges. But the button should not be pressed when the option **_TCD connected by wire_** is set, as it might yield unwanted results.
-
 ### BTTF-Network ("BTTFN")
 
 The TCD can communicate with the Dash Gauges wirelessly, via the built-in "**B**asic-**T**elematics-**T**ransmission-**F**ramework" over WiFi. It can send out information about a time travel and an alarm. Furthermore, the TCD's keypad can be used to remote-control the Dash Gauges.
@@ -347,7 +337,17 @@ Afterwards, the Dash Gauges and the TCD can communicate wirelessly and
 - the Dash Gauges queries the TCD for fake power and night mode, in order to react accordingly if so configured,
 - pressing the dash gauges' Time Travel button can trigger a synchronized Time Travel on all BTTFN-connected devices, just like if that Time Travel was triggered through the TCD.
 
-You can use BTTF-Network and MQTT at the same time, see immediately below.
+You can use BTTF-Network and MQTT at the same time, see [below](#home-assistant--mqtt).
+
+### Connecting a TCD by wire
+
+>Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place, and there is no way to remote-control the Gauges through the TCD by wire. A wireless connection over BTTFN/WiFi is much more powerful and therefore recommended over a wired connection.
+
+For wiring information, please see [here](hardware/#connecting-a-tcd-to-the-dash-gauges-by-wire).
+
+With the wiring in place, head to the Config Portal and set the option **_TCD connected by wire_**. On the TCD, the option "Control props connected by wire" must be set.
+
+>You can connect both the TCD and a Time Travel button to the Dash Gauges. But the button should not be pressed when the option **_TCD connected by wire_** is set, as it might yield unwanted results.
 
 ## Home Assistant / MQTT
 
