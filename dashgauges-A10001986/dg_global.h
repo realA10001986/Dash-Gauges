@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------------------
  * Dash Gauges Panel
- * (C) 2023-2024 Thomas Winischhofer (A10001986)
+ * (C) 2023-2025 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.out-a-ti.me
  *
@@ -15,8 +15,8 @@
  ***                          Version Strings                          ***
  *************************************************************************/
 
-#define DG_VERSION       "V1.10"
-#define DG_VERSION_EXTRA "OCT262024"
+#define DG_VERSION       "V1.12"
+#define DG_VERSION_EXTRA "JAN132025"
 
 //#define DG_DBG              // debug output on Serial
 

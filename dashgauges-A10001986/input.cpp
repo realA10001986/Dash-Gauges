@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------------------
  * Dash Gauges Panel
- * (C) 2023-2024 Thomas Winischhofer (A10001986)
+ * (C) 2023-2025 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.out-a-ti.me
  *
@@ -68,7 +68,7 @@
  * activeLow: Set to true when the input level is LOW when the button is pressed, Default is true.
  * pullupActive: Activate the internal pullup when available. Default is true.
  */
-DGButton::DGButton(const int pin, const boolean activeLow, const bool pullupActive)
+DGButton::DGButton(const int pin, const bool activeLow, const bool pullupActive)
 {
     _pin = pin;
 

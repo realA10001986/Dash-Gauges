@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------------------
  * Dash Gauges Panel
- * (C) 2023-2024 Thomas Winischhofer (A10001986)
+ * (C) 2023-2025 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.out-a-ti.me
  *
@@ -67,7 +67,7 @@ typedef enum {
 class DGButton {
   
     public:
-        DGButton(const int pin, const boolean activeLow = true, const bool pullupActive = true);
+        DGButton(const int pin, const bool activeLow = true, const bool pullupActive = true);
 
         void begin();
         

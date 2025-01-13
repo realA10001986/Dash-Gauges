@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------------------
  * Dash Gauges Panel
- * (C) 2023-2024 Thomas Winischhofer (A10001986)
+ * (C) 2023-2025 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.out-a-ti.me
  *
@@ -313,6 +313,7 @@ static uint8_t       bttfnReqStatus = 0x52; // Request capabilities, status, spe
 static uint32_t      tcdHostNameHash = 0;
 static byte          BTTFMCBuf[BTTF_PACKET_SIZE];
 static uint8_t       bttfnMcMarker = 0;
+static IPAddress     bttfnMcIP(224, 0, 0, 224);
 #endif  
 
 static int      iCmdIdx = 0;
@@ -386,7 +387,8 @@ static bool bttfn_checkmc();
 static void BTTFNCheckPacket();
 static bool BTTFNTriggerUpdate();
 static void BTTFNSendPacket();
-static bool BTTFNTriggerTT();
+
+static bool bttfn_trigger_tt();
 
 // Boot
 
@@ -859,7 +861,7 @@ void main_loop()
                 if(TCDconnected) {
                     ssEnd();
                 }
-                if(TCDconnected || !bttfnTT || !BTTFNTriggerTT()) {
+                if(TCDconnected || !bttfnTT || !bttfn_trigger_tt()) {
                     timeTravel(TCDconnected, noETTOLead ? 0 : ETTO_LEAD);
                 }
             }
@@ -1099,6 +1101,8 @@ void main_loop()
         if(atoi(settings.playALsnd) > 0) {
             play_file("/alarm.mp3", PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL, 1.0);
         }
+        // No special handling for !FPBUnitIsOn needed, when
+        // special signal ends, it restores the old state
         emptyLED.specialSignal(DGSEQ_ALARM);
     }
 
@@ -2030,7 +2034,7 @@ static void bttfn_setup()
 
     #ifdef BTTFN_MC
     dgMcUDP = &bttfMcUDP;
-    dgMcUDP->beginMulticast(IPAddress(224, 0, 0, 224), BTTF_DEFAULT_LOCAL_PORT + 2);
+    dgMcUDP->beginMulticast(bttfnMcIP, BTTF_DEFAULT_LOCAL_PORT + 2);
     #endif
     
     BTTFNfailCount = 0;
@@ -2129,8 +2133,7 @@ static void handle_tcd_notification(uint8_t *buf)
         addCmdQueue(1000000);
         break;
     case BTTFN_NOT_PCG_CMD:
-        addCmdQueue( buf[6] | (buf[7] << 8) |
-                    (buf[8] | (buf[9] << 8)) << 16);
+        addCmdQueue(GET32(buf, 6));
         break;
     case BTTFN_NOT_WAKEUP:
         if(!TTrunning) {
@@ -2318,16 +2321,12 @@ static bool BTTFNTriggerUpdate()
     return true;
 }
 
-static void BTTFNSendPacket()
-{   
+static void BTTFNPreparePacket()
+{
     memset(BTTFUDPBuf, 0, BTTF_PACKET_SIZE);
 
     // ID
     memcpy(BTTFUDPBuf, BTTFUDPHD, 4);
-
-    // Serial
-    BTTFUDPID = (uint32_t)millis();
-    SET32(BTTFUDPBuf, 6, BTTFUDPID);
 
     // Tell the TCD about our hostname (0-term., 13 bytes total)
     strncpy((char *)BTTFUDPBuf + 10, settings.hostName, 12);
@@ -2335,26 +2334,22 @@ static void BTTFNSendPacket()
 
     BTTFUDPBuf[10+13] = BTTFN_TYPE_PCG;
 
+    // Version, MC-marker
     #ifdef BTTFN_MC
-    BTTFUDPBuf[4] = BTTFN_VERSION | bttfnMcMarker; // Version, MC-marker
+    BTTFUDPBuf[4] = BTTFN_VERSION | bttfnMcMarker;  
     #else
     BTTFUDPBuf[4] = BTTFN_VERSION;
-    #endif
-    BTTFUDPBuf[5] = bttfnReqStatus;                // Request status and speed
+    #endif                
+}
 
-    #ifdef BTTFN_MC
-    if(!haveTCDIP) {
-        BTTFUDPBuf[5] |= 0x80;
-        SET32(BTTFUDPBuf, 31, tcdHostNameHash);
-    }
-    #endif
-
+static void BTTFNDispatch()
+{
     uint8_t a = 0;
     for(int i = 4; i < BTTF_PACKET_SIZE - 1; i++) {
         a += BTTFUDPBuf[i] ^ 0x55;
     }
     BTTFUDPBuf[BTTF_PACKET_SIZE - 1] = a;
-    
+
     #ifdef BTTFN_MC
     if(haveTCDIP) {
     #endif  
@@ -2364,14 +2359,36 @@ static void BTTFNSendPacket()
         #ifdef DG_DBG
         Serial.printf("Sending multicast (hostname hash %x)\n", tcdHostNameHash);
         #endif
-        dgUDP->beginPacket("224.0.0.224", BTTF_DEFAULT_LOCAL_PORT + 1);
+        dgUDP->beginPacket(bttfnMcIP, BTTF_DEFAULT_LOCAL_PORT + 1);
     }
     #endif
     dgUDP->write(BTTFUDPBuf, BTTF_PACKET_SIZE);
     dgUDP->endPacket();
 }
 
-static bool BTTFNTriggerTT()
+
+static void BTTFNSendPacket()
+{   
+    BTTFNPreparePacket();
+
+    // Serial
+    BTTFUDPID = (uint32_t)millis();
+    SET32(BTTFUDPBuf, 6, BTTFUDPID);
+
+    // Request status and speed
+    BTTFUDPBuf[5] = bttfnReqStatus;
+
+    #ifdef BTTFN_MC
+    if(!haveTCDIP) {
+        BTTFUDPBuf[5] |= 0x80;
+        SET32(BTTFUDPBuf, 31, tcdHostNameHash);
+    }
+    #endif
+
+    BTTFNDispatch();
+}
+
+static bool bttfn_trigger_tt()
 {
     if(!useBTTFN)
         return false;
@@ -2390,33 +2407,11 @@ static bool BTTFNTriggerTT()
     if(TTrunning)
         return false;
 
-    memset(BTTFUDPBuf, 0, BTTF_PACKET_SIZE);
-
-    // ID
-    memcpy(BTTFUDPBuf, BTTFUDPHD, 4);
-
-    // Tell the TCD about our hostname (0-term., 13 bytes total)
-    strncpy((char *)BTTFUDPBuf + 10, settings.hostName, 12);
-    BTTFUDPBuf[10+12] = 0;
-
-    BTTFUDPBuf[10+13] = BTTFN_TYPE_PCG;
-
-    #ifdef BTTFN_MC
-    BTTFUDPBuf[4] = BTTFN_VERSION | bttfnMcMarker; // Version, MC-marker
-    #else
-    BTTFUDPBuf[4] = BTTFN_VERSION;
-    #endif
+    BTTFNPreparePacket();
+    
     BTTFUDPBuf[5] = 0x80;           // Trigger BTTFN-wide TT
 
-    uint8_t a = 0;
-    for(int i = 4; i < BTTF_PACKET_SIZE - 1; i++) {
-        a += BTTFUDPBuf[i] ^ 0x55;
-    }
-    BTTFUDPBuf[BTTF_PACKET_SIZE - 1] = a;
-        
-    dgUDP->beginPacket(bttfnTcdIP, BTTF_DEFAULT_LOCAL_PORT);
-    dgUDP->write(BTTFUDPBuf, BTTF_PACKET_SIZE);
-    dgUDP->endPacket();
+    BTTFNDispatch();
 
     #ifdef DG_DBG
     Serial.println("Triggered BTTFN-wide TT");

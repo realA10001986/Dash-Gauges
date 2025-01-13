@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------------------
  * Dash Gauges Panel
- * (C) 2023-2024 Thomas Winischhofer (A10001986)
+ * (C) 2023-2025 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.out-a-ti.me
  *
@@ -115,6 +115,10 @@
 
 /*  Changelog
  *  
+ *  2025/01/13 (A10001986) [1.12]
+ *    - BTTFN: Minor code optimization
+ *  2024/10/27 (A10001986)
+ *    - Minor changes
  *  2024/10/26 (A10001986) [1.10]
  *    - Add support for TCD multicast notifications: This brings more immediate speed 
  *      updates (no more polling; TCD sends out speed info when appropriate), and 
