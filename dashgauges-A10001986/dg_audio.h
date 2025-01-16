@@ -66,6 +66,7 @@
 #define PA_ISEMPTY 0x0010
 #define PA_WAV     0x0020
 #define PA_DOOR    0x0040
+// upper 8 bits all taken
 #define PA_MASKA   (PA_LOOP|PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL|PA_ISEMPTY)
 
 void audio_setup();
@@ -73,14 +74,17 @@ void audio_loop();
 
 void play_file(const char *audio_file, uint16_t flags, float volumeFactor = 1.0);
 void append_file(const char *audio_file, uint16_t flags, float volumeFactor = 1.0);
-bool checkAudioDone();
-void stopAudio();
-void stopAudioAtLoopEnd();
-bool append_pending();
 
 void play_empty();
 //void append_empty();
 void remove_appended_empty();
+void play_key(int k, bool stopOnly = false);
+
+bool check_file_SD(const char *audio_file);
+bool checkAudioDone();
+void stopAudio();
+void stopAudioAtLoopEnd();
+bool append_pending();
 
 void     mp_init(bool isSetup);
 void     mp_play(bool forcePlay = true);

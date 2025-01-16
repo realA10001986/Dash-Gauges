@@ -1347,7 +1347,7 @@ static void execute_remote_command()
     if(command < 10) {                                // 900x
         switch(command) {
         case 1:
-            play_file("/key1.mp3", PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL);
+            play_key(1);
             break;
         case 2:
             if(haveMusic) {
@@ -1355,10 +1355,10 @@ static void execute_remote_command()
             }
             break;
         case 3:
-            play_file("/key3.mp3", PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL);
+            play_key(3);
             break;
         case 4:
-            play_file("/key4.mp3", PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL);
+            play_key(4);
             break;
         case 5:
             if(haveMusic) {
@@ -1371,10 +1371,10 @@ static void execute_remote_command()
             }
             break;
         case 6:
-            play_file("/key6.mp3", PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL);
+            play_key(6);
             break;
         case 7:
-            play_file("/key7.mp3", PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL);
+            play_key(7);
             break;
         case 8:
             if(haveMusic) {
@@ -1382,7 +1382,7 @@ static void execute_remote_command()
             }
             break;
         case 9:
-            play_file("/key9.mp3", PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL);
+            play_key(9);
             break;
         }
       

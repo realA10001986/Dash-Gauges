@@ -115,6 +115,9 @@
 
 /*  Changelog
  *  
+ *  2025/01/15 (A10001986) [1.13]
+ *    - Optimize play_key; keyX will be stopped instead of (re)started if it is 
+ *      currently played when repeatedly triggered
  *  2025/01/13 (A10001986) [1.12]
  *    - BTTFN: Minor code optimization
  *  2024/10/27 (A10001986)
