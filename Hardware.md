@@ -234,7 +234,7 @@ The safest bet is a **model 29** DC _voltmeter_, although I have only tested thi
 
 **Model 79** are wattmeters - no idea if (or how) those can be modified.
 
-For reference, see the 1964 Simpson [catalog](simpson_catalog.pdf).
+For reference, see the 1964 Simpson [catalog](hardware/simpson_catalog.pdf).
 
 Tested meter options and configuration:
 
