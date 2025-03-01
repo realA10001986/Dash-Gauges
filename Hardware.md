@@ -1,6 +1,6 @@
 # The Dash Gauges Hardware
 
-[<img src="img/mydg3.jpg">](img/mydg3_l.jpg)
+[<img src="hardware/img/mydg3.jpg">](hardware/img/mydg3_l.jpg)
 
 The Dash Gauges consist of several parts:
 - A **Control Board**: Readily available at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-gauge-control-board/). If you want to make it yourself, the production data is in the ["electronics"](https://github.com/realA10001986/Dash-Gauges/tree/main/hardware/electronics) folder. 
