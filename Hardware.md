@@ -11,7 +11,7 @@ This prop was made to be compatible with the CircuitSetup line of movie props ([
 
 ## Control board
 
-| <img src="img/cb_mounted.jpg"> |
+| <img src="hardware/img/cb_mounted.jpg"> |
 |:--:| 
 | *The Control Board* |
 
@@ -36,7 +36,7 @@ The terms "analog" and "digital" have the following meaning in this document:
 
 In order to make the Control Board as versatile as possible, there are some solder jumpers (ie adjacent solder pads which are connected using solder), and easy-to-solder through-the-hole resistors which need to be added depending on the other hardware used.
 
-| [<img src="img/cb-analog-s.jpg">](img/cb-analog.jpg) |
+| [<img src="hardware/img/cb-analog-s.jpg">](hardware/img/cb-analog.jpg) |
 |:--:| 
 | *Click for hi-res image* |
 
@@ -77,7 +77,7 @@ Digital gauges, as well as connecting anything to connector [green_6], require 1
  
 Example for configuration for three analog gauges:
 
-| [<img src="img/cb-analog-s.jpg">](img/cb-analog.jpg) |
+| [<img src="hardware/img/cb-analog-s.jpg">](hardware/img/cb-analog.jpg) |
 |:--:| 
 | *Click for hi-res image* |
 
@@ -98,7 +98,7 @@ _Note: CircuitSetup-produced boards are pre-configured for analog gauges; they h
 
 Example for configuration for three digital gauges:
 
-| [<img src="img/cb-digital-s.jpg">](img/cb-digital.jpg) |
+| [<img src="hardware/img/cb-digital-s.jpg">](hardware/img/cb-digital.jpg) |
 |:--:| 
 | *Click for hi-res image* |
 
@@ -157,7 +157,7 @@ _Do not connect 3V3 to the TCD!_
 
 ### The "Primary" and "Percent Power" Gauges
 
-[<img src="img/Phaos.jpg">](img/Phaos_l.jpg)
+[<img src="hardware/img/Phaos.jpg">](hardware/img/Phaos_l.jpg)
 
 In the Original, these were Phaostron 631 series meters. There are many different types/models of those vintage Phaostron meters; anything that starts with 63x fits size-wise; some 300 series meters also fit. Not all 63x meters are usable though. I haven't seen a complete list, but what I came across leads to some conclusions: 631 and 634 differ in the method used for movement suspension (pivot-and-jewel vs taut band). Both should be usable; due to their lower moving-element resistance the 634 series might have a lower sensitivity rating (ie they will require higher resistors values). The 633 series appears to look different (360° scale, no faceted glass). Many of the meters in the 637 series and presumably the entire 639 series are highly rated AC meters with iron wane movement, these are probably unusable. I could not find out enough about the 638 series to draw any conclusions. Some meters have their zero position in the center of the scale, so avoid those, too. 
 
@@ -182,25 +182,25 @@ To find out suitable resistor values for R1/R2 and/or R3/R4 on the Control Board
 
 Movie-accurate dials for those gauges are available in the [faces-labels](https://github.com/realA10001986/Dash-Gauges/tree/main/hardware/faces-labels) folder. In order to avoid the old dial shining through the new dial, apply the new label on the back-side of the original dial. To apply the labels properly, cut them precisely at the bottom and the right hand side (leave some extra at the top and the left hand side), then place the dial in the corner of a 90 deg angled ruler, and align the sticker at the bottom and right hand side. Slowly apply the sticker from the bottom up to avoid bubbles, and in the end, with the sticker facing down, use an Exacto knife to cut off the surplus.
 
-![Alignment](img/phaostron_align.jpg)
+![Alignment](hardware/img/phaostron_align.jpg)
 
 For illumination, there are LEDs mounted on the back of the Control Board that reach into the enclosures of the gauges. These require a 6mm hole in the rear of the metal enclosure (center: 7mm from barrel bottom edge). I used a 5mm yellow LED (590nm). Most replicas use white LEDs, but I think on the A-Car as shown in the Petersen Museum, there are yellow ones used, and I found white ones too bright. 
 
-![Hole](img/phaostron_hole.jpg)
+![Hole](hardware/img/phaostron_hole.jpg)
 
-![Hole](img/phaostron_hole_2.png)
+![Hole](hardware/img/phaostron_hole_2.png)
 
 Phaostron meters have either 6mm (1/4"-28 UNF) or 4mm (8-32 UNC) screw terminals on the back. For the 6mm versions, the LEDs can usually stick out approx 12-16mm from PCB to the LED's top, but you have to check your Phaostron meter for obstacles. For the shorter 4mm terminals the LED must be shorter. Look into your meter to find out about possible depth. The mounting order is meant to be original plastic washer, washer, nut, washer, Control Board, washer, nut.
 
-![MountingOrder](img/mo_6mm.jpg)
+![MountingOrder](hardware/img/mo_6mm.jpg)
 
 The "Primary" and "Percent Power" labels are made with a Rotex 880 label maker; the "Primary" is on 1/2" (12mm) tape, the "Percent Power" on 3/8" (9mm).
 
 ### The "Roentgens" Gauge
 
-[<img src="img/RoeVU.jpg">](img/RoeVU_l.jpg)
-[<img src="img/Roe250mADC.jpg">](img/Roe250mADC_l.jpg)
-[<img src="img/roentgens_s.jpg">](img/roentgens_l.jpg)
+[<img src="hardware/img/RoeVU.jpg">](hardware/img/RoeVU_l.jpg)
+[<img src="hardware/img/Roe250mADC.jpg">](hardware/img/Roe250mADC_l.jpg)
+[<img src="hardware/img/roentgens_s.jpg">](hardware/img/roentgens_l.jpg)
 
 #### Suitable Simpson meters
 
@@ -210,7 +210,7 @@ There are a lot of Simpson meters that look similar - yet not identical - to wha
 
 A word on Simpson model numbers: Their main model number means mainly "case style", not "specific type of meter". "Model 49" therefore only means "4.5 inch case", but not whether this is a VU meter, a voltmeter, or what not:
 
-<img width="985" alt="Simpson meters" src="img/simpson_catalog.png">
+<img width="985" alt="Simpson meters" src="hardware/img/simpson_catalog.png">
 
 The only illuminated Simpson meters - apart from the Roentgens meters - were apparently their VU meters, models 49 (not listed above as they pre-date the catalog) and 142 (10470, 10540). Model 49 has the movie-accurate front - as long as its build date is something around the 1950s or earlier; later models, unfortunately using the same model number, look entirely different. (They added design groups like "Rectangular" or "Wide Vue" over time, and re-used their model numbers together with these design groups. It's all a bit confusing.)
 
@@ -218,7 +218,7 @@ I was lucky to score a **Simpson model 49L VU-meter** and a **Simpson model 49MC
 
 The **model 142 VU-meters**, while perfectly usable electronically, are a bit smaller (4.25x3.9" vs 4.66x4.2") and look different on the back; their barrel is thicker (3.25" vs 2.78" in diameter), and the screws are not at the outer corners but closer to the barrel. There are special files in the [enclosure](https://github.com/realA10001986/Dash-Gauges/tree/main/hardware/enclosure) folder for model 142 dimensions. Unfortunately, the barrel is so big that it does not allow for a simple hole for the "Empty" light; this must be done another way. Also, there are (at least) two versions of this meter that differ in pointer length. Avoid the version with the short pointer, it does not allow for accurate dial and "Empty" light placement.
 
-![model142pointers](img/mod142pl.jpg)
+![model142pointers](hardware/img/mod142pl.jpg)
 
 If you can't find a model 49 VU-meter or consider the 142 too far off, you could try other Simpson meters; models 29, 39, 49, 59 or 79 fit size-wise. _As mentioned above, these meters have fronts too thin to fit the "Empty" light and the red pointer; you will either need the aforementioned "extension ring" or be ready to compromise._
 
@@ -266,15 +266,15 @@ The additional red pointer is added by
 
 The non-illuminated meters' front part is thinner, so be careful when enlarging the hole for the screw head. Also, for this pointer to fit, you need the aforementioned extension ring to elevate the front part. Without this extension ring, there is no room for the red pointer.
 
-![wirepointer](img/redpointer1.jpg)
-![red_pointer_hole](img/rphole.jpg)
+![wirepointer](hardware/img/redpointer1.jpg)
+![red_pointer_hole](hardware/img/rphole.jpg)
 
 #### The "Empty" light
 
 I recommend a light like this one (12V version), available on aliexpress and ebay. There are also buttons that look identical and can be used instead.
 
-![emptylight](img/emptylight.png)
-![emptybutton](img/emptybutton.png)
+![emptylight](hardware/img/emptylight.png)
+![emptybutton](hardware/img/emptybutton.png)
 
 The LED in those lights/buttons requires 12V. The Control Board has two connectors for the "Empty" LED:
 - When using the "Empty Light" [green_4] connector, the light/button's built-in resistor needs to be removed: Pull up the red cover and pull out the LED; then desolder the LED (ie desolder the two metal tops, and push the LED out) and bridge the resistor, or replace it with a wire. Reassemble.
@@ -284,18 +284,18 @@ Above light/button requires a 16mm hole. The vertical center of this hole is, lo
 
 In order to avoid the old dial shining through your new label, use the backside of the dial.
 
-![emptyhole](img/empty_hole_new.jpg)
+![emptyhole](hardware/img/empty_hole_new.jpg)
 
-[<img src="img/roeitw1.jpg">](img/roeitw1_l.jpg)
-[<img src="img/roeitw2.jpg">](img/roeitw2_l.jpg)
-[<img src="img/roeitw3.jpg">](img/roeitw3_l.jpg)
+[<img src="hardware/img/roeitw1.jpg">](hardware/img/roeitw1_l.jpg)
+[<img src="hardware/img/roeitw2.jpg">](hardware/img/roeitw2_l.jpg)
+[<img src="hardware/img/roeitw3.jpg">](hardware/img/roeitw3_l.jpg)
 
 #### Dial face
 
 A movie-accurate dial as well as "Empty" label is in the [faces-labels](https://github.com/realA10001986/Dash-Gauges/tree/main/hardware/faces-labels) folder. To apply the dial properly, follow the instructions above for the Phaostron meters.
 
-[<img src="img/roeitw4.jpg">](img/roeitw4_l.jpg)
-[<img src="img/roeitw5.jpg">](img/roeitw5_l.jpg)
+[<img src="hardware/img/roeitw4.jpg">](hardware/img/roeitw4_l.jpg)
+[<img src="hardware/img/roeitw5.jpg">](hardware/img/roeitw5_l.jpg)
 
 ## Bezel
 
@@ -325,7 +325,7 @@ In case of the "Roentgens" meter, align the pointer's "zero position" to the "gr
 
 Now build your testing "circuit":
 
-![resistors](img/resistor.png)
+![resistors](hardware/img/resistor.png)
 
 To find out suitable resistor values for R1/R2, R3/R4 or R5/R6, start out with a 10k resistor between the + output of the power supply and the + of the gauge (usually the left terminal when looking at the back).
 
@@ -363,10 +363,10 @@ CircuitSetup-produced boards have pre-installed trimpots (trimmer potentiometers
 - Navigate your browser to the Config Portal.
 - Set the Gauge Type to "Generic analog 0-5V"
   
-    ![gaugetype](img/adjgaugetype.png)
+    ![gaugetype](hardware/img/adjgaugetype.png)
 - Set the "Full percentage" of the gauge to 100
   
-    ![perc100](img/adjfullpercent.png)
+    ![perc100](hardware/img/adjfullpercent.png)
 - Click "SAVE". The device reboots.
 - Wait until the startup-sequence has finished. (If the pointer shoots to the end of the scale, power off, and repeat above steps but set the Gauge Type to "Generic Analog 0-2.048V")
 - Turn the screws on the trimpots until the pointer points to the end of the scale.
