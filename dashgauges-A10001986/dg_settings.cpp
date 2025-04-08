@@ -1054,6 +1054,10 @@ void doCopyAudioFiles()
         copy_audio_files(delIDfile);// Retry copy
     }
 
+    if(haveSD) {
+        SD.remove("/_installing.mp3");
+    }
+
     if(delIDfile) {
         delete_ID_file();
     } else {

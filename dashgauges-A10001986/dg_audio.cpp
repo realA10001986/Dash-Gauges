@@ -317,8 +317,6 @@ void play_file(const char *audio_file, uint16_t flags, float volumeFactor)
     playingEmptyEnds = false;
     playingDoor = (flags & PA_DOOR) ? true : false;
     key_playing = flags & 0xff00;
-
-    sampleCnt = 0;
     
     out->SetGain(getVolume());
 

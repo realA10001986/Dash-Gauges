@@ -115,6 +115,8 @@
 
 /*  Changelog
  *  
+ *  2025/02/13 (A10001986) [1.13.1]
+ *    - Delete temp file after audio installation
  *  2025/01/15 (A10001986) [1.13]
  *    - Optimize play_key; keyX will be stopped instead of (re)started if it is 
  *      currently played when repeatedly triggered
