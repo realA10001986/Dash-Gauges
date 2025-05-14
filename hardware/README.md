@@ -1,5 +1,6 @@
 This folder contains
 - dial faces/labels
 - electronics information
+- info on the enclosure.
 
-For information on the hardware, please see [here](Hardware.md).
+Please see [here](../Hardware.md).
