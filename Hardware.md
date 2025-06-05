@@ -298,16 +298,18 @@ A movie-accurate dial as well as "Empty" label is in the [faces-labels](https://
 [<img src="hardware/img/roeitw4.jpg">](hardware/img/roeitw4_l.jpg)
 [<img src="hardware/img/roeitw5.jpg">](hardware/img/roeitw5_l.jpg)
 
-#### Model 29 conversion details
+#### Model 29/39/49/59/79 conversion details
 
-With the red pointer mounted, and the extension ring, the front's inside looks like this:
+With the red pointer mounted, and the aforementioned extension ring in place, the front's inside looks like this:
 
 [<img src="hardware/img/roeitw6.jpg">](hardware/img/roeitw6_l.jpg)
 
-Now we add lights. I used SMD-mounted dual-LEDs (used for model trains these days).
+Now for the backlight. I used SMD-mounted dual-LEDs (used for model trains):
 
 [<img src="hardware/img/roeitw7.jpg">](hardware/img/roeitw7_l.jpg)
 [<img src="hardware/img/roeitw8.jpg">](hardware/img/roeitw8_l.jpg)
+
+Be careful with the wires, they must not interfere with pointer movement.
 
 Final result:
 
