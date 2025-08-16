@@ -206,7 +206,7 @@ The "Primary" and "Percent Power" labels are made with a Rotex 880 label maker; 
 
 The "Roentgens" gauge is more of a challenge. The pictures above show my modified Simpson model 49 VU meters. The original in the movie was a real Roentgens meter from a CP95 radiac. Such devices are hard to find, let alone one with the correct Simpson meter. The CP95 was built over a long period of time and they used meters from different manufacturers (QVS, Specialty Assy, etc).
 
-There are a lot of Simpson meters that look similar - yet not identical - to what was seen in the movies. However: One - quite important - issue is that hardly any Simpson meters are illuminated. Non-illuminated meters have a front that is 7mm thinner than the fronts of illuminated models, the glass is closer to the dial, and, as a result, the movie-accurate "Empty" light and the red pointer won't fit. _A solution for this problem - in shape of an "extension ring" that is put between the case and the original front, elevating the front by 7mm - is available on special request from [CircuitSetup](https://circuitsetup.us/); if you have a 3D printer available, you can make one [yourself](/hardware/extension_ring). This extension is required to fit the "Empty" light and the red pointer as described below. It will also allow for easily illuminating a non-illuminated Simpson meter model x9. (The screws required for the enclosure with the extension ring installed are UNC 3-48 1/2" with a suitable flat head)_
+There are a lot of Simpson meters that look similar - yet not identical - to what was seen in the movies. However: One - quite important - issue is that hardly any Simpson meters are illuminated. Non-illuminated meters have a front that is 7mm thinner than the fronts of illuminated models, the glass is closer to the dial, and, as a result, the movie-accurate "Empty" light and the red pointer won't fit. _A solution for this problem - in shape of an "extension ring" that is put between the case and the original front, elevating the front by 7mm - is available on special request from [CircuitSetup](https://circuitsetup.us/); if you have a 3D printer available, you can make one [yourself](hardware/extension_ring). This extension is required to fit the "Empty" light and the red pointer as described below. It will also allow for easily illuminating a non-illuminated Simpson meter model x9. (The screws required for the enclosure with the extension ring installed are UNC 3-48 1/2" with a suitable flat head)_
 
 A word on Simpson model numbers: Their main model number means mainly "case style", not "specific type of meter". "Model 49" therefore only means "4.5 inch case", but not whether this is a VU meter, a voltmeter, or what not:
 
@@ -300,7 +300,7 @@ A movie-accurate dial as well as "Empty" label is in the [faces-labels](https://
 
 #### Model 29/39/49/59/79 conversion details
 
-With the red pointer mounted, and the aforementioned [extension ring](https://github.com/realA10001986/Dash-Gauges/tree/main/hardware/extension_ring) in place, the front's inside looks like this:
+With the red pointer mounted, and the aforementioned [extension ring](hardware/extension_ring) in place, the front's inside looks like this:
 
 [<img src="hardware/img/roeitw6.jpg">](hardware/img/roeitw6_l.jpg)
 
