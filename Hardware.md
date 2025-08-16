@@ -300,7 +300,7 @@ A movie-accurate dial as well as "Empty" label is in the [faces-labels](https://
 
 #### Model 29/39/49/59/79 conversion details
 
-With the red pointer mounted, and the aforementioned extension ring in place, the front's inside looks like this:
+With the red pointer mounted, and the aforementioned [extension ring](https://github.com/realA10001986/Dash-Gauges/tree/main/hardware/extension_ring) in place, the front's inside looks like this:
 
 [<img src="hardware/img/roeitw6.jpg">](hardware/img/roeitw6_l.jpg)
 
