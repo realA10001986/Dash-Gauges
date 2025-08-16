@@ -19,7 +19,7 @@ To have [JCLPCB](https://jlcpcb.com) make your board:
 
 #### Things requiring manual selection:
 1) L1, L2, L3: Only ONE of those three can be placed on the board since they share the same space. Choose one, deselect the others.
-2) CN5SW-A and CN5SW-B are mutually exclusive. -A is an [S2B-XH-A-1](https://www.lcsc.com/product-detail/Wire-To-Board-Connector_JST-S2B-XH-A-1-LF-SN_C163035.html) header (for example: LCSC part number C163035), -B a [2510 KK](https://www.lcsc.com/product-detail/Wire-To-Board-Connector_HCTL-HC-2510-2AW_C2982041.html) header (For example: LCSC part number C2982041). Choose one. To use this board to replace a "legacy" board, use the -B version.
+2) CN5SW-A and CN5SW-B are mutually exclusive. -A is an [S2B-XH-A-1](https://www.lcsc.com/product-detail/Wire-To-Board-Connector_JST-S2B-XH-A-1-LF-SN_C163035.html) header (for example: LCSC part number C163035), -B a [2510 KK](https://www.lcsc.com/product-detail/Wire-To-Board-Connector_HCTL-HC-2510-2AW_C2982041.html) header (For example: LCSC part number C2982041). Choose one. To use the board to replace a "legacy" board running digital gauges, use the -B version.
 
 #### Unmatched or "shortfall" parts:
 1) HDR1 and HDR2 are [19-pin 2,54mm pitch 8.5mm high female headers](https://www.lcsc.com/product-detail/Female-Headers_CONNFLY-Elec-DS1023-1x19SF11_C7509529.html) for the NodeMCU ESP32 dev board. You might have to source and solder them on yourself. For example: LCSC part number C7509529 or C2932678. If you can't get them for 19 pins exactly, get some longer ones and cut them off.
