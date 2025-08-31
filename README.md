@@ -22,14 +22,14 @@ Firmware features include
 - [Time Travel](#time-travel) function, triggered by button, [Time Circuits Display](https://tcd.out-a-ti.me) (TCD) or via [MQTT](#home-assistant--mqtt)
 - support for Side Switch to play "empty" and "refill" sequences
 - Automatic refill timer, automatic alarm mute timer (both optional)
-- easy expandability to support different gauges hardware (currently implemented: variable voltage (0-5V); digital [on/off, all or separate])
-- Support for door switches for playing sounds when opening/closing the car doors
-- [Wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://tcd.out-a-ti.me); used for synchronized time travels, alarm, night mode, fake power and remote control through TCD keypad
-- [Music player](#the-music-player): Play mp3 files located on an SD card [requires TCD connected wirelessly for control]
+- easy expandability to support different gauges hardware
+- support for door switches for playing sounds when opening/closing the car doors
+- [wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://tcd.out-a-ti.me); used for synchronized time travels, alarm, night mode, fake power and remote control through TCD keypad
+- [music player](#the-music-player): Play mp3 files located on an SD card [requires TCD connected wirelessly for control]
 - [SD card](#sd-card) support for custom audio files for effects, and music for the Music Player
-- Advanced network-accessible [Config Portal](#the-config-portal) for setup (http://gauges.local, hostname configurable)
+- advanced network-accessible [Config Portal](#the-config-portal) for setup (http://gauges.local, hostname configurable)
 - [Home Assistant](#home-assistant--mqtt) (MQTT 3.1.1) support
-- Built-in installer for default audio files in addition to OTA firmware updates
+- built-in OTA installer for firmware updates and audio files
 
 ## Firmware Installation
 
