@@ -259,7 +259,7 @@ The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as 
     </tr>
 </table>
 
-[Here](CheatSheet.pdf) is a cheat sheet for printing or screen-use. (Note that MacOS' preview application has a bug that scrambles the links in the document. Acrobat Reader does it correctly.)
+[Here](https://github.com/realA10001986/Dash-Gauges/blob/main/CheatSheet.pdf) is a cheat sheet for printing or screen-use. (Note that MacOS' preview application has a bug that scrambles the links in the document. Acrobat Reader does it correctly.)
 
 ## Time travel
 
