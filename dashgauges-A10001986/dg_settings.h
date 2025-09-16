@@ -204,9 +204,11 @@ bool check_allow_CPA();
 void delete_ID_file();
 
 #include <FS.h>
-bool openACFile(File& file);
+bool   openACFile(File& file);
 size_t writeACFile(File& file, uint8_t *buf, size_t len);
-void closeACFile(File& file);
-void removeACFile();
+void   closeACFile(File& file);
+void   removeACFile(bool isUPLFile);
+bool   openUploadFile(const char *fn, File& file, bool& isDel);
+void   renameUploadFile();
 
 #endif

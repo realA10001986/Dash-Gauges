@@ -115,6 +115,19 @@
 
 /*  Changelog
  *  
+ *  2025/09/15 (A10001986) [1.20]
+ *    - Refine mp3 upload facility; allow deleting files from SD by prefixing
+ *      filename with "delete-".
+ *    - WiFi manager: Remove lots of <br> tags; makes Safari display the
+ *      pages better.
+ *  2025/09/14 (A10001986)
+ *    - Allow uploading .mp3 files to SD through config portal. Uses the same
+ *      interface as audio container upload. Files are stored in the root
+ *      folder of the SD; hence not suitable for music player.
+ *    - WiFi manager: Remove (ie skip compilation of) unused code
+ *    - WiFi manager: Add callback to Erase WiFi settings, before reboot
+ *    - WiFi manager: Build param page with fixed size string to avoid memory 
+ *      fragmentation; add functions to calculate String size beforehand.
  *  2025/02/13 (A10001986) [1.13.1]
  *    - Delete temp file after audio installation
  *  2025/01/15 (A10001986) [1.13]

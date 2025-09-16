@@ -91,6 +91,7 @@ void endWaitSequence();
 void showCopyError();
 
 void allOff();
+void prepareReboot();
 
 void mydelay(unsigned long mydel);
 

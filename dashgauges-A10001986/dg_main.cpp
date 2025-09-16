@@ -1489,11 +1489,7 @@ static void execute_remote_command()
       
         switch(command) {
         case 64738:                               // 64738: reboot
-            allOff();
-            mp_stop();
-            stopAudio();
-            flushDelayedSave();
-            unmount_fs();
+            prepareReboot();
             delay(500);
             esp_restart();
             break;
@@ -1876,6 +1872,17 @@ void allOff()
     gauges.off();
     emptyLED.stopBlink();
     emptyLED.specialSignal(0);
+}
+
+void prepareReboot()
+{
+    mp_stop();
+    stopAudio();
+    allOff();
+    flushDelayedSave();
+    delay(500);
+    unmount_fs();
+    delay(100);
 }
 
 /*
