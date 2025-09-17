@@ -78,7 +78,7 @@ It is ok to leave it in AP-mode, predominantly if used stand-alone.
 
 ##### &#9654; Home setup with a pre-existing local WiFi network
 
-In this case, you can connect your Dash Gauges to your home WiFi network: Click on "Connect to WiFi" and either select a network from the top of the page or enter a WiFi network name (SSID), and enter your WiFi password.
+In this case, you can connect your Dash Gauges to your home WiFi network: Click on "Connect to WiFi" and either select a network from the top of the page or enter a WiFi network name (SSID), and enter your WiFi password. After saving the WiFi network settings, the device reboots and tries to connect to your configured WiFi network. If that fails, it will again start in access point mode.
 
 >If you have a [Time Circuits Display](https://tcd.out-a-ti.me) note that in order to have both Dash Gauges and TCD communicate with each other, your Dash Gauges must be connected to the same network your TCD is connected to. In order to use MQTT, your Dash Gauges must be connected to the same network your broker is connected to.
 
@@ -93,17 +93,11 @@ In this case, you can connect your Dash Gauges to your home WiFi network: Click 
 >
 >This procedure causes static IP data to be deleted; the device will return to DHCP after a reboot.
 
-After saving the WiFi network settings, the device reboots and tries to connect to your configured WiFi network. If that fails, it will again start in access point mode.
-
 ##### &#9654; Places without a WiFi network
 
 If no TCD is present, keep your Dash Gauges operating in AP-mode.
 
-If you have a [Time Circuits Display](https://tcd.out-a-ti.me), you can connect your Dash Gauges to the TCD's own WiFi network. 
-
-Click on "Connect to WiFi" and either select "TCD-AP" from the top of the page or enter "TCD-AP" under *WiFi network name (SSID)*. If you password-proteced your TCD-AP, enter this password below.
-
-See [here](#car-setup) for more details.
+If you have a [Time Circuits Display](https://tcd.out-a-ti.me), you can connect your Dash Gauges to the TCD's own WiFi network: Click on "Connect to WiFi" and either select "TCD-AP" from the top of the page or enter "TCD-AP" under *WiFi network name (SSID)*. If you password-proteced your TCD-AP, enter this password below. See [here](#car-setup) for more details.
 
 After completing this step, your Dash Gauges are ready to be configured through the "Config Portal".
 
