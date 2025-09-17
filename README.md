@@ -460,6 +460,8 @@ You can also install the Dash Gauges' audio data on this page; download the curr
 
 Note that either a firmware or audio data can be uploaded at once, not both at the same time.
 
+Finally, this page is also for uploading [custom or replacement sound files](#installing-custom--replacement-audio-files) to the SD card. Select an mp3 file in the bottom file selector and click upload. (Requires firmware 1.20 or later.)
+
 ##### &#9654; Erase WiFi Config
 
 Clicking this (and saying "yes" in the confirmation dialog) erases the WiFi configuration (WiFi network and password) and reboots the device; it will restart in "access point" mode. See [here](#short-summary-of-first-steps).
