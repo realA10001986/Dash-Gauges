@@ -484,7 +484,7 @@ Clicking this (and saying "yes" in the confirmation dialog) erases the WiFi conn
 
 ### Setup page
 
-#### Basic settings
+#### <ins>Basic settings</ins>
 
 ##### &#9654; Auto-refill timer
 
@@ -493,6 +493,10 @@ After a time travel, the plutonium is depleted, and the chamber needs to be refi
 ##### &#9654; Mute 'empty' alarm timer
 
 The "empty" alarm's sound can be annoying if played for longer periods. This timer allows to mute it after the given number of seconds. 0 means never.
+
+##### &#9654; Play TCD-alarm sounds
+
+If a TCD is connected via BTTFN or MQTT, the Dash Gauges visually signals when the TCD's alarm sounds. If you want to play an alarm sound, check this option.
 
 ##### &#9654; Screen saver timer
 
@@ -503,83 +507,8 @@ The Screen Saver, when active, stops the "empty" alarm sound and disables all ga
 - on a connected TCD, a destination date is entered (only if TCD is wirelessly connected) or a time travel event is triggered (also when wired).
 
 The music player will continue to run.
- 
-#### Hardware configuration settings
 
-##### Volume level (0-19)
-
-Enter a value between 0 (mute) or 19 (very loud) here. This is your starting point; you can change the volume via TCD (93xx) and that new volume will also be saved (and appear in this field when the page is reloaded in your browser).
-
-#### Network settings
-
-##### &#9654; Hostname
-
-The device's hostname in the WiFi network. Defaults to 'gauges'. This also is the domain name at which the Config Portal is accessible from a browser in the same local network. The URL of the Config Portal then is http://<i>hostname</i>.local (the default is http://gauges.local)
-
-If you have several Dash Gauges in your local network, please give them unique hostnames.
-
-##### &#9654; AP Mode: Network name appendix
-
-By default, if the Dash Gauges create a WiFi network of its own ("AP-mode"), this network is named "DG-AP". In case you have multiple Dash Gauges in your vicinity, you can have a string appended to create a unique network name. If you, for instance, enter "-ABC" here, the WiFi network name will be "DG-AP-ABC". Characters A-Z, a-z, 0-9 and - are allowed.
-
-##### &#9654; AP Mode: WiFi password
-
-By default, and if this field is empty, the Dash Gauges's own WiFi network ("AP-mode") will be unprotected. If you want to protect your access point, enter your password here. It needs to be 8 characters in length and only characters A-Z, a-z, 0-9 and - are allowed.
-
-If you forget this password and are thereby locked out of your Dash Gauges, 
-- power-down the device,
-- hold the Time Travel button,
-- power-up the device (while still holding the Time Travel button)
-- wait until the "Empty" LED flashes briefly,
-- flip the Side Switch twice within 10 seconds,
-- wait until the "Empty" LED lights up,
-- then release the Time Travel button.
-
-This procedure temporarily (until a reboot) clears the WiFi password, allowing unprotected access to the Config Portal. (Note that this procedure also deletes static IP addres data; the device will return to using DHCP after a reboot.)
-
-##### &#9654; WiFi connection attempts
-
-Number of times the firmware tries to reconnect to a WiFi network, before falling back to AP-mode. See [here](#short-summary-of-first-steps)
-
-##### &#9654; WiFi connection timeout
-
-Number of seconds before a timeout occurs when connecting to a WiFi network. When a timeout happens, another attempt is made (see immediately above), and if all attempts fail, the device falls back to AP-mode. See [here](#short-summary-of-first-steps)
-
-#### Settings for prop communication/synchronization
-
-##### &#9654; TCD connected by wire
-
-Check this if you have a Time Circuits Display connected by wire. Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place.
-
-While you can connect both a button and the TCD to the "time travel" connector on the Dash Gauges, the button should not be pressed when this option is set, as it might yield unwanted effects.
-
-Do NOT check this option if your TCD is connected wirelessly (BTTFN, MQTT).
-
-##### &#9654; TCD signals Time Travel without 5s lead
-
-Usually, the TCD signals a time travel with a 5 seconds lead, in order to give a prop a chance to play an acceleration sequence before the actual time travel takes place. Since this 5 second lead is unique to CircuitSetup props, and people sometimes want to connect third party props to the TCD, the TCD has the option of skipping this 5 seconds lead. If that is the case, and your Dash Gauges are connected by wire, you need to set this option.
-
-If your Dash Gauges are connected wirelessly, this option has no effect.
-
-##### &#9654; IP address or hostname of TCD
-
-If you want to have your Dash Gauges to communicate with a Time Circuits Display wirelessly ("BTTF-Network"), enter the TCD's hostname - usually 'timecircuits' - or IP address here.
-
-If you connect your Dash Gauges to the TCD's access point ("TCD-AP"), the TCD's IP address is 192.168.4.1.
-
-##### &#9654; Follow TCD night-mode
-
-If this option is checked, and your TCD goes into night mode, the Dash Gauges will activate the Screen Saver with a very short timeout, and reduce its audio volume.
-
-##### &#9654; Follow TCD fake power
-
-If this option is checked, and your TCD is equipped with a fake power switch, the Dash Gauges will also fake-power up/down. If fake power is off, no LED is active and the Dash Gauges will ignore all input.
-
-##### &#9654; TT button trigger BTTFN-wide TT
-
-If the dash gauges are connected to a TCD through BTTFN, this option allows to trigger a synchronized time travel on all BTTFN-connected devices when pressing the Time Travel button, just as if the Time Travel was triggered by the TCD. If this option is unchecked, pressing the Time Travel button only triggers a Time Travel sequence on the dash gauges.
-
-#### Audio-visual options
+#### <ins>Visual options</ins>
 
 ##### &#9654; 'Primary' full percentage
 
@@ -639,25 +568,84 @@ Same as [this](#-primary-empty-threshold), but for the 'Percent Power' gauge. In
 
 Same as [this](#-primary-empty-threshold), but for the 'Roentgens' gauge. In light of the _Note_ above, this value is only used, if your "Roentgens" gauge is your only digital gauge.
 
-##### &#9654; Play TCD-alarm sounds
+#### <ins>Volume settings</ins>
 
-If a TCD is connected via BTTFN or MQTT, the Dash Gauges visually signals when the TCD's alarm sounds. If you want to play an alarm sound, check this option.
+##### Volume level (0-19)
 
-##### &#9654; Play door sounds
+Enter a value between 0 (mute) or 19 (very loud) here.
 
-The Control Board has a connector for two door switches; these switches change state whenever a door is opened or closed. The firmware can play a sound for each such event. To enable door sounds, check this.
+This can also be set/changed through a TCD keypad via BTTFN (9300 - 9319). Such a change will be saved 10 seconds after it occurred.
 
-This option must be unchecked in order to use the MQTT commands PLAY_DOOR_OPEN and PLAY_DOOR_CLOSED.
+#### <ins>Music Player settings</ins>
 
-##### &#9654; Switch closes when door is closed
+##### &#9654; Music folder
 
-This selects what type of door switch is being used. Check this, if the switch closes contact when the door closes. Leave unchecked if the switch opens when the door closes.
+Selects the current music folder, can be 0 through 9. 
 
-##### &#9654; Door sound delay
+This can also be set/changed through a TCD keypad via BTTFN (9050 - 9059). Such a change will be saved immediately.
 
-Depending on the position of the switch and its reaction point, a delay for sound playback might be desired. You can configure such a delay here. Enter the number of milliseconds into the text field; 0 means no delay. The maximum is 5000ms (=5 seconds).
+##### &#9654; Shuffle at startup
 
-#### Home Assistant / MQTT settings
+When checked, songs are shuffled when the device is booted. When unchecked, songs will be played in order.
+
+#### <ins>Network settings</ins>
+
+##### &#9654; Hostname
+
+The device's hostname in the WiFi network. Defaults to 'gauges'. This also is the domain name at which the Config Portal is accessible from a browser in the same local network. The URL of the Config Portal then is http://<i>hostname</i>.local (the default is http://gauges.local)
+
+This setting applies to both AP-mode and when your Dash Gauges is connected to a WiFi network. If you have several Dash Gauges in your local network, please give them unique hostnames.
+
+##### &#9654; WiFi connection attempts
+
+Number of times the firmware tries to reconnect to a WiFi network, before falling back to AP-mode. See [here](#short-summary-of-first-steps)
+
+##### &#9654; WiFi connection timeout
+
+Number of seconds before a timeout occurs when connecting to a WiFi network. When a timeout happens, another attempt is made (see immediately above), and if all attempts fail, the device falls back to AP-mode. See [here](#short-summary-of-first-steps)
+
+#### <ins>Network settings for AP-mode</ins>
+
+##### &#9654; Network name (SSID) appendix
+
+By default, when the Dash Gauges create a WiFi network of its own ("AP-mode"), this network is named "DG-AP". In case you have multiple Dash Gauges in your vicinity, you can have a string appended to create a unique network name. If you, for instance, enter "-ABC" here, the WiFi network name will be "DG-AP-ABC". Characters A-Z, a-z, 0-9 and - are allowed.
+
+##### &#9654; Password
+
+By default, and if this field is empty, the Dash Gauges's own WiFi network ("AP-mode") will be unprotected. If you want to protect your access point, enter your password here. It needs to be 8 characters in length and only characters A-Z, a-z, 0-9 and - are allowed.
+
+If you forget this password and are thereby locked out of your Dash Gauges, 
+- power-down the device,
+- hold the Time Travel button,
+- power-up the device (while still holding the Time Travel button)
+- wait until the "Empty" LED flashes briefly,
+- flip the Side Switch twice within 10 seconds,
+- wait until the "Empty" LED lights up,
+- then release the Time Travel button.
+
+This procedure temporarily (until a reboot) clears the WiFi password, allowing unprotected access to the Config Portal. (Note that this procedure also deletes static IP addres data; the device will return to using DHCP after a reboot.)
+
+#### <ins>Settings for BTTFN communication</ins>
+
+##### &#9654; IP address or hostname of TCD
+
+If you want to have your Dash Gauges to communicate with a Time Circuits Display wirelessly ("BTTF-Network"), enter the TCD's hostname - usually 'timecircuits' - or IP address here.
+
+If you connect your Dash Gauges to the TCD's access point ("TCD-AP"), the TCD's IP address is 192.168.4.1.
+
+##### &#9654; Follow TCD night-mode
+
+If this option is checked, and your TCD goes into night mode, the Dash Gauges will activate the Screen Saver with a very short timeout, and reduce its audio volume.
+
+##### &#9654; Follow TCD fake power
+
+If this option is checked, and your TCD is equipped with a fake power switch, the Dash Gauges will also fake-power up/down. If fake power is off, no LED is active and the Dash Gauges will ignore all input.
+
+##### &#9654; TT button trigger BTTFN-wide TT
+
+If the dash gauges are connected to a TCD through BTTFN, this option allows to trigger a synchronized time travel on all BTTFN-connected devices when pressing the Time Travel button, just as if the Time Travel was triggered by the TCD. If this option is unchecked, pressing the Time Travel button only triggers a Time Travel sequence on the dash gauges.
+
+#### <ins>Home Assistant / MQTT settings</ins>
 
 ##### &#9654; Use Home Assistant (MQTT 3.1.1)
 
@@ -671,17 +659,23 @@ The broker server address. Can be a domain (eg. "myhome.me") or an IP address (e
 
 The username (and optionally the password) to be used when connecting to the broker. Can be left empty if the broker accepts anonymous logins.
 
-#### Music Player settings
+#### <ins>Settings for wired connections</ins>
 
-##### &#9654; Music folder
+##### &#9654; TCD connected by wire
 
-Selects the current music folder, can be 0 through 9. This can also be set/changed through a TCD keypad via BTTFN.
+Check this if you have a Time Circuits Display connected by wire. Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place.
 
-##### &#9654; Shuffle at startup
+While you can connect both a button and the TCD to the "time travel" connector on the Dash Gauges, the button should not be pressed when this option is set, as it might yield unwanted effects.
 
-When checked, songs are shuffled when the device is booted. When unchecked, songs will be played in order.
+Do NOT check this option if your TCD is connected wirelessly (BTTFN, MQTT).
 
-#### Other settings
+##### &#9654; TCD signals Time Travel without 5s lead
+
+Usually, the TCD signals a time travel with a 5 seconds lead, in order to give a prop a chance to play an acceleration sequence before the actual time travel takes place. Since this 5 second lead is unique to CircuitSetup props, and people sometimes want to connect third party props to the TCD, the TCD has the option of skipping this 5 seconds lead. If that is the case, and your Dash Gauges are connected by wire, you need to set this option.
+
+If your Dash Gauges are connected wirelessly, this option has no effect.
+
+#### <ins>Other settings</ins>
 
 ##### &#9654; Save secondary settings on SD
 
@@ -698,7 +692,23 @@ If you want copy settings from one SD card to another, do as follows:
 
 This procedure ensures that all your settings are copied from the old to the new SD card.
 
-#### Gauge Hardware settings
+#### <ins>Door Switches Hardware settings</ins>
+
+##### &#9654; Play door sounds
+
+The Control Board has a connector for two door switches; these switches change state whenever a door is opened or closed. The firmware can play a sound for each such event. To enable door sounds, check this.
+
+This option must be unchecked in order to use the MQTT commands PLAY_DOOR_OPEN and PLAY_DOOR_CLOSED.
+
+##### &#9654; Switch closes when door is closed
+
+This selects what type of door switch is being used. Check this, if the switch closes contact when the door closes. Leave unchecked if the switch opens when the door closes.
+
+##### &#9654; Door sound delay
+
+Depending on the position of the switch and its reaction point, a delay for sound playback might be desired. You can configure such a delay here. Enter the number of milliseconds into the text field; 0 means no delay. The maximum is 5000ms (=5 seconds).
+
+#### <ins>Gauge Hardware settings</ins>
 
 ##### &#9654; Gauges hardware type
 
@@ -708,10 +718,6 @@ This selects the type of gauge hardware and the way of connection. In order to p
 - enter 9317931 on a wirelessly connected TCD,
 
 then reload the page in your browser.
-
-
-
-
 
 _Text & images: (C) Thomas Winischhofer ("A10001986"). See LICENSE._ Source: https://dg.out-a-ti.me  
 _Other props: [Time Circuits Display](https://tcd.out-a-ti.me) ... [Flux Capacitor](https://fc.out-a-ti.me) ... [SID](https://sid.out-a-ti.me) ... [VSR](https://vsr.out-a-ti.me) ... [Remote Control](https://remote.out-a-ti.me) ... [TFC](https://tfc.out-a-ti.me)_
