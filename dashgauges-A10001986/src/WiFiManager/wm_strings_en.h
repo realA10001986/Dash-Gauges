@@ -97,7 +97,7 @@ const char HTTP_SCAN_LINK[]        PROGMEM = "<br/><form action='/wifi?refresh=1
 #endif
 
 const char HTTP_SAVED[]            PROGMEM = "<div class='msg'>Saving Credentials<br/>Trying to connect ESP to network.<br />If it fails reconnect to AP to try again</div>";
-const char HTTP_PARAMSAVED[]       PROGMEM = "<div class='msg S'>Saved<br/></div>";
+const char HTTP_PARAMSAVED[]       PROGMEM = "<div class='msg S'>Settings saved. Rebooting.<br/></div>";
 const char HTTP_END[]              PROGMEM = "</div></body></html>";
 #ifdef _A10001986_NO_BR
 const char HTTP_ERASEBTN[]         PROGMEM = "<form action='/erase' method='get'><button class='D'>Erase WiFi config</button></form>";
@@ -109,11 +109,11 @@ const char HTTP_ERASEBTN[]         PROGMEM = "<br/><form action='/erase' method=
 const char HTTP_BACKBTN[]          PROGMEM = "<hr><br/><form action='/' method='get'><button>Back</button></form>";
 #endif
 const char HTTP_STATUS_ON[]        PROGMEM = "<div class='msg S'><strong>Connected</strong> to {v}<br/><em><small>with IP {i}</small></em></div>";
-const char HTTP_STATUS_OFF[]       PROGMEM = "<div class='msg {c}'><strong>Not connected</strong> to {v}{r}</div>"; //{c=class} {v=ssid} {r=status_off}
+const char HTTP_STATUS_OFF[]       PROGMEM = "<div class='msg {c}'><strong>Not connected</strong> to {v}{r}<br/><em><small>Currently operating in AP-mode</small></em></div>"; //{c=class} {v=ssid} {r=status_off}
 const char HTTP_STATUS_OFFPW[]     PROGMEM = "<br/>Authentication failure"; // STATION_WRONG_PASSWORD,  no eps32
-const char HTTP_STATUS_OFFNOAP[]   PROGMEM = "<br/>AP not found";   		// WL_NO_SSID_AVAIL
+const char HTTP_STATUS_OFFNOAP[]   PROGMEM = "<br/>Network not found";   	// WL_NO_SSID_AVAIL
 const char HTTP_STATUS_OFFFAIL[]   PROGMEM = "<br/>Could not connect"; 		// WL_CONNECT_FAILED
-const char HTTP_STATUS_NONE[]      PROGMEM = "<div class='msg'>No AP set</div>";
+const char HTTP_STATUS_NONE[]      PROGMEM = "<div class='msg'>No WiFi connection configured</div>";
 const char HTTP_BR[]               PROGMEM = "<br/>";
 
 const char HTTP_STYLE[]            PROGMEM = "<style>"

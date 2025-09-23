@@ -308,8 +308,10 @@ class WiFiManager
     //called when config portal is timeout
     void          setConfigPortalTimeoutCallback( std::function<void()> func );
 	
-    //A10001986 inserted / called after erasing WiFi config, before reboot
+    //A10001986 inserted / called after erasing WiFi config, before reboot,
+	//                     called to add HTML to root menu
     void          setPostEraseCallback( std::function<void()> func );
+	void          setMenuOutCallback( std::function<void(String &page)> func ); 
 	// --- end
 
     //sets timeout before AP,webserver loop ends and exits even if there has been no setup.
@@ -854,6 +856,7 @@ class WiFiManager
     std::function<void()> _configportaltimeoutcallback;
 	// A10001986 inserted
 	std::function<void()> _posterasecallback;
+	std::function<void(String &page)> _menuoutcallback;
 	// --- end
 
     template <class T>

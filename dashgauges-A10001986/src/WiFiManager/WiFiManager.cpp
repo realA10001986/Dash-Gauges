@@ -1621,6 +1621,12 @@ String WiFiManager::getMenuOut()
     page += HTTP_PORTAL_MENU[menuId];
   }
 
+  // A10001986 added
+  if (_menuoutcallback != NULL) {
+    _menuoutcallback(page);  // @CALLBACK 
+  }
+  // A10001986 end
+
   return page;
 }
 
@@ -2795,36 +2801,31 @@ void WiFiManager::reportStatus(String &page)
   DEBUG_WM(DEBUG_DEV,F("[WIFI] reportStatus prev:"),getWLStatusString(_lastconxresult));
   DEBUG_WM(DEBUG_DEV,F("[WIFI] reportStatus current:"),getWLStatusString(WiFi.status()));
   String str;
-  if (WiFi_SSID() != ""){
+  if (WiFi_SSID() != "") {
     if (WiFi.status()==WL_CONNECTED){
       str = FPSTR(HTTP_STATUS_ON);
       str.replace(FPSTR(T_i),WiFi.localIP().toString());
       str.replace(FPSTR(T_v),htmlEntities(WiFi_SSID()));
-    }
-    else {
+    } else {
       str = FPSTR(HTTP_STATUS_OFF);
       str.replace(FPSTR(T_v),htmlEntities(WiFi_SSID()));
       if(_lastconxresult == WL_STATION_WRONG_PASSWORD){
         // wrong password
         str.replace(FPSTR(T_c),"D"); // class
         str.replace(FPSTR(T_r),FPSTR(HTTP_STATUS_OFFPW));
-      }
-      else if(_lastconxresult == WL_NO_SSID_AVAIL){
+      } else if(_lastconxresult == WL_NO_SSID_AVAIL){
         // connect failed, or ap not found
         str.replace(FPSTR(T_c),"D");
         str.replace(FPSTR(T_r),FPSTR(HTTP_STATUS_OFFNOAP));
-      }
-      else if(_lastconxresult == WL_CONNECT_FAILED){
+      } else if(_lastconxresult == WL_CONNECT_FAILED){
         // connect failed
         str.replace(FPSTR(T_c),"D");
         str.replace(FPSTR(T_r),FPSTR(HTTP_STATUS_OFFFAIL));
-      }
-	  else if(_lastconxresult == WL_CONNECTION_LOST){
+      } else if(_lastconxresult == WL_CONNECTION_LOST){
         // connect failed, MOST likely 4WAY_HANDSHAKE_TIMEOUT/incorrect password, state is ambiguous however
         str.replace(FPSTR(T_c),"D");
         str.replace(FPSTR(T_r),FPSTR(HTTP_STATUS_OFFFAIL));
-      }
-      else{
+      } else{
         str.replace(FPSTR(T_c),"");
         str.replace(FPSTR(T_r),"");
       } 
@@ -3232,6 +3233,14 @@ void WiFiManager::setConfigPortalTimeoutCallback( std::function<void()> func )
 void WiFiManager::setPostEraseCallback( std::function<void()> func ) 
 {
   _posterasecallback = func;
+}
+/* setMenuOutCallback, set a callback to add html to root menu
+ * @access public
+ * @param {[type]} void (*func)(String &page)
+ */
+void WiFiManager::setMenuOutCallback( std::function<void(String &page)> func ) 
+{
+  _menuoutcallback = func;
 }
 // A10001986 end
 
