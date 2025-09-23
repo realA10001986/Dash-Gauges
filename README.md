@@ -52,7 +52,7 @@ Then there are two alternative ways to proceed. Note that both methods *require 
 - Copy "DGA.bin" to the root directory of of a FAT32 formatted SD card;
 - power down the Dash Gauges,
 - insert this SD card into the slot and 
-- power up the Dash Gauges; the audio data will be installed automatically.
+- power up the Dash Gauges; the sound-pack will be installed automatically.
 
 After installation, the SD card can be re-used for [other purposes](#sd-card).
 
@@ -282,7 +282,7 @@ Other ways of triggering a time travel are available if a [Time Circuits Display
 
 Preface note on SD cards: For unknown reasons, some SD cards simply do not work with this device. For instance, I had no luck with Sandisk Ultra 32GB and  "Intenso" cards. If your SD card is not recognized, check if it is formatted in FAT32 format (not exFAT!). Also, the size must not exceed 32GB (as larger cards cannot be formatted with FAT32). Transcend SDHC cards work fine in my experience.
 
-The SD card, apart from being required for [installing](#sound-pack-installation) of the built-in audio data, can be used for substituting built-in sound effects and for music played back by the [Music player](#the-music-player). Also, it is _strongly recommended_ to store [secondary settings](#-save-secondary-settings-on-sd) on the SD card to minimize [Flash Wear](#flash-wear).
+The SD card, apart from being required for [installing](#sound-pack-installation) of the built-in sound-pack, can be used for substituting built-in sound effects and for music played back by the [Music player](#the-music-player). Also, it is _strongly recommended_ to store [secondary settings](#-save-secondary-settings-on-sd) on the SD card to minimize [Flash Wear](#flash-wear).
 
 Note that the SD card must be inserted before powering up the device. It is not recognized if inserted while the Dash Gauges are running. Furthermore, do not remove the SD card while the device is powered.
 
@@ -466,15 +466,15 @@ This leads to the [Setup page](#setup-page).
 
 ##### &#9654; Update
 
-This leads to the firmware and audio update page. 
+This leads to the firmware and audio upload page. 
 
 In order to upload a new firmware binary (such as the ones published here in the install/ folder), select that image file in the top file selector and click "Update".
 
-You can also install the Dash Gauges' audio data on this page; download the current sound-pack, extract it and select the resulting DGA.bin file in the bottom file selector. Finally, click "Upload". Note that an SD card is required for this operation.
-
-Note that either a firmware or audio data can be uploaded at once, not both at the same time.
+You can also install the Dash Gauges' sound-pack on this page; download the current sound-pack, extract it and select the resulting DGA.bin file in the bottom file selector. Finally, click "Upload". Note that an SD card is required for this operation.
 
 Finally, this page is also for uploading [custom or replacement sound files](#installing-custom--replacement-audio-files) to the SD card. Select an mp3 file in the bottom file selector and click upload. (Requires firmware 1.20 or later.)
+
+Note that either a firmware or audio data can be uploaded at once, not both at the same time.
 
 ##### &#9654; Erase WiFi Config
 
