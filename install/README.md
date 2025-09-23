@@ -10,9 +10,9 @@ If you are using a fresh ESP32 board, please see [dashgauges-A10001986.ino](http
 
  *Important: After a firmware update, the "empty" LED might blink for short while after reboot. Do NOT unplug the device during this time.*
 
-## Audio data installation
+## Sound-pack installation
 
-The audio data is not updated as often as the firmware itself. If you have previously installed the latest version of the sound-pack, you normally don't have to re-install the audio data when you update the firmware. Only if either a new version of the sound-pack is released, or your device is quiet after a firmware update, a re-installation is needed.
+The sound-pack is not updated as often as the firmware itself. If you have previously installed the latest version of the sound-pack, you normally don't have to re-install it when you update the firmware. Only if the "Empty" LED signals "SOS" (three short blinks, three long blinks, three short blicks) during boot, a re-installation/update is needed.
 
 The first step is to download "install/sound-pack-xxxxxxxx.zip" and extract it. It contains one file named "DGA.bin".
 
@@ -26,4 +26,4 @@ Then there are two alternative ways to proceed. Note that both methods *require 
 - insert this SD card into the slot and 
 - power up the Dash Gauges; the audio data will be installed automatically.
 
-See also [here](https://github.com/realA10001986/Dash-Gauges/blob/main/README.md#audio-data-installation).
+See also [here](https://github.com/realA10001986/Dash-Gauges/blob/main/README.md#sound-pack-installation).
