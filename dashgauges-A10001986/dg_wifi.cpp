@@ -67,11 +67,6 @@
 #include "mqtt.h"
 #endif
 
-
-// If undefined, use the checkbox/dropdown-hacks.
-// If defined, go back to standard text boxes
-//#define DG_NOCHECKBOXES
-
 #define STRLEN(x) (sizeof(x)-1)
 
 Settings settings;
@@ -133,26 +128,39 @@ static const char gaTyLockedHintHTML[] = "<div style='margin:0;padding:0;font-si
 
 static const char gaThresholdHintHTML[] = "<div style='margin:0;padding:0;font-size:80%'>If gauges are on same pin, first applicable has priority.</div>";
 
-
 static const char *aco = "autocomplete='off'";
 
-WiFiManagerParameter custom_aood("<div class='msg P'>Please <a href='/update'>install/update</a> audio data</div>");
+WiFiManagerParameter custom_aood("<div class='msg P'>Please <a href='/update'>install/update</a> sound pack</div>");
 
 WiFiManagerParameter custom_aRef("aRef", "Auto-refill timer (seconds; 0=never)", settings.autoRefill, 3, "type='number' min='0' max='360' autocomplete='off'", WFM_LABEL_BEFORE);
 WiFiManagerParameter custom_aMut("aMut", "Mute 'empty' alarm timer (seconds; 0=never)", settings.autoMute, 3, "type='number' min='0' max='360' autocomplete='off'", WFM_LABEL_BEFORE);
+WiFiManagerParameter custom_playALSnd("plyALS", "Play TCD-alarm sound", settings.playALsnd, 1, "autocomplete='off' title='Check to have the device play a sound when the TCD alarm sounds.' type='checkbox' class='mt5 mb10'", WFM_LABEL_AFTER);
 WiFiManagerParameter custom_ssDelay("ssDel", "Screen saver timer (minutes; 0=off)", settings.ssTimer, 3, "type='number' min='0' max='999' autocomplete='off'", WFM_LABEL_BEFORE);
 
+WiFiManagerParameter custom_lIdle("lIdle", "'Primary' full percentage (0-100; 0=use default)", settings.lIdle, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
+WiFiManagerParameter custom_cIdle("cIdle", "'Percent Power' full percentage (0-100; 0=use default)", settings.cIdle, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
+WiFiManagerParameter custom_rIdle("rIdle", "'Roentgens' full percentage (0-100; 0=use default)", settings.rIdle, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
+WiFiManagerParameter custom_lEmpty("lEmpty", "'Primary' empty percentage (0-100)", settings.lEmpty, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
+WiFiManagerParameter custom_cEmpty("cEmpty", "'Percent Power' empty percentage (0-100)", settings.cEmpty, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
+WiFiManagerParameter custom_rEmpty("rEmpty", "'Roentgens' empty percentage (0-100)", settings.rEmpty, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
+WiFiManagerParameter custom_drPri("drPri", "Slowly drain Primary during TT", settings.drPri, 1, "autocomplete='off' title='Check to to slowly drain meter during time travel.' type='checkbox' class='mt5' style='margin-bottom:15px;'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_drPPo("drPPo", "Slowly drain Percent Power during TT", settings.drPPo, 1, "autocomplete='off' title='Check to to slowly drain meter during time travel.' type='checkbox' class='mt5' style='margin-bottom:15px;'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_drRoe("drRoe", "Slowly drain Roentgens during TT", settings.drRoe, 1, "autocomplete='off' title='Check to to slowly drain meter during time travel.' type='checkbox' class='mt5'", WFM_LABEL_AFTER);
+
+WiFiManagerParameter custom_lTh("lTh", "'Primary' empty threshold (0-99)", settings.lThreshold, 2, "type='number' min='0' max='99' autocomplete='off'", WFM_LABEL_BEFORE);
+WiFiManagerParameter custom_cTh("cTh", "'Percent Power' empty threshold (0-99)", settings.cThreshold, 2, "type='number' min='0' max='99' autocomplete='off'", WFM_LABEL_BEFORE);
+WiFiManagerParameter custom_rTh("rTh", "'Roentgens' empty threshold (0-99)", settings.rThreshold, 2, "type='number' min='0' max='99' autocomplete='off'", WFM_LABEL_BEFORE);
+WiFiManagerParameter custom_rHint(gaThresholdHintHTML);
+
 #ifdef DG_HAVEVOLKNOB
-#ifdef DG_NOCHECKBOXES  // --- Standard text boxes: -------
-WiFiManagerParameter custom_FixV("FixV", "Disable volume knob (0=no, 1=yes)", settings.FixV, 1, "autocomplete='off' title='Enable this if the audio volume should be set by software; if disabled, the volume knob is used' style='margin-top:5px;'");
-#else // -------------------- Checkbox hack: --------------
 WiFiManagerParameter custom_FixV("FixV", "Disable volume knob", settings.FixV, 1, "autocomplete='off' title='Check this if the audio volume should be set by software; if unchecked, the volume knob is used' type='checkbox' class='mt5'", WFM_LABEL_AFTER);
-#endif // -------------------------------------------------
-//WiFiManagerParameter custom_Vol("Vol", "<br>Software volume level (0-19)", settings.Vol, 2, "type='number' min='0' max='19' autocomplete='off'", WFM_LABEL_BEFORE);
 WiFiManagerParameter custom_Vol("Vol", "Software volume level (0-19)", settings.Vol, 2, "type='number' min='0' max='19' autocomplete='off'", WFM_LABEL_BEFORE);
 #else
 WiFiManagerParameter custom_Vol("Vol", "Volume level (0-19)", settings.Vol, 2, "type='number' min='0' max='19' autocomplete='off'", WFM_LABEL_BEFORE);
 #endif
+
+WiFiManagerParameter custom_musicFolder("mfol", "Music folder (0-9)", settings.musicFolder, 2, "type='number' min='0' max='9'");
+WiFiManagerParameter custom_shuffle("musShu", "Shuffle mode enabled at startup", settings.shuffle, 1, "type='checkbox' class='mt5'", WFM_LABEL_AFTER);
 
 #if defined(DG_MDNS) || defined(DG_WM_HAS_MDNS)
 #define HNTEXT "Hostname<br><span style='font-size:80%'>The Config Portal is accessible at http://<i>hostname</i>.local<br>(Valid characters: a-z/0-9/-)</span>"
@@ -160,117 +168,38 @@ WiFiManagerParameter custom_Vol("Vol", "Volume level (0-19)", settings.Vol, 2, "
 #define HNTEXT "Hostname<br><span style='font-size:80%'>(Valid characters: a-z/0-9/-)</span>"
 #endif
 WiFiManagerParameter custom_hostName("hostname", HNTEXT, settings.hostName, 31, "pattern='[A-Za-z0-9\\-]+' placeholder='Example: fluxcapacitor'");
-WiFiManagerParameter custom_sysID("sysID", "AP Mode: Network name appendix<br><span style='font-size:80%'>Will be appended to \"DG-AP\" to create a unique name if multiple devices in range. [a-z/0-9/-]</span>", settings.systemID, 7, "pattern='[A-Za-z0-9\\-]+'");
-WiFiManagerParameter custom_appw("appw", "AP Mode: WiFi password<br><span style='font-size:80%'>Password to protect DG-AP. Empty or 8 characters [a-z/0-9/-]<br><b>Write this down, you might lock yourself out!</b></span>", settings.appw, 8, "minlength='8' pattern='[A-Za-z0-9\\-]+'");
 WiFiManagerParameter custom_wifiConRetries("wifiret", "WiFi connection attempts (1-10)", settings.wifiConRetries, 2, "type='number' min='1' max='10' autocomplete='off'", WFM_LABEL_BEFORE);
 WiFiManagerParameter custom_wifiConTimeout("wificon", "WiFi connection timeout (7-25[seconds])", settings.wifiConTimeout, 2, "type='number' min='7' max='25'");
 
-#ifdef DG_NOCHECKBOXES  // --- Standard text boxes: -------
-WiFiManagerParameter custom_TCDpresent("TCDpres", "TCD connected by wire (0=no, 1=yes)", settings.TCDpresent, 1, "autocomplete='off' title='Enable this if you have a Time Circuits Display connected via wire' style='margin-top:5px;'");
-#else // -------------------- Checkbox hack: --------------
-WiFiManagerParameter custom_TCDpresent("TCDpres", "TCD connected by wire", settings.TCDpresent, 1, "autocomplete='off' title='Check this if you have a Time Circuits Display connected via wire' type='checkbox' class='mt5'", WFM_LABEL_AFTER);
-#endif // -------------------------------------------------
-#ifdef TC_NOCHECKBOXES  // --- Standard text boxes: -------
-WiFiManagerParameter custom_noETTOL("uEtNL", "TCD signals Time Travel without 5s lead (0=no, 1=yes)", settings.noETTOLead, 1, "autocomplete='off'");
-#else // -------------------- Checkbox hack: --------------
-WiFiManagerParameter custom_noETTOL("uEtNL", "TCD signals Time Travel without 5s lead", settings.noETTOLead, 1, "autocomplete='off' type='checkbox' class='mt5' style='margin-left:20px'", WFM_LABEL_AFTER);
-#endif // -------------------------------------------------
+WiFiManagerParameter custom_sysID("sysID", "Network name (SSID) appendix<br><span style='font-size:80%'>Will be appended to \"DG-AP\" to create a unique SSID if multiple such devices are in range. [a-z/0-9/-]</span>", settings.systemID, 7, "pattern='[A-Za-z0-9\\-]+'");
+WiFiManagerParameter custom_appw("appw", "Password<br><span style='font-size:80%'>Password to protect DG-AP. Empty or 8 characters [a-z/0-9/-]<br><b>Write this down, you might lock yourself out!</b></span>", settings.appw, 8, "minlength='8' pattern='[A-Za-z0-9\\-]+'");
 
-WiFiManagerParameter custom_bttfnHint("<div style='margin:0px 0px 10px 0px;padding:0px'>Wireless communication (BTTF-Network)</div>");
 #ifdef BTTFN_MC
-WiFiManagerParameter custom_tcdIP("tcdIP", "IP address or hostname of TCD", settings.tcdIP, 63, "pattern='(^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$)|([A-Za-z0-9\\-]+)' placeholder='Example: 192.168.4.1'");
+WiFiManagerParameter custom_tcdIP("tcdIP", "IP address or hostname of TCD", settings.tcdIP, 31, "pattern='(^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$)|([A-Za-z0-9\\-]+)' placeholder='Example: 192.168.4.1'");
 #else
-WiFiManagerParameter custom_tcdIP("tcdIP", "IP address of TCD", settings.tcdIP, 63, "pattern='^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$' placeholder='Example: 192.168.4.1'");
+WiFiManagerParameter custom_tcdIP("tcdIP", "IP address of TCD", settings.tcdIP, 31, "pattern='^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$' placeholder='Example: 192.168.4.1'");
 #endif
-#ifdef DG_NOCHECKBOXES  // --- Standard text boxes: -------
-WiFiManagerParameter custom_uNM("uNM", "Follow TCD night-mode (0=no, 1=yes)<br><span style='font-size:80%'>If enabled, the Screen Saver will activate when TCD is in night-mode.</span>", settings.useNM, 1, "autocomplete='off'");
-#else // -------------------- Checkbox hack: --------------
-WiFiManagerParameter custom_uNM("uNM", "Follow TCD night-mode<br><span style='font-size:80%'>If checked, the Screen Saver will activate when TCD is in night-mode.</span>", settings.useNM, 1, "autocomplete='off' type='checkbox' style='margin-bottom:0px;'", WFM_LABEL_AFTER);
-#endif // -------------------------------------------------
-#ifdef DG_NOCHECKBOXES  // --- Standard text boxes: -------
-WiFiManagerParameter custom_uFPO("uFPO", "Follow TCD fake power (0=no, 1=yes)", settings.useFPO, 1, "autocomplete='off'");
-#else // -------------------- Checkbox hack: --------------
-WiFiManagerParameter custom_uFPO("uFPO", "Follow TCD fake power", settings.useFPO, 1, "autocomplete='off' type='checkbox' style='margin-bottom:0px;'", WFM_LABEL_AFTER);
-#endif // -------------------------------------------------
-#ifdef TC_NOCHECKBOXES  // --- Standard text boxes: -------
-WiFiManagerParameter custom_bttfnTT("bttfnTT", "TT button triggers BTTFN-wide TT (0=no, 1=yes)<br><span style='font-size:80%'>If enabled, pressing the Time Travel button triggers a BTTFN-wide TT</span>", settings.bttfnTT, 1, "autocomplete='off'");
-#else // -------------------- Checkbox hack: --------------
-WiFiManagerParameter custom_bttfnTT("bttfnTT", "TT button triggers BTTFN-wide TT<br><span style='font-size:80%'>If checked, pressing the Time Travel button triggers a BTTFN-wide TT</span>", settings.bttfnTT, 1, "autocomplete='off' type='checkbox' style='margin-bottom:0px;'", WFM_LABEL_AFTER);
-#endif // -------------------------------------------------
-
-WiFiManagerParameter custom_lIdle("lIdle", "'Primary' full percentage (0-100; 0=use default)", settings.lIdle, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
-//WiFiManagerParameter custom_cIdle("cIdle", "<br>'Percent Power' full percentage (0-100; 0=use default)", settings.cIdle, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
-WiFiManagerParameter custom_cIdle("cIdle", "'Percent Power' full percentage (0-100; 0=use default)", settings.cIdle, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
-//WiFiManagerParameter custom_rIdle("rIdle", "<br>'Roentgens' full percentage (0-100; 0=use default)", settings.rIdle, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
-WiFiManagerParameter custom_rIdle("rIdle", "'Roentgens' full percentage (0-100; 0=use default)", settings.rIdle, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
-WiFiManagerParameter custom_lEmpty("lEmpty", "'Primary' empty percentage (0-100)", settings.lEmpty, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
-WiFiManagerParameter custom_cEmpty("cEmpty", "'Percent Power' empty percentage (0-100)", settings.cEmpty, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
-WiFiManagerParameter custom_rEmpty("rEmpty", "'Roentgens' empty percentage (0-100)", settings.rEmpty, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
-
-#ifdef TC_NOCHECKBOXES  // --- Standard text boxes: -------
-WiFiManagerParameter custom_drPri("drPri", "Drain Primary during TT (0=no, 1=yes)", settings.drPri, 1, "autocomplete='off' title='Enable to to slowly drain meter during time travel.'");
-WiFiManagerParameter custom_drPPo("drPPo", "Drain Percent Power during TT (0=no, 1=yes)", settings.drPPo, 1, "autocomplete='off' title='Enable to to slowly drain meter during time travel.'");
-WiFiManagerParameter custom_drRoe("drRoe", "Drain Roentgens during TT (0=no, 1=yes)", settings.drRoe, 1, "autocomplete='off' title='Enable to to slowly drain meter during time travel.'");
-#else // -------------------- Checkbox hack: --------------
-WiFiManagerParameter custom_drPri("drPri", "Slowly drain Primary during TT", settings.drPri, 1, "autocomplete='off' title='Check to to slowly drain meter during time travel.' type='checkbox' style='margin-top:5px;margin-bottom:15px;'", WFM_LABEL_AFTER);
-WiFiManagerParameter custom_drPPo("drPPo", "Slowly drain Percent Power during TT", settings.drPPo, 1, "autocomplete='off' title='Check to to slowly drain meter during time travel.' type='checkbox' style='margin-top:5px;margin-bottom:15px;'", WFM_LABEL_AFTER);
-WiFiManagerParameter custom_drRoe("drRoe", "Slowly drain Roentgens during TT", settings.drRoe, 1, "autocomplete='off' title='Check to to slowly drain meter during time travel.' type='checkbox' style='margin-top:5px;'", WFM_LABEL_AFTER);
-#endif // -------------------------------------------------
-
-WiFiManagerParameter custom_lTh("lTh", "'Primary' empty threshold (0-99)", settings.lThreshold, 2, "type='number' min='0' max='99' autocomplete='off'", WFM_LABEL_BEFORE);
-WiFiManagerParameter custom_cTh("cTh", "'Percent Power' empty threshold (0-99)", settings.cThreshold, 2, "type='number' min='0' max='99' autocomplete='off'", WFM_LABEL_BEFORE);
-WiFiManagerParameter custom_rTh("rTh", "'Roentgens' empty threshold (0-99)", settings.rThreshold, 2, "type='number' min='0' max='99' autocomplete='off'", WFM_LABEL_BEFORE);
-WiFiManagerParameter custom_rHint(gaThresholdHintHTML);
-
-#ifdef TC_NOCHECKBOXES  // --- Standard text boxes: -------
-WiFiManagerParameter custom_playALSnd("plyALS", "Play TCD-alarm sounds (0=no, 1=yes)", settings.playALsnd, 1, "autocomplete='off' title='Enable to have the device play a sound when the TCD alarm sounds.'");
-#else // -------------------- Checkbox hack: --------------
-WiFiManagerParameter custom_playALSnd("plyALS", "Play TCD-alarm sound", settings.playALsnd, 1, "autocomplete='off' title='Check to have the device play a sound when the TCD alarm sounds.' type='checkbox' class='mt5'", WFM_LABEL_AFTER);
-#endif // -------------------------------------------------
-
-#ifdef DG_HAVEDOORSWITCH
-#ifdef TC_NOCHECKBOXES  // --- Standard text boxes: -------
-WiFiManagerParameter custom_dsPlay("dsPlay", "Play door sounds (0=no, 1=yes)", settings.dsPlay, 1, "autocomplete='off' title='Enable to have the device play a sound when door switch changes state'");
-#else // -------------------- Checkbox hack: --------------
-WiFiManagerParameter custom_dsPlay("dsPlay", "Play door sounds", settings.dsPlay, 1, "autocomplete='off' title='Check to have the device play a sound when door switch changes state' type='checkbox' style='margin-top:13px;'", WFM_LABEL_AFTER);
-#endif // -------------------------------------------------
-#ifdef TC_NOCHECKBOXES  // --- Standard text boxes: -------
-WiFiManagerParameter custom_dsCOnC("dsCOnC", "Switch closes when door is closed (0=no, 1=yes)", settings.dsCOnC, 1, "autocomplete='off' title='Enable to play the door open sound when switch opens'");
-#else // -------------------- Checkbox hack: --------------
-WiFiManagerParameter custom_dsCOnC("dsCOnC", "Switch closes when door is closed", settings.dsCOnC, 1, "autocomplete='off' title='Check to play the door open sound when switch opens' type='checkbox' class='mt5' style='margin-bottom:8px;'", WFM_LABEL_AFTER);
-#endif // -------------------------------------------------
-//WiFiManagerParameter custom_dsDelay("dsDelay", "<br>Door sound delay (0-5000[milliseconds])", settings.dsDelay, 4, "type='number' min='0' max='5000'");
-WiFiManagerParameter custom_dsDelay("dsDelay", "Door sound delay (0-5000[milliseconds])", settings.dsDelay, 4, "type='number' min='0' max='5000'");
-#endif
+WiFiManagerParameter custom_uNM("uNM", "Follow TCD night-mode<br><span style='font-size:80%'>If checked, the Screen Saver will activate when TCD is in night-mode.</span>", settings.useNM, 1, "autocomplete='off' type='checkbox' class='mb0'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_uFPO("uFPO", "Follow TCD fake power", settings.useFPO, 1, "autocomplete='off' type='checkbox'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_bttfnTT("bttfnTT", "TT button triggers BTTFN-wide TT<br><span style='font-size:80%'>If checked, pressing the Time Travel button triggers a BTTFN-wide TT</span>", settings.bttfnTT, 1, "autocomplete='off' type='checkbox' class='mb0'", WFM_LABEL_AFTER);
 
 #ifdef DG_HAVEMQTT
-#ifdef DG_NOCHECKBOXES  // --- Standard text boxes: -------
-WiFiManagerParameter custom_useMQTT("uMQTT", "Use Home Assistant (0=no, 1=yes)", settings.useMQTT, 1, "autocomplete='off'");
-#else // -------------------- Checkbox hack: --------------
-WiFiManagerParameter custom_useMQTT("uMQTT", "Use Home Assistant (MQTT 3.1.1)", settings.useMQTT, 1, "type='checkbox' style='margin-top:5px'", WFM_LABEL_AFTER);
-#endif // -------------------------------------------------
-//WiFiManagerParameter custom_mqttServer("ha_server", "<br>Broker IP[:port] or domain[:port]", settings.mqttServer, 79, "pattern='[a-zA-Z0-9\\.:\\-]+' placeholder='Example: 192.168.1.5'");
+WiFiManagerParameter custom_useMQTT("uMQTT", "Use Home Assistant (MQTT 3.1.1)", settings.useMQTT, 1, "type='checkbox' class='mt5 mb10'", WFM_LABEL_AFTER);
 WiFiManagerParameter custom_mqttServer("ha_server", "Broker IP[:port] or domain[:port]", settings.mqttServer, 79, "pattern='[a-zA-Z0-9\\.:\\-]+' placeholder='Example: 192.168.1.5'");
 WiFiManagerParameter custom_mqttUser("ha_usr", "User[:Password]", settings.mqttUser, 63, "placeholder='Example: ronald:mySecret'");
 #endif // HAVEMQTT
 
-WiFiManagerParameter custom_musicFolder("mfol", "Music folder (0-9)", settings.musicFolder, 2, "type='number' min='0' max='9'");
-#ifdef DG_NOCHECKBOXES  // --- Standard text boxes: -------
-WiFiManagerParameter custom_shuffle("musShu", "Shuffle mode enabled at startup (0=no, 1=yes)", settings.shuffle, 1, "autocomplete='off'");
-#else // -------------------- Checkbox hack: --------------
-WiFiManagerParameter custom_shuffle("musShu", "Shuffle mode enabled at startup", settings.shuffle, 1, "type='checkbox' style='margin-top:8px'", WFM_LABEL_AFTER);
-#endif // -------------------------------------------------
+WiFiManagerParameter custom_TCDpresent("TCDpres", "TCD connected by wire", settings.TCDpresent, 1, "autocomplete='off' title='Check this if you have a Time Circuits Display connected via wire' type='checkbox' class='mt5'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_noETTOL("uEtNL", "TCD signals Time Travel without 5s lead", settings.noETTOLead, 1, "autocomplete='off' type='checkbox' class='mt5' style='margin-left:20px'", WFM_LABEL_AFTER);
 
-#ifdef DG_NOCHECKBOXES  // --- Standard text boxes: -------
-WiFiManagerParameter custom_CfgOnSD("CfgOnSD", "Save secondary settings on SD (0=no, 1=yes)<br><span style='font-size:80%'>Enable this to avoid flash wear</span>", settings.CfgOnSD, 1, "autocomplete='off'");
-#else // -------------------- Checkbox hack: --------------
-WiFiManagerParameter custom_CfgOnSD("CfgOnSD", "Save secondary settings on SD<br><span style='font-size:80%'>Check this to avoid flash wear</span>", settings.CfgOnSD, 1, "autocomplete='off' type='checkbox' class='mt5'", WFM_LABEL_AFTER);
-#endif // -------------------------------------------------
-//#ifdef DG_NOCHECKBOXES  // --- Standard text boxes: -------
-//WiFiManagerParameter custom_sdFrq("sdFrq", "SD clock speed (0=16Mhz, 1=4Mhz)<br><span style='font-size:80%'>Slower access might help in case of problems with SD cards</span>", settings.sdFreq, 1, "autocomplete='off'");
-//#else // -------------------- Checkbox hack: --------------
+WiFiManagerParameter custom_CfgOnSD("CfgOnSD", "Save secondary settings on SD<br><span style='font-size:80%'>Check this to avoid flash wear</span>", settings.CfgOnSD, 1, "autocomplete='off' type='checkbox' class='mt5 mb0'", WFM_LABEL_AFTER);
 //WiFiManagerParameter custom_sdFrq("sdFrq", "4MHz SD clock speed<br><span style='font-size:80%'>Checking this might help in case of SD card problems</span>", settings.sdFreq, 1, "autocomplete='off' type='checkbox' style='margin-top:12px'", WFM_LABEL_AFTER);
-//#endif // -------------------------------------------------
+
+#ifdef DG_HAVEDOORSWITCH
+WiFiManagerParameter custom_dsPlay("dsPlay", "Play door sounds", settings.dsPlay, 1, "autocomplete='off' title='Check to have the device play a sound when door switch changes state' type='checkbox' class='mt5'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_dsCOnC("dsCOnC", "Switch closes when door is closed", settings.dsCOnC, 1, "autocomplete='off' title='Check to play the door open sound when switch opens' type='checkbox' class='mb10'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_dsDelay("dsDelay", "Door sound delay (0-5000[milliseconds])", settings.dsDelay, 4, "type='number' min='0' max='5000'");
+#endif
 
 WiFiManagerParameter custom_gaugeIDA(gaTyCustHTMLA);
 WiFiManagerParameter custom_gaugeIDB(gaTyCustHTMLB);
@@ -281,12 +210,11 @@ WiFiManagerParameter custom_sectstart_head("<div class='sects'>");
 WiFiManagerParameter custom_sectstart("</div><div class='sects'>");
 WiFiManagerParameter custom_sectend("</div>");
 
-WiFiManagerParameter custom_sectstart_nw("</div><div class='sects'><div class='headl'>Wireless communication (BTTF-Network)</div>");
-
 WiFiManagerParameter custom_sectstart_ag("</div><div class='sects'><div class='headl'>Analog gauges setup</div>");
 WiFiManagerParameter custom_sectstart_dg("</div><div class='sects'><div class='headl'>Digital/Legacy gauges setup</div>");
-
 WiFiManagerParameter custom_sectstart_mp("</div><div class='sects'><div class='headl'>MusicPlayer</div>");
+WiFiManagerParameter custom_sectstart_ap("</div><div class='sects'><div class='headl'>Access point (AP) mode</div>");
+WiFiManagerParameter custom_sectstart_nw("</div><div class='sects'><div class='headl'>Wireless communication (BTTF-Network)</div>");
 
 WiFiManagerParameter custom_sectend_foot("</div><p></p>");
 
@@ -295,7 +223,7 @@ static const char* wifiMenu[TC_MENUSIZE] = {"wifi", "param", "sep", "update", "s
 
 static const char apName[]  = "DG-AP";
 static const char myTitle[] = "Dash Gauges";
-static const char myHead[]  = "<link rel='shortcut icon' type='image/png' href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA9QTFRFAAAAjpCRzMvH////4wAAGgJHgAAAADhJREFUeNpiYEIDDEyMKACrAAMSgAgwAwELC4jEKQAWQlHBgC4AE0EygwFZAMNa0gXQ/YIGAAIMAM86AWWJwuU9AAAAAElFTkSuQmCC'><script>function wlp(){return window.location.pathname;}function getn(x){return document.getElementsByTagName(x)}function ge(x){return document.getElementById(x)}function c(l){ge('s').value=l.getAttribute('data-ssid')||l.innerText||l.textContent;p=l.nextElementSibling.classList.contains('l');ge('p').disabled=!p;if(p){ge('p').placeholder='';ge('p').focus();}}uacs1=\"(function(el){document.getElementById('uacb').style.display = el.value=='' ? 'none' : 'initial';})(this)\";uacstr=\"Upload DGA.bin and/or .mp3 file(s)<br><form method='POST' action='uac' enctype='multipart/form-data' onchange=\\\"\"+uacs1+\"\\\"><input type='file' name='upac' multiple accept='.bin,application/octet-stream,.mp3,audio/mpeg'><button id='uacb' type='submit' class='h D'>Upload</button></form>\";window.onload=function(){xx=false;document.title='Dash Gauges';if(ge('s')&&ge('dns')){xx=true;xxx=document.title;yyy='Connect to WiFi';aa=ge('s').parentElement;bb=aa.innerHTML;dd=bb.search('<hr>');ee=bb.search('<button');cc='<div class=\"sects\">'+bb.substring(0,dd)+'</div><div class=\"sects\">'+bb.substring(dd+4,ee)+'</div>'+bb.substring(ee);aa.innerHTML=cc;document.querySelectorAll('a[href=\"#p\"]').forEach((userItem)=>{userItem.onclick=function(){c(this);return false;}});if(aa=ge('s')){aa.oninput=function(){if(this.placeholder.length>0&&this.value.length==0){ge('p').placeholder='********';}}}}if(ge('uploadbin')){aa=document.getElementsByClassName('wrap');if(aa.length>0){aa[0].insertAdjacentHTML('beforeend',uacstr);}}if(ge('uploadbin')||wlp()=='/u'||wlp()=='/uac'||wlp()=='/wifisave'||wlp()=='/paramsave'){xx=true;xxx=document.title;yyy=(wlp()=='/wifisave')?'Connect to WiFi':(wlp()=='/paramsave'?'Setup':'Firmware upload');aa=document.getElementsByClassName('wrap');if(aa.length>0){if((bb=ge('uploadbin'))){aa[0].style.textAlign='center';bb.parentElement.onsubmit=function(){aa=ge('uploadbin');if(aa){aa.disabled=true;aa.innerHTML='Please wait'}aa=ge('uacb');if(aa){aa.disabled=true}};if((bb=ge('uacb'))){aa[0].style.textAlign='center';bb.parentElement.onsubmit=function(){aa=ge('uacb');if(aa){aa.disabled=true;aa.innerHTML='Please wait'}aa=ge('uploadbin');if(aa){aa.disabled=true}}}}aa=getn('H3');if(aa.length>0){aa[0].remove()}aa=getn('H1');if(aa.length>0){aa[0].remove()}}}if(ge('ttrp')||wlp()=='/param'){xx=true;xxx=document.title;yyy='Setup';}if(ge('ebnew')){xx=true;bb=getn('H3');aa=getn('H1');xxx=aa[0].innerHTML;yyy=bb[0].innerHTML;ff=aa[0].parentNode;ff.style.position='relative';}if(xx){zz=(Math.random()>0.8);dd=document.createElement('div');dd.classList.add('tpm0');dd.innerHTML='<div class=\"tpm\" onClick=\"window.location=\\'/\\'\"><div class=\"tpm2\"><img src=\"data:image/png;base64,'+(zz?'iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFSp1tAAAA635cugAAAAJ0Uk5T/wDltzBKAAAAbUlEQVR42tzXwRGAQAwDMdF/09QQQ24MLkDj77oeTiPA1wFGQiHATOgDGAp1AFOhDWAslAHMhS6AQKgCSIQmgEgoAsiEHoBQqAFIhRaAWCgByIVXAMuAdcA6YBlwALAKePzgd71QAByP71uAAQC+xwvdcFg7UwAAAABJRU5ErkJggg==':'iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFSp1tAAAA635cugAAAAJ0Uk5T/wDltzBKAAAAgElEQVR42tzXQQqDABAEwcr/P50P2BBUdMhee6j7+lw8i4BCD8MiQAjHYRAghAh7ADWMMAcQww5jADHMsAYQwwxrADHMsAYQwwxrADHMsAYQwwxrgLgOPwKeAjgrrACcFkYAzgu3AN4C3AV4D3AP4E3AHcDF+8d/YQB4/Pn+CjAAMaIIJuYVQ04AAAAASUVORK5CYII=')+'\" class=\"tpm3\"></div><H1 class=\"tpmh1\"'+(zz?' style=\"margin-left:1.2em\"':'')+'>'+xxx+'</H1>'+'<H3 class=\"tpmh3\"'+(zz?' style=\"padding-left:4.5em\"':'')+'>'+yyy+'</div></div>';}if(ge('ebnew')){bb[0].remove();aa[0].replaceWith(dd);}if((ge('s')&&ge('dns'))||ge('uploadbin')||wlp()=='/u'||wlp()=='/uac'||wlp()=='/wifisave'||wlp()=='/paramsave'||ge('ttrp')||wlp()=='/param'){aa=document.getElementsByClassName('wrap');if(aa.length>0){aa[0].insertBefore(dd,aa[0].firstChild);aa[0].style.position='relative';}}}</script><style type='text/css'>body{font-family:-apple-system,BlinkMacSystemFont,system-ui,'Segoe UI',Roboto,'Helvetica Neue',Verdana,Helvetica}H1,H2{margin-top:0px;margin-bottom:0px;text-align:center;}H3{margin-top:0px;margin-bottom:5px;text-align:center;}div.msg{border:1px solid #ccc;border-left-width:15px;border-radius:20px;background:linear-gradient(320deg,rgb(255,255,255) 0%,rgb(235,234,233) 100%);}button{transition-delay:250ms;margin-top:10px;margin-bottom:10px;color:#fff;background-color:#225a98;font-variant-caps:all-small-caps;}button.DD{color:#000;border:4px ridge #999;border-radius:2px;background:#e0c942;background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADBQTFRF////AAAAMyks8+AAuJYi3NHJo5aQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAbP19EwAAAAh0Uk5T/////////wDeg71ZAAAA4ElEQVR42qSTyxLDIAhF7yChS/7/bwtoFLRNF2UmRr0H8IF4/TBsY6JnQFvTJ8D0ncChb0QGlDvA+hkw/yC4xED2Z2L35xwDRSdqLZpFIOU3gM2ox6mA3tnDPa8UZf02v3q6gKRH/Eyg6JZBqRUCRW++yFYIvCjNFIt9OSC4hol/ItH1FkKRQgAbi0ty9f/F7LM6FimQacPbAdG5zZVlWdfvg+oEpl0Y+jzqIJZ++6fLqlmmnq7biZ4o67lgjBhA0kvJyTww/VK0hJr/LHvBru8PR7Dpx9MT0f8e72lvAQYALlAX+Kfw0REAAAAASUVORK5CYII=');background-repeat:no-repeat;background-origin:content-box;background-size:contain;}br{display:block;font-size:1px;content:''}input[type='checkbox']{display:inline-block;margin-top:10px}input{border:thin inset}small{display:none}em > small{display:inline}form{margin-block-end:0;}.tpm{cursor:pointer;border:1px solid black;border-radius:5px;padding:0 0 0 0px;min-width:18em;}.tpm2{position:absolute;top:-0.7em;z-index:130;left:0.7em;}.tpm3{width:4em;height:4em;}.tpmh1{font-variant-caps:all-small-caps;font-weight:normal;margin-left:2em;overflow:clip;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI Semibold',Roboto,'Helvetica Neue',Verdana,Helvetica}.tpmh3{background:#000;font-size:0.6em;color:#ffa;padding-left:7em;margin-left:0.5em;margin-right:0.5em;border-radius:5px}.sects{background-color:#eee;border-radius:7px;margin-bottom:20px;padding-bottom:7px;padding-top:7px}.tpm0{position:relative;width:20em;margin:0 auto 0 auto;}.headl{margin:0 0 7px 0;padding:0}.cmp0{margin:0;padding:0;}.sel0{font-size:90%;width:auto;margin-left:10px;vertical-align:baseline;}.mt5{margin-top:5px!important}</style>";
+static const char myHead[]  = "<link rel='shortcut icon' type='image/png' href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA9QTFRFAAAAjpCRzMvH////4wAAGgJHgAAAADhJREFUeNpiYEIDDEyMKACrAAMSgAgwAwELC4jEKQAWQlHBgC4AE0EygwFZAMNa0gXQ/YIGAAIMAM86AWWJwuU9AAAAAElFTkSuQmCC'><script>function wlp(){return window.location.pathname;}function getn(x){return document.getElementsByTagName(x)}function ge(x){return document.getElementById(x)}function c(l){ge('s').value=l.getAttribute('data-ssid')||l.innerText||l.textContent;p=l.nextElementSibling.classList.contains('l');ge('p').disabled=!p;if(p){ge('p').placeholder='';ge('p').focus();}}uacs1=\"(function(el){document.getElementById('uacb').style.display = el.value=='' ? 'none' : 'initial';})(this)\";uacstr=\"Upload sound pack (DGA.bin)<br>and/or .mp3 file(s)<br><form method='POST' action='uac' enctype='multipart/form-data' onchange=\\\"\"+uacs1+\"\\\"><input type='file' name='upac' multiple accept='.bin,application/octet-stream,.mp3,audio/mpeg'><button id='uacb' type='submit' class='h D'>Upload</button></form>\";window.onload=function(){xx=false;document.title='Dash Gauges';if(ge('s')&&ge('dns')){xx=true;xxx=document.title;yyy='Connect to WiFi';aa=ge('s').parentElement;bb=aa.innerHTML;dd=bb.search('<hr>');ee=bb.search('<button');cc='<div class=\"sects\">'+bb.substring(0,dd)+'</div><div class=\"sects\">'+bb.substring(dd+4,ee)+'</div>'+bb.substring(ee);aa.innerHTML=cc;document.querySelectorAll('a[href=\"#p\"]').forEach((userItem)=>{userItem.onclick=function(){c(this);return false;}});if(aa=ge('s')){aa.oninput=function(){if(this.placeholder.length>0&&this.value.length==0){ge('p').placeholder='********';}}}}if(ge('uploadbin')){aa=document.getElementsByClassName('wrap');if(aa.length>0){aa[0].insertAdjacentHTML('beforeend',uacstr);}}if(ge('uploadbin')||wlp()=='/u'||wlp()=='/uac'||wlp()=='/wifisave'||wlp()=='/paramsave'){xx=true;xxx=document.title;yyy=(wlp()=='/wifisave')?'Connect to WiFi':(wlp()=='/paramsave'?'Setup':'Firmware upload');aa=document.getElementsByClassName('wrap');if(aa.length>0){if((bb=ge('uploadbin'))){aa[0].style.textAlign='center';bb.parentElement.onsubmit=function(){aa=ge('uploadbin');if(aa){aa.disabled=true;aa.innerHTML='Please wait'}aa=ge('uacb');if(aa){aa.disabled=true}};if((bb=ge('uacb'))){aa[0].style.textAlign='center';bb.parentElement.onsubmit=function(){aa=ge('uacb');if(aa){aa.disabled=true;aa.innerHTML='Please wait'}aa=ge('uploadbin');if(aa){aa.disabled=true}}}}aa=getn('H3');if(aa.length>0){aa[0].remove()}aa=getn('H1');if(aa.length>0){aa[0].remove()}}}if(ge('ttrp')||wlp()=='/param'){xx=true;xxx=document.title;yyy='Setup';}if(ge('ebnew')){xx=true;bb=getn('H3');aa=getn('H1');xxx=aa[0].innerHTML;yyy=bb[0].innerHTML;ff=aa[0].parentNode;ff.style.position='relative';}if(xx){zz=(Math.random()>0.8);dd=document.createElement('div');dd.classList.add('tpm0');dd.innerHTML='<div class=\"tpm\" onClick=\"window.location=\\'/\\'\"><div class=\"tpm2\"><img src=\"data:image/png;base64,'+(zz?'iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFSp1tAAAA635cugAAAAJ0Uk5T/wDltzBKAAAAbUlEQVR42tzXwRGAQAwDMdF/09QQQ24MLkDj77oeTiPA1wFGQiHATOgDGAp1AFOhDWAslAHMhS6AQKgCSIQmgEgoAsiEHoBQqAFIhRaAWCgByIVXAMuAdcA6YBlwALAKePzgd71QAByP71uAAQC+xwvdcFg7UwAAAABJRU5ErkJggg==':'iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFSp1tAAAA635cugAAAAJ0Uk5T/wDltzBKAAAAgElEQVR42tzXQQqDABAEwcr/P50P2BBUdMhee6j7+lw8i4BCD8MiQAjHYRAghAh7ADWMMAcQww5jADHMsAYQwwxrADHMsAYQwwxrADHMsAYQwwxrgLgOPwKeAjgrrACcFkYAzgu3AN4C3AV4D3AP4E3AHcDF+8d/YQB4/Pn+CjAAMaIIJuYVQ04AAAAASUVORK5CYII=')+'\" class=\"tpm3\"></div><H1 class=\"tpmh1\"'+(zz?' style=\"margin-left:1.2em\"':'')+'>'+xxx+'</H1>'+'<H3 class=\"tpmh3\"'+(zz?' style=\"padding-left:4.5em\"':'')+'>'+yyy+'</div></div>';}if(ge('ebnew')){bb[0].remove();aa[0].replaceWith(dd);}if((ge('s')&&ge('dns'))||ge('uploadbin')||wlp()=='/u'||wlp()=='/uac'||wlp()=='/wifisave'||wlp()=='/paramsave'||ge('ttrp')||wlp()=='/param'){aa=document.getElementsByClassName('wrap');if(aa.length>0){aa[0].insertBefore(dd,aa[0].firstChild);aa[0].style.position='relative';}}}</script><style type='text/css'>body{font-family:-apple-system,BlinkMacSystemFont,system-ui,'Segoe UI',Roboto,'Helvetica Neue',Verdana,Helvetica}H1,H2{margin-top:0px;margin-bottom:0px;text-align:center;}H3{margin-top:0px;margin-bottom:5px;text-align:center;}div.msg{border:1px solid #ccc;border-left-width:15px;border-radius:20px;background:linear-gradient(320deg,rgb(255,255,255) 0%,rgb(235,234,233) 100%);}button{transition-delay:250ms;margin-top:10px;margin-bottom:10px;color:#fff;background-color:#225a98;font-variant-caps:all-small-caps;}button.DD{color:#000;border:4px ridge #999;border-radius:2px;background:#e0c942;background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADBQTFRF////AAAAMyks8+AAuJYi3NHJo5aQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAbP19EwAAAAh0Uk5T/////////wDeg71ZAAAA4ElEQVR42qSTyxLDIAhF7yChS/7/bwtoFLRNF2UmRr0H8IF4/TBsY6JnQFvTJ8D0ncChb0QGlDvA+hkw/yC4xED2Z2L35xwDRSdqLZpFIOU3gM2ox6mA3tnDPa8UZf02v3q6gKRH/Eyg6JZBqRUCRW++yFYIvCjNFIt9OSC4hol/ItH1FkKRQgAbi0ty9f/F7LM6FimQacPbAdG5zZVlWdfvg+oEpl0Y+jzqIJZ++6fLqlmmnq7biZ4o67lgjBhA0kvJyTww/VK0hJr/LHvBru8PR7Dpx9MT0f8e72lvAQYALlAX+Kfw0REAAAAASUVORK5CYII=');background-repeat:no-repeat;background-origin:content-box;background-size:contain;}br{display:block;font-size:1px;content:''}input[type='checkbox']{display:inline-block;margin-top:10px}input{border:thin inset}small{display:none}em > small{display:inline}form{margin-block-end:0;}.tpm{cursor:pointer;border:1px solid black;border-radius:5px;padding:0 0 0 0px;min-width:18em;}.tpm2{position:absolute;top:-0.7em;z-index:130;left:0.7em;}.tpm3{width:4em;height:4em;}.tpmh1{font-variant-caps:all-small-caps;font-weight:normal;margin-left:2em;overflow:clip;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI Semibold',Roboto,'Helvetica Neue',Verdana,Helvetica}.tpmh3{background:#000;font-size:0.6em;color:#ffa;padding-left:7em;margin-left:0.5em;margin-right:0.5em;border-radius:5px}.sects{background-color:#eee;border-radius:7px;margin-bottom:20px;padding-bottom:7px;padding-top:7px}.tpm0{position:relative;width:20em;margin:0 auto 0 auto;}.headl{margin:0 0 7px 0;padding:0}.cmp0{margin:0;padding:0;}.sel0{font-size:90%;width:auto;margin-left:10px;vertical-align:baseline;}.mt5{margin-top:5px!important}.mb10{margin-bottom:10px!important}.mb0{margin-bottom:0px!important}</style>";
 static const char* myCustMenu = "<form action='/erase' method='get' onsubmit='return confirm(\"Delete WiFi connection settings? Device will reboot in access point mode.\");'><button id='ebnew' class='DD'>Erase WiFi Config</button></form><br/><img style='display:block;margin:10px auto 10px auto;' src='data:image/png;base64,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'><div style='font-size:11px;margin-left:auto;margin-right:auto;text-align:center;'>Version " DG_VERSION " (" DG_VERSION_EXTRA ")<br>Powered by <a href='https://dg.out-a-ti.me'>A10001986  [Documentation]</a></div>";
 
 static int  shouldSaveConfig = 0;
@@ -350,6 +278,7 @@ static void preUpdateCallback();
 static void postEraseCallback();
 static void preSaveConfigCallback();
 static void waitConnectCallback();
+static void menuOutCallback(String& page);
 
 static void setupStaticIP();
 static void ipToString(char *str, IPAddress ip);
@@ -359,10 +288,8 @@ static void getParam(String name, char *destBuf, size_t length);
 static bool myisspace(char mychar);
 static char* strcpytrim(char* destination, const char* source, bool doFilter = false);
 static void mystrcpy(char *sv, WiFiManagerParameter *el);
-#ifndef DG_NOCHECKBOXES
 static void strcpyCB(char *sv, WiFiManagerParameter *el);
 static void setCBVal(WiFiManagerParameter *el, char *sv);
-#endif
 
 static void setupWebServerCallback();
 static void handleUploadDone();
@@ -401,6 +328,7 @@ void wifi_setup()
     wm.setPreOtaUpdateCallback(preUpdateCallback);
     wm.setWebServerCallback(setupWebServerCallback);
     wm.setPostEraseCallback(postEraseCallback);
+    wm.setMenuOutCallback(menuOutCallback);
     wm.setHostname(settings.hostName);
     wm.setCaptivePortalEnable(false);
     
@@ -440,33 +368,11 @@ void wifi_setup()
         wm.addParameter(&custom_aood);
     }
     
-    wm.addParameter(&custom_sectstart_head);// 4
+    wm.addParameter(&custom_sectstart_head);// 5
     wm.addParameter(&custom_aRef);
     wm.addParameter(&custom_aMut);
-    wm.addParameter(&custom_ssDelay); 
-
-    wm.addParameter(&custom_sectstart);     // 3
-    #ifdef DG_HAVEVOLKNOB
-    wm.addParameter(&custom_FixV);
-    #endif
-    wm.addParameter(&custom_Vol);
-    
-    wm.addParameter(&custom_sectstart);     // 6
-    wm.addParameter(&custom_hostName);
-    wm.addParameter(&custom_sysID);
-    wm.addParameter(&custom_appw);
-    wm.addParameter(&custom_wifiConRetries);
-    wm.addParameter(&custom_wifiConTimeout);
-
-    wm.addParameter(&custom_sectstart);     // 3
-    wm.addParameter(&custom_TCDpresent);
-    wm.addParameter(&custom_noETTOL);
-
-    wm.addParameter(&custom_sectstart_nw);  // 6
-    wm.addParameter(&custom_tcdIP);
-    wm.addParameter(&custom_uNM);
-    wm.addParameter(&custom_uFPO);
-    wm.addParameter(&custom_bttfnTT);
+    wm.addParameter(&custom_playALSnd);
+    wm.addParameter(&custom_ssDelay);
 
     wm.addParameter(&custom_sectstart_ag);  // 10
     wm.addParameter(&custom_lIdle);
@@ -484,14 +390,31 @@ void wifi_setup()
     wm.addParameter(&custom_cTh);
     wm.addParameter(&custom_rTh);
     wm.addParameter(&custom_rHint);
-    
-    wm.addParameter(&custom_sectstart);     // 5
-    wm.addParameter(&custom_playALSnd);
-    #ifdef DG_HAVEDOORSWITCH
-    wm.addParameter(&custom_dsPlay);
-    wm.addParameter(&custom_dsCOnC);
-    wm.addParameter(&custom_dsDelay);
+
+    wm.addParameter(&custom_sectstart);     // 2 (3)
+    #ifdef DG_HAVEVOLKNOB
+    wm.addParameter(&custom_FixV);
     #endif
+    wm.addParameter(&custom_Vol);
+
+    wm.addParameter(&custom_sectstart_mp);  // 3
+    wm.addParameter(&custom_musicFolder);
+    wm.addParameter(&custom_shuffle);
+    
+    wm.addParameter(&custom_sectstart);     // 4
+    wm.addParameter(&custom_hostName);
+    wm.addParameter(&custom_wifiConRetries);
+    wm.addParameter(&custom_wifiConTimeout);
+
+    wm.addParameter(&custom_sectstart_ap);  // 3
+    wm.addParameter(&custom_sysID);
+    wm.addParameter(&custom_appw);
+   
+    wm.addParameter(&custom_sectstart_nw);  // 5
+    wm.addParameter(&custom_tcdIP);
+    wm.addParameter(&custom_uNM);
+    wm.addParameter(&custom_uFPO);
+    wm.addParameter(&custom_bttfnTT);
 
     #ifdef DG_HAVEMQTT
     wm.addParameter(&custom_sectstart);     // 4
@@ -500,13 +423,20 @@ void wifi_setup()
     wm.addParameter(&custom_mqttUser);
     #endif
 
-    wm.addParameter(&custom_sectstart_mp);  // 3
-    wm.addParameter(&custom_musicFolder);
-    wm.addParameter(&custom_shuffle);
+    wm.addParameter(&custom_sectstart);     // 3
+    wm.addParameter(&custom_TCDpresent);
+    wm.addParameter(&custom_noETTOL);
     
     wm.addParameter(&custom_sectstart);     // 2 (3)
     wm.addParameter(&custom_CfgOnSD);
     //wm.addParameter(&custom_sdFrq);
+
+    #ifdef DG_HAVEDOORSWITCH
+    wm.addParameter(&custom_sectstart);     // 4
+    wm.addParameter(&custom_dsPlay);
+    wm.addParameter(&custom_dsCOnC);
+    wm.addParameter(&custom_dsDelay);
+    #endif
 
     wm.addParameter(&custom_sectstart);     // 5
     wm.addParameter(&custom_gaugeIDA);
@@ -721,11 +651,7 @@ void wifi_loop()
 
             // Save volume setting
             #ifdef DG_HAVEVOLKNOB
-            #ifdef DG_NOCHECKBOXES // --------- Plain text boxes:
-            mystrcpy(settings.FixV, &custom_FixV);
-            #else
             strcpyCB(settings.FixV, &custom_FixV);
-            #endif
             #endif
             
             mystrcpy(settings.Vol, &custom_Vol);
@@ -763,7 +689,24 @@ void wifi_loop()
             
             mystrcpy(settings.autoRefill, &custom_aRef);
             mystrcpy(settings.autoMute, &custom_aMut);
+            strcpyCB(settings.playALsnd, &custom_playALSnd);
             mystrcpy(settings.ssTimer, &custom_ssDelay);
+
+            mystrcpy(settings.lIdle, &custom_lIdle);
+            mystrcpy(settings.cIdle, &custom_cIdle);
+            mystrcpy(settings.rIdle, &custom_rIdle);
+            mystrcpy(settings.lEmpty, &custom_lEmpty);
+            mystrcpy(settings.cEmpty, &custom_cEmpty);
+            mystrcpy(settings.rEmpty, &custom_rEmpty);
+            strcpyCB(settings.drPri, &custom_drPri);
+            strcpyCB(settings.drPPo, &custom_drPPo);
+            strcpyCB(settings.drRoe, &custom_drRoe);
+
+            mystrcpy(settings.lThreshold, &custom_lTh);
+            mystrcpy(settings.cThreshold, &custom_cTh);
+            mystrcpy(settings.rThreshold, &custom_rTh);
+
+            strcpyCB(settings.shuffle, &custom_shuffle);
             
             strcpytrim(settings.hostName, custom_hostName.getValue(), true);
             if(strlen(settings.hostName) == 0) {
@@ -772,6 +715,9 @@ void wifi_loop()
                 char *s = settings.hostName;
                 for ( ; *s; ++s) *s = tolower(*s);
             }
+            mystrcpy(settings.wifiConRetries, &custom_wifiConRetries);
+            mystrcpy(settings.wifiConTimeout, &custom_wifiConTimeout);
+            
             strcpytrim(settings.systemID, custom_sysID.getValue(), true);
             strcpytrim(settings.appw, custom_appw.getValue(), true);
             if((temp = strlen(settings.appw)) > 0) {
@@ -779,33 +725,33 @@ void wifi_loop()
                     settings.appw[0] = 0;
                 }
             }
-            mystrcpy(settings.wifiConRetries, &custom_wifiConRetries);
-            mystrcpy(settings.wifiConTimeout, &custom_wifiConTimeout);
 
             strcpytrim(settings.tcdIP, custom_tcdIP.getValue());
             if(strlen(settings.tcdIP) > 0) {
                 char *s = settings.tcdIP;
                 for ( ; *s; ++s) *s = tolower(*s);
             }
-
-            mystrcpy(settings.lIdle, &custom_lIdle);
-            mystrcpy(settings.cIdle, &custom_cIdle);
-            mystrcpy(settings.rIdle, &custom_rIdle);
-            mystrcpy(settings.lEmpty, &custom_lEmpty);
-            mystrcpy(settings.cEmpty, &custom_cEmpty);
-            mystrcpy(settings.rEmpty, &custom_rEmpty);
-
-            mystrcpy(settings.lThreshold, &custom_lTh);
-            mystrcpy(settings.cThreshold, &custom_cTh);
-            mystrcpy(settings.rThreshold, &custom_rTh);
-
-            #ifdef DG_HAVEDOORSWITCH
-            mystrcpy(settings.dsDelay, &custom_dsDelay);
-            #endif
-
+            strcpyCB(settings.useNM, &custom_uNM);
+            strcpyCB(settings.useFPO, &custom_uFPO);
+            strcpyCB(settings.bttfnTT, &custom_bttfnTT);
+                                  
             #ifdef DG_HAVEMQTT
+            strcpyCB(settings.useMQTT, &custom_useMQTT);
             strcpytrim(settings.mqttServer, custom_mqttServer.getValue());
             strcpyutf8(settings.mqttUser, custom_mqttUser.getValue(), sizeof(settings.mqttUser));
+            #endif
+
+            strcpyCB(settings.TCDpresent, &custom_TCDpresent);
+            strcpyCB(settings.noETTOLead, &custom_noETTOL);
+
+            oldCfgOnSD = settings.CfgOnSD[0];
+            strcpyCB(settings.CfgOnSD, &custom_CfgOnSD);
+            //strcpyCB(settings.sdFreq, &custom_sdFrq);
+
+            #ifdef DG_HAVEDOORSWITCH
+            strcpyCB(settings.dsPlay, &custom_dsPlay);
+            strcpyCB(settings.dsCOnC, &custom_dsCOnC);
+            mystrcpy(settings.dsDelay, &custom_dsDelay);
             #endif
 
             if(!gaugeTypeLocked) {
@@ -822,68 +768,6 @@ void wifi_loop()
                     sprintf(settings.gaugeIDC, "%d", DEF_GAUGE_TYPE);
                 }
             }
-            
-            #ifdef DG_NOCHECKBOXES // --------- Plain text boxes:
-
-            mystrcpy(settings.TCDpresent, &custom_TCDpresent);
-            mystrcpy(settings.noETTOLead, &custom_noETTOL);
-
-            mystrcpy(settings.useNM, &custom_uNM);
-            mystrcpy(settings.useFPO, &custom_uFPO);
-            mystrcpy(settings.bttfnTT, &custom_bttfnTT);
-
-            mystrcpy(settings.drPri, &custom_drPri);
-            mystrcpy(settings.drPPo, &custom_drPPo);
-            mystrcpy(settings.drRoe, &custom_drRoe);
-
-            mystrcpy(settings.playALsnd, &custom_playALSnd);
-
-            #ifdef DG_HAVEDOORSWITCH
-            mystrcpy(settings.dsPlay, &custom_dsPlay);
-            mystrcpy(settings.dsCOnC, &custom_dsCOnC);
-            #endif
-
-            #ifdef DG_HAVEMQTT
-            mystrcpy(settings.useMQTT, &custom_useMQTT);
-            #endif
-
-            mystrcpy(settings.shuffle, &custom_shuffle);
-
-            oldCfgOnSD = settings.CfgOnSD[0];
-            mystrcpy(settings.CfgOnSD, &custom_CfgOnSD);
-            //mystrcpy(settings.sdFreq, &custom_sdFrq);
-
-            #else // -------------------------- Checkboxes:
-
-            strcpyCB(settings.TCDpresent, &custom_TCDpresent);
-            strcpyCB(settings.noETTOLead, &custom_noETTOL);
-
-            strcpyCB(settings.useNM, &custom_uNM);
-            strcpyCB(settings.useFPO, &custom_uFPO);
-            strcpyCB(settings.bttfnTT, &custom_bttfnTT);
-
-            strcpyCB(settings.drPri, &custom_drPri);
-            strcpyCB(settings.drPPo, &custom_drPPo);
-            strcpyCB(settings.drRoe, &custom_drRoe);
-
-            strcpyCB(settings.playALsnd, &custom_playALSnd);
-
-            #ifdef DG_HAVEDOORSWITCH
-            strcpyCB(settings.dsPlay, &custom_dsPlay);
-            strcpyCB(settings.dsCOnC, &custom_dsCOnC);
-            #endif
-
-            #ifdef DG_HAVEMQTT
-            strcpyCB(settings.useMQTT, &custom_useMQTT);
-            #endif
-
-            strcpyCB(settings.shuffle, &custom_shuffle);
-            
-            oldCfgOnSD = settings.CfgOnSD[0];
-            strcpyCB(settings.CfgOnSD, &custom_CfgOnSD);
-            //strcpyCB(settings.sdFreq, &custom_sdFrq);
-
-            #endif  // -------------------------
 
             // Copy secondary settings to other medium if
             // user changed respective option
@@ -1284,7 +1168,13 @@ static void makeGaugeType(char *target, const char *label, char *setting, const 
     }
     strcat(target, gaTyCustHTMLE);
 }
-    
+
+static void menuOutCallback(String& page)
+{       
+    if(!haveAudioFiles) {
+        page += "<hr><div style='margin-left:auto;margin-right:auto;text-align:center;'>Please <a href='/update'>install</a> sound pack</div><hr>";
+    }
+}
 
 void updateConfigPortalValues()
 {
@@ -1293,15 +1183,8 @@ void updateConfigPortalValues()
 
     custom_aRef.setValue(settings.autoRefill, 3);
     custom_aMut.setValue(settings.autoMute, 3);
+    setCBVal(&custom_playALSnd, settings.playALsnd);
     custom_ssDelay.setValue(settings.ssTimer, 3);
-
-    custom_hostName.setValue(settings.hostName, 31);
-    custom_sysID.setValue(settings.systemID, 7);
-    custom_appw.setValue(settings.appw, 8);
-    custom_wifiConTimeout.setValue(settings.wifiConTimeout, 2);
-    custom_wifiConRetries.setValue(settings.wifiConRetries, 2);
-
-    custom_tcdIP.setValue(settings.tcdIP, 63);
 
     custom_lIdle.setValue(settings.lIdle, 3);
     custom_cIdle.setValue(settings.cIdle, 3);
@@ -1309,80 +1192,46 @@ void updateConfigPortalValues()
     custom_lEmpty.setValue(settings.lEmpty, 3);
     custom_cEmpty.setValue(settings.cEmpty, 3);
     custom_rEmpty.setValue(settings.rEmpty, 3);
+    setCBVal(&custom_drPri, settings.drPri);
+    setCBVal(&custom_drPPo, settings.drPPo);
+    setCBVal(&custom_drRoe, settings.drRoe);
 
     custom_lTh.setValue(settings.lThreshold, 2);
     custom_cTh.setValue(settings.cThreshold, 2);
     custom_rTh.setValue(settings.rThreshold, 2);
 
-    #ifdef DG_HAVEDOORSWITCH
-    custom_dsDelay.setValue(settings.dsDelay, 4);
-    #endif
+    setCBVal(&custom_shuffle, settings.shuffle);
 
-    #ifdef DG_HAVEMQTT
-    custom_mqttServer.setValue(settings.mqttServer, 79);
-    custom_mqttUser.setValue(settings.mqttUser, 63);
-    #endif
-
-    #ifdef DG_NOCHECKBOXES  // Standard text boxes: -------
-
-    custom_TCDpresent.setValue(settings.TCDpresent, 1);
-    custom_noETTOL.setValue(settings.noETTOLead, 1);
-
-    custom_uNM.setValue(settings.useNM, 1);
-    custom_uFPO.setValue(settings.useFPO, 1);
-    custom_bttfnTT.setValue(settings.bttfnTT, 1);
-
-    custom_drPri.setValue(settings.drPri, 1);
-    custom_drPPo.setValue(settings.drPPo, 1);
-    custom_drRoe.setValue(settings.drRoe, 1);
-
-    custom_playALSnd.setValue(settings.playALsnd, 1);
-
-    #ifdef DG_HAVEDOORSWITCH
-    custom_dsPlay.setValue(settings.dsPlay, 1);
-    custom_dsCOnC.setValue(settings.dsCOnC, 1);
-    #endif
+    custom_hostName.setValue(settings.hostName, 31);
+    custom_wifiConTimeout.setValue(settings.wifiConTimeout, 2);
+    custom_wifiConRetries.setValue(settings.wifiConRetries, 2);
     
-    #ifdef DG_HAVEMQTT
-    custom_useMQTT.setValue(settings.useMQTT, 1);
-    #endif
+    custom_sysID.setValue(settings.systemID, 7);
+    custom_appw.setValue(settings.appw, 8);
 
-    custom_shuffle.setValue(settings.shuffle, 1);
-    
-    custom_CfgOnSD.setValue(settings.CfgOnSD, 1);
-    //custom_sdFrq.setValue(settings.sdFreq, 1);
-    
-    #else   // For checkbox hack --------------------------
-
-    setCBVal(&custom_TCDpresent, settings.TCDpresent);
-    setCBVal(&custom_noETTOL, settings.noETTOLead);
-    
+    custom_tcdIP.setValue(settings.tcdIP, 31);
     setCBVal(&custom_uNM, settings.useNM);
     setCBVal(&custom_uFPO, settings.useFPO);
     setCBVal(&custom_bttfnTT, settings.bttfnTT);
 
-    setCBVal(&custom_drPri, settings.drPri);
-    setCBVal(&custom_drPPo, settings.drPPo);
-    setCBVal(&custom_drRoe, settings.drRoe);
+    #ifdef DG_HAVEMQTT
+    setCBVal(&custom_useMQTT, settings.useMQTT);
+    custom_mqttServer.setValue(settings.mqttServer, 79);
+    custom_mqttUser.setValue(settings.mqttUser, 63);
+    #endif
 
-    setCBVal(&custom_playALSnd, settings.playALsnd);
+    setCBVal(&custom_TCDpresent, settings.TCDpresent);
+    setCBVal(&custom_noETTOL, settings.noETTOLead);
+
+    setCBVal(&custom_CfgOnSD, settings.CfgOnSD);
+    //setCBVal(&custom_sdFrq, settings.sdFreq);
 
     #ifdef DG_HAVEDOORSWITCH
     setCBVal(&custom_dsPlay, settings.dsPlay);
     setCBVal(&custom_dsCOnC, settings.dsCOnC);
+    custom_dsDelay.setValue(settings.dsDelay, 4);
     #endif
-
-    #ifdef DG_HAVEMQTT
-    setCBVal(&custom_useMQTT, settings.useMQTT);
-    #endif
-
-    setCBVal(&custom_shuffle, settings.shuffle);
     
-    setCBVal(&custom_CfgOnSD, settings.CfgOnSD);
-    //setCBVal(&custom_sdFrq, settings.sdFreq);
-
-    #endif // ---------------------------------------------
-
     makeGaugeType(gaTyCustHTMLA, "'Primary' gauge type", settings.gaugeIDA, "A", true);
     makeGaugeType(gaTyCustHTMLB, "'Percent' gauge type", settings.gaugeIDB, "B", true);
     makeGaugeType(gaTyCustHTMLC, "'Roentgens' gauge type", settings.gaugeIDC, "C", false);
@@ -1417,11 +1266,7 @@ void updateConfigPortalVolValues()
     #endif
 
     #ifdef DG_HAVEVOLKNOB
-    #ifdef DG_NOCHECKBOXES  // Standard text boxes: -------
-    custom_FixV.setValue(settings.FixV, 1);
-    #else   // For checkbox hack --------------------------
     setCBVal(&custom_FixV, settings.FixV);
-    #endif // ---------------------------------------------
     #endif
     
     custom_Vol.setValue(settings.Vol, 2);
@@ -1795,7 +1640,6 @@ static void mystrcpy(char *sv, WiFiManagerParameter *el)
     strcpy(sv, el->getValue());
 }
 
-#ifndef DG_NOCHECKBOXES
 static void strcpyCB(char *sv, WiFiManagerParameter *el)
 {
     strcpy(sv, (atoi(el->getValue()) > 0) ? "1" : "0");
@@ -1807,7 +1651,6 @@ static void setCBVal(WiFiManagerParameter *el, char *sv)
     
     el->setValue((atoi(sv) > 0) ? makeCheck : "1", 14);
 }
-#endif
 
 #ifdef DG_HAVEMQTT
 static void strcpyutf8(char *dst, const char *src, unsigned int len)

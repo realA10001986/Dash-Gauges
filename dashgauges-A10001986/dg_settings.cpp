@@ -441,36 +441,8 @@ static bool read_settings(File configFile)
 
         wd |= CopyCheckValidNumParm(json["aRef"], settings.autoRefill, sizeof(settings.autoRefill), 0, 360, DEF_AUTO_REFILL);
         wd |= CopyCheckValidNumParm(json["aMut"], settings.autoMute, sizeof(settings.autoMute), 0, 360, DEF_AUTO_MUTE);
+        wd |= CopyCheckValidNumParm(json["playALsnd"], settings.playALsnd, sizeof(settings.playALsnd), 0, 1, DEF_PLAY_ALM_SND);
         wd |= CopyCheckValidNumParm(json["ssTimer"], settings.ssTimer, sizeof(settings.ssTimer), 0, 999, DEF_SS_TIMER);
-        
-        if(json["hostName"]) {
-            memset(settings.hostName, 0, sizeof(settings.hostName));
-            strncpy(settings.hostName, json["hostName"], sizeof(settings.hostName) - 1);
-        } else wd = true;
-        if(json["systemID"]) {
-            memset(settings.systemID, 0, sizeof(settings.systemID));
-            strncpy(settings.systemID, json["systemID"], sizeof(settings.systemID) - 1);
-        } else wd = true;
-
-        if(json["appw"]) {
-            memset(settings.appw, 0, sizeof(settings.appw));
-            strncpy(settings.appw, json["appw"], sizeof(settings.appw) - 1);
-        } else wd = true;
-        
-        wd |= CopyCheckValidNumParm(json["wifiConRetries"], settings.wifiConRetries, sizeof(settings.wifiConRetries), 1, 10, DEF_WIFI_RETRY);
-        wd |= CopyCheckValidNumParm(json["wifiConTimeout"], settings.wifiConTimeout, sizeof(settings.wifiConTimeout), 7, 25, DEF_WIFI_TIMEOUT);
-
-        wd |= CopyCheckValidNumParm(json["TCDpresent"], settings.TCDpresent, sizeof(settings.TCDpresent), 0, 1, DEF_TCD_PRES);
-        wd |= CopyCheckValidNumParm(json["noETTOLead"], settings.noETTOLead, sizeof(settings.noETTOLead), 0, 1, DEF_NO_ETTO_LEAD);
-
-        if(json["tcdIP"]) {
-            memset(settings.tcdIP, 0, sizeof(settings.tcdIP));
-            strncpy(settings.tcdIP, json["tcdIP"], sizeof(settings.tcdIP) - 1);
-        } else wd = true;
-        //wd |= CopyCheckValidNumParm(json["useGPSS"], settings.useGPSS, sizeof(settings.useGPSS), 0, 1, DEF_USE_GPSS);
-        wd |= CopyCheckValidNumParm(json["useNM"], settings.useNM, sizeof(settings.useNM), 0, 1, DEF_USE_NM);
-        wd |= CopyCheckValidNumParm(json["useFPO"], settings.useFPO, sizeof(settings.useFPO), 0, 1, DEF_USE_FPO);
-        wd |= CopyCheckValidNumParm(json["bttfnTT"], settings.bttfnTT, sizeof(settings.bttfnTT), 0, 1, DEF_BTTFN_TT);
 
         wd |= CopyCheckValidNumParm(json["lIdle"], settings.lIdle, sizeof(settings.lIdle), 0, 100, DEF_L_GAUGE_IDLE);
         wd |= CopyCheckValidNumParm(json["cIdle"], settings.cIdle, sizeof(settings.cIdle), 0, 100, DEF_C_GAUGE_IDLE);
@@ -487,14 +459,33 @@ static bool read_settings(File configFile)
         wd |= CopyCheckValidNumParm(json["cTh"], settings.cThreshold, sizeof(settings.cThreshold), 0, 99, 0);
         wd |= CopyCheckValidNumParm(json["rTh"], settings.rThreshold, sizeof(settings.rThreshold), 0, 99, 0);
 
-        wd |= CopyCheckValidNumParm(json["playALsnd"], settings.playALsnd, sizeof(settings.playALsnd), 0, 1, DEF_PLAY_ALM_SND);
-
-        #ifdef DG_HAVEDOORSWITCH
-        wd |= CopyCheckValidNumParm(json["dsPlay"], settings.dsPlay, sizeof(settings.dsPlay), 0, 1, DEF_DS_PLAY);
-        wd |= CopyCheckValidNumParm(json["dsCOnC"], settings.dsCOnC, sizeof(settings.dsCOnC), 0, 1, DEF_DS_NC);
-        wd |= CopyCheckValidNumParm(json["dsDelay"], settings.dsDelay, sizeof(settings.dsDelay), 0, 5000, DEF_DS_DELAY);
-        #endif
+        wd |= CopyCheckValidNumParm(json["shuffle"], settings.shuffle, sizeof(settings.shuffle), 0, 1, DEF_SHUFFLE);
         
+        if(json["hostName"]) {
+            memset(settings.hostName, 0, sizeof(settings.hostName));
+            strncpy(settings.hostName, json["hostName"], sizeof(settings.hostName) - 1);
+        } else wd = true;
+        wd |= CopyCheckValidNumParm(json["wifiConRetries"], settings.wifiConRetries, sizeof(settings.wifiConRetries), 1, 10, DEF_WIFI_RETRY);
+        wd |= CopyCheckValidNumParm(json["wifiConTimeout"], settings.wifiConTimeout, sizeof(settings.wifiConTimeout), 7, 25, DEF_WIFI_TIMEOUT);
+
+        if(json["systemID"]) {
+            memset(settings.systemID, 0, sizeof(settings.systemID));
+            strncpy(settings.systemID, json["systemID"], sizeof(settings.systemID) - 1);
+        } else wd = true;
+        if(json["appw"]) {
+            memset(settings.appw, 0, sizeof(settings.appw));
+            strncpy(settings.appw, json["appw"], sizeof(settings.appw) - 1);
+        } else wd = true;
+
+        if(json["tcdIP"]) {
+            memset(settings.tcdIP, 0, sizeof(settings.tcdIP));
+            strncpy(settings.tcdIP, json["tcdIP"], sizeof(settings.tcdIP) - 1);
+        } else wd = true;
+        //wd |= CopyCheckValidNumParm(json["useGPSS"], settings.useGPSS, sizeof(settings.useGPSS), 0, 1, DEF_USE_GPSS);
+        wd |= CopyCheckValidNumParm(json["useNM"], settings.useNM, sizeof(settings.useNM), 0, 1, DEF_USE_NM);
+        wd |= CopyCheckValidNumParm(json["useFPO"], settings.useFPO, sizeof(settings.useFPO), 0, 1, DEF_USE_FPO);
+        wd |= CopyCheckValidNumParm(json["bttfnTT"], settings.bttfnTT, sizeof(settings.bttfnTT), 0, 1, DEF_BTTFN_TT);
+
         #ifdef DG_HAVEMQTT
         wd |= CopyCheckValidNumParm(json["useMQTT"], settings.useMQTT, sizeof(settings.useMQTT), 0, 1, 0);
         if(json["mqttServer"]) {
@@ -507,10 +498,17 @@ static bool read_settings(File configFile)
         } else wd = true;
         #endif
 
-        wd |= CopyCheckValidNumParm(json["shuffle"], settings.shuffle, sizeof(settings.shuffle), 0, 1, DEF_SHUFFLE);
-        
+        wd |= CopyCheckValidNumParm(json["TCDpresent"], settings.TCDpresent, sizeof(settings.TCDpresent), 0, 1, DEF_TCD_PRES);
+        wd |= CopyCheckValidNumParm(json["noETTOLead"], settings.noETTOLead, sizeof(settings.noETTOLead), 0, 1, DEF_NO_ETTO_LEAD);
+
         wd |= CopyCheckValidNumParm(json["CfgOnSD"], settings.CfgOnSD, sizeof(settings.CfgOnSD), 0, 1, DEF_CFG_ON_SD);
         //wd |= CopyCheckValidNumParm(json["sdFreq"], settings.sdFreq, sizeof(settings.sdFreq), 0, 1, DEF_SD_FREQ);
+        
+        #ifdef DG_HAVEDOORSWITCH
+        wd |= CopyCheckValidNumParm(json["dsPlay"], settings.dsPlay, sizeof(settings.dsPlay), 0, 1, DEF_DS_PLAY);
+        wd |= CopyCheckValidNumParm(json["dsCOnC"], settings.dsCOnC, sizeof(settings.dsCOnC), 0, 1, DEF_DS_NC);
+        wd |= CopyCheckValidNumParm(json["dsDelay"], settings.dsDelay, sizeof(settings.dsDelay), 0, 5000, DEF_DS_DELAY);
+        #endif
 
         wd |= CopyCheckValidNumParm(json["gaugeIDA"], settings.gaugeIDA, sizeof(settings.gaugeIDA), 0, gauges.max_id_small, DEF_GAUGE_TYPE);
         wd |= CopyCheckValidNumParm(json["gaugeIDB"], settings.gaugeIDB, sizeof(settings.gaugeIDB), 0, gauges.max_id_small, DEF_GAUGE_TYPE);
@@ -545,22 +543,8 @@ void write_settings()
 
     json["aRef"] = (const char *)settings.autoRefill;
     json["aMut"] = (const char *)settings.autoMute;
+    json["playALsnd"] = (const char *)settings.playALsnd;
     json["ssTimer"] = (const char *)settings.ssTimer;
-    
-    json["hostName"] = (const char *)settings.hostName;
-    json["systemID"] = (const char *)settings.systemID;
-    json["appw"] = (const char *)settings.appw;
-    json["wifiConRetries"] = (const char *)settings.wifiConRetries;
-    json["wifiConTimeout"] = (const char *)settings.wifiConTimeout;
-
-    json["TCDpresent"] = (const char *)settings.TCDpresent;
-    json["noETTOLead"] = (const char *)settings.noETTOLead;
-
-    json["tcdIP"] = (const char *)settings.tcdIP;
-    //json["useGPSS"] = (const char *)settings.useGPSS;
-    json["useNM"] = (const char *)settings.useNM;
-    json["useFPO"] = (const char *)settings.useFPO;
-    json["bttfnTT"] = (const char *)settings.bttfnTT;
 
     json["lIdle"] = (const char *)settings.lIdle;
     json["cIdle"] = (const char *)settings.cIdle;
@@ -576,24 +560,38 @@ void write_settings()
     json["cTh"] = (const char *)settings.cThreshold;
     json["rTh"] = (const char *)settings.rThreshold;
 
-    json["playALsnd"] = (const char *)settings.playALsnd;
+    json["shuffle"] = (const char *)settings.shuffle;
+    
+    json["hostName"] = (const char *)settings.hostName;
+    json["wifiConRetries"] = (const char *)settings.wifiConRetries;
+    json["wifiConTimeout"] = (const char *)settings.wifiConTimeout;
+    
+    json["systemID"] = (const char *)settings.systemID;
+    json["appw"] = (const char *)settings.appw;
+
+    json["tcdIP"] = (const char *)settings.tcdIP;
+    //json["useGPSS"] = (const char *)settings.useGPSS;
+    json["useNM"] = (const char *)settings.useNM;
+    json["useFPO"] = (const char *)settings.useFPO;
+    json["bttfnTT"] = (const char *)settings.bttfnTT;
+
+    #ifdef DG_HAVEMQTT
+    json["useMQTT"] = (const char *)settings.useMQTT;
+    json["mqttServer"] = (const char *)settings.mqttServer;
+    json["mqttUser"] = (const char *)settings.mqttUser;
+    #endif
+    
+    json["TCDpresent"] = (const char *)settings.TCDpresent;
+    json["noETTOLead"] = (const char *)settings.noETTOLead;
+
+    json["CfgOnSD"] = (const char *)settings.CfgOnSD;
+    //json["sdFreq"] = (const char *)settings.sdFreq;
 
     #ifdef DG_HAVEDOORSWITCH
     json["dsPlay"] = (const char *)settings.dsPlay;
     json["dsCOnC"] = (const char *)settings.dsCOnC;
     json["dsDelay"] = (const char *)settings.dsDelay;
     #endif
-    
-    #ifdef DG_HAVEMQTT
-    json["useMQTT"] = (const char *)settings.useMQTT;
-    json["mqttServer"] = (const char *)settings.mqttServer;
-    json["mqttUser"] = (const char *)settings.mqttUser;
-    #endif
-
-    json["shuffle"] = (const char *)settings.shuffle;
-    
-    json["CfgOnSD"] = (const char *)settings.CfgOnSD;
-    //json["sdFreq"] = (const char *)settings.sdFreq;
 
     json["gaugeIDA"] = (const char *)settings.gaugeIDA;
     json["gaugeIDB"] = (const char *)settings.gaugeIDB;

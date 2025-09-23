@@ -213,7 +213,7 @@ static volatile uint8_t  _specialidx = 0;
 static volatile int16_t  _specialticks = 0;
 
 static const DRAM_ATTR uint8_t _specialArray[DGSEQ_MAX][64] = {
-    {                                               // 1: error: no audio files installed ("SOS")
+    {                                               // 1: Please update sound-pack ("SOS")
       SS_ONESHOT,
       1, 15, 0, 15, 1, 15, 0, 15, 1, 15, 0, 15,
       1, 40, 0, 40, 1, 40, 0, 40, 1, 40, 0, 40,
@@ -231,7 +231,7 @@ static const DRAM_ATTR uint8_t _specialArray[DGSEQ_MAX][64] = {
       1, 100, 0, 50, 1, 100, 0, 50,
       SS_END
     },
-    {                                               // 4: Error when copying audio files
+    {                                               // 4: Error when copying sound-pack
       SS_LOOP,
       1, 20, 0, 20, 1, 20, 0, 100,
       SS_END
