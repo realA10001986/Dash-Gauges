@@ -40,7 +40,7 @@ If you are using a fresh ESP32 board, please see [dashgauges-A10001986.ino](http
 
 ### Sound-pack installation
 
-The firmware comes with audio data ("sound-pack") which needs to be installed separately. The sound-pack is not updated as often as the firmware itself. If you have previously installed the latest version of the sound-pack, you normally don't have to re-install it when you update the firmware. Only if either a new version of the sound-pack is released, or your device is quiet after a firmware update, a re-installation/update is needed.
+The firmware comes with audio data ("sound-pack") which needs to be installed separately. The sound-pack is not updated as often as the firmware itself. If you have previously installed the latest version of the sound-pack, you normally don't have to re-install it when you update the firmware. Only if the "Empty" LED signals "SOS" (three short blinks, three long blinks, three short blicks) during boot, a re-installation/update is needed.
 
 The first step is to download "install/sound-pack-xxxxxxxx.zip" and extract it. It contains one file named "DGA.bin".
 
