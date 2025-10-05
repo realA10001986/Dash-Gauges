@@ -483,7 +483,7 @@ Through this page you can either connect your Dash Gauges to your local WiFi net
 
 #### <ins>Connecting to an existing WiFi network</ins>
 
-In order to connect your Dash Gauges to your WiFi network, all you need to do is either to click on one of the networks listed at the top or to enter a __WiFi network name (SSID)__, and optionally a __passwort__ (WPAx).
+In order to connect your Dash Gauges to your WiFi network, all you need to do is either to click on one of the networks listed at the top or to enter a __Network name (SSID)__, and optionally a __passwort__ (WPAx).
 
 >By default, the Dash Gauges request an IP address via DHCP. However, you can also configure a static IP for the Dash Gauges by entering the IP, netmask, gateway and DNS server. All four fields must be filled for a valid static IP configuration. If you want to stick to DHCP, leave those four fields empty. If you connect your Dash Gauges to your Time Circuits Display acting as access point ("TCD-AP"), leave these all empty.
 
@@ -509,7 +509,7 @@ Number of seconds before a timeout occurs when connecting to a WiFi network. Whe
 
 #### <ins>Settings for AP-mode</ins>
 
-##### &#9654; Network name(SSID) appendix
+##### &#9654; Network name (SSID) appendix
 
 By default, when the Dash Gauges create a WiFi network of its own ("AP-mode"), this network is named "DG-AP". In case you have multiple Dash Gauges in your vicinity, you can have a string appended to create a unique network name. If you, for instance, enter "-ABC" here, the WiFi network name will be "DG-AP-ABC". Characters A-Z, a-z, 0-9 and - are allowed.
 
