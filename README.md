@@ -407,7 +407,7 @@ In order to connect to a MQTT network, a "broker" (such as [mosquitto](https://m
 
 If your broker does not allow anonymous logins, a username and password can be specified.
 
-Note that MQTT is disabled when the FC is operated in AP-mode or when connected to the TCD run in AP-Mode (TCD-AP).
+Note that MQTT is disabled when the Dash Gauges are operated in AP-mode or when connected to the TCD run in AP-Mode (TCD-AP).
 
 Limitations: MQTT Protocol version 3.1.1; TLS/SSL not supported; ".local" domains (MDNS) not supported; server/broker must respond to PING (ICMP) echo requests. For proper operation with low latency, it is recommended that the broker is on your local network. 
 
