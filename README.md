@@ -117,6 +117,7 @@ It can be accessed as follows:
 
 - Connect your computer or handheld device to the WiFi network "DG-AP".
 - Navigate your browser to http://gauges.local or http://192.168.4.1 to enter the Config Portal.
+- (For proper operation, please disconnect your computer or handheld from DG-AP when you are done with configuring your Dash Gauges. These devices can cause high network traffic, resulting in severe performance penalties.)
 
 #### If Dash Gauges are connected to WiFi network
 
