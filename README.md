@@ -530,7 +530,7 @@ This procedure temporarily (until a reboot) clears the WiFi password, allowing u
 
 ##### &#9654; WiFi channel
 
-Here you can select one out of 13 channels, or have the TCD choose a random channel for you. The default channel is 1.
+Here you can select one out of 13 channels, or have the Dash Gauges choose a random channel for you. The default channel is 1.
 
 ---
 
