@@ -172,19 +172,19 @@ static bool          d2sOpen = false;
 static unsigned long swInitNow = 0;
 
 #define STARTUP_DELAY 2300
-static bool          startup = false;
+bool                 startup = false;
 static unsigned long startupNow = 0;
 
 #define REFILL_DELAY 1235
-static bool          refill = false;
+bool                 refill = false;
 static unsigned long refillNow = 0;
-static bool          refillWA = false;
+bool                 refillWA = false;
 
 static unsigned long autoRefill = 0;
 static unsigned long autoMute = 0;
 
 #define ALARM_DELAY 1000
-static bool          startAlarm = false;
+bool                 startAlarm = false;
 static unsigned long startAlarmNow = 0;
 
 bool networkTimeTravel = false;
@@ -248,7 +248,7 @@ static bool          fpoOld = false;
 bool                 FPBUnitIsOn = true;
 
 #define EMPTY_INTERVAL   (832/2)
-static bool          emptyAlarm = false;
+bool                 emptyAlarm = false;
 static unsigned long emptyAlarmNow = 0;
 
 static bool          FPOffemptyAlarm = false;
@@ -472,7 +472,7 @@ void main_setup()
     int temp;
     unsigned long tempu;
     
-    Serial.println(F("Dash Gauges version " DG_VERSION " " DG_VERSION_EXTRA));
+    Serial.println("Dash Gauges version " DG_VERSION " " DG_VERSION_EXTRA);
 
     if(gauges.supportVariablePercentage(0)) {
         left_gauge_idle = restrict_gauge_idle(atoi(settings.lIdle), 0, 100, DEF_L_GAUGE_IDLE);
@@ -565,7 +565,7 @@ void main_setup()
 
     // Invoke audio file installer if SD content qualifies
     #ifdef DG_DBG
-    Serial.println(F("Probing for audio files on SD"));
+    Serial.println("Probing for audio files on SD");
     #endif
     if(check_allow_CPA()) {
         showWaitSequence();
@@ -579,7 +579,7 @@ void main_setup()
 
     if(!haveAudioFiles) {
         #ifdef DG_DBG
-        Serial.println(F("Current audio data not installed"));
+        Serial.println("Current audio data not installed");
         #endif
         emptyLED.specialSignal(DGSEQ_NOAUDIO);
         while(emptyLED.specialDone()) {
@@ -612,7 +612,7 @@ void main_setup()
     #endif
 
     #ifdef DG_DBG
-    Serial.println(F("main_setup() done"));
+    Serial.println("main_setup() done");
     #endif
 
     // If "Follow TCD fake power" is set,

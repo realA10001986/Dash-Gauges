@@ -64,6 +64,12 @@ extern uint8_t musFolderNum;
 #define XMS(s) #s
 
 // Default settings
+
+#define DEF_HOSTNAME        "gauges"
+#define DEF_WIFI_RETRY      3     // 1-10; Default: 3 retries
+#define DEF_WIFI_TIMEOUT    7     // 7-25; Default: 7 seconds
+#define DEF_AP_CHANNEL      1     // 1-13; 0 = random(1-13)
+
 #define DEF_AUTO_REFILL     0     // Default auto-refill: 0=Never (1-360 seconds)
 #define DEF_AUTO_MUTE       0     // Default audio mute: 0=Never (1-360 seconds)
 #define DEF_PLAY_ALM_SND    0     // 1: Play TCD-alarm sound, 0: do not
@@ -80,10 +86,6 @@ extern uint8_t musFolderNum;
 #define DEF_DR_ROE          1     // 0: Meter jumps to zero after TT; 1: slowly drain during TT
 
 #define DEF_SHUFFLE         0     // Music Player: Do not shuffle by default
-
-#define DEF_HOSTNAME        "gauges"
-#define DEF_WIFI_RETRY      3     // 1-10; Default: 3 retries
-#define DEF_WIFI_TIMEOUT    7     // 7-25; Default: 7 seconds
 
 #define DEF_TCD_IP          ""    // TCD ip address for BTTFN
 #define DEF_USE_GPSS        0     // 0: Ignore GPS speed; 1: Use it for chase speed
@@ -104,6 +106,16 @@ extern uint8_t musFolderNum;
 #define DEF_GAUGE_TYPE      0     // Default gauge type; to protect the hardware, this is zero by default (=NONE)
 
 struct Settings {
+    char ssid[34]           = "";
+    char pass[66]           = "";
+
+    char hostName[32]       = DEF_HOSTNAME;
+    char wifiConRetries[4]  = MS(DEF_WIFI_RETRY);
+    char wifiConTimeout[4]  = MS(DEF_WIFI_TIMEOUT);
+    char systemID[8]        = "";
+    char appw[10]           = "";
+    char apChnl[4]          = MS(DEF_AP_CHANNEL);
+    
     char autoRefill[6]      = MS(DEF_AUTO_REFILL);
     char autoMute[6]        = MS(DEF_AUTO_MUTE);
     char playALsnd[4]       = MS(DEF_PLAY_ALM_SND);
@@ -124,12 +136,6 @@ struct Settings {
     char rThreshold[6]      = "0";
 
     char shuffle[4]         = MS(DEF_SHUFFLE);
-    
-    char hostName[32]       = DEF_HOSTNAME;
-    char systemID[8]        = "";
-    char appw[10]           = "";
-    char wifiConRetries[4]  = MS(DEF_WIFI_RETRY);
-    char wifiConTimeout[4]  = MS(DEF_WIFI_TIMEOUT);
 
     char tcdIP[32]          = DEF_TCD_IP;
     //char useGPSS[4]         = MS(DEF_USE_GPSS);

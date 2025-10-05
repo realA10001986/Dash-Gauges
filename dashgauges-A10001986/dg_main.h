@@ -69,6 +69,11 @@ extern bool FPBUnitIsOn;
 extern bool dgNM;
 
 extern bool TTrunning;
+extern bool emptyAlarm;
+extern bool startup;
+extern bool startAlarm;
+extern bool refill;
+extern bool refillWA;
 
 extern bool networkTimeTravel;
 extern bool networkTCDTT;

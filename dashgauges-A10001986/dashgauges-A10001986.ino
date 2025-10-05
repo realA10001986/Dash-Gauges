@@ -115,6 +115,25 @@
 
 /*  Changelog
  *  
+ *  2025/10/03-05 (A10001986) [1.23]
+ *    - More WiFiManager changes. We no longer use NVS-stored WiFi configs, 
+ *      all is managed by our own settings. (No details are known, but it
+ *      appears as if the core saves some data to NVS on every reboot, this
+ *      is totally not needed for our purposes, nor in the interest of 
+ *      flash longevity.)
+ *    - Save static IP only if changed
+ *    - Disable MQTT when connected to "TCD-AP"; the TCD runs a captive DNS,
+ *      resolves the MQTT server domain with the TCD's IP, and as a result
+ *      the device tries to connect to the TCD for MQTT, which naturally
+ *      will fail.
+ *    - Let DNS server in AP mode only resolve our domain (hostname)
+ *  2025/09/22-10/03 (A10001986)
+ *    - WiFi Manager overhaul; many changes to Config Portal.
+ *      WiFi-related settings moved to WiFi Configuration page.
+ *      Note: If the DG are in AP-mode, mp3 playback will be stopped when
+ *      accessing Config Portal web pages from now on.
+ *      This had lead to sound stutter and incomplete page loads in the past.
+ *    - Various code optimizations to minimize code size and used RAM
  *  2025/09/22 (A10001986) [1.22]
  *    - Config Portal: Re-order settings; remove non-checkbox-code
  *    - Fix TCD hostname length field

@@ -15,8 +15,8 @@
  ***                          Version Strings                          ***
  *************************************************************************/
 
-#define DG_VERSION       "V1.22"
-#define DG_VERSION_EXTRA "SEP222025"
+#define DG_VERSION       "V1.23"
+#define DG_VERSION_EXTRA "OCT052025"
 
 //#define DG_DBG              // debug output on Serial
 

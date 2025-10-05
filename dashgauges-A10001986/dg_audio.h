@@ -82,9 +82,11 @@ void play_key(int k, bool stopOnly = false);
 
 bool check_file_SD(const char *audio_file);
 bool checkAudioDone();
+bool checkMP3Running();
 void stopAudio();
 void stopAudioAtLoopEnd();
 bool append_pending();
+bool checkAudioStarted();
 
 void     mp_init(bool isSetup);
 void     mp_play(bool forcePlay = true);
