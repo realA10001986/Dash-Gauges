@@ -95,11 +95,11 @@ In this case, you can connect your Dash Gauges to your home WiFi network: Click 
 >
 >This procedure causes static IP data to be deleted; the device will return to DHCP after a reboot.
 
-##### &#9654; Places without a WiFi network
+##### &#9654; Places without WiFi network
 
-If no TCD is present, keep your Dash Gauges operating in AP-mode.
+In this case and with no [Time Circuits Display](https://tcd.out-a-ti.me) at hand, keep your Dash Gauges operating in AP-mode.
 
-If you have a [Time Circuits Display](https://tcd.out-a-ti.me), you can connect your Dash Gauges to the TCD's own WiFi network: Click on "WiFi Configuration" and either select "TCD-AP" from the top of the page or enter "TCD-AP" under *Network name (SSID)*. If you password-proteced your TCD-AP, enter this password below. See [here](#car-setup) for more details.
+If you have a [Time Circuits Display](https://tcd.out-a-ti.me), you can connect your Dash Gauges to the TCD's own WiFi network: Run the TCD in AP-Mode, and on your Dash Gauges' Config Portal, click on "WiFi Configuration" and either select "TCD-AP" from the top of the page or enter "TCD-AP" under *Network name (SSID)*. If you password-proteced your TCD-AP, enter this password below. See [here](#car-setup) for more details.
 
 After completing this step, your Dash Gauges are ready to be configured through the "Config Portal".
 
@@ -119,9 +119,9 @@ It can be accessed as follows:
 - Navigate your browser to http://gauges.local or http://192.168.4.1 to enter the Config Portal.
 - (For proper operation, please disconnect your computer or handheld from DG-AP when you are done with configuring your Dash Gauges. These devices can cause high network traffic, resulting in severe performance penalties.)
 
-#### If Dash Gauges are connected to WiFi network
+#### If Dash Gauges are connected to a WiFi network
 
-- Connect your hand-held/computer to the same WiFi network to which the Dash Gauges are connected, and
+- Connect your hand-held/computer to the same (WiFi) network to which the Dash Gauges are connected, and
 - navigate your browser to http://gauges.local
 
   Accessing the Config Portal through this address requires the operating system of your hand-held/computer to support Bonjour/mDNS: Windows 10 version TH2     (1511) [other sources say 1703] and later, Android 13 and later; MacOS and iOS since the dawn of time.
@@ -285,7 +285,7 @@ Other ways of triggering a time travel are available if a [Time Circuits Display
 
 Preface note on SD cards: For unknown reasons, some SD cards simply do not work with this device. For instance, I had no luck with Sandisk Ultra 32GB and  "Intenso" cards. If your SD card is not recognized, check if it is formatted in FAT32 format (not exFAT!). Also, the size must not exceed 32GB (as larger cards cannot be formatted with FAT32). Transcend SDHC cards work fine in my experience.
 
-The SD card, apart from being required for [installing](#sound-pack-installation) of the built-in sound-pack, can be used for substituting built-in sound effects and for music played back by the [Music player](#the-music-player). Also, it is _strongly recommended_ to store [secondary settings](#-save-secondary-settings-on-sd) on the SD card to minimize [Flash Wear](#flash-wear).
+The SD card, apart from being required for [installing](#sound-pack-installation) of the sound-pack, can be used for substituting built-in sound effects and for music played back by the [Music player](#the-music-player). Also, it is _strongly recommended_ to store [secondary settings](#-save-secondary-settings-on-sd) on the SD card to minimize [Flash Wear](#flash-wear).
 
 Note that the SD card must be inserted before powering up the device. It is not recognized if inserted while the Dash Gauges are running. Furthermore, do not remove the SD card while the device is powered.
 
@@ -421,7 +421,7 @@ If your Dash Gauges, along with a [Time Circuits Display](https://tcd.out-a-ti.m
 #### TCD
 
 - Run your TCD in [*car mode*](https://tcd.out-a-ti.me/#car-mode);
-- disable WiFi power-saving on the TCD by setting **_WiFi power save timer (AP-mode)_** to 0 (zero).
+- disable WiFi power-saving on the TCD by setting **_Power save timer_** to 0 (zero) in the "AP-mode settings" section on the WiFi Configuration page.
 
 #### Dash Gauges
 
@@ -432,7 +432,7 @@ Enter the Config Portal on the Dash Gauges (as described above), click on *Setti
 
 After the Dash Gauges have restarted, re-enter the Dash Gauges's Config Portal (while the TCD is powered and in *car mode*) and
   - click on *WiFi Configuration*,
-  - select the TCD's access point name in the list at the top ("TCD-AP") or enter *TCD-AP* into the *Network name (SSID)* field; if you password-protected your TCD's AP, enter this password in the *password* field. Leave all other fields empty,
+  - select the TCD's access point name in the list at the top ("TCD-AP"; if there is no list, click on "WiFi Scan") or enter *TCD-AP* into the *Network name (SSID)* field; if you password-protected your TCD's AP, enter this password in the *password* field. Leave all other fields empty,
   - click on *Save*.
 
 In order to access the Dash Gauges's Config Portal in your car, connect your hand held or computer to the TCD's WiFi access point ("TCD-AP"), and direct your browser to http://gauges.local ; if that does not work, go to the TCD's keypad menu, press ENTER until "BTTFN CLIENTS" is shown, hold ENTER, and look for the Dash Gauges's IP address there; then direct your browser to that IP by using the URL http://a.b.c.d (a-d being the IP address displayed on the TCD display).
