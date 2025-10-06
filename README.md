@@ -36,7 +36,7 @@ If a previous version of the Dash Gauges firmware is installed on your device's 
 
 If you are using a fresh ESP32 board, please see [dashgauges-A10001986.ino](https://github.com/realA10001986/Dash-Gauges/blob/main/dashgauges-A10001986/dashgauges-A10001986.ino) for detailed build and upload information, or, if you don't want to deal with source code, compilers and all that nerd stuff, go [here](https://install.out-a-ti.me) and follow the instructions.
 
- *Important: After a firmware update, the "empty" LED might blink for short while after reboot. Do NOT unplug the device during this time.*
+ *Important: After a firmware update, the "empty" light might blink for short while after reboot. Do NOT unplug the device during this time.*
 
 ### Sound-pack installation
 
