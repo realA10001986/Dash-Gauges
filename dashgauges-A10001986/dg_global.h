@@ -15,22 +15,10 @@
  ***                          Version Strings                          ***
  *************************************************************************/
 
-#define DG_VERSION       "V1.23"
-#define DG_VERSION_EXTRA "OCT052025"
+#define DG_VERSION       "V1.24"
+#define DG_VERSION_EXTRA "OCT072025"
 
 //#define DG_DBG              // debug output on Serial
-
-/*************************************************************************
- ***                     mDNS (Bonjour) support                        ***
- *************************************************************************/
-
-// Supply mDNS service 
-// Allows accessing the Config Portal via http://hostname.local
-// <hostname> is configurable in the Config Portal
-// This needs to be commented if WiFiManager provides mDNS
-#define DG_MDNS
-// Uncomment this if WiFiManager has mDNS enabled
-//#define DG_WM_HAS_MDNS 
 
 /*************************************************************************
  ***             Configuration for peripherals/features                ***

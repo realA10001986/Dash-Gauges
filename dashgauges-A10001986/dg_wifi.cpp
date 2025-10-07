@@ -53,11 +53,12 @@
 
 #include <Arduino.h>
 
-#ifdef DG_MDNS
+#include "src/WiFiManager/WiFiManager.h"
+
+#ifndef WM_MDNS
+#define DG_MDNS
 #include <ESPmDNS.h>
 #endif
-
-#include "src/WiFiManager/WiFiManager.h"
 
 #include "dg_audio.h"
 #include "dg_settings.h"
@@ -140,6 +141,7 @@ static const char *wmBuildgaugeC(const char *dest);
 static const char *wmBuildgaugeLocked(const char *dest);
 
 static const char *wmBuildApChnl(const char *dest);
+static const char *wmBuildHaveSD(const char *dest);
 
 static const char gaTyLockedHintHTML[] = "<div style='margin:0;padding:0;font-size:80%'>Hold time travel button for 5 seconds to unlock, then reload page.</div>";
 
@@ -147,6 +149,8 @@ static const char *osde = "</option></select></div>";
 static const char *ooe  = "</option><option value='";
 static const char custHTMLSel[] = " selected";
 static const char *aco = "autocomplete='off'";
+
+static const char haveNoSD[] = "<div class='c' style='background-color:#dc3630;color:#fff;font-size:80%;border-radius:5px'><i>No SD card present</i></div>";
 
 // WiFi Configuration
 
@@ -215,6 +219,7 @@ WiFiManagerParameter custom_mqttUser("ha_usr", "User[:Password]", settings.mqttU
 WiFiManagerParameter custom_TCDpresent("TCDpres", "TCD connected by wire", settings.TCDpresent, 1, "autocomplete='off' title='Check this if you have a Time Circuits Display connected via wire' type='checkbox' class='mt5'", WFM_LABEL_AFTER);
 WiFiManagerParameter custom_noETTOL("uEtNL", "TCD signals Time Travel without 5s lead", settings.noETTOLead, 1, "autocomplete='off' type='checkbox' class='mt5' style='margin-left:20px'", WFM_LABEL_AFTER);
 
+WiFiManagerParameter custom_haveSD(wmBuildHaveSD);
 WiFiManagerParameter custom_CfgOnSD("CfgOnSD", "Save secondary settings on SD<br><span style='font-size:80%'>Check this to avoid flash wear</span>", settings.CfgOnSD, 1, "autocomplete='off' type='checkbox' class='mt5 mb0'", WFM_LABEL_AFTER);
 //WiFiManagerParameter custom_sdFrq("sdFrq", "4MHz SD clock speed<br><span style='font-size:80%'>Checking this might help in case of SD card problems</span>", settings.sdFreq, 1, "autocomplete='off' type='checkbox' style='margin-top:12px'", WFM_LABEL_AFTER);
 
@@ -435,6 +440,7 @@ void wifi_setup()
       &custom_noETTOL,
       
       &custom_sectstart,     // 2 (3)
+      &custom_haveSD,
       &custom_CfgOnSD,
       //&custom_sdFrq,
   
@@ -464,7 +470,7 @@ void wifi_setup()
     if(!settings.ssid[0] && settings.ssid[1] == 'X') {
         
         // Read NVS-stored WiFi data
-        wm.getStoredCredentials(settings.ssid, sizeof(settings.ssid) - 1, settings.pass, sizeof(settings.pass) - 1);
+        wm.getStoredCredentials(settings.ssid, sizeof(settings.ssid), settings.pass, sizeof(settings.pass));
 
         #ifdef DG_DBG
         Serial.printf("WiFi Transition: ssid '%s' pass '%s'\n", settings.ssid, settings.pass);
@@ -475,7 +481,7 @@ void wifi_setup()
 
     wm.setHostname(settings.hostName);
 
-    wm.showUploadContainer(true, AA_CONTAINER);
+    wm.showUploadContainer(haveSD, AA_CONTAINER, true);
     
     wm.setPreSaveWiFiCallback(preSaveWiFiCallback);
     wm.setSaveWiFiCallback(saveWiFiCallback);
@@ -1577,6 +1583,14 @@ static const char *wmBuildApChnl(const char *dest)
     buildSelectMenu(str, apChannelCustHTMLSrc, 16, settings.apChnl);
     
     return str;
+}
+
+static const char *wmBuildHaveSD(const char *dest)
+{
+    if(dest || haveSD)
+        return NULL;
+
+    return haveNoSD;
 }
 
 /*

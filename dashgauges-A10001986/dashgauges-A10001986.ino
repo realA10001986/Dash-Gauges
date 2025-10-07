@@ -101,20 +101,28 @@
  *
  * - Go to "Sketch" -> "Upload" to compile and upload the firmware to your ESP32 board.
  *
- * - Install the audio data: 
+ * - Install the sound-pack: 
  *   Method 1:
- *   - Go to Config Portal, click "Update" and upload the audio data (DGA.bin, extracted
+ *   - Go to Config Portal, click "Update" and upload the sound-pack (DGA.bin, extracted
  *     from install/sound-pack-xxxxxxxx.zip) through the bottom file selector.
  *     An SD card must be present in the slot during this operation.
  *   Method 2:
  *   - Copy DGA.bin to the top folder of a FAT32 (not ExFAT!) formatted SD card (max 
  *     32GB) and put this card into the slot while the Gauges are powered down. 
- *   - Now power-up. The audio files will now be installed. When finished, the Gauges 
+ *   - Now power-up. The sound-pack will now be installed. When finished, the Gauges 
  *     will reboot.
  */
 
 /*  Changelog
  *  
+ *  2025/10/07 (A10001986) [1.24]
+ *    - Add emergency firmware update via SD (for dev purposes)
+ *    - WM fixes (Upload, etc)
+ *  2025/10/06 (A10001986)
+ *    - WM: Skip setting static IP params in Save
+ *    - Add "No SD present" banner in Config Portal if no SD present
+ *  2025/10/05 (A10001986)
+ *    - CP: Show msg instead of upload file input if no sd card is present
  *  2025/10/03-05 (A10001986) [1.23]
  *    - More WiFiManager changes. We no longer use NVS-stored WiFi configs, 
  *      all is managed by our own settings. (No details are known, but it
@@ -122,10 +130,7 @@
  *      is totally not needed for our purposes, nor in the interest of 
  *      flash longevity.)
  *    - Save static IP only if changed
- *    - Disable MQTT when connected to "TCD-AP"; the TCD runs a captive DNS,
- *      resolves the MQTT server domain with the TCD's IP, and as a result
- *      the device tries to connect to the TCD for MQTT, which naturally
- *      will fail.
+ *    - Disable MQTT when connected to "TCD-AP"
  *    - Let DNS server in AP mode only resolve our domain (hostname)
  *  2025/09/22-10/03 (A10001986)
  *    - WiFi Manager overhaul; many changes to Config Portal.
