@@ -381,6 +381,7 @@ static void set_port_pin(uint8_t bitnum);
 static void clr_port_pin(uint8_t bitnum);
 
 static void bttfn_setup();
+static void bttfn_loop_quick();
 #ifdef BTTFN_MC
 static bool bttfn_checkmc();
 #endif
@@ -1909,7 +1910,7 @@ static void myloop()
     #ifdef DG_HAVEDOORSWITCH
     dsScan();
     #endif
-    bttfn_loop();
+    bttfn_loop_quick();
 }
 
 /*
@@ -2051,7 +2052,7 @@ static void bttfn_setup()
 void bttfn_loop()
 {
     #ifdef BTTFN_MC
-    int t = 10;
+    int t = 100;
     #endif
     
     if(!useBTTFN)
@@ -2072,6 +2073,20 @@ void bttfn_loop()
             BTTFNTriggerUpdate();
         }
     }
+}
+
+static void bttfn_loop_quick()
+{
+    #ifdef BTTFN_MC
+    int t = 100;
+    #endif
+    
+    if(!useBTTFN)
+        return;
+
+    #ifdef BTTFN_MC
+    while(bttfn_checkmc() && t--) {}
+    #endif
 }
 
 static bool check_packet(uint8_t *buf)
@@ -2177,6 +2192,10 @@ static bool bttfn_checkmc()
     if(!psize) {
         return false;
     }
+
+    // This returns true as long as a packet was received
+    // regardless whether it was for us or not. Point is
+    // to clear the receive buffer.
     
     dgMcUDP->read(BTTFMCBuf, BTTF_PACKET_SIZE);
 
@@ -2186,26 +2205,26 @@ static bool bttfn_checkmc()
 
     if(haveTCDIP) {
         if(bttfnTcdIP != dgMcUDP->remoteIP())
-            return false;
+            return true; //false;
     } else {
         // Do not use tcdHostNameHash; let DISCOVER do its work
         // and wait for a result.
-        return false;
+        return true; //false;
     }
 
     if(!check_packet(BTTFMCBuf))
-        return false;
+        return true; //false;
 
     if((BTTFMCBuf[4] & 0x4f) == (BTTFN_VERSION | 0x40)) {
 
         // A notification from the TCD
         handle_tcd_notification(BTTFMCBuf);
     
-    } else {
+    } /*else {
       
         return false;
 
-    }
+    }*/
 
     return true;
 }

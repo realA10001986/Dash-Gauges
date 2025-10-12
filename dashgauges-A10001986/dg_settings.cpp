@@ -474,7 +474,7 @@ static bool read_settings(File configFile)
         if(json["appw"]) {
             CopyTextParm(settings.appw, json["appw"], sizeof(settings.appw));
         } else wd = true;
-        wd |= CopyCheckValidNumParm(json["apch"], settings.apChnl, sizeof(settings.apChnl), 0, 13, DEF_AP_CHANNEL);
+        wd |= CopyCheckValidNumParm(json["apch"], settings.apChnl, sizeof(settings.apChnl), 0, 11, DEF_AP_CHANNEL);
 
         // Settings
 
