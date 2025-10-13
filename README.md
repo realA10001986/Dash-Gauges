@@ -72,7 +72,7 @@ Your Dash Gauges know two ways of WiFi operation: Either they create their own W
 
 As long as the device is unconfigured, it creates its own WiFi network named "DG-AP". This mode of operation is called "**Access point mode**", or "AP-mode". 
 
-It is ok to leave it in AP-mode, predominantly if used stand-alone. (To keep operating your Dash Gauges in AP-mode, do not configure a WiFi network as described below, or click on "Erase WiFi config" on the Config Portal's main page.)
+It is ok to leave it in AP-mode, predominantly if used stand-alone. (To keep operating your Dash Gauges in AP-mode, do not configure a WiFi network as described below, or check on "Forget saved WiFi network" and click "Save" on the Config Portal's "WiFi configuration" page.)
 
 >Please do not leave computers/hand helds permanently connected to the Dash Gauges' AP. These devices might think they are connected to the internet and therefore hammer your Dash Gauges with DNS and HTTP requests which might lead to packet loss and disruptions.
 
