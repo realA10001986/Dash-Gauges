@@ -1051,12 +1051,15 @@ uint8_t WiFiManager::waitForConnectResult(bool haveStatic, uint32_t timeout)
  ****************************************************************************/
 
 // Calc size of header
-unsigned int WiFiManager::getHTTPHeadLength(const char *title, bool includeQI)
+unsigned int WiFiManager::getHTTPHeadLength(const char *title, bool includeMSG, bool includeQI)
 {
     int bufSize = STRLEN(HTTP_HEAD_START) - 3;  // -3 token
     bufSize += strlen(title);
     bufSize += STRLEN(HTTP_SCRIPT);
     bufSize += STRLEN(HTTP_STYLE);
+    if(includeMSG) {
+        bufSize += STRLEN(HTTP_STYLE_MSG);
+    }
     if(includeQI) {
         bufSize += STRLEN(HTTP_STYLE_QI);
     }
@@ -1068,7 +1071,7 @@ unsigned int WiFiManager::getHTTPHeadLength(const char *title, bool includeQI)
 }
 
 // Construct header
-void WiFiManager::getHTTPHeadNew(String& page, const char *title, bool includeQI)
+void WiFiManager::getHTTPHeadNew(String& page, const char *title, bool includeMSG, bool includeQI)
 {
     String temp;
     temp.reserve(STRLEN(HTTP_HEAD_START) + strlen(title));
@@ -1079,6 +1082,9 @@ void WiFiManager::getHTTPHeadNew(String& page, const char *title, bool includeQI
 
     page += FPSTR(HTTP_SCRIPT);
     page += FPSTR(HTTP_STYLE);
+    if(includeMSG) {
+        page += FPSTR(HTTP_STYLE_MSG);
+    }
     if(includeQI) {
         page += FPSTR(HTTP_STYLE_QI);
     }
@@ -1100,13 +1106,13 @@ int WiFiManager::reportStatusLen()
     #endif
 
     if(SSID != "") {
+        bufSize = STRLEN(HTTP_STATUS_HEAD) - 3 + 1; // class span
+        bufSize += htmlEntitiesLen(SSID, true);
         if(WiFi.status() == WL_CONNECTED) {
-            bufSize = STRLEN(HTTP_STATUS_ON) - (2*3);
+            bufSize += STRLEN(HTTP_STATUS_ON) - (2*3);
             bufSize += 15;        // max len of ip address
-            bufSize += htmlEntitiesLen(SSID);
         } else {
-            bufSize = STRLEN(HTTP_STATUS_OFF);
-            bufSize += htmlEntitiesLen(SSID);
+            bufSize += STRLEN(HTTP_STATUS_OFF) - (3*3);
             switch(_lastconxresult) {
             case WL_NO_SSID_AVAIL:          // connect failed, or ap not found
                 bufSize += (STRLEN(HTTP_STATUS_OFFNOAP) + STRLEN(HTTP_STATUS_APMODE));
@@ -1125,8 +1131,9 @@ int WiFiManager::reportStatusLen()
                 break;
             }
         }
+        bufSize += STRLEN(HTTP_STATUS_TAIL);
     } else {
-        bufSize = strlen(HTTP_STATUS_NONE);
+        bufSize = STRLEN(HTTP_STATUS_NONE);
     }
 
     #ifdef _A10001986_DBG
@@ -1143,41 +1150,44 @@ void WiFiManager::reportStatus(String &page, unsigned int estSize)
     if(estSize) str.reserve(estSize);
 
     if(SSID != "") {
+        str = FPSTR(HTTP_STATUS_HEAD);
         if(WiFi.status() == WL_CONNECTED) {
-            str = FPSTR(HTTP_STATUS_ON);
+            str += FPSTR(HTTP_STATUS_ON);
+            str.replace(FPSTR(T_c), "g");
             str.replace(FPSTR(T_i), WiFi.localIP().toString());
-            str.replace(FPSTR(T_v), htmlEntities(SSID));
+            str.replace(FPSTR(T_v), htmlEntities(SSID, true));
         } else {
-            str = FPSTR(HTTP_STATUS_OFF);
-            str.replace(FPSTR(T_v), htmlEntities(SSID));
+            str += FPSTR(HTTP_STATUS_OFF);
+            str.replace(FPSTR(T_v), htmlEntities(SSID, true));
             switch(_lastconxresult) {
             case WL_NO_SSID_AVAIL:    // connect failed, or ap not found
-                str.replace(FPSTR(T_c), "D");
+                str.replace(FPSTR(T_c), "r");
                 str.replace(FPSTR(T_r), FPSTR(HTTP_STATUS_OFFNOAP));
                 str.replace(FPSTR(T_V), FPSTR(HTTP_STATUS_APMODE));
                 break;
             case WL_CONNECT_FAILED:   // connect failed
-                str.replace(FPSTR(T_c), "D");
+                str.replace(FPSTR(T_c), "r");
                 str.replace(FPSTR(T_r), FPSTR(HTTP_STATUS_OFFFAIL));
                 str.replace(FPSTR(T_V), FPSTR(HTTP_STATUS_APMODE));
                 break;
             case WL_CONNECTION_LOST:  // connect failed, MOST likely 4WAY_HANDSHAKE_TIMEOUT/incorrect
-                str.replace(FPSTR(T_c), "D"); // password, state is ambiguous however
+                str.replace(FPSTR(T_c), "r"); // password, state is ambiguous however
                 str.replace(FPSTR(T_r), FPSTR(HTTP_STATUS_OFFFAIL));
                 str.replace(FPSTR(T_V), FPSTR(HTTP_STATUS_APMODE));
                 break;
             case WL_DISCONNECTED:     // wrong or missing password
-                str.replace(FPSTR(T_c), "D");
+                str.replace(FPSTR(T_c), "r");
                 str.replace(FPSTR(T_r), FPSTR(HTTP_STATUS_DISCONN));
                 str.replace(FPSTR(T_V), FPSTR(HTTP_STATUS_APMODE));
                 break;
             default:
-                str.replace(FPSTR(T_c), "");
+                str.replace(FPSTR(T_c), "n");
                 str.replace(FPSTR(T_r), "");
                 str.replace(FPSTR(T_V), _carMode ? FPSTR(HTTP_STATUS_CARMODE) : FPSTR(HTTP_STATUS_APMODE));
                 break;
             }
         }
+        str += FPSTR(HTTP_STATUS_TAIL);
     } else {
         str = FPSTR(HTTP_STATUS_NONE);
     }
@@ -1489,7 +1499,7 @@ void WiFiManager::getMenuOut(String& page)
 unsigned int WiFiManager::calcRootLen(unsigned int& headSize, unsigned int& repSize)
 {
     // Calc page size
-    unsigned int bufSize = getHTTPHeadLength(_title, false);
+    unsigned int bufSize = getHTTPHeadLength(_title);
 
     headSize = STRLEN(HTTP_ROOT_MAIN) - (2*3);
     headSize += strlen(_title);
@@ -1763,15 +1773,20 @@ unsigned int WiFiManager::getScanItemsLen(int n, bool scanErr, int *indices, uns
                 String SSID = WiFi.SSID(indices[i]);
                 if(SSID == "") {
                     if(showall) {
-                        SSID = "[Hidden]";
+                        SSID = S_hidden;
+                    } else {
+                        continue;
+                    }
+                } else if(!checkSSID(SSID)) {
+                    if(showall) {
+                        SSID = S_nonprintable;
                     } else {
                         continue;
                     }
                 }
 
                 mySize += STRLEN(HTTP_WIFI_ITEM) - (6*3);
-                mySize += htmlEntitiesLen(SSID);
-                mySize += htmlEntitiesLen(SSID, true);
+                mySize += (2 * htmlEntitiesLen(SSID, true));
                 mySize += (4+4+1+1);     // rssi, rssi, qual class, enc class
                 if(showall) mySize += 6; // chnlnum
 
@@ -1821,7 +1836,7 @@ String WiFiManager::getScanItemsOut(int n, bool scanErr, int *indices, unsigned 
 
             int rssi = WiFi.RSSI(indices[i]);
 
-            if(_minimumRSSI <= rssi) {
+            if(_minimumRSSI < rssi) {
 
                 uint8_t enc_type = WiFi.encryptionType(indices[i]);
                 String SSID = WiFi.SSID(indices[i]);
@@ -1829,7 +1844,14 @@ String WiFiManager::getScanItemsOut(int n, bool scanErr, int *indices, unsigned 
 
                 if(SSID == "") {
                     if(showall) {
-                        SSID = "[Hidden]";
+                        SSID = S_hidden;
+                        func = "d";
+                    } else {
+                        continue;
+                    }
+                } else if(!checkSSID(SSID)) {
+                    if(showall) {
+                        SSID = S_nonprintable;
                         func = "d";
                     } else {
                         continue;
@@ -1839,8 +1861,8 @@ String WiFiManager::getScanItemsOut(int n, bool scanErr, int *indices, unsigned 
                 item = FPSTR(HTTP_WIFI_ITEM);
 
                 item.replace(FPSTR(T_t), func);
-                item.replace(FPSTR(T_V), htmlEntities(SSID));       // ssid no encoding
-                item.replace(FPSTR(T_v), htmlEntities(SSID, true)); // ssid no encoding
+                item.replace(FPSTR(T_V), htmlEntities(SSID));
+                item.replace(FPSTR(T_v), htmlEntities(SSID, true));
                 if(showall) {
                     sprintf(chnlnum, " (%d)", WiFi.channel(indices[i]));
                     item.replace(FPSTR(T_c), chnlnum);              // channel
@@ -2012,7 +2034,7 @@ void WiFiManager::buildWifiPage(bool scan, String& page)
         sortNetworks(n, indices, numDupes, !showall);
     }
 
-    bufSize = getHTTPHeadLength(S_titlewifi, scan);
+    bufSize = getHTTPHeadLength(S_titlewifi, false, scan);
     if(showrefresh) {
         // No message
     } else if(!scanallowed) {
@@ -2038,7 +2060,6 @@ void WiFiManager::buildWifiPage(bool scan, String& page)
     if(haveShowAll) {
         bufSize += STRLEN(HTTP_SHOWALL_FORM);
     }
-    if(_showBack) bufSize += STRLEN(HTTP_BACKBTN);
     repSize = reportStatusLen();
     bufSize += repSize;
     bufSize += STRLEN(HTTP_END);
@@ -2049,7 +2070,7 @@ void WiFiManager::buildWifiPage(bool scan, String& page)
 
     page.reserve(bufSize + 16);
 
-    getHTTPHeadNew(page, S_titlewifi, scan);
+    getHTTPHeadNew(page, S_titlewifi, false, scan);
     if(showrefresh) {
         // No message
     } else if(!scanallowed) {
@@ -2087,7 +2108,6 @@ void WiFiManager::buildWifiPage(bool scan, String& page)
     if(haveShowAll) {
         page += FPSTR(HTTP_SHOWALL_FORM);
     }
-    if(_showBack) page += FPSTR(HTTP_BACKBTN);
     reportStatus(page, repSize);
     page += FPSTR(HTTP_END);
 
@@ -2130,6 +2150,7 @@ void WiFiManager::handleWifi(bool scan)
  */
 void WiFiManager::handleWifiSave()
 {
+    unsigned long s;
     bool haveNewSSID = false;
     bool networkDeleted = false;
 
@@ -2213,37 +2234,39 @@ void WiFiManager::handleWifiSave()
     // Build page
 
     unsigned long addLen = STRLEN(HTTP_END);
-    if(_showBack) addLen += STRLEN(HTTP_BACKBTN);
 
     String page;
 
    if(!haveNewSSID) {
-        unsigned long s = getHTTPHeadLength(S_titlewifi) + addLen + STRLEN(HTTP_PARAMSAVED) + STRLEN(HTTP_PARAMSAVED_END) + 16;
+        s = getHTTPHeadLength(S_titlewifi, true) + addLen + STRLEN(HTTP_PARAMSAVED) + STRLEN(HTTP_PARAMSAVED_END) + 16;
         if(networkDeleted) s += STRLEN(HTTP_SAVED_ERASED);
         page.reserve(s);
-        getHTTPHeadNew(page, S_titlewifi);
+        getHTTPHeadNew(page, S_titlewifi, true);
         page += FPSTR(HTTP_PARAMSAVED);
         if(networkDeleted) page += FPSTR(HTTP_SAVED_ERASED);
         page += FPSTR(HTTP_PARAMSAVED_END);
     } else {
-        unsigned long s = getHTTPHeadLength(S_titlewifi) + addLen + STRLEN(HTTP_PARAMSAVED) + 16;
+        s = getHTTPHeadLength(S_titlewifi, true) + addLen + STRLEN(HTTP_PARAMSAVED) + 16;
         if(_carMode) s += STRLEN(HTTP_SAVED_CARMODE);
         else         s += STRLEN(HTTP_SAVED_NORMAL);
         s += STRLEN(HTTP_PARAMSAVED_END);
         page.reserve(s);
-        getHTTPHeadNew(page, S_titlewifi);
+        getHTTPHeadNew(page, S_titlewifi, true);
         page += FPSTR(HTTP_PARAMSAVED);
         if(_carMode) page += FPSTR(HTTP_SAVED_CARMODE);
         else         page += FPSTR(HTTP_SAVED_NORMAL);
         page += FPSTR(HTTP_PARAMSAVED_END);
     }
 
-    if(_showBack) page += FPSTR(HTTP_BACKBTN);
     page += FPSTR(HTTP_END);
 
     if(_gpcallback) {
         _gpcallback(WM_LP_PREHTTPSEND);
     }
+
+    #ifdef _A10001986_DBG
+    Serial.printf("handleWiFiSave: calced content size %d\n", s);
+    #endif
 
     server->sendHeader(FPSTR(HTTP_HEAD_CORS), FPSTR(HTTP_HEAD_CORS_ALLOW_ALL));
     HTTPSend(page);
@@ -2272,7 +2295,6 @@ int WiFiManager::calcParmPageSize(unsigned int& maxItemSize)
     mySize += getParamOutSize(_params, _paramsCount, maxItemSize);
 
     mySize += STRLEN(HTTP_FORM_END);
-    if(_showBack) mySize += STRLEN(HTTP_BACKBTN);
     mySize += STRLEN(HTTP_END);
 
     #ifdef _A10001986_DBG
@@ -2309,7 +2331,6 @@ void WiFiManager::handleParam()
     getParamOut(_params, _paramsCount, page, maxItemSize);
 
     page += FPSTR(HTTP_FORM_END);
-    if(_showBack) page += FPSTR(HTTP_BACKBTN);
     page += FPSTR(HTTP_END);
 
     if(_gpcallback) {
@@ -2342,7 +2363,7 @@ void WiFiManager::handleParamSave()
         _saveparamscallback();
     }
 
-    mySize = getHTTPHeadLength(S_titleparam);
+    mySize = getHTTPHeadLength(S_titleparam, true);
 
     headSize = STRLEN(HTTP_ROOT_MAIN) - (2*3);
     headSize += strlen(_title);
@@ -2350,7 +2371,6 @@ void WiFiManager::handleParamSave()
     mySize += headSize;
 
     mySize += STRLEN(HTTP_PARAMSAVED) + STRLEN(HTTP_PARAMSAVED_END);
-    if(_showBack) mySize += STRLEN(HTTP_BACKBTN);
     mySize += STRLEN(HTTP_END);
 
     String page;
@@ -2360,7 +2380,7 @@ void WiFiManager::handleParamSave()
     Serial.printf("handleParamSave: calced content size %d\n", mySize);
     #endif
 
-    getHTTPHeadNew(page, S_titleparam);
+    getHTTPHeadNew(page, S_titleparam, true);
 
     {
         String str;
@@ -2373,7 +2393,6 @@ void WiFiManager::handleParamSave()
 
     page += FPSTR(HTTP_PARAMSAVED);
     page += FPSTR(HTTP_PARAMSAVED_END);
-    if(_showBack) page += FPSTR(HTTP_BACKBTN);
     page += FPSTR(HTTP_END);
 
     if(_gpcallback) {
@@ -2545,7 +2564,7 @@ void WiFiManager::handleUpdateDone()
     Serial.println("<- Handle update done");
     #endif
 
-    mySize = getHTTPHeadLength(S_titleupd);
+    mySize = getHTTPHeadLength(S_titleupd, !Update.hasError());
 
     headSize = STRLEN(HTTP_ROOT_MAIN) - (2*3);
     headSize += strlen(_title);
@@ -2568,7 +2587,7 @@ void WiFiManager::handleUpdateDone()
     String page;
     page.reserve(mySize + 16);
 
-    getHTTPHeadNew(page, S_titleupd);
+    getHTTPHeadNew(page, S_titleupd, !Update.hasError());
 
     {
         String str;
@@ -2693,19 +2712,23 @@ void WiFiManager::setConnectRetries(uint8_t numRetries)
  * setHttpPort
  * @param uint16_t port webserver port number default 80
  */
+#ifdef WM_ADDLSETTERS
 void WiFiManager::setHttpPort(uint16_t port)
 {
     _httpPort = port;
 }
+#endif
 
 /**
  * toggle _cleanconnect, always disconnect before connecting
  * @param {[type]} bool enable [description]
  */
+#ifdef WM_ADDLSETTERS
 void WiFiManager::setCleanConnect(bool enable)
 {
     _cleanConnect = enable;
 }
+#endif
 
 /**
  * [setAPStaticIPConfig description]
@@ -2757,10 +2780,12 @@ void WiFiManager::setSTAStaticIPConfig(IPAddress ip, IPAddress gw, IPAddress sn,
  * @access public
  * @param {[type]} int rssi [description]
  */
+#ifdef WM_ADDLSETTERS
 void WiFiManager::setMinimumRSSI(int rssi)
 {
     _minimumRSSI = rssi;
 }
+#endif
 
 /**
  * setAPCallback, set a callback when softap is started
@@ -2945,10 +2970,12 @@ void WiFiManager::setCustomMenuHTML(const char* html)
  * @access public
  * @param bool alwaysShow [false]
  */
+#ifdef WM_ADDLSETTERS
 void WiFiManager::setShowStaticFields(bool doShow)
 {
     _staShowStaticFields = doShow;
 }
+#endif
 
 /**
  * toggle showing dns fields
@@ -2957,10 +2984,12 @@ void WiFiManager::setShowStaticFields(bool doShow)
  * @access public
  * @param bool alwaysShow [false]
  */
+#ifdef WM_ADDLSETTERS
 void WiFiManager::setShowDnsFields(bool doShow)
 {
     _staShowDns = doShow;
 }
+#endif
 
 /**
  * set the hostname (dhcp client id)
@@ -3025,13 +3054,18 @@ void WiFiManager::showUploadContainer(bool enable, const char *contName, bool sh
  * @param int8_t menu[] array of menu ids
  */
 
-void WiFiManager::setMenu(const int8_t *menu, uint8_t size)
+void WiFiManager::setMenu(const int8_t *menu, uint8_t size, bool doCopy)
 {
     if(_menuIdArr) free((void *)_menuIdArr);
 
     _menuIdArr = NULL;
 
     if(!size) return;
+
+    if(!doCopy) {
+        _menuIdArr = (int8_t *)menu;
+        return;
+    }
 
     _menuIdArr = (int8_t *)malloc(size + 1);
     memset(_menuIdArr, WM_MENU_END, size + 1);
@@ -3054,10 +3088,12 @@ void WiFiManager::setCarMode(bool enable)
  * check if the config portal is running
  * @return bool true if active
  */
+#ifdef WM_ADDLGETTERS
 bool WiFiManager::getConfigPortalActive()
 {
     return configPortalActive;
 }
+#endif
 
 /**
  * [getConfigPortalActive description]
@@ -3086,10 +3122,12 @@ uint8_t WiFiManager::getConnectRetries()
  * @access public
  * @return bool return wl_status codes
  */
+#ifdef WM_ADDLGETTERS
 uint8_t WiFiManager::getLastConxResult()
 {
     return _lastconxresult;
 }
+#endif
 
 /**
  * getDefaultAPName
@@ -3124,6 +3162,11 @@ const char * WiFiManager::getHTTPSCRIPT()
 const char * WiFiManager::getHTTPSTYLE()
 {
     return HTTP_STYLE;
+}
+
+const char * WiFiManager::getHTTPSTYLEOK()
+{
+    return HTTP_STYLE_MSG;
 }
 
 bool WiFiManager::_getbestapchannel(int32_t& channel, int& quality)
@@ -3349,49 +3392,103 @@ bool WiFiManager::validApPassword()
 }
 
 /**
- * encode htmlentities
+ * encode htmlentities, but do not garble UTF8 characters
  * @since $dev
  * @param  string str  string to replace entities
  * @return string      encoded string
  */
-String WiFiManager::htmlEntities(String str, bool whitespace)
+String WiFiManager::htmlEntities(String& str, bool forprint)
 {
-    str.replace("&", "&amp;");
-    str.replace("<", "&lt;");
-    str.replace(">", "&gt;");
-    str.replace("'", "&#39;");
-    if(whitespace) str.replace(" ", "&#160;");
-    // str.replace("-","&ndash;");
-    // str.replace("\"","&quot;");
-    // str.replace("/": "&#x2F;");
-    // str.replace("`": "&#x60;");
-    // str.replace("=": "&#x3D;");
-    return str;
-}
+    int i, e, slen = str.length();
+    unsigned char c;
+    char buf[8];
 
-int WiFiManager::htmlEntitiesLen(String& str, bool whitespace)
-{
-    int size = 0;
-    for(int i = 0; i < str.length(); i++) {
-        switch(str.charAt(i)) {
-        case '&':
-        case '\'':
-            size += 5;
-            break;
-        case '<':
-        case '>':
-            size += 4;
-            break;
-        case ' ':
-            size += whitespace ? 6 : 1;
-            break;
-        default:
-            size++;
+    String dstr;
+    dstr.reserve(htmlEntitiesLen(str, forprint) + 8);
+
+    for(i = 0; i < slen; i++) {
+        c = (unsigned char)str.charAt(i);
+        if(c == '&')        dstr += "&amp;";
+        else if(c == '\'')  dstr += "&#39;";
+        else if(c == '<' )  dstr += "&lt;";
+        else if(c == '>')   dstr += "&gt;";
+        else if(c == ' ' && forprint) dstr += "&nbsp;";
+        else {
+            e = 1;
+            if     (c >= 192 && c < 224)  e = 2;
+            else if(c >= 224 && c < 240)  e = 3;
+            else if(c >= 240 && c < 248)  e = 4;  // Invalid UTF8 >= 245, but consider 4-byte char anyway
+
+            if((i + e) >= slen) {
+                e = slen - i;
+            }
+            memcpy(buf, str.c_str() + i, e);
+            buf[e] = 0;
+            dstr += (const char *)buf;
+
+            i += (e - 1);
         }
     }
+
+    return dstr;
+}
+
+int WiFiManager::htmlEntitiesLen(String& str, bool forprint)
+{
+    int size = 0;
+    int i, e, slen = str.length();
+    unsigned char c;
+
+    for(i = 0; i < slen; i++) {
+        c = (unsigned char)str.charAt(i);
+        if(c == '&' || c == '\'')       size += 5;
+        else if(c == '<' || c == '>')   size += 4;
+        else if(c == ' ')               size += forprint ? 6 : 1;
+        else {
+            e = 1;
+            if     (c >= 192 && c < 224)  e = 2;
+            else if(c >= 224 && c < 240)  e = 3;
+            else if(c >= 240 && c < 248)  e = 4;  // Invalid UTF8 >= 245, but consider 4-byte char anyway
+
+            if((i + e) >= slen) {
+                e = slen - i;
+            }
+
+            size += e;
+
+            i += (e - 1);
+        }
+    }
+
     return size;
 }
 
+// Check SSID: Reject SSIDs with chars < 32 and 127
+bool WiFiManager::checkSSID(String &ssid)
+{
+    int i, e, slen = ssid.length();
+    unsigned char c;
+
+    for(i = 0; i < slen; i++) {
+        c = (unsigned char)ssid.charAt(i);
+        if(c < 32 || c == 127) return false;
+
+        e = 1;
+        if     (c >= 192 && c < 224)  e = 2;
+        else if(c >= 224 && c < 240)  e = 3;
+        else if(c >= 240 && c < 248)  e = 4;  // Invalid UTF8 >= 245, but consider 4-byte char anyway
+
+        if((i + e) >= slen) {
+            e = slen - i;
+        }
+
+        i += (e - 1);
+    }
+
+    return true;
+}
+
+// map rssi to "quality" 1-4
 long WiFiManager::wmmap(long x)
 {
   if(x <= -83) return 1;
