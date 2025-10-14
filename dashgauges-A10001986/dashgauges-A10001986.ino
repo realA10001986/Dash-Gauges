@@ -115,7 +115,12 @@
 
 /*  Changelog
  *  
- *  2025/10/11 (A10001986)
+ *  2025/10/14 (A10001986) [1.24.2]
+ *    - WM: Do not garble UTF8 SSID; skip SSIDs with non-printable characters
+ *    - Fix regression in CP ("show password")
+ *  2025/10/13 (A10001986)
+ *    - Config Portal: Minor restyling (message boxes)
+ *  2025/10/11 (A10001986) [1.24.1]
  *    - More WM changes: Simplify "Forget" using a checkbox; redo signal quality
  *      assessment; remove over-engineered WM debug stuff.
  *  2025/10/08 (A10001986)
