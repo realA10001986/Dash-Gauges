@@ -115,6 +115,8 @@
 
 /*  Changelog
  *  
+ *  2025/10/14 (A10001986) [1.24.3]
+ *    - Hotfix for Config Portal
  *  2025/10/14 (A10001986) [1.24.2]
  *    - WM: Do not garble UTF8 SSID; skip SSIDs with non-printable characters
  *    - Fix regression in CP ("show password")

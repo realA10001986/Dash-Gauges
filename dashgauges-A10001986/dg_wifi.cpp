@@ -251,14 +251,15 @@ WiFiManagerParameter custom_sectstart_nw("</div><div class='sects'><div class='h
 
 WiFiManagerParameter custom_sectend_foot("</div><p></p>");
 
-#define TC_MENUSIZE 6
+#define TC_MENUSIZE 7
 static const int8_t wifiMenu[TC_MENUSIZE] = { 
     WM_MENU_WIFI,
     WM_MENU_PARAM,
     WM_MENU_SEP,
     WM_MENU_UPDATE,
     WM_MENU_SEP,
-    WM_MENU_CUSTOM
+    WM_MENU_CUSTOM,
+    WM_MENU_END
 };
 
 #define AA_TITLE "Dash Gauges"
