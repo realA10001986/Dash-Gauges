@@ -377,7 +377,7 @@ For wiring information, please see [here](hardware/#connecting-a-tcd-to-the-dash
 
 With the wiring in place, head to the Config Portal and set the option **_TCD connected by wire_**. On the TCD, the option "Control props connected by wire" must be set.
 
->You can connect both the TCD and a Time Travel button to the Dash Gauges. But the button should not be pressed when the option **_TCD connected by wire_** is set, as it might yield unwanted results.
+>You can connect both the TCD and a Time Travel button to the Dash Gauges. However, the button should not be pressed when the option **_TCD connected by wire_** is set, as it might yield unwanted results.
 
 ## Home Assistant / MQTT
 
@@ -385,7 +385,7 @@ The Dash Gauges support the MQTT protocol version 3.1.1 for the following featur
 
 ### Control the Dash Gauges via MQTT
 
-The Dash Gauges can - to some extent - be controlled through messages sent to topic **bttf/dg/cmd**. Support commands are
+The Dash Gauges can - to some extent - be controlled through messages sent to topic **bttf/dg/cmd**. Supported commands are
 - TIMETRAVEL: Start a [time travel](#time-travel)
 - EMPTY: "Drain" Plutonium and trigger alarm
 - REFILL: Refill the Plutonium chamber
