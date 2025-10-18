@@ -40,7 +40,7 @@ If you are using a fresh ESP32 board, please see [dashgauges-A10001986.ino](http
 
 ### Sound-pack installation
 
-The firmware comes with a sound-pack which needs to be installed separately. The sound-pack is not updated as often as the firmware itself. If you have previously installed the latest version of the sound-pack, you normally don't have to re-install it when you update the firmware. Only if the "Empty" LED signals "SOS" (three short blinks, three long blinks, three short blicks) during boot, a re-installation/update is needed.
+The firmware comes with a sound-pack which needs to be installed separately. The sound-pack is not updated as often as the firmware itself. If you have previously installed the latest version of the sound-pack, you normally don't have to re-install it when you update the firmware. Only if the "Empty" LED signals "SOS" (three short blinks, three long blinks, three short blinks) during boot, a re-installation/update is needed.
 
 The first step is to download "install/sound-pack-xxxxxxxx.zip" and extract it. It contains one file named "DGA.bin".
 
@@ -123,10 +123,10 @@ It can be accessed as follows:
 
 #### If Dash Gauges are connected to a WiFi network
 
-- Connect your hand-held/computer to the same (WiFi) network to which the Dash Gauges are connected, and
+- Connect your handheld/computer to the same (WiFi) network to which the Dash Gauges are connected, and
 - navigate your browser to http://gauges.local
 
-  >Accessing the Config Portal through this address requires the operating system of your hand-held/computer to support Bonjour/mDNS: Windows 10 version TH2     (1511) [other sources say 1703] and later, Android 13 and later; MacOS and iOS since the dawn of time.
+  >Accessing the Config Portal through this address requires the operating system of your handheld/computer to support Bonjour/mDNS: Windows 10 version TH2     (1511) [other sources say 1703] and later, Android 13 and later; MacOS and iOS since the dawn of time.
 
   >If connecting to http://gauges.local fails due to a name resolution error, you need to find out the Gauges' IP address. In order to do so, hold "Button 1" on the Control Board for 2 seconds, and listen. The IP address will be spoken out loud. Then, on your handheld or computer, navigate to http://a.b.c.d (a.b.c.d being the IP address as just given by the Dash Gauges) in order to enter the Config Portal.
 
@@ -358,7 +358,7 @@ Note that the TCD's firmware must be up to date for BTTFN. You can use [this](ht
 
 ![BTTFN connection](img/family-wifi-bttfn.png)
 
-In order to connect your Dash Gauges to the TCD using BTTFN, just enter the TCD's IP address or hostname in the **_IP address or hostname of TCD_** field in the Dash Gauges's Config Portal. On the TCD, no special configuration is required.
+In order to connect your Dash Gauges to the TCD using BTTFN, just enter the TCD's IP address or hostname in the **_IP address or hostname of TCD_** field in the Dash Gauges' Config Portal. On the TCD, no special configuration is required.
   
 Afterwards, the Dash Gauges and the TCD can communicate wirelessly and 
 - play time travel sequences in sync,
@@ -432,12 +432,12 @@ Enter the Config Portal on the Dash Gauges (as described above), click on *Setti
   - check the option **_Follow TCD fake power_** if you have a fake power switch for the TCD (like eg a TFC switch)
   - click on *Save*.
 
-After the Dash Gauges have restarted, re-enter the Dash Gauges's Config Portal (while the TCD is powered and in *car mode*) and
+After the Dash Gauges have restarted, re-enter the Dash Gauges' Config Portal (while the TCD is powered and in *car mode*) and
   - click on *WiFi Configuration*,
   - select the TCD's access point name in the list at the top ("TCD-AP"; if there is no list, click on "WiFi Scan") or enter *TCD-AP* into the *Network name (SSID)* field; if you password-protected your TCD's AP, enter this password in the *password* field. Leave all other fields empty,
   - click on *Save*.
 
-In order to access the Dash Gauges's Config Portal in your car, connect your handheld or computer to the TCD's WiFi access point ("TCD-AP"), and direct your browser to http://gauges.local ; if that does not work, go to the TCD's keypad menu, press ENTER until "BTTFN CLIENTS" is shown, hold ENTER, and look for the Dash Gauges's IP address there; then direct your browser to that IP by using the URL http://a.b.c.d (a-d being the IP address displayed on the TCD display).
+In order to access the Dash Gauges' Config Portal in your car, connect your handheld or computer to the TCD's WiFi access point ("TCD-AP"), and direct your browser to http://gauges.local ; if that does not work, go to the TCD's keypad menu, press ENTER until "BTTFN CLIENTS" is shown, hold ENTER, and look for the Dash Gauges' IP address there; then direct your browser to that IP by using the URL http://a.b.c.d (a-d being the IP address displayed on the TCD display).
 
 This "car setup" can also be used in a home setup with no local WiFi network present.
 
@@ -517,7 +517,7 @@ By default, when the Dash Gauges create a WiFi network of its own ("AP-mode"), t
 
 ##### &#9654; Password
 
-By default, and if this field is empty, the Dash Gauges's own WiFi network ("DG-AP") will be unprotected. If you want to protect your access point, enter your password here. It needs to be 8 characters in length and only characters A-Z, a-z, 0-9 and - are allowed.
+By default, and if this field is empty, the Dash Gauges' own WiFi network ("DG-AP") will be unprotected. If you want to protect your access point, enter your password here. It needs to be 8 characters in length and only characters A-Z, a-z, 0-9 and - are allowed.
 
 If you forget this password and are thereby locked out of your Dash Gauges, 
 - power-down the device,
@@ -528,7 +528,7 @@ If you forget this password and are thereby locked out of your Dash Gauges,
 - wait until the "Empty" LED lights up,
 - then release the Time Travel button.
 
-This procedure temporarily (until a reboot) clears the WiFi password, allowing unprotected access to the Config Portal. (Note that this procedure also deletes static IP addres data; the device will return to using DHCP after a reboot.)
+This procedure temporarily (until a reboot) clears the WiFi password, allowing unprotected access to the Config Portal. (Note that this procedure also deletes static IP address data; the device will return to using DHCP after a reboot.)
 
 ##### &#9654; WiFi channel
 
@@ -577,9 +577,9 @@ The music player will continue to run.
 
 For analog gauges only. 
 
-Here you can select the readiing the "Primary" meter should give when "full". You can enter a value between 0 and 100 here. 0 will reset the "full" percentage to a default; 1-100 select a specific percentage. Values below 10 don't really make sense, though.
+Here you can select the reading the "Primary" meter should give when "full". You can enter a value between 0 and 100 here. 0 will reset the "full" percentage to a default; 1-100 select a specific percentage. Values below 10 don't really make sense, though.
 
-The "full" percentage can be changed through the TCD keypad (91xx for the "Primary" gauge, 93xx for the "Pecent Power" one, and 97xx for the "Roentgens"). 9x00 resets the "full" position the a default value. Note that changing the "full" percentage through the TCD keypad is not persistent. The boot-up values are only set through the Config Portal.
+The "full" percentage can be changed through the TCD keypad (91xx for the "Primary" gauge, 93xx for the "Percent Power" one, and 97xx for the "Roentgens"). 9x00 resets the "full" position the default value. Note that changing the "full" percentage through the TCD keypad is not persistent. The boot-up values are only set through the Config Portal.
 
 ##### &#9654; 'Primary' empty percentage
 
