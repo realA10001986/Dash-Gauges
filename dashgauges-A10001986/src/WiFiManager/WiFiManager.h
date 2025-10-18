@@ -2,13 +2,10 @@
  * WiFiManager.h
  *
  * Based on:
- *
  * WiFiManager, a library for the ESP32/Arduino platform
- *
- * @author Creator tzapu
- * @author tablatronix
- * @version 2.0.15+A10001986
- * @license MIT
+ * Creator tzapu (tablatronix)
+ * Version 2.0.15
+ * License MIT
  *
  * Adapted by Thomas Winischhofer (A10001986)
  */
@@ -82,6 +79,8 @@
 #define WM_WIFI_SCAN_BUSY -133
 
 #define DNS_PORT           53
+
+#define MAX_SCAN_OUTPUT_SIZE  6144  // Maximum buffer for scan list on WiFi Config page
 
 #if defined(ESP_ARDUINO_VERSION) && defined(ESP_ARDUINO_VERSION_VAL)
     #if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(2,0,0)
@@ -237,7 +236,7 @@ class WiFiManager
 
   	// Set connection parameters
 
-    //sets timeout for which to attempt connecting, useful if you get a lot of failed connects
+    // sets timeout for which to attempt connecting, useful if you get a lot of failed connects
     void          setConnectTimeout(unsigned long seconds);
 
     // sets number of retries for autoconnect, force retry after wait failure exit
@@ -392,13 +391,10 @@ class WiFiManager
     int           _ap_max_clients         = 4;     // softap max clients
     uint16_t      _httpPort               = 80;    // port for webserver
     uint8_t       _connectRetries         = 1;     // number of sta connect retries, force reconnect, wait loop (connectimeout) does not always work and first disconnect bails
-    bool          _aggresiveReconn        = true;  // use an aggressive reconnect strategy, WILL delay conxs
-                                                   // on some conn failure modes will add delays and many retries to work around esp and ap bugs, ie, anti de-auth protections
-                                                   // https://github.com/tzapu/WiFiManager/issues/1067
 
     wifi_event_id_t wm_event_id           = 0;
     static uint8_t  _eventlastconxresult;          // for wifi event callback
-    static bool     _gotip;                        // for wifi event callback
+    static uint16_t _WiFiEventMask;                // for wifi event callback
 
     int           _minimumRSSI            = -1000; // filter wifiscan ap by this rssi
     bool          _staShowStaticFields    = true;
@@ -413,7 +409,6 @@ class WiFiManager
 
     // internal options
     unsigned int  _scancachetime          = 30000; // ms cache time for preload scans
-    bool          _asyncScan              = true;  // perform wifi network scan async
 
     bool          _autoforcerescan        = false; // automatically force rescan if scan networks is 0, ignoring cache
 
@@ -444,14 +439,18 @@ class WiFiManager
     uint8_t       waitForConnectResult(bool haveStatic);
     uint8_t       waitForConnectResult(bool haveStatic, uint32_t timeout);
 
+    bool          wifiSTAOn();
+    bool          wifiSTAOff();
+    bool          waitEvent(uint16_t mask, unsigned long timeout);
+
     // webserver handlers
 	  unsigned int  getHTTPHeadLength(const char *title, bool includeMSG = false, bool includeQI = false);
 	  void          getHTTPHeadNew(String& page, const char *title, bool includeMSG = false, bool includeQI = false);
 
 	  unsigned int  getParamOutSize(WiFiManagerParameter** params,
                         int paramsCount, unsigned int& maxItemSize);
-  	void          getParamOut(WiFiManagerParameter** params,
-                        int paramsCount, String &page, unsigned int maxItemSize);
+  	void          getParamOut(String &page, WiFiManagerParameter** params,
+                        int paramsCount, unsigned int maxItemSize);
     void          doParamSave(WiFiManagerParameter** params, int paramsCount);
 
 	  int           reportStatusLen();
@@ -469,12 +468,12 @@ class WiFiManager
   	// WiFi page
   	int           getScanItemStart();
   	void          sortNetworks(int n, int *indices, int& haveDupes, bool removeDupes);
-  	unsigned int  getScanItemsLen(int n, bool scanErr, int *indices, unsigned int& maxItemSize, bool showall);
-    String        getScanItemsOut(int n, bool scanErr, int *indices, unsigned int maxItemSize, bool showall);
-	  String        getIpForm(const char *id, const char *title, IPAddress& value, const char *ph = NULL);
-    String        getStaticOut(unsigned int estPageSize = 0);
+  	unsigned int  getScanItemsLen(int n, bool scanErr, int *indices, unsigned int& maxItemSize, int& stopAt, bool showall);
+    void          getScanItemsOut(String& page, int n, bool scanErr, int *indices, unsigned int maxItemSize, bool showall);
+	  void          getIpForm(String& page, const char *id, const char *title, IPAddress& value, const char *ph = NULL);
+    void          getStaticOut(String& page);
 	  unsigned int  getStaticLen();
-    void          buildWifiPage(bool scan, String& page);
+    void          buildWifiPage(String& page, bool scan);
 	  void          handleWifi(bool scan);
     void          handleWifiSave();
 
@@ -504,7 +503,6 @@ class WiFiManager
     void          WiFiEvent(WiFiEvent_t event, arduino_event_info_t info);
 
     // helpers
-    String        toStringIp(IPAddress ip);
     bool          validApPassword();
 
     // helper for html
