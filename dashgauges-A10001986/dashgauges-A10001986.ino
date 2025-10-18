@@ -115,8 +115,19 @@
 
 /*  Changelog
  *  
+ *  2025/10/17 (A10001986) [1.25]
+ *    - Wipe flash FS if alien VER found; in case no VER is present, check
+ *      available space for audio files, and wipe if not enough.
+ *  2025/10/16 (A10001986)
+ *    - Minor code optim (settings)
+ *    - WM: More event-based waiting instead of delays
+ *  2025/10/15 (A10001986)  
+ *    - Some more WM changes. Number of scanned networks listed is now restricted in 
+ *      order not to run out of memory.
  *  2025/10/14 (A10001986) [1.24.3]
- *    - Hotfix for Config Portal
+ *    - Hotfix for Config Portal. If you installed 1.24.2, please update to this
+ *      version: Put the firmware file on an SD card, rename it to "dgfw.bin",
+ *      put the card into the slot and power up. Sorry for that.
  *  2025/10/14 (A10001986) [1.24.2]
  *    - WM: Do not garble UTF8 SSID; skip SSIDs with non-printable characters
  *    - Fix regression in CP ("show password")
