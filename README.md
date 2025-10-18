@@ -396,7 +396,7 @@ The Dash Gauges can - to some extent - be controlled through messages sent to to
 - MP_PREV: Jump to previous song
 - MP_SHUFFLE_ON: Enables shuffle mode in [Music Player](#the-music-player)
 - MP_SHUFFLE_OFF: Disables shuffle mode in [Music Player](#the-music-player)
-- MP_FOLDER_x: x being 0-9, set Music Folder number for [Music Player](#the-music-player)
+- MP_FOLDER_x: x being 0-9, set folder number for [Music Player](#the-music-player)
 
 ### Receive commands from Time Circuits Display
 
