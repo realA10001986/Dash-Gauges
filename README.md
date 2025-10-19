@@ -70,7 +70,9 @@ The first step is to establish access to the configuration web site ("Config Por
 
 Your Dash Gauges know two ways of WiFi operation: Either they create their own WiFi network, or they connect to a pre-existing WiFi network.
 
-As long as the device is unconfigured, it creates its own WiFi network named "DG-AP". This mode of operation is called "**Access point mode**", or "AP-mode". 
+As long as the device is unconfigured, it creates its own WiFi network named "DG-AP". This mode of operation is called "**Access point mode**", or "AP-mode". In this mode, other devices - such as computers/handhelds - can connect to the Dash Gauges, but there is no BTTFN, no HA/MQTT.
+
+![APmode](img/apmode.png)
 
 It is ok to leave it in AP-mode, predominantly if used stand-alone. (To keep operating your Dash Gauges in AP-mode, do not configure a WiFi network as described below, or check on "Forget saved WiFi network" and click "Save" on the Config Portal's "WiFi configuration" page.)
 
@@ -82,7 +84,11 @@ It is ok to leave it in AP-mode, predominantly if used stand-alone. (To keep ope
 
 ##### &#9654; Home setup with a pre-existing local WiFi network
 
-In this case, you can connect your Dash Gauges to your home WiFi network: Click on "WiFi Configuration" and either select a network from the top of the page or enter a WiFi network name (SSID), and enter your WiFi password. After saving the WiFi network settings, the device reboots and tries to connect to your configured WiFi network. If that fails, it will again start in access point mode.
+In this case, you can connect your Dash Gauges to your home WiFi network. . This allows for BTTFN and HA/MQTT.
+
+![STAmode-home](img/stamode-home.png)
+
+Click on "WiFi Configuration" and either select a network from the top of the page or enter a WiFi network name (SSID), and enter your WiFi password. After saving the WiFi network settings, the device reboots and tries to connect to your configured WiFi network. If that fails, it will again start in access point mode.
 
 >If you have a [Time Circuits Display](https://tcd.out-a-ti.me) note that in order to have both Dash Gauges and TCD communicate with each other, your Dash Gauges must be connected to the same network your TCD is connected to. In order to use MQTT, your Dash Gauges must be connected to the same network your broker is connected to.
 
@@ -101,7 +107,11 @@ In this case, you can connect your Dash Gauges to your home WiFi network: Click 
 
 In this case and with no [Time Circuits Display](https://tcd.out-a-ti.me) at hand, keep your Dash Gauges operating in AP-mode.
 
-If you have a [Time Circuits Display](https://tcd.out-a-ti.me), you can connect your Dash Gauges to the TCD's own WiFi network: Run the TCD in AP-Mode, and on your Dash Gauges' Config Portal, click on "WiFi Configuration" and either select "TCD-AP" from the top of the page or enter "TCD-AP" under *Network name (SSID)*. If you password-protected your TCD-AP, enter this password below. See [here](#car-setup) for more details.
+If you have a [Time Circuits Display](https://tcd.out-a-ti.me), you can connect your Dash Gauges to the TCD's own WiFi network: 
+
+![STAmode-car](img/stamode-car.png)
+
+Run the TCD in AP-Mode, and on your Dash Gauges' Config Portal, click on "WiFi Configuration" and either select "TCD-AP" from the top of the page or enter "TCD-AP" under *Network name (SSID)*. If you password-protected your TCD-AP, enter this password below. See [here](#car-setup) for more details.
 
 After completing this step, your Dash Gauges are ready to be configured through the "Config Portal".
 
@@ -420,6 +430,8 @@ Limitations: MQTT Protocol version 3.1.1; TLS/SSL not supported; ".local" domain
 
 If your Dash Gauges, along with a [Time Circuits Display](https://tcd.out-a-ti.me/), is mounted in a car, the following network configuration is recommended:
 
+![STAmode-car](img/stamode-car.png)
+
 #### TCD
 
 - Run your TCD in [*car mode*](https://tcd.out-a-ti.me/#car-mode);
@@ -429,7 +441,6 @@ If your Dash Gauges, along with a [Time Circuits Display](https://tcd.out-a-ti.m
 
 Enter the Config Portal on the Dash Gauges (as described above), click on *Settings* and
   - enter *192.168.4.1* into the field **_IP address or hostname of TCD_** under BTTFN settings;
-  - check the option **_Follow TCD fake power_** if you have a fake power switch for the TCD (like eg a TFC switch)
   - click on *Save*.
 
 After the Dash Gauges have restarted, re-enter the Dash Gauges' Config Portal (while the TCD is powered and in *car mode*) and
