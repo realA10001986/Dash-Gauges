@@ -70,7 +70,7 @@ The first step is to establish access to the configuration web site ("Config Por
 
 Your Dash Gauges know two ways of WiFi operation: Either they create their own WiFi network, or they connect to a pre-existing WiFi network.
 
-As long as the device is unconfigured, it creates its own WiFi network named "DG-AP". This mode of operation is called "**Access point mode**", or "AP-mode". In this mode, other devices - such as computers/handhelds - can connect to the Dash Gauges, but there is no BTTFN, no HA/MQTT.
+As long as the device is unconfigured, it creates its own WiFi network named "DG-AP". This mode of operation is called "**Access point mode**", or "AP-mode". In this mode, other devices - such as computers/handhelds - can connect to the Dash Gauges, but they cannot connect or talk to other devices.
 
 ![APmode](img/apmode.png)
 
