@@ -74,7 +74,7 @@ As long as the device is unconfigured, it creates its own WiFi network named "DG
 
 ![APmode](img/apmode.png)
 
-It is ok to leave it in AP-mode, predominantly if used stand-alone. (To keep operating your Dash Gauges in AP-mode, simply _do not configure_ a WiFi network connection as described below.
+It is ok to leave it in AP-mode, predominantly if used stand-alone. To keep operating your Dash Gauges in AP-mode, simply _do not configure_ a WiFi network connection as described below.
 
 >Please do not leave computers/handhelds permanently connected to the Dash Gauges in AP-mode. These devices might think they are connected to the internet and therefore hammer your Dash Gauges with DNS and HTTP requests which might lead to packet loss and disruptions.
 
