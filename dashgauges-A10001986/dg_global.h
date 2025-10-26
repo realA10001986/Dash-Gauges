@@ -15,8 +15,8 @@
  ***                          Version Strings                          ***
  *************************************************************************/
 
-#define DG_VERSION       "V1.25"
-#define DG_VERSION_EXTRA "OCT172025"
+#define DG_VERSION       "V1.25.1"
+#define DG_VERSION_EXTRA "OCT262025"
 
 //#define DG_DBG              // debug output on Serial
 
@@ -101,7 +101,6 @@
 #endif
 
 #define EMPTY_LED_PIN     17  // [OUT] SBv1/CBv1: "Empty" LED
-#define EMPTY_LED_PIN2    14  // [OUT] SBv2:      "Empty" LED
 
 // I2S audio pins
 #define I2S_BCLK_PIN      26
@@ -116,15 +115,5 @@
 
 // Analog input for volume (unused on A10001986 Control Boards)
 #define VOLUME_PIN        32
-
-/* 
- *  Switchboard v2: Bits on PCA8574 port expander
- */
-#define SIDESWITCH_BIT     7    // input    Toggle switch on side
-#define DOORSWITCH_BIT     0    // input    Door switch
-#define BACKLIGHTS_BIT     6    // output   Gauges' backlights (via relay)
-
-#define PX_READ_MASK       ((1<<SIDESWITCH_BIT)|(1<<DOORSWITCH_BIT))
-#define PX_WRITE_MASK      ((1<<BACKLIGHTS_BIT))
 
 #endif

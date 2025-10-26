@@ -81,13 +81,6 @@ static uint8_t left_gauge_empty = 0;
 static uint8_t center_gauge_empty = 0;
 static uint8_t right_gauge_empty = 0;
 
-// SwitchBoard version 2
-#define PORT_EXPANDER_ADDR 0x21
-bool                 sbv2 = false;
-static uint8_t       portx_shadow = 0;
-static unsigned long portScannedNow = 0;
-static uint8_t       portScanResult = 0;
-
 // The emptyLED object
 static EmptyLED emptyLED = EmptyLED(0);
 
@@ -296,6 +289,7 @@ static WiFiUDP       bttfMcUDP;
 static UDP*          dgMcUDP;
 #endif
 static byte          BTTFUDPBuf[BTTF_PACKET_SIZE];
+static byte          BTTFUDPTBuf[BTTF_PACKET_SIZE];
 static unsigned long BTTFNUpdateNow = 0;
 static unsigned long BTFNTSAge = 0;
 static unsigned long BTTFNTSRQAge = 0;
@@ -312,7 +306,6 @@ static uint8_t       bttfnReqStatus = 0x52; // Request capabilities, status, spe
 #ifdef BTTFN_MC
 static uint32_t      tcdHostNameHash = 0;
 static byte          BTTFMCBuf[BTTF_PACKET_SIZE];
-static uint8_t       bttfnMcMarker = 0;
 static IPAddress     bttfnMcIP(224, 0, 0, 224);
 #endif  
 
@@ -387,6 +380,7 @@ static bool bttfn_checkmc();
 #endif
 static void BTTFNCheckPacket();
 static bool BTTFNTriggerUpdate();
+static void BTTFNPreparePacketTemplate();
 static void BTTFNSendPacket();
 
 static bool bttfn_trigger_tt();
@@ -398,53 +392,36 @@ void main_boot()
     while(millis() - powerupMillis < 100) {
         delay(10);
     }
-    
-    // Check for port expander on i2c bus to identify sbv2
-    Wire.beginTransmission(PORT_EXPANDER_ADDR);
-    sbv2 = (Wire.endTransmission(true)) ? false : true;
-
-    #ifdef DG_DBG
-    Serial.printf("Switchboard v%d detected\n", sbv2 ? 2 : 1);
-    #endif
         
     // Some init
-    if(sbv2) {
-        // Write 0, set input pins to 1
-        write_port(0);
-        portx_shadow = 0;
-    } else {
-        // Setup pin for lights
-        pinMode(BACKLIGHTS_PIN, OUTPUT);
-    }
+    
+    // Setup pin for lights
+    pinMode(BACKLIGHTS_PIN, OUTPUT);
     
     gauge_lights_off();
     
     // Set up "empty" LED
-    emptyLED.begin(sbv2 ? EMPTY_LED_PIN2 : EMPTY_LED_PIN);
+    emptyLED.begin(EMPTY_LED_PIN);
 
     // Init side switch
-    if(!sbv2) {
-        sideSwitch.begin();
-        sideSwitch.setTiming(50, 10, 50);
-        sideSwitch.attachLongPressStart(sideSwitchLongPress);
-        sideSwitch.attachLongPressStop(sideSwitchLongPressStop);
-    }
+    sideSwitch.begin();
+    sideSwitch.setTiming(50, 10, 50);
+    sideSwitch.attachLongPressStart(sideSwitchLongPress);
+    sideSwitch.attachLongPressStop(sideSwitchLongPressStop);
     sideSwitch_scan();
 
     // Init door switch
     #ifdef DG_HAVEDOORSWITCH
-    if(!sbv2) {
-        doorSwitch.begin();
-        doorSwitch.setTiming(50, 10, 50);
-        doorSwitch.attachLongPressStart(doorSwitchLongPress);
-        doorSwitch.attachLongPressStop(doorSwitchLongPressStop);
-        #ifdef DG_HAVEDOORSWITCH2
-        door2Switch.begin();
-        door2Switch.setTiming(50, 10, 50);
-        door2Switch.attachLongPressStart(door2SwitchLongPress);
-        door2Switch.attachLongPressStop(door2SwitchLongPressStop);
-        #endif
-    }
+    doorSwitch.begin();
+    doorSwitch.setTiming(50, 10, 50);
+    doorSwitch.attachLongPressStart(doorSwitchLongPress);
+    doorSwitch.attachLongPressStop(doorSwitchLongPressStop);
+    #ifdef DG_HAVEDOORSWITCH2
+    door2Switch.begin();
+    door2Switch.setTiming(50, 10, 50);
+    door2Switch.attachLongPressStart(door2SwitchLongPress);
+    door2Switch.attachLongPressStop(door2SwitchLongPressStop);
+    #endif
     doorSwitch_scan();
     #endif
 
@@ -648,11 +625,6 @@ void main_loop()
     // Execute scheduled digital gauge changes
     gauges.loop();
 
-    if(sbv2) {
-        portScannedNow = now;
-        portScanResult = read_port_debounce();
-    }
-
     // Scan door switch
     #ifdef DG_HAVEDOORSWITCH
     dsScan();
@@ -830,12 +802,29 @@ void main_loop()
     if(!TTrunning && !startup && !startAlarm && !refill && !refillWA) {
         Button1Scan();
         if(isB1Held) {
+            // Say IP address
             isB1Held = isB1Pressed = false;
             flushDelayedSave();
             say_ip_address();
         } else if(isB1Pressed) {
+            // WiFi re-connect / restart from Power Save
+            bool wasActiveM = false, waitShown = false;
             isB1Pressed = false;
-            // TODO?
+            if(wifiOnWillBlock()) {
+                if(haveMusic && mpActive) {
+                    mp_stop();
+                    wasActiveM = true;
+                }
+                stopAudio();
+                showWaitSequence();
+                waitShown = true;
+                flushDelayedSave();
+            }
+            // Enable WiFi / even if in AP mode / with CP
+            wifiOn(0, true, false);
+            if(waitShown) endWaitSequence();
+            // Restart mp if active before
+            if(wasActiveM) mp_play();
         }
     }
     
@@ -1068,9 +1057,9 @@ void main_loop()
         execute_remote_command();
     }
 
-    // Wake up on RotEnc speed changes
+    // Wake up on RotEnc/Remote speed changes; on GPS only if old speed was <=0
     if(gpsSpeed != oldGpsSpeed) {
-        if(FPBUnitIsOn && !TTrunning && spdIsRotEnc && gpsSpeed >= 0) {
+        if(FPBUnitIsOn && !TTrunning && (spdIsRotEnc || oldGpsSpeed <= 0) && gpsSpeed >= 0) {
             wakeup();
         }
         oldGpsSpeed = gpsSpeed;
@@ -1092,6 +1081,7 @@ void main_loop()
             (!BTTFNBootTO && !lastBTTFNpacket && (now - powerupMillis > 60*1000)) ) {
             tcdNM = false;
             tcdFPO = false;
+            gpsSpeed = -1;
             lastBTTFNpacket = 0;
             BTTFNBootTO = true;
         }
@@ -1628,49 +1618,19 @@ static void stopEmptyAlarm()
 
 static void gauge_lights_on()
 {
-    if(sbv2) {
-        set_port_pin(BACKLIGHTS_BIT);
-    } else {
-        digitalWrite(BACKLIGHTS_PIN, HIGH);
-    }
+    digitalWrite(BACKLIGHTS_PIN, HIGH);
 }
 
 static void gauge_lights_off()
 {
-    if(sbv2) {
-        clr_port_pin(BACKLIGHTS_BIT);
-    } else {
-        digitalWrite(BACKLIGHTS_PIN, LOW);
-    }
+    digitalWrite(BACKLIGHTS_PIN, LOW);
 }
 
 /* Keys & buttons */
 
 void sideSwitch_scan()
 {
-    if(sbv2) {
-        uint8_t val;
-        if(millis() - portScannedNow >= 20) {
-            portScanResult = read_port_debounce();
-            portScannedNow = millis();
-        }
-        val = portScanResult;
-        if(val & (1 << SIDESWITCH_BIT)) {
-            // unpressed
-            if(sideSwitchStatus > 0) {
-                sideSwitchLongPressStop();
-                sideSwitchStatus = 0;
-            }
-        } else {
-            // pressed
-            if(!sideSwitchStatus) {
-                sideSwitchLongPress();
-                sideSwitchStatus = 1;
-            }
-        }
-    } else {
-        sideSwitch.scan();
-    }
+    sideSwitch.scan();
 }
 
 static void sideSwitchLongPress()
@@ -1705,32 +1665,10 @@ void play_door_open(int doorNum, bool isOpen)
 
 void doorSwitch_scan()
 {
-    if(sbv2) {
-        uint8_t val;
-        if(millis() - portScannedNow >= 20) {
-            portScanResult = read_port_debounce();
-            portScannedNow = millis();
-        }
-        val = portScanResult;
-        if(val & (1 << DOORSWITCH_BIT)) {
-            // unpressed
-            if(doorSwitchStatus > 0) {
-                doorSwitchLongPressStop();
-                doorSwitchStatus = 0;
-            }
-        } else {
-            // pressed
-            if(!doorSwitchStatus) {
-                doorSwitchLongPress();
-                doorSwitchStatus = 1;
-            }
-        }
-    } else {
-        doorSwitch.scan();
-        #ifdef DG_HAVEDOORSWITCH2
-        door2Switch.scan();
-        #endif
-    }
+    doorSwitch.scan();
+    #ifdef DG_HAVEDOORSWITCH2
+    door2Switch.scan();
+    #endif
 }
 static void doorSwitchLongPress()
 {
@@ -1942,67 +1880,6 @@ static uint8_t restrict_gauge_empty(int val, int minimum, int maximum, uint8_t d
 }
 
 /*
- * Switchboard v2: Port expander
- */
-
-static void write_port(uint8_t val)
-{
-    Wire.beginTransmission(PORT_EXPANDER_ADDR);
-    Wire.write((val & PX_WRITE_MASK)|PX_READ_MASK);
-    Wire.endTransmission();
-}
-
-uint8_t read_port()
-{
-    Wire.requestFrom(PORT_EXPANDER_ADDR, (int)1);
-    return Wire.read() & PX_READ_MASK;
-}
-
-uint8_t read_port_debounce()
-{
-    uint8_t val1, val2, val3;
-    int retry = 2;
-
-    do {
-        val1 = read_port();
-        delay(5);
-        val2 = read_port();
-        delay(5);
-        val3 = read_port();
-    
-        if(val1 == val2 && val2 == val3) {
-            #ifdef DG_DBG
-            if(retry != 2) {
-                Serial.println("Port read-out unstable (1)");
-            }
-            #endif
-            return val1;
-        }
-
-        audio_loop();
-
-    } while(--retry);
-
-    #ifdef DG_DBG
-    Serial.println("Port read-out unstable (2)");
-    #endif
-
-    return val3;
-}
-
-static void set_port_pin(uint8_t bitnum)
-{
-    portx_shadow |= (1 << bitnum);
-    write_port(portx_shadow);
-}
-
-static void clr_port_pin(uint8_t bitnum)
-{
-    portx_shadow &= ~(1 << bitnum);
-    write_port(portx_shadow);
-}
-
-/*
  * Basic Telematics Transmission Framework (BTTFN)
  */
 
@@ -2044,6 +1921,8 @@ static void bttfn_setup()
     dgMcUDP = &bttfMcUDP;
     dgMcUDP->beginMulticast(bttfnMcIP, BTTF_DEFAULT_LOCAL_PORT + 2);
     #endif
+    
+    BTTFNPreparePacketTemplate();
     
     BTTFNfailCount = 0;
     useBTTFN = true;
@@ -2110,6 +1989,25 @@ static void handle_tcd_notification(uint8_t *buf)
     uint32_t seqCnt;
     
     switch(buf[5]) {
+    case BTTFN_NOT_SPD:
+        seqCnt = GET32(buf, 12);
+        if(seqCnt == 1 || seqCnt > bttfnTCDSeqCnt) {
+            gpsSpeed = (int16_t)(buf[6] | (buf[7] << 8));
+            if(gpsSpeed > 88) gpsSpeed = 88;
+            switch(buf[8] | (buf[9] << 8)) {
+            case BTTFN_SSRC_GPS:
+                spdIsRotEnc = false;
+                break;
+            default:
+                spdIsRotEnc = true;
+            }
+        } else {
+            #ifdef DG_DBG
+            Serial.printf("Out-of-sequence packet received from TCD %d %d\n", seqCnt, bttfnTCDSeqCnt);
+            #endif
+        }
+        bttfnTCDSeqCnt = seqCnt;
+        break;
     case BTTFN_NOT_PREPARE:
         // Prepare for TT. Comes at some undefined point,
         // an undefined time before the actual tt, and
@@ -2161,25 +2059,6 @@ static void handle_tcd_notification(uint8_t *buf)
         if(!TTrunning) {
             wakeup();
         }
-        break;
-    case BTTFN_NOT_SPD:
-        seqCnt = GET32(buf, 12);
-        if(seqCnt == 1 || seqCnt > bttfnTCDSeqCnt) {
-            gpsSpeed = (int16_t)(buf[6] | (buf[7] << 8));
-            if(gpsSpeed > 88) gpsSpeed = 88;
-            switch(buf[8] | (buf[9] << 8)) {
-            case BTTFN_SSRC_GPS:
-                spdIsRotEnc = false;
-                break;
-            default:
-                spdIsRotEnc = true;
-            }
-        } else {
-            #ifdef DG_DBG
-            Serial.printf("Out-of-sequence packet received from TCD %d %d\n", seqCnt, bttfnTCDSeqCnt);
-            #endif
-        }
-        bttfnTCDSeqCnt = seqCnt;
         break;
     }
 }
@@ -2314,7 +2193,6 @@ static void BTTFNCheckPacket()
             bttfnReqStatus &= ~0x40;     // Do no longer poll capabilities
             #ifdef BTTFN_MC
             if(BTTFUDPBuf[31] & 0x01) {
-                bttfnMcMarker = BTTFN_SUP_MC;
                 bttfnReqStatus &= ~0x02; // Do no longer poll speed, comes over multicast
             }
             #endif
@@ -2347,26 +2225,31 @@ static bool BTTFNTriggerUpdate()
     return true;
 }
 
-static void BTTFNPreparePacket()
+static void BTTFNPreparePacketTemplate()
 {
-    memset(BTTFUDPBuf, 0, BTTF_PACKET_SIZE);
+    memset(BTTFUDPTBuf, 0, BTTF_PACKET_SIZE);
 
     // ID
-    memcpy(BTTFUDPBuf, BTTFUDPHD, 4);
+    memcpy(BTTFUDPTBuf, BTTFUDPHD, 4);
 
-    // Tell the TCD about our hostname (0-term., 13 bytes total)
-    strncpy((char *)BTTFUDPBuf + 10, settings.hostName, 12);
-    BTTFUDPBuf[10+12] = 0;
+    // Tell the TCD about our hostname
+    // 13 bytes total. If hostname is longer, last in buf is '.'
+    memcpy(BTTFUDPTBuf + 10, settings.hostName, 13);
+    if(strlen(settings.hostName) > 13) BTTFUDPTBuf[10+12] = '.';
 
-    BTTFUDPBuf[10+13] = BTTFN_TYPE_PCG;
+    BTTFUDPTBuf[10+13] = BTTFN_TYPE_PCG;
 
     // Version, MC-marker
+    BTTFUDPTBuf[4] = BTTFN_VERSION;
     #ifdef BTTFN_MC
-    BTTFUDPBuf[4] = BTTFN_VERSION | bttfnMcMarker;  
-    #else
-    BTTFUDPBuf[4] = BTTFN_VERSION;
-    #endif                
+    BTTFUDPTBuf[4] |= BTTFN_SUP_MC;
+    #endif
 }
+
+static void BTTFNPreparePacket()
+{
+    memcpy(BTTFUDPBuf, BTTFUDPTBuf, BTTF_PACKET_SIZE);
+} 
 
 static void BTTFNDispatch()
 {

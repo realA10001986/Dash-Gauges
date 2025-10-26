@@ -58,8 +58,6 @@ extern unsigned long powerupMillis;
 
 extern Gauges gauges;
 
-extern bool sbv2;
-
 extern bool TCDconnected;
 #ifdef DG_HAVEDOORSWITCH
 extern bool dsPlay;

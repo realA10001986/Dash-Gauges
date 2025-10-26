@@ -188,9 +188,8 @@ void settings_setup()
 
     // Pre-maturely use TT button and side switch (initialized again later)
     pinMode(TT_IN_PIN, INPUT);
-    if(!sbv2) {
-        pinMode(SIDESWITCH_PIN, INPUT);
-    }
+    pinMode(SIDESWITCH_PIN, INPUT);
+    
     delay(20);
 
     #ifdef DG_DBG
@@ -317,7 +316,7 @@ void settings_setup()
     // (Reason: LittleFS crashes when flash FS is full.)
     if(!haveAudioFiles && haveFS && !FlashROMode) {
         if((alienVER > 0) || (alienVER < 0 && (SPIFFS.totalBytes() - SPIFFS.usedBytes() < soa + 16384))) {
-            #ifdef FC_DBG
+            #ifdef DG_DBG
             Serial.printf("Reformatting. Alien VER: %d, space %d", alienVER, SPIFFS.totalBytes() - SPIFFS.usedBytes());
             #endif
             writedefault = true;
@@ -355,13 +354,9 @@ void settings_setup()
             unsigned long mnow = millis();
             bool ssState, newSSState;
             int ssCount = 0;
-            int ledpin = sbv2 ? EMPTY_LED_PIN2 : EMPTY_LED_PIN;
-
-            if(sbv2) {
-                ssState = (read_port() & (1 << SIDESWITCH_PIN)) ? false : true;
-            } else {
-                ssState = digitalRead(SIDESWITCH_PIN);
-            }
+            int ledpin = EMPTY_LED_PIN;
+            
+            ssState = digitalRead(SIDESWITCH_PIN);
 
             // Pre-maturely use empty led
             pinMode(ledpin, OUTPUT);
@@ -371,33 +366,16 @@ void settings_setup()
 
             while(1) {
                 if((ssCount == 2) || (millis() - mnow > 10*1000)) break;
-
-                if(sbv2) {
-
-                    if((!!(read_port() & (1 << SIDESWITCH_PIN))) != ssState) {
-                        delay(50);
-                        if((newSSState = (!!(read_port() & (1 << SIDESWITCH_PIN)))) != ssState) {
-                            ssCount++;
-                            ssState = newSSState;
-                        }
-                    } else {
-                        delay(50);
-                    }
-
-                } else {
                   
-                    if(digitalRead(SIDESWITCH_PIN) != ssState) {
-                        delay(50);
-                        if((newSSState = digitalRead(SIDESWITCH_PIN)) != ssState) {
-                            ssCount++;
-                            ssState = newSSState;
-                        }
-                    } else {
-                        delay(50);
+                if(digitalRead(SIDESWITCH_PIN) != ssState) {
+                    delay(50);
+                    if((newSSState = digitalRead(SIDESWITCH_PIN)) != ssState) {
+                        ssCount++;
+                        ssState = newSSState;
                     }
-
+                } else {
+                    delay(50);
                 }
-                
             }
 
             if(ssCount == 2) {
@@ -494,6 +472,7 @@ static bool read_settings(File configFile, int cfgReadCount)
         wd |= CopyTextParm(json["systemID"], settings.systemID, sizeof(settings.systemID));
         wd |= CopyTextParm(json["appw"], settings.appw, sizeof(settings.appw));
         wd |= CopyCheckValidNumParm(json["apch"], settings.apChnl, sizeof(settings.apChnl), 0, 11, DEF_AP_CHANNEL);
+        wd |= CopyCheckValidNumParm(json["wAOD"], settings.wifiAPOffDelay, sizeof(settings.wifiAPOffDelay), 0, 99, DEF_WIFI_APOFFDELAY);
 
         // Settings
 
@@ -583,6 +562,7 @@ void write_settings()
     json["systemID"] = (const char *)settings.systemID;
     json["appw"] = (const char *)settings.appw;
     json["apch"] = (const char *)settings.apChnl;
+    json["wAOD"] = (const char *)settings.wifiAPOffDelay;
 
     json["aRef"] = (const char *)settings.autoRefill;
     json["aMut"] = (const char *)settings.autoMute;
@@ -1602,7 +1582,7 @@ static void firmware_update()
     if(!myFile)
         return;
 
-    int ledpin = sbv2 ? EMPTY_LED_PIN2 : EMPTY_LED_PIN;
+    int ledpin = EMPTY_LED_PIN;
     pinMode(ledpin, OUTPUT);
     
     if(!Update.begin(UPDATE_SIZE_UNKNOWN)) {

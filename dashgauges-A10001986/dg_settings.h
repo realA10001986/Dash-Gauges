@@ -69,6 +69,7 @@ extern uint8_t musFolderNum;
 #define DEF_WIFI_RETRY      3     // 1-10; Default: 3 retries
 #define DEF_WIFI_TIMEOUT    7     // 7-25; Default: 7 seconds
 #define DEF_AP_CHANNEL      1     // 1-13; 0 = random(1-13)
+#define DEF_WIFI_APOFFDELAY 0
 
 #define DEF_AUTO_REFILL     0     // Default auto-refill: 0=Never (1-360 seconds)
 #define DEF_AUTO_MUTE       0     // Default audio mute: 0=Never (1-360 seconds)
@@ -115,6 +116,7 @@ struct Settings {
     char systemID[8]        = "";
     char appw[10]           = "";
     char apChnl[4]          = MS(DEF_AP_CHANNEL);
+    char wifiAPOffDelay[4]  = MS(DEF_WIFI_APOFFDELAY);
     
     char autoRefill[6]      = MS(DEF_AUTO_REFILL);
     char autoMute[6]        = MS(DEF_AUTO_MUTE);
