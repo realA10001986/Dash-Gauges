@@ -17,11 +17,11 @@
 //#define _A10001986_DBG
 //#define _A10001986_V_DBG
 
+#define WM_MDNS
 // #define WM_AP_STATIC_IP
 // #define WM_APCALLBACK
 // #define WM_PRECONNECTCB
 // #define WM_EVENTCB
-// #define WM_MDNS
 // #define WM_ADDLGETTERS
 // #define WM_ADDLSETTERS
 
@@ -166,6 +166,9 @@ class WiFiManager
 
     // disconnect wifi
     bool          disconnect();
+
+    // Disable WiFi all together (result: WiFi mode = WIFI_OFF)
+    void          disableWiFi();
 
     // allocate numParms entries in params array (overrules WIFI_MANAGER_MAX_PARAMS)
     void          allocParms(int numParms);
@@ -395,6 +398,7 @@ class WiFiManager
     wifi_event_id_t wm_event_id           = 0;
     static uint8_t  _eventlastconxresult;          // for wifi event callback
     static uint16_t _WiFiEventMask;                // for wifi event callback
+    bool          _wifiOffFlag            = false;
 
     int           _minimumRSSI            = -1000; // filter wifiscan ap by this rssi
     bool          _staShowStaticFields    = true;

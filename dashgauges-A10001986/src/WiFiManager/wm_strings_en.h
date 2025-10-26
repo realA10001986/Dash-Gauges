@@ -13,8 +13,6 @@
 #ifndef _WM_STRINGS_EN_H_
 #define _WM_STRINGS_EN_H_
 
-#include "wm_consts_en.h"
-
 const char HTTP_HEAD_START[]       PROGMEM = "<!DOCTYPE html>"
     "<html lang='en'><head>"
     "<meta name='format-detection' content='telephone=no'>"
@@ -170,9 +168,62 @@ const char S_GET[]                PROGMEM = "GET";
 const char S_POST[]               PROGMEM = "POST";
 const char S_NA[]                 PROGMEM = "Unknown";
 
-const char S_hidden[]             PROGMEM = "[Hidden]";
 const char S_nonprintable[]       PROGMEM = "[Non-printable SSID]";
 
 const char S_notfound[]           PROGMEM = "404 File not found\n\n";
+
+// Routes
+const char R_root[]               PROGMEM = "/";
+const char R_wifi[]               PROGMEM = "/wifi";
+const char R_wifisave[]           PROGMEM = "/wifisave";
+const char R_param[]              PROGMEM = "/param";
+const char R_paramsave[]          PROGMEM = "/paramsave";
+const char R_update[]             PROGMEM = "/update";
+const char R_updatedone[]         PROGMEM = "/u";
+
+// Strings
+const char S_ip[]                 PROGMEM = WMS_ip;
+const char S_gw[]                 PROGMEM = WMS_gw;
+const char S_sn[]                 PROGMEM = WMS_sn;
+const char S_dns[]                PROGMEM = WMS_dns;
+
+// Tokens
+const char T_v[]                  PROGMEM = "{v}"; // @token v
+const char T_V[]                  PROGMEM = "{V}"; // @token v
+const char T_I[]                  PROGMEM = "{I}"; // @token I
+const char T_i[]                  PROGMEM = "{i}"; // @token i
+const char T_n[]                  PROGMEM = "{n}"; // @token n
+const char T_p[]                  PROGMEM = "{p}"; // @token p
+const char T_t[]                  PROGMEM = "{t}"; // @token t
+const char T_l[]                  PROGMEM = "{l}"; // @token l
+const char T_c[]                  PROGMEM = "{c}"; // @token c
+const char T_e[]                  PROGMEM = "{e}"; // @token e
+const char T_q[]                  PROGMEM = "{q}"; // @token q
+const char T_r[]                  PROGMEM = "{r}"; // @token r
+const char T_R[]                  PROGMEM = "{R}"; // @token R
+const char T_h[]                  PROGMEM = "{h}"; // @token h
+
+// http
+const char HTTP_HEAD_CL[]         PROGMEM = "Content-Length";
+const char HTTP_HEAD_CT[]         PROGMEM = "text/html";
+const char HTTP_HEAD_CT2[]        PROGMEM = "text/plain";
+const char HTTP_HEAD_CORS[]       PROGMEM = "Access-Control-Allow-Origin";
+const char HTTP_HEAD_CORS_ALLOW_ALL[]  PROGMEM = "*";
+
+// Debug
+#ifdef _A10001986_DBG
+const char * const WIFI_STA_STATUS[] PROGMEM =
+{
+    "WL_IDLE_STATUS",     // 0 STATION_IDLE
+    "WL_NO_SSID_AVAIL",   // 1 STATION_NO_AP_FOUND
+    "WL_SCAN_COMPLETED",  // 2
+    "WL_CONNECTED",       // 3 STATION_GOT_IP
+    "WL_CONNECT_FAILED",  // 4 STATION_CONNECT_FAIL, STATION_WRONG_PASSWORD(NI)
+    "WL_CONNECTION_LOST", // 5
+    "WL_DISCONNECTED",    // 6
+    "WL_STATION_WRONG_PASSWORD" // 7 KLUDGE
+};
+const char* const WIFI_MODES[] PROGMEM = { "NULL", "STA", "AP", "STA+AP" };
+#endif
 
 #endif  // _WM_STRINGS_EN_H_

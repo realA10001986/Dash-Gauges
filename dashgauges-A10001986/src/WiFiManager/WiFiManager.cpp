@@ -333,6 +333,8 @@ bool WiFiManager::autoConnect(const char *ssid, const char *pass, const char *ap
     Serial.println("AutoConnect");
     #endif
 
+    _begin();
+
     // Store given ssid/pass
 
     memset(_ssid, 0, sizeof(_ssid));
@@ -343,6 +345,8 @@ bool WiFiManager::autoConnect(const char *ssid, const char *pass, const char *ap
     if(pass && *pass) {
         strncpy(_pass, pass, sizeof(_pass) - 1);
     }
+
+    _wifiOffFlag = false;
 
     // We do never ever use NVS saved data, nor do we save data to NVS
     WiFi.persistent(false);
@@ -369,8 +373,6 @@ bool WiFiManager::autoConnect(const char *ssid, const char *pass, const char *ap
         }
         WiFi.setHostname(_hostname);
     }
-
-    _begin();
 
     // Attempt to connect to given network, on fail fallback to AP config portal
 
@@ -653,6 +655,8 @@ bool WiFiManager::startConfigPortal(char const *apName, char const *apPassword, 
         return false;
     }
 
+    _wifiOffFlag = false;
+
     // We never ever use NVS saved data, not do we write to NVS
     WiFi.persistent(false);
 
@@ -762,6 +766,11 @@ void WiFiManager::process(bool handleWeb)
 {
     if(webPortalActive || configPortalActive) {
         processConfigPortal(handleWeb);
+    } else if(_wifiOffFlag) {
+        if(_WiFiEventMask & WM_EVB_APSTOP) {
+            WiFi.mode(WIFI_OFF);
+            _wifiOffFlag = false;
+        }
     }
 }
 
@@ -823,14 +832,25 @@ bool WiFiManager::shutdownConfigPortal()
     // free wifi scan results
     WiFi.scanDelete();
 
+    #ifdef WM_MDNS
+    MDNS.end();
+    #endif
+
     if(!configPortalActive)
         return false;
 
     dnsServer->stop();
     dnsServer.reset();
 
-    // turn off AP, (true = set mode WIFI_OFF)
-    bool ret = WiFi.softAPdisconnect(true);
+    // Turn off AP (true = set mode WIFI_OFF)
+    // softAPdisconnect(true) causes run-time errors:
+    // E (611610) wifi_netif: esp_wifi_internal_reg_rxcb for if=1 failed with 12289
+    // E (611611) wifi_init_default: esp_wifi_register_if_rWxcb for if=0x3ffb582c failed with 259
+
+    _wifiOffFlag = true;
+    _WiFiEventMask &= ~WM_EVB_APSTOP;
+    bool ret = WiFi.softAPdisconnect(false);
+    // WiFi will be switched off in process() after AP_STOP event
 
     configPortalActive = false;
 
@@ -838,7 +858,6 @@ bool WiFiManager::shutdownConfigPortal()
     Serial.println("configportal closed");
     #endif
 
-    _end();
     return ret;
 }
 
@@ -1088,6 +1107,19 @@ bool WiFiManager::waitEvent(uint16_t mask, unsigned long timeout)
     #endif
 
     return false;
+}
+
+void WiFiManager::disableWiFi()
+{
+    if(WiFi.getMode() == WIFI_OFF)
+        return;
+
+    if(WiFi.getMode() & WIFI_AP) {
+        shutdownConfigPortal();
+    } else if(WiFi.getMode() & WIFI_STA) {
+        stopWebPortal();
+        WiFi.mode(WIFI_OFF);
+    }
 }
 
 /****************************************************************************
@@ -1818,11 +1850,7 @@ unsigned int WiFiManager::getScanItemsLen(int n, bool scanErr, int *indices, uns
 
                 String SSID = WiFi.SSID(indices[i]);
                 if(SSID == "") {
-                    if(showall) {
-                        SSID = S_hidden;
-                    } else {
-                        continue;
-                    }
+                    continue;
                 } else if(!checkSSID(SSID)) {
                     if(showall) {
                         SSID = S_nonprintable;
@@ -1898,12 +1926,7 @@ void WiFiManager::getScanItemsOut(String& page, int n, bool scanErr, int *indice
                 String func = "c";
 
                 if(SSID == "") {
-                    if(showall) {
-                        SSID = S_hidden;
-                        func = "d";
-                    } else {
-                        continue;
-                    }
+                    continue;
                 } else if(!checkSSID(SSID)) {
                     if(showall) {
                         SSID = S_nonprintable;
@@ -3468,7 +3491,7 @@ void WiFiManager::WiFiEvent(WiFiEvent_t event, arduino_event_info_t info)
         case ARDUINO_EVENT_WIFI_AP_START:
             _WiFiEventMask |= WM_EVB_APSTART;
             break;
-        case  ARDUINO_EVENT_WIFI_AP_STOP:
+        case ARDUINO_EVENT_WIFI_AP_STOP:
             _WiFiEventMask |= WM_EVB_APSTOP;
             break;
         case ARDUINO_EVENT_WIFI_STA_START:
