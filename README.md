@@ -101,7 +101,7 @@ Click on "WiFi Configuration" and either select a network from the top of the pa
 >
 >This procedure causes static IP data to be deleted; the device will return to DHCP after a reboot.
 
-If the Dash Gauges fail to connect, they fall back to AP-mode. You can trigger another connection attempt by briefly pressing Button 1.
+If the Dash Gauges fail to connect, they fall back to AP-mode. You can trigger another connection attempt by briefly pressing "Button 1" (located behind the "Percent Power" gauge on the control board).
 
 #### &#9654; Places without WiFi network
 
@@ -468,7 +468,7 @@ The Config Portal offers an option for WiFi power saving for AP-mode (ie when th
 
 The timer can be set to 0 (which disables it; WiFi is never switched off; this is the default), or 10-99 minutes. 
 
-After WiFi has been switched off due to timer expiration, it can be re-enabled by briefly pressing Button 1, in which case the timers are restarted (ie WiFi is again switched off after timer expiration).
+After WiFi has been switched off due to timer expiration, it can be re-enabled by briefly pressing Button 1, in which case the timers are restarted (ie WiFi is again switched off after timer expiration). Button 1 is located behind the "Percent Power" gauge on the control board.
 
 Briefly pressing Button 1 also triggers a re-connection attempt in case your configured WiFi network was not available when the Remote was trying to connect, see [here](#-home-setup-with-a-pre-existing-local-wifi-network).
 
