@@ -101,7 +101,7 @@ Click on "WiFi Configuration" and either select a network from the top of the pa
 >
 >This procedure causes static IP data to be deleted; the device will return to DHCP after a reboot.
 
-If the Dash Gauges fail to connect, they fall back to AP-mode. You can trigger another connection attempt by entering briefly presing Button 1.
+If the Dash Gauges fail to connect, they fall back to AP-mode. You can trigger another connection attempt by briefly pressing Button 1.
 
 #### &#9654; Places without WiFi network
 
