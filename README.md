@@ -80,13 +80,15 @@ It is ok to leave it in AP-mode, predominantly if used stand-alone. To keep oper
 
 >If you wish for your device to remain in AP-mode, please select a suitable WiFi channel on the Config Portal's "WiFi Configuration" page. See [here](#-wifi-channel).
 
+> In AP-mode, the Remote can switch off WiFi to save power. See [here](#wifi-power-saving-features).
+
 #### &#9654; Home setup with a pre-existing local WiFi network
 
 In this case, you can connect your Dash Gauges to your home WiFi network. This allows for inter-prop-communication ([BTTFN](#bttf-network-bttfn)) and [HA/MQTT](#home-assistant--mqtt).
 
 ![STAmode-home](img/stamode-home.png)
 
-Click on "WiFi Configuration" and either select a network from the top of the page or enter a WiFi network name (SSID), and enter your WiFi password. After saving the WiFi network settings, the device reboots and tries to connect to your configured WiFi network. If that fails, it will again start in access point mode.
+Click on "WiFi Configuration" and either select a network from the top of the page or enter a WiFi network name (SSID), and enter your WiFi password. After saving the WiFi network settings, the device reboots and tries to connect to your configured WiFi network. 
 
 >The device requests an IP address via DHCP, unless you entered valid data in the fields for static IP addresses (IP, gateway, netmask, DNS). If the device is inaccessible as a result of incorrect static IPs, 
 >- power-down the device,
@@ -98,6 +100,8 @@ Click on "WiFi Configuration" and either select a network from the top of the pa
 >- then release the Time Travel button.
 >
 >This procedure causes static IP data to be deleted; the device will return to DHCP after a reboot.
+
+If the Dash Gauges fail to connect, they fall back to AP-mode. You can trigger another connection attempt by entering briefly presing Button 1.
 
 #### &#9654; Places without WiFi network
 
@@ -458,6 +462,16 @@ By default, the "Door Open" sound is played when the switch is closed; "Door clo
 
 In the Config Portal, you can invert this setting, so that the "Door Open" sound is played when the switch is closed.
 
+## WiFi power saving features
+
+The Config Portal offers an option for WiFi power saving for AP-mode (ie when the device acts as an access point). This option configures a timer after whose expiration WiFi is switched off; the device is no longer transmitting or receiving data over WiFi.
+
+The timer can be set to 0 (which disables it; WiFi is never switched off; this is the default), or 10-99 minutes. 
+
+After WiFi has been switched off due to timer expiration, it can be re-enabled by briefly pressing Button 1, in which case the timers are restarted (ie WiFi is again switched off after timer expiration).
+
+Briefly pressing Button 1 also triggers a re-connection attempt in case your configured WiFi network was not available when the Remote was trying to connect, see [here](#-home-setup-with-a-pre-existing-local-wifi-network).
+
 ## Flash Wear
 
 Flash memory has a somewhat limited lifetime. It can be written to only between 10.000 and 100.000 times before becoming unreliable. The firmware writes to the internal flash memory when saving settings and other data. Every time you change settings, data is written to flash memory.
@@ -550,7 +564,11 @@ If a WiFi Scan was done (which can be triggered by clicking "WiFI Scan"),
 - a list of networks is displayed at the top of the page; click "Show All" to list all networks including their channel;
 - a "proposed channel" is displayed near the "WiFi channel" drop-down, based on a rather simple heuristic. The banner is green when a channel is excellent, grey when it is impeded by overlapping channels, and when that banner is red operation in AP mode is not recommended due to channels all being used.
 
-The channel proposition is based on all WiFi networks found; it does not take non-WiFi equipment (baby monitors, cordless phones, Bluetooth devices, microwave ovens, etc) into account. 
+The channel proposition is based on all WiFi networks found; it does not take non-WiFi equipment (baby monitors, cordless phones, Bluetooth devices, microwave ovens, etc) into account.
+
+##### &#9654; Power save timer
+
+See [here](#wifi-power-saving-features).
 
 ---
 
