@@ -488,7 +488,7 @@ The timer can be set to 0 (which disables it; WiFi is never switched off; this i
 
 After WiFi has been switched off due to timer expiration, it can be re-enabled by briefly pressing Button 1, in which case the timers are restarted (ie WiFi is again switched off after timer expiration). Button 1 is located behind the "Percent Power" gauge on the control board.
 
-> Briefly pressing Button 1 also triggers a re-connection attempt in case your configured WiFi network was not available when the Dash Gauges were trying to connect, see [here](#-home-setup-with-a-pre-existing-local-wifi-network).
+> Briefly pressing Button 1 also triggers a re-connection attempt in case your configured WiFi network was not available when the Dash Gauges were trying to connect, see [here](#home-setup-with-a-pre-existing-local-wifi-network).
 
 ## Flash Wear
 
