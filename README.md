@@ -32,7 +32,7 @@ Firmware features include
 
 ## Firmware Installation
 
-If a previous version of the Dash Gauges firmware is installed on your device's ESP32, you can update easily using the pre-compiled binary. Enter the [Config Portal](#the-config-portal), click on "Update" and select the pre-compiled binary file provided in this repository ([install/dashgauges-A10001986.ino.nodemcu-32s.bin](https://github.com/realA10001986/Dash-Gauges/blob/main/install/dashgauges-A10001986.ino.nodemcu-32s.bin)).
+If a previous version of the Dash Gauges firmware is installed on your device's ESP32, you can update easily using the pre-compiled binary. Enter the [Config Portal](#the-config-portal), click on "Update" and select the pre-compiled binary file provided in this repository ([install/dashgauges-A10001986.ino.nodemcu-32s.bin](https://github.com/realA10001986/Dash-Gauges/blob/main/install/dashgauges-A10001986.ino.nodemcu-32s.bin)) in the top file selector.
 
 If you are using a fresh ESP32 board, please see [dashgauges-A10001986.ino](https://github.com/realA10001986/Dash-Gauges/blob/main/dashgauges-A10001986/dashgauges-A10001986.ino) for detailed build and upload information, or, if you don't want to deal with source code, compilers and all that nerd stuff, go [here](https://install.out-a-ti.me) and follow the instructions.
 
@@ -42,7 +42,7 @@ If you are using a fresh ESP32 board, please see [dashgauges-A10001986.ino](http
 
 The firmware comes with a sound-pack which needs to be installed separately. The sound-pack is not updated as often as the firmware itself. If you have previously installed the latest version of the sound-pack, you normally don't have to re-install it when you update the firmware. Only if the "Empty" LED signals "SOS" (three short blinks, three long blinks, three short blinks) during boot, a re-installation/update is needed.
 
-The first step is to download "install/sound-pack-xxxxxxxx.zip" and extract it. It contains one file named "DGA.bin".
+The first step is to download "install/sound-pack-dgXX.zip" and extract it. It contains one file named "DGA.bin".
 
 Then there are two alternative ways to proceed. Note that both methods *require an SD card*.
 
@@ -352,27 +352,38 @@ You can use BTTF-Network and MQTT at the same time, see [below](#home-assistant-
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key1.mp3</a>"</td>
-     <td align="left">9001&#9166;</td>
+     <td align="left">9001&#9166; / 9501&#9166;</td>
+    </tr>
+    <tr>
+     <td align="left">Play "<a href="#additional-custom-sounds">key2.mp3</a>"</td>
+     <td align="left">9502&#9166;</td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key3.mp3</a>"</td>
-     <td align="left">9003&#9166;</td>
+     <td align="left">9003&#9166; / 9503&#9166;</td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key4.mp3</a>"</td>
-     <td align="left">9004&#9166;</td>
+     <td align="left">9004&#9166; / 9504&#9166;</td>
+    </tr>
+    <tr>
+     <td align="left">Play "<a href="#additional-custom-sounds">key5.mp3</a>"</td>
+     <td align="left">9505&#9166;</td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key6.mp3</a>"</td>
-     <td align="left">9006&#9166;</td>
+     <td align="left">9006&#9166; / 9506&#9166;</td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key7.mp3</a>"</td>
-     <td align="left">9007&#9166;</td>
+     <td align="left">9007&#9166; / 9507&#9166;</td>
+    </tr>
+     <td align="left">Play "<a href="#additional-custom-sounds">key8.mp3</a>"</td>
+     <td align="left">9508&#9166;</td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key9.mp3</a>"</td>
-     <td align="left">9009&#9166;</td>
+     <td align="left">9009&#9166; / 9509&#9166;</td>
     </tr>
     <tr>
      <td align="left">Say current IP address</td>
@@ -415,7 +426,7 @@ The Dash Gauges support the MQTT protocol version 3.1.1 for the following featur
 
 ### Control the Dash Gauges via MQTT
 
-The Dash Gauges can - to some extent - be controlled through messages sent to topic **bttf/dg/cmd**. Supported commands are
+The Dash Gauges can be controlled through messages sent to topic **bttf/dg/cmd**. Supported commands are
 - TIMETRAVEL: Start a [time travel](#time-travel)
 - EMPTY: "Drain" Plutonium and trigger alarm
 - REFILL: Refill the Plutonium chamber
@@ -427,6 +438,21 @@ The Dash Gauges can - to some extent - be controlled through messages sent to to
 - MP_SHUFFLE_ON: Enables shuffle mode in [Music Player](#the-music-player)
 - MP_SHUFFLE_OFF: Disables shuffle mode in [Music Player](#the-music-player)
 - MP_FOLDER_x: x being 0-9, set folder number for [Music Player](#the-music-player)
+- PLAYKEY_x: Play keyX.mp3 (from SD card). X can range from 1 to 9.
+- STOPKEY: Stop playback of keyX file. Does nothing if no keyX file is currently played back.
+- INJECT_x: See immediately below.
+
+### The INJECT_x command
+
+This command allows remote control of the Dash Gauges through HA/MQTT in the same way as through the TCD keypad by injecting commands in the Dash Gauges command queue (hence the name). Commands are listed [here](#tcd-remote-command-reference); all with a leading "9" are supported, but are to be entered _minus 9000_. For example:
+
+To set "full" percentage of "Percent Power" gauge to 50% (9450), issue the following command: **INJECT_450**
+
+To play "key2.mp3" (9502), issue **INJECT_502**
+
+To select the music1 folder (9051), issue **INJECT_51**
+
+_The Refill command (009) is not supported through INJECT; use the REFILL MQTT-command instead._
 
 ### Receive commands from Time Circuits Display
 
