@@ -405,7 +405,7 @@ You can use BTTF-Network and MQTT at the same time, see [below](#home-assistant-
 
 >Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place, and there is no way to remote-control the Gauges through the TCD by wire. A wireless connection over BTTFN/WiFi is much more powerful and therefore recommended over a wired connection.
 
-For wiring information, please see [here](hardware/#connecting-a-tcd-to-the-dash-gauges-by-wire).
+For wiring information, please see [here](Hardware.md#connecting-a-tcd-to-the-dash-gauges-by-wire).
 
 With the wiring in place, head to the Config Portal and set the option **_TCD connected by wire_**. On the TCD, the option "Control props connected by wire" must be set.
 
