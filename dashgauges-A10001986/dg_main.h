@@ -111,8 +111,10 @@ void doorSwitch_scan();
 void play_door_open(int doorNum, bool isOpen);
 #endif
 
-uint8_t read_port();
-uint8_t read_port_debounce();
+//uint8_t read_port();
+//uint8_t read_port_debounce();
+
+void addCmdQueue(uint32_t command);
 
 void bttfn_loop();
 

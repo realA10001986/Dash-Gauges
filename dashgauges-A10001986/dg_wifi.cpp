@@ -88,8 +88,8 @@ static const char R_updateacdone[] = "/uac";
 
 static const char acul_part3[]  = "</head><body><div class='wrap'><h1>";
 static const char acul_part5[]  = "</h1><h3>";
-static const char acul_part6[]  = "</h3><div id='lc' class='msg";
-static const char acul_part7[]  = " S'><strong>Upload successful.</strong><br/>Device rebooting.";
+static const char acul_part6[]  = "</h3><div class='msg";
+static const char acul_part7[]  = " S' id='lc'><strong>Upload successful.</strong><br/>Device rebooting.";
 static const char acul_part7a[] = "<br>Installation will proceed after reboot.";
 static const char acul_part71[] = " D'><strong>Upload failed.</strong><br>";
 static const char acul_part8[]  = "</div></div></body></html>";
@@ -162,7 +162,7 @@ static const char haveNoSD[] = "<div class='c' style='background-color:#dc3630;c
 #define HNTEXT "Hostname<br><span style='font-size:80%'>(Valid characters: a-z/0-9/-)</span>"
 #endif
 WiFiManagerParameter custom_hostName("hostname", HNTEXT, settings.hostName, 31, "pattern='[A-Za-z0-9\\-]+' placeholder='Example: fluxcapacitor'");
-WiFiManagerParameter custom_wifiConRetries("wifiret", "Connection attempts (1-10)", settings.wifiConRetries, 2, "type='number' min='1' max='10' autocomplete='off'", WFM_LABEL_BEFORE);
+WiFiManagerParameter custom_wifiConRetries("wifiret", "Connection attempts (1-10)", settings.wifiConRetries, 2, "type='number' min='1' max='10'");
 WiFiManagerParameter custom_wifiConTimeout("wificon", "Connection timeout (7-25[seconds])", settings.wifiConTimeout, 2, "type='number' min='7' max='25'");
 
 WiFiManagerParameter custom_sysID("sysID", "Network name (SSID) appendix<br><span style='font-size:80%'>Will be appended to \"DG-AP\" to create a unique SSID if multiple such devices are in range. [a-z/0-9/-]</span>", settings.systemID, 7, "pattern='[A-Za-z0-9\\-]+'");
@@ -176,61 +176,61 @@ WiFiManagerParameter custom_wifihint("<div style='margin:0;padding:0'>Press Butt
 
 WiFiManagerParameter custom_aood("<div class='msg P'>Please <a href='/update'>install/update</a> sound pack</div>");
 
-WiFiManagerParameter custom_aRef("aRef", "Auto-refill timer (seconds; 0=never)", settings.autoRefill, 3, "type='number' min='0' max='360' autocomplete='off'", WFM_LABEL_BEFORE);
-WiFiManagerParameter custom_aMut("aMut", "Mute 'empty' alarm timer (seconds; 0=never)", settings.autoMute, 3, "type='number' min='0' max='360' autocomplete='off'", WFM_LABEL_BEFORE);
-WiFiManagerParameter custom_playALSnd("plyALS", "Play TCD-alarm sound", settings.playALsnd, 1, "autocomplete='off' title='Check to have the device play a sound when the TCD alarm sounds.' type='checkbox' class='mt5 mb10'", WFM_LABEL_AFTER);
-WiFiManagerParameter custom_ssDelay("ssDel", "Screen saver timer (minutes; 0=off)", settings.ssTimer, 3, "type='number' min='0' max='999' autocomplete='off'", WFM_LABEL_BEFORE);
+WiFiManagerParameter custom_aRef("aRef", "Auto-refill timer (seconds; 0=never)", settings.autoRefill, 3, "type='number' min='0' max='360' autocomplete='off'");
+WiFiManagerParameter custom_aMut("aMut", "Mute 'empty' alarm timer (seconds; 0=never)", settings.autoMute, 3, "type='number' min='0' max='360' autocomplete='off'");
+WiFiManagerParameter custom_playALSnd("plyALS", "Play TCD-alarm sound", settings.playALsnd, 1, "title='Check to have the device play a sound when the TCD alarm sounds.' class='mt5 mb10'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
+WiFiManagerParameter custom_ssDelay("ssDel", "Screen saver timer (minutes; 0=off)", settings.ssTimer, 3, "type='number' min='0' max='999' autocomplete='off'");
 
-WiFiManagerParameter custom_lIdle("lIdle", "'Primary' full percentage (0-100; 0=use default)", settings.lIdle, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
-WiFiManagerParameter custom_cIdle("cIdle", "'Percent Power' full percentage (0-100; 0=use default)", settings.cIdle, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
-WiFiManagerParameter custom_rIdle("rIdle", "'Roentgens' full percentage (0-100; 0=use default)", settings.rIdle, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
-WiFiManagerParameter custom_lEmpty("lEmpty", "'Primary' empty percentage (0-100)", settings.lEmpty, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
-WiFiManagerParameter custom_cEmpty("cEmpty", "'Percent Power' empty percentage (0-100)", settings.cEmpty, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
-WiFiManagerParameter custom_rEmpty("rEmpty", "'Roentgens' empty percentage (0-100)", settings.rEmpty, 3, "type='number' min='0' max='100' autocomplete='off'", WFM_LABEL_BEFORE);
-WiFiManagerParameter custom_drPri("drPri", "Slowly drain Primary during TT", settings.drPri, 1, "autocomplete='off' title='Check to to slowly drain meter during time travel.' type='checkbox' class='mt5' style='margin-bottom:15px;'", WFM_LABEL_AFTER);
-WiFiManagerParameter custom_drPPo("drPPo", "Slowly drain Percent Power during TT", settings.drPPo, 1, "autocomplete='off' title='Check to to slowly drain meter during time travel.' type='checkbox' class='mt5' style='margin-bottom:15px;'", WFM_LABEL_AFTER);
-WiFiManagerParameter custom_drRoe("drRoe", "Slowly drain Roentgens during TT", settings.drRoe, 1, "autocomplete='off' title='Check to to slowly drain meter during time travel.' type='checkbox' class='mt5'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_lIdle("lIdle", "'Primary' full percentage (0-100; 0=use default)", settings.lIdle, 3, "type='number' min='0' max='100' autocomplete='off'");
+WiFiManagerParameter custom_cIdle("cIdle", "'Percent Power' full percentage (0-100; 0=use default)", settings.cIdle, 3, "type='number' min='0' max='100' autocomplete='off'");
+WiFiManagerParameter custom_rIdle("rIdle", "'Roentgens' full percentage (0-100; 0=use default)", settings.rIdle, 3, "type='number' min='0' max='100' autocomplete='off'");
+WiFiManagerParameter custom_lEmpty("lEmpty", "'Primary' empty percentage (0-100)", settings.lEmpty, 3, "type='number' min='0' max='100' autocomplete='off'");
+WiFiManagerParameter custom_cEmpty("cEmpty", "'Percent Power' empty percentage (0-100)", settings.cEmpty, 3, "type='number' min='0' max='100' autocomplete='off'");
+WiFiManagerParameter custom_rEmpty("rEmpty", "'Roentgens' empty percentage (0-100)", settings.rEmpty, 3, "type='number' min='0' max='100' autocomplete='off'");
+WiFiManagerParameter custom_drPri("drPri", "Slowly drain Primary during TT", settings.drPri, 1, "title='Check to to slowly drain meter during time travel.' class='mt5' style='margin-bottom:15px;'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
+WiFiManagerParameter custom_drPPo("drPPo", "Slowly drain Percent Power during TT", settings.drPPo, 1, "title='Check to to slowly drain meter during time travel.' class='mt5' style='margin-bottom:15px;'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
+WiFiManagerParameter custom_drRoe("drRoe", "Slowly drain Roentgens during TT", settings.drRoe, 1, "title='Check to to slowly drain meter during time travel.' class='mt5'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
 
-WiFiManagerParameter custom_lTh("lTh", "'Primary' empty threshold (0-99)", settings.lThreshold, 2, "type='number' min='0' max='99' autocomplete='off'", WFM_LABEL_BEFORE);
-WiFiManagerParameter custom_cTh("cTh", "'Percent Power' empty threshold (0-99)", settings.cThreshold, 2, "type='number' min='0' max='99' autocomplete='off'", WFM_LABEL_BEFORE);
-WiFiManagerParameter custom_rTh("rTh", "'Roentgens' empty threshold (0-99)", settings.rThreshold, 2, "type='number' min='0' max='99' autocomplete='off'", WFM_LABEL_BEFORE);
+WiFiManagerParameter custom_lTh("lTh", "'Primary' empty threshold (0-99)", settings.lThreshold, 2, "type='number' min='0' max='99' autocomplete='off'");
+WiFiManagerParameter custom_cTh("cTh", "'Percent Power' empty threshold (0-99)", settings.cThreshold, 2, "type='number' min='0' max='99' autocomplete='off'");
+WiFiManagerParameter custom_rTh("rTh", "'Roentgens' empty threshold (0-99)", settings.rThreshold, 2, "type='number' min='0' max='99' autocomplete='off'");
 WiFiManagerParameter custom_rHint("<div style='margin:0;padding:0;font-size:80%'>If gauges are on same pin, first applicable has priority.</div>");
 
 #ifdef DG_HAVEVOLKNOB
-WiFiManagerParameter custom_FixV("FixV", "Disable volume knob", settings.FixV, 1, "autocomplete='off' title='Check this if the audio volume should be set by software; if unchecked, the volume knob is used' type='checkbox' class='mt5'", WFM_LABEL_AFTER);
-WiFiManagerParameter custom_Vol("Vol", "Software volume level (0-19)", settings.Vol, 2, "type='number' min='0' max='19' autocomplete='off'", WFM_LABEL_BEFORE);
+WiFiManagerParameter custom_FixV("FixV", "Disable volume knob", settings.FixV, 1, "title='Check this if the audio volume should be set by software; if unchecked, the volume knob is used' class='mt5'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
+WiFiManagerParameter custom_Vol("Vol", "Software volume level (0-19)", settings.Vol, 2, "type='number' min='0' max='19' autocomplete='off'");
 #else
-WiFiManagerParameter custom_Vol("Vol", "Volume level (0-19)", settings.Vol, 2, "type='number' min='0' max='19' autocomplete='off'", WFM_LABEL_BEFORE);
+WiFiManagerParameter custom_Vol("Vol", "Volume level (0-19)", settings.Vol, 2, "type='number' min='0' max='19' autocomplete='off'");
 #endif
 
 WiFiManagerParameter custom_musicFolder("mfol", "Music folder (0-9)", settings.musicFolder, 2, "type='number' min='0' max='9'");
-WiFiManagerParameter custom_shuffle("musShu", "Shuffle mode enabled at startup", settings.shuffle, 1, "type='checkbox' class='mt5'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_shuffle("musShu", "Shuffle mode enabled at startup", settings.shuffle, 1, "class='mt5'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
 
 #ifdef BTTFN_MC
 WiFiManagerParameter custom_tcdIP("tcdIP", "IP address or hostname of TCD", settings.tcdIP, 31, "pattern='(^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$)|([A-Za-z0-9\\-]+)' placeholder='Example: 192.168.4.1'");
 #else
 WiFiManagerParameter custom_tcdIP("tcdIP", "IP address of TCD", settings.tcdIP, 31, "pattern='^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$' placeholder='Example: 192.168.4.1'");
 #endif
-WiFiManagerParameter custom_uNM("uNM", "Follow TCD night-mode<br><span style='font-size:80%'>If checked, the Screen Saver will activate when TCD is in night-mode.</span>", settings.useNM, 1, "autocomplete='off' type='checkbox' class='mb0'", WFM_LABEL_AFTER);
-WiFiManagerParameter custom_uFPO("uFPO", "Follow TCD fake power", settings.useFPO, 1, "autocomplete='off' type='checkbox'", WFM_LABEL_AFTER);
-WiFiManagerParameter custom_bttfnTT("bttfnTT", "TT button triggers BTTFN-wide TT<br><span style='font-size:80%'>If checked, pressing the Time Travel button triggers a BTTFN-wide TT</span>", settings.bttfnTT, 1, "autocomplete='off' type='checkbox' class='mb0'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_uNM("uNM", "Follow TCD night-mode<br><span style='font-size:80%'>If checked, the Screen Saver will activate when TCD is in night-mode.</span>", settings.useNM, 1, "class='mb0'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
+WiFiManagerParameter custom_uFPO("uFPO", "Follow TCD fake power", settings.useFPO, 1, "", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
+WiFiManagerParameter custom_bttfnTT("bttfnTT", "TT button triggers BTTFN-wide TT<br><span style='font-size:80%'>If checked, pressing the Time Travel button triggers a BTTFN-wide TT</span>", settings.bttfnTT, 1, "class='mb0'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
 
 #ifdef DG_HAVEMQTT
-WiFiManagerParameter custom_useMQTT("uMQTT", "Use Home Assistant (MQTT 3.1.1)", settings.useMQTT, 1, "type='checkbox' class='mt5 mb10'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_useMQTT("uMQTT", "Use Home Assistant (MQTT 3.1.1)", settings.useMQTT, 1, "class='mt5 mb10'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
 WiFiManagerParameter custom_mqttServer("ha_server", "Broker IP[:port] or domain[:port]", settings.mqttServer, 79, "pattern='[a-zA-Z0-9\\.:\\-]+' placeholder='Example: 192.168.1.5'");
 WiFiManagerParameter custom_mqttUser("ha_usr", "User[:Password]", settings.mqttUser, 63, "placeholder='Example: ronald:mySecret'");
 #endif // HAVEMQTT
 
-WiFiManagerParameter custom_TCDpresent("TCDpres", "TCD connected by wire", settings.TCDpresent, 1, "autocomplete='off' title='Check this if you have a Time Circuits Display connected via wire' type='checkbox' class='mt5'", WFM_LABEL_AFTER);
-WiFiManagerParameter custom_noETTOL("uEtNL", "TCD signals Time Travel without 5s lead", settings.noETTOLead, 1, "autocomplete='off' type='checkbox' class='mt5' style='margin-left:20px'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_TCDpresent("TCDpres", "TCD connected by wire", settings.TCDpresent, 1, "title='Check this if you have a Time Circuits Display connected via wire' class='mt5'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
+WiFiManagerParameter custom_noETTOL("uEtNL", "TCD signals Time Travel without 5s lead", settings.noETTOLead, 1, "class='mt5' style='margin-left:20px'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
 
 WiFiManagerParameter custom_haveSD(wmBuildHaveSD);
-WiFiManagerParameter custom_CfgOnSD("CfgOnSD", "Save secondary settings on SD<br><span style='font-size:80%'>Check this to avoid flash wear</span>", settings.CfgOnSD, 1, "autocomplete='off' type='checkbox' class='mt5 mb0'", WFM_LABEL_AFTER);
-//WiFiManagerParameter custom_sdFrq("sdFrq", "4MHz SD clock speed<br><span style='font-size:80%'>Checking this might help in case of SD card problems</span>", settings.sdFreq, 1, "autocomplete='off' type='checkbox' style='margin-top:12px'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_CfgOnSD("CfgOnSD", "Save secondary settings on SD<br><span style='font-size:80%'>Check this to avoid flash wear</span>", settings.CfgOnSD, 1, "class='mt5 mb0'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
+//WiFiManagerParameter custom_sdFrq("sdFrq", "4MHz SD clock speed<br><span style='font-size:80%'>Checking this might help in case of SD card problems</span>", settings.sdFreq, 1, "style='margin-top:12px'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
 
 #ifdef DG_HAVEDOORSWITCH
-WiFiManagerParameter custom_dsPlay("dsPlay", "Play door sounds", settings.dsPlay, 1, "autocomplete='off' title='Check to have the device play a sound when door switch changes state' type='checkbox' class='mt5'", WFM_LABEL_AFTER);
-WiFiManagerParameter custom_dsCOnC("dsCOnC", "Switch closes when door is closed", settings.dsCOnC, 1, "autocomplete='off' title='Check to play the door open sound when switch opens' type='checkbox' class='mb10'", WFM_LABEL_AFTER);
+WiFiManagerParameter custom_dsPlay("dsPlay", "Play door sounds", settings.dsPlay, 1, "title='Check to have the device play a sound when door switch changes state'class='mt5'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
+WiFiManagerParameter custom_dsCOnC("dsCOnC", "Switch closes when door is closed", settings.dsCOnC, 1, "title='Check to play the door open sound when switch opens' class='mb10'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
 WiFiManagerParameter custom_dsDelay("dsDelay", "Door sound delay (0-5000[milliseconds])", settings.dsDelay, 4, "type='number' min='0' max='5000'");
 #endif
 
@@ -270,10 +270,11 @@ static const int8_t wifiMenu[TC_MENUSIZE] = {
 #define UNI_VERSION DG_VERSION 
 #define UNI_VERSION_EXTRA DG_VERSION_EXTRA
 #define WEBHOME "dg"
+#define PARM2TITLE ""
 
 static const char myTitle[] = AA_TITLE;
 static const char apName[]  = "DG-AP";
-static const char myHead[]  = "<link rel='shortcut icon' type='image/png' href='data:image/png;base64," AA_ICON "'><script>window.onload=function(){xx=false;document.title=xxx='" AA_TITLE "';id=-1;ar=['/u','/uac','/wifisave','/paramsave'];ti=['Firmware upload','','WiFi Configuration','Settings'];if(ge('s')&&ge('dns')){xx=true;yyy=ti[2]}if(ge('uploadbin')||(id=ar.indexOf(wlp()))>=0){xx=true;if(id>=2){yyy=ti[id]}else{yyy=ti[0]};aa=gecl('wrap');if(aa.length>0){if(ge('uploadbin')){aa[0].style.textAlign='center';}aa=getn('H3');if(aa.length>0){aa[0].remove()}aa=getn('H1');if(aa.length>0){aa[0].remove()}}}if(ge('ttrp')||wlp()=='/param'){xx=true;yyy=ti[3];}if(ge('ebnew')){xx=true;bb=getn('H3');aa=getn('H1');yyy=bb[0].innerHTML;ff=aa[0].parentNode;ff.style.position='relative';}if(xx){zz=(Math.random()>0.8);dd=document.createElement('div');dd.classList.add('tpm0');dd.innerHTML='<div class=\"tpm\" onClick=\"window.location=\\'/\\'\"><div class=\"tpm2\"><img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAQMAAACQp+OdAAAABlBMVEUAAABKnW0vhlhrAAAAAXRSTlMAQObYZgAAA'+(zz?'GBJREFUKM990aEVgCAABmF9BiIjsIIbsJYNRmMURiASePwSDPD0vPT12347GRejIfaOOIQwigSrRHDKBK9CCKoEqQF2qQMOSQAzEL9hB9ICNyMv8DPKgjCjLtAD+AV4dQM7O4VX9m1RYAAAAABJRU5ErkJggg==':'HtJREFUKM990bENwyAUBuFnuXDpNh0rZIBIrJUqMBqjMAIlBeIihQIF/fZVX39229PscYG32esCzeyjsXUzNHZsI0ocxJ0kcZIOsoQjnxQJT3FUiUD1NAloga6wQQd+4B/7QBQ4BpLAOZAn3IIy4RfUibCgTTDq+peG6AvsL/jPTu1L9wAAAABJRU5ErkJggg==')+'\" class=\"tpm3\"></div><H1 class=\"tpmh1\"'+(zz?' style=\"margin-left:1.4em\"':'')+'>'+xxx+'</H1>'+'<H3 class=\"tpmh3\"'+(zz?' style=\"padding-left:5em\"':'')+'>'+yyy+'</div></div>';}if(ge('ebnew')){bb[0].remove();aa[0].replaceWith(dd);}else if(xx){aa=gecl('wrap');if(aa.length>0){aa[0].insertBefore(dd,aa[0].firstChild);aa[0].style.position='relative';}}var lc=ge('lc');if(lc){lc.style.transform='rotate('+(358+[0,1,3,4,5][Math.floor(Math.random()*4)])+'deg)'}}</script><style type='text/css'>H1,H2{margin-top:0px;margin-bottom:0px;text-align:center;}H3{margin-top:0px;margin-bottom:5px;text-align:center;}button{transition-delay:250ms;margin-top:10px;margin-bottom:10px;font-variant-caps:all-small-caps;border-bottom:0.2em solid #225a98}input{border:thin inset}em > small{display:inline}form{margin-block-end:0;}.tpm{cursor:pointer;border:1px solid black;border-radius:5px;padding:0 0 0 0px;min-width:18em;}.tpm2{position:absolute;top:-0.7em;z-index:130;left:0.7em;}.tpm3{width:4em;height:4em;}.tpmh1{font-variant-caps:all-small-caps;font-weight:normal;margin-left:2.2em;overflow:clip;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI Semibold',Roboto,'Helvetica Neue',Verdana,Helvetica}.tpmh3{background:#000;font-size:0.6em;color:#ffa;padding-left:7.2em;margin-left:0.5em;margin-right:0.5em;border-radius:5px}.tpm0{position:relative;width:20em;padding:5px 0px 5px 0px;margin:0 auto 0 auto;}.cmp0{margin:0;padding:0;}.sel0{font-size:90%;width:auto;margin-left:10px;vertical-align:baseline;}.mt5{margin-top:5px!important}.mb10{margin-bottom:10px!important}.mb0{margin-bottom:0px!important}.mb15{margin-bottom:15px!important}</style>";
+static const char myHead[]  = "<link rel='shortcut icon' type='image/png' href='data:image/png;base64," AA_ICON "'><script>window.onload=function(){xx=false;document.title=xxx='" AA_TITLE "';id=-1;ar=['/u','/uac','/wifisave','/paramsave','/param2save'];ti=['Firmware upload','','WiFi Configuration','Settings','" PARM2TITLE "'];if(ge('s')&&ge('dns')){xx=true;yyy=ti[2]}if(ge('uploadbin')||(id=ar.indexOf(wlp()))>=0){xx=true;if(id>=2){yyy=ti[id]}else{yyy=ti[0]};aa=gecl('wrap');if(aa.length>0){if(ge('uploadbin')){aa[0].style.textAlign='center';}aa=getn('H3');if(aa.length>0){aa[0].remove()}aa=getn('H1');if(aa.length>0){aa[0].remove()}}}if(ge('ttrp')||wlp()=='/param'||wlp()=='/param2'){xx=true;yyy=ti[3];}if(ge('ebnew')){xx=true;bb=getn('H3');aa=getn('H1');yyy=bb[0].innerHTML;ff=aa[0].parentNode;ff.style.position='relative';}if(xx){zz=(Math.random()>0.8);dd=document.createElement('div');dd.classList.add('tpm0');dd.innerHTML='<div class=\"tpm\" onClick=\"window.location=\\'/\\'\"><div class=\"tpm2\"><img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAQMAAACQp+OdAAAABlBMVEUAAABKnW0vhlhrAAAAAXRSTlMAQObYZgAAA'+(zz?'GBJREFUKM990aEVgCAABmF9BiIjsIIbsJYNRmMURiASePwSDPD0vPT12347GRejIfaOOIQwigSrRHDKBK9CCKoEqQF2qQMOSQAzEL9hB9ICNyMv8DPKgjCjLtAD+AV4dQM7O4VX9m1RYAAAAABJRU5ErkJggg==':'HtJREFUKM990bENwyAUBuFnuXDpNh0rZIBIrJUqMBqjMAIlBeIihQIF/fZVX39229PscYG32esCzeyjsXUzNHZsI0ocxJ0kcZIOsoQjnxQJT3FUiUD1NAloga6wQQd+4B/7QBQ4BpLAOZAn3IIy4RfUibCgTTDq+peG6AvsL/jPTu1L9wAAAABJRU5ErkJggg==')+'\" class=\"tpm3\"></div><H1 class=\"tpmh1\"'+(zz?' style=\"margin-left:1.4em\"':'')+'>'+xxx+'</H1>'+'<H3 class=\"tpmh3\"'+(zz?' style=\"padding-left:5em\"':'')+'>'+yyy+'</div></div>';}if(ge('ebnew')){bb[0].remove();aa[0].replaceWith(dd);}else if(xx){aa=gecl('wrap');if(aa.length>0){aa[0].insertBefore(dd,aa[0].firstChild);aa[0].style.position='relative';}}var lc=ge('lc');if(lc){lc.style.transform='rotate('+(358+[0,1,3,4,5][Math.floor(Math.random()*4)])+'deg)'}}</script><style type='text/css'>H1,H2{margin-top:0px;margin-bottom:0px;text-align:center;}H3{margin-top:0px;margin-bottom:5px;text-align:center;}button{transition-delay:250ms;margin-top:10px;margin-bottom:10px;font-variant-caps:all-small-caps;border-bottom:0.2em solid #225a98}input{border:thin inset}em > small{display:inline}form{margin-block-end:0;}.tpm{cursor:pointer;border:1px solid black;border-radius:5px;padding:0 0 0 0px;min-width:18em;}.tpm2{position:absolute;top:-0.7em;z-index:130;left:0.7em;}.tpm3{width:4em;height:4em;}.tpmh1{font-variant-caps:all-small-caps;font-weight:normal;margin-left:2.2em;overflow:clip;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI Semibold',Roboto,'Helvetica Neue',Verdana,Helvetica}.tpmh3{background:#000;font-size:0.6em;color:#ffa;padding-left:7.2em;margin-left:0.5em;margin-right:0.5em;border-radius:5px}.tpm0{position:relative;width:20em;padding:5px 0px 5px 0px;margin:0 auto 0 auto;}.cmp0{margin:0;padding:0;}.sel0{font-size:90%;width:auto;margin-left:10px;vertical-align:baseline;}.mt5{margin-top:5px!important}.mb10{margin-bottom:10px!important}.mb0{margin-bottom:0px!important}.mb15{margin-bottom:15px!important}</style>";
 static const char* myCustMenu = "<img id='ebnew' style='display:block;margin:10px auto 5px auto;' src='data:image/png;base64,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'><div style='font-size:0.9em;line-height:0.9em;font-weight:bold;margin:5px auto 0px auto;text-align:center;font-variant:all-small-caps'>" UNI_VERSION " (" UNI_VERSION_EXTRA ")<br>Powered by A10001986 <a href='https://" WEBHOME ".out-a-ti.me' style='text-decoration:underline' target=_blank>[Home]</a></div>";
 
 const char menu_myNoSP[] = "<hr><div style='margin-left:auto;margin-right:auto;text-align:center;'>Please <a href='/update'>install</a> sound pack</div><hr>";
@@ -333,7 +334,7 @@ static uint16_t      mqttPingsExpired = 0;
 static void wifiConnect(bool deferConfigPortal = false);
 static void wifiOff(bool force);
 
-static void saveParamsCallback();
+static void saveParamsCallback(int);
 static void saveWiFiCallback(const char *ssid, const char *pass);
 static void preConnectCallback();
 static void preUpdateCallback();
@@ -1292,10 +1293,11 @@ static void saveWiFiCallback(const char *ssid, const char *pass)
 
 
 // This is the callback from the actual Params page. We read out
-// thew WM "Settings" parameters and save them.
-static void saveParamsCallback()
+// the WM "Settings" parameters and save them.
+// paramspage is 1 or 2
+static void saveParamsCallback(int paramspage)
 {
-    shouldSaveConfig = 2;
+    shouldSaveConfig = paramspage + 1;
 }
 
 // This is called before a firmware updated is initiated.
@@ -2156,6 +2158,9 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
       "MP_FOLDER_",       // 9  MP_FOLDER_0..MP_FOLDER_9
       "PLAY_DOOR_OPEN",   // 10
       "PLAY_DOOR_CLOSE",  // 11
+      "PLAYKEY_",         // 12  PLAYKEY_1..PLAYKEY_9
+      "STOPKEY",          // 13
+      "INJECT_",          // 14
       NULL
     };
     static const char *cmdList2[] = {
@@ -2248,8 +2253,8 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
         // User commands
 
         // Not taking commands under these circumstances: (FPBUnitOn checked further down)
-        if(TTrunning)
-            return;
+        //if(TTrunning || startup || startAlarm || refill || refillWA)
+        //    return;
 
         while(cmdList[i]) {
             j = strlen(cmdList[i]);
@@ -2261,6 +2266,47 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
 
         if(!cmdList[i]) return;
 
+        // What needs to be handled here:
+        // - complete command parsing
+        // - stuff to execute when fake power is off
+        // All other stuff translated into command and queued
+
+        switch(i) {
+        case 3:
+        case 4:
+            addCmdQueue((i == 3) ? 555 : 222);
+            break;
+        case 9:
+            if(strlen(tempBuf) > j && tempBuf[j] >= '0' && tempBuf[j] <= '9') {
+                addCmdQueue(50 + (uint32_t)(tempBuf[j] - '0'));
+            }
+            break;
+        case 10:
+        case 11:
+            #ifdef DG_HAVEDOORSWITCH
+            // Commands ignored if "play door sounds" enabled in CP
+            // (would interfere with switch logic otherwise)
+            if(dsPlay || TTrunning || startup || startAlarm || refill || refillWA)
+                return;
+
+            play_door_open(1, (i == 10));
+            #endif
+            break;
+        case 12:
+            if(strlen(tempBuf) > j && tempBuf[j] >= '1' && tempBuf[j] <= '9') {
+                addCmdQueue(500 + (uint32_t)(tempBuf[j] - '0'));
+            }
+            break;
+        case 14:
+            if(strlen(tempBuf) > j) {
+                addCmdQueue(atoi(tempBuf+j) | 0x80000000);
+            }
+            break;
+        default:
+            addCmdQueue(1000 + i);
+        }
+
+        /*
         if(!FPBUnitIsOn) {
             // Allow door sounds even if fake-power is off
             if(i != 10 && i != 11)
@@ -2315,7 +2361,18 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
             }
             #endif
             break;
+        case 12:
+            if(haveSD) {
+                if(strlen(tempBuf) > j && tempBuf[j] >= '1' && tempBuf[j] <= '9') {
+                    play_key((int)(tempBuf[j] - '0'));
+                }
+            }
+            break;
+        case 13:
+            stop_key();
+            break;
         }
+        */
             
     } 
 }

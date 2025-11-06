@@ -115,6 +115,19 @@
 
 /*  Changelog
  *  
+ *  2025/11/05 (A10001986) [1.26]
+ *    - Add MQTT command "INJECT_"
+ *  2025/11/04 (A10001986)
+ *    - Add MQTT commands PLAYKEY_x and STOPKEY (X=1-9)
+ *    - Add commands 9501-9509 to play keyX (X=1-9) (Old short-hands 900x for 
+ *      a subset of keyX playback remain as well.)
+ *    - Eliminate historical limitation of not having "key8.mp3". Can be played
+ *      through HA/MQTT and TCD-commands.
+ *    - Put MQTT commands in command queue instead of executing them directly.
+ *  2025/11/02 (A10001986)
+ *    - WM: Generate HTML for checkboxes on-the-fly.
+ *  2025/10/30 (A10001986) 
+ *    - Fix deleting a bad .bin file after upload
  *  2025/10/26 (A10001986) [1.25.1]
  *    - BTTFN: Fix hostname length issues; code optimizations; minor fix for mc 
  *      notifications. Breaks support for TCD firmwares < 3.2.

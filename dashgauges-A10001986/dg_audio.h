@@ -72,8 +72,8 @@
 void audio_setup();
 void audio_loop();
 
-void play_file(const char *audio_file, uint16_t flags, float volumeFactor = 1.0);
-void append_file(const char *audio_file, uint16_t flags, float volumeFactor = 1.0);
+void play_file(const char *audio_file, uint32_t flags, float volumeFactor = 1.0);
+void append_file(const char *audio_file, uint32_t flags, float volumeFactor = 1.0);
 
 void play_empty();
 //void append_empty();
@@ -85,6 +85,7 @@ bool checkAudioDone();
 bool checkMP3Running();
 void stopAudio();
 void stopAudioAtLoopEnd();
+bool stop_key();
 bool append_pending();
 bool checkAudioStarted();
 

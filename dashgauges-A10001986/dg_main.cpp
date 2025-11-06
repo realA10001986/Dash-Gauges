@@ -1052,7 +1052,7 @@ void main_loop()
         nmOld = tcdNM;
     }
 
-    // Execute remote commands from TCD
+    // Execute remote commands from TCD or MQTT
     if(FPBUnitIsOn) {
         execute_remote_command();
     }
@@ -1322,6 +1322,7 @@ static void execute_remote_command()
 {
     uint32_t command = commandQueue[oCmdIdx];
     bool pE = playingEmpty && !playingEmptyEnds;
+    bool injected = false;
 
     // We are only called if ON
     // No command execution during time travel
@@ -1334,6 +1335,11 @@ static void execute_remote_command()
     commandQueue[oCmdIdx] = 0;
     oCmdIdx++;
     oCmdIdx &= 0x0f;
+
+    if(command & 0x80000000) {
+        injected = true;
+        command &= ~0x80000000;
+    }
 
     if(command < 10) {                                // 900x
         switch(command) {
@@ -1459,6 +1465,10 @@ static void execute_remote_command()
                 updateConfigPortalVolValues();
             }
 
+        } else if(command >= 501 && command <= 509) {
+
+            play_key(command - 500);              // 501-509: Play keyX
+
         } else {
 
             switch(command) {
@@ -1475,23 +1485,71 @@ static void execute_remote_command()
                 break;
             }
         }
-        
+
+    } else if(command < 10000) {                  // 1000-9999 MQTT commands
+
+        // All below only when we're ON
+        // Commands allowed while off must be handled in mqttCallback()
+
+        if(!injected) {
+
+            command -= 1000;
+    
+            switch(command) {
+            case 0:
+                // Trigger Time Travel; treated like button, not
+                // like TT from TCD.
+                networkTimeTravel = true;
+                networkTCDTT = false;
+                break;
+            case 1:
+                ssEnd();
+                set_empty();
+                break;
+            case 2:
+                ssEnd();
+                refill_plutonium();
+                break;
+            case 5:    
+                if(haveMusic) mp_play();
+                break;
+            case 6:
+                if(haveMusic && mpActive) {
+                    mp_stop();
+                }
+                break;
+            case 7:
+                if(haveMusic) mp_next(mpActive);
+                break;
+            case 8:
+                if(haveMusic) mp_prev(mpActive);
+                break;
+            case 13:
+                stop_key();
+                break;
+            }
+        }
+
     } else {
       
         switch(command) {
         case 64738:                               // 64738: reboot
-            prepareReboot();
-            delay(500);
-            esp_restart();
+            if(!injected) {
+                prepareReboot();
+                delay(500);
+                esp_restart();
+            }
             break;
         case 123456:
             flushDelayedSave();
-            deleteIpSettings();                   // 123456: deletes IP settings
-            if(settings.appw[0]) {
-                settings.appw[0] = 0;             // and clears AP mode WiFi password
-                write_settings();
+            if(!injected) {
+                deleteIpSettings();                   // 123456: deletes IP settings
+                if(settings.appw[0]) {
+                    settings.appw[0] = 0;             // and clears AP mode WiFi password
+                    write_settings();
+                }
+                ssRestartTimer();
             }
-            ssRestartTimer();
             break;
         case 317931:                              // 317931: Unlock Gauge Type selection in Config Portal
             if(gaugeTypeLocked) {
@@ -1883,7 +1941,7 @@ static uint8_t restrict_gauge_empty(int val, int minimum, int maximum, uint8_t d
  * Basic Telematics Transmission Framework (BTTFN)
  */
 
-static void addCmdQueue(uint32_t command)
+void addCmdQueue(uint32_t command)
 {
     if(!command) return;
 

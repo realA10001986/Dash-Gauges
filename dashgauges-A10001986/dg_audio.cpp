@@ -117,7 +117,7 @@ bool            playingDoor = false;
 
 static char     append_audio_file[256];
 static float    append_vol;
-static uint16_t append_flags;
+static uint32_t append_flags;
 static bool     appendFile = false;
 
 static char     keySnd[] = "/key3.mp3";   // not const
@@ -191,7 +191,6 @@ void audio_setup()
 
     // Check for keyX sounds to avoid unsuccessful file-lookups every time
     for(int i = 1; i < 10; i++) {
-        if(i == 8) continue;
         keySnd[4] = '0' + i;
         haveKeySnd[i] = check_file_SD(keySnd);
     }
@@ -275,7 +274,7 @@ static int findWAVdata(char *buf)
     return 0;
 }
 
-void append_file(const char *audio_file, uint16_t flags, float volumeFactor)
+void append_file(const char *audio_file, uint32_t flags, float volumeFactor)
 {
     strcpy(append_audio_file, audio_file);
     append_flags = flags;
@@ -287,7 +286,7 @@ void append_file(const char *audio_file, uint16_t flags, float volumeFactor)
     #endif
 }
 
-void play_file(const char *audio_file, uint16_t flags, float volumeFactor)
+void play_file(const char *audio_file, uint32_t flags, float volumeFactor)
 {
     char buf[64];
     int32_t curSeek = 0;
@@ -320,7 +319,7 @@ void play_file(const char *audio_file, uint16_t flags, float volumeFactor)
     playingEmpty = (flags & PA_ISEMPTY) ? true : false;
     playingEmptyEnds = false;
     playingDoor = (flags & PA_DOOR) ? true : false;
-    key_playing = flags & 0xff00;
+    key_playing = flags & 0x1ff00;
     
     out->SetGain(getVolume());
 
@@ -404,7 +403,7 @@ void remove_appended_empty()
 
 void play_key(int k, bool stopOnly)
 {
-    uint16_t pa_key = (k == 9) ? 0x8000 : (1 << (7+k));
+    uint16_t pa_key = (1 << (7+k));
     
     if(!haveKeySnd[k]) return;    
 
@@ -557,6 +556,17 @@ void stopAudioAtLoopEnd()
         myFS0L->setPlayLoop(false);
     }
     playingEmptyEnds = true;
+}
+
+bool stop_key()
+{
+    if(key_playing) {
+        mp3->stop();
+        key_playing = 0;
+        audioplaystart = 0;
+        return true;
+    }
+    return false;
 }
 
 bool append_pending()

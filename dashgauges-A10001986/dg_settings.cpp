@@ -1548,6 +1548,9 @@ void renameUploadFile(int idx)
         SD.remove(t);
         
         SD.rename(uploadFileName, t);
+
+        // Real name is now changed
+        strcpy(uploadFileName, t);
         
         free(t);
     }
