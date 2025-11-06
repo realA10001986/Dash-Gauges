@@ -24,7 +24,7 @@ Firmware features include
 - Automatic refill timer, automatic alarm mute timer (both optional)
 - support for door switches for playing sounds when opening/closing the car doors
 - [wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://tcd.out-a-ti.me); used for synchronized time travels, alarm, night mode, fake power and remote control through TCD keypad
-- [music player](#the-music-player): Play mp3 files located on an SD card [requires TCD connected wirelessly for control]
+- [music player](#the-music-player): Play mp3 files located on an SD card [requires TCD connected wirelessly or HA/MQTT for control]
 - [SD card](#sd-card) support for custom audio files for effects, and music for the Music Player
 - advanced network-accessible [Config Portal](#the-config-portal) for setup (http://gauges.local, hostname configurable)
 - [Home Assistant](#home-assistant--mqtt) (MQTT 3.1.1) support
@@ -209,9 +209,9 @@ Your replacements need to be put in the root (top-most) directory of the SD card
 
 The firmware supports some additional user-provided sound effects, which it will load from the SD card. If the respective file is present, it will be used. If that file is absent, no sound will be played.
 
-- "key1.mp3", "key3.mp3", "key4.mp3", "key6.mp3", "key7.mp3", "key9.mp3": Will be played when you type 900x (x being 1, 3, 4, 6, 7 or 9) on the TCD (connected through BTTFN).
+- "key1.mp3" - "key9.mp3": Will be played when you type 900x (x being 1, 3, 4, 6, 7 or 9) or 950x (1-9) on the TCD (connected through BTTFN).
 
-> The seemingly odd numbering is because of synchronicity with other props, especially the TCD and its keymap where the Music Player occupies keys 2, 5, 8.
+> The seemingly odd numbering for the 900x range is because of synchronicity with other props, especially the TCD and its keymap where the Music Player occupies keys 2, 5, 8. Likewise, 9002, 9005 and 9008 control the Dash Gauges' Music Player (prev, play/stop, next).
 
 Those files are not provided here. You can use any mp3, with a bitrate of 128kpbs or less.
 
@@ -444,7 +444,7 @@ The Dash Gauges can be controlled through messages sent to topic **bttf/dg/cmd**
 - STOPKEY: Stop playback of keyX file. Does nothing if no keyX file is currently played back.
 - INJECT_x: See immediately below.
 
-### The INJECT_x command
+#### The INJECT_x command
 
 This command allows remote control of the Dash Gauges through HA/MQTT in the same way as through the TCD keypad by injecting commands in the Dash Gauges command queue (hence the name). Commands are listed [here](#tcd-remote-command-reference); nearly all with a leading "9" are supported, but are to be entered _minus 9000_. For example:
 
