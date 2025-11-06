@@ -423,7 +423,7 @@ The Dash Gauges support the MQTT protocol version 3.1.1 for the following featur
 ### Control the Dash Gauges via MQTT
 
 The Dash Gauges can be controlled through messages sent to topic **bttf/dg/cmd**. Supported commands are
-- TIMETRAVEL: Start a [time travel](#time-travel)
+- TIMETRAVEL: Start a time travel
 - EMPTY: "Drain" Plutonium and trigger alarm
 - REFILL: Refill the Plutonium chamber
 - PLAY_DOOR_OPEN, PLAY_DOOR_CLOSED: Play respective door sounds; these commands are only executed if the option **_Play door sounds_** in the Config Portal is unchecked.
@@ -734,9 +734,9 @@ If this option is checked, and your TCD goes into night mode, the Dash Gauges wi
 
 If this option is checked, and your TCD is equipped with a fake power switch, the Dash Gauges will also fake-power up/down. If fake power is off, no LED is active and the Dash Gauges will ignore all input.
 
-##### &#9193; TT button trigger BTTFN-wide TT
+##### &#9193; TT button triggers BTTFN-wide TT
 
-If the dash gauges are connected to a TCD through BTTFN, this option allows to trigger a synchronized time travel on all BTTFN-connected devices when pressing the Time Travel button, just as if the Time Travel was triggered by the TCD. If this option is unchecked, pressing the Time Travel button only triggers a Time Travel sequence on the dash gauges.
+If the dash gauges are connected to a TCD through BTTFN, this option allows to trigger a synchronized time travel on all BTTFN-connected devices when pressing the Time Travel button, just as if the Time Travel was triggered by the TCD. If this option is unchecked, pressing the Time Travel button only triggers a Time Travel sequence on the Dash Gauges.
 
 #### <ins>Home Assistant / MQTT settings</ins>
 
