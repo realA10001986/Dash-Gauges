@@ -403,7 +403,7 @@ You can use BTTF-Network and MQTT at the same time, see [below](#home-assistant-
     </tr>
 </table>
 
-1: Not supported through HA/MQTT [_INJECT_](#the_inject_x-command) command
+1: Not supported through HA/MQTT [_INJECT_](#the-inject_x-command) command
 
 [Here](https://github.com/realA10001986/Dash-Gauges/blob/main/CheatSheet.pdf) is a cheat sheet for printing or screen-use. (Note that MacOS' preview application has a bug that scrambles the links in the document. Acrobat Reader does it correctly.)
 
