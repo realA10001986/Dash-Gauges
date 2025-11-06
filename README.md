@@ -287,7 +287,7 @@ You can use BTTF-Network and MQTT at the same time, see [below](#home-assistant-
     </tr>
    <tr><td>Function</td><td>Code on TCD</td></tr>
     <tr>
-     <td align="left">"Refill"</td>
+     <td align="left">"Refill"<sup>1</sup></td>
      <td>009&#9166;</td>
     </tr>
    <tr>
@@ -390,11 +390,11 @@ You can use BTTF-Network and MQTT at the same time, see [below](#home-assistant-
      <td align="left">9090&#9166;</td>
     </tr>   
     <tr>
-     <td align="left">Reboot the device</td>
+     <td align="left">Reboot the device<sup>1</sup></td>
      <td align="left">9064738&#9166;</td>
     </tr>
     <tr>
-     <td align="left">Delete static IP address<br>and WiFi-AP password</td>
+     <td align="left">Delete static IP address<br>and WiFi-AP password<sup>1</sup></td>
      <td align="left">9123456&#9166;</td>
     </tr>
     <tr>
@@ -402,6 +402,8 @@ You can use BTTF-Network and MQTT at the same time, see [below](#home-assistant-
      <td align="left">9317931&#9166;</td>
     </tr>
 </table>
+
+1: Not supported through HA/MQTT [_INJECT_](#the_inject_x-command) command
 
 [Here](https://github.com/realA10001986/Dash-Gauges/blob/main/CheatSheet.pdf) is a cheat sheet for printing or screen-use. (Note that MacOS' preview application has a bug that scrambles the links in the document. Acrobat Reader does it correctly.)
 
@@ -444,15 +446,15 @@ The Dash Gauges can be controlled through messages sent to topic **bttf/dg/cmd**
 
 ### The INJECT_x command
 
-This command allows remote control of the Dash Gauges through HA/MQTT in the same way as through the TCD keypad by injecting commands in the Dash Gauges command queue (hence the name). Commands are listed [here](#tcd-remote-command-reference); all with a leading "9" are supported, but are to be entered _minus 9000_. For example:
+This command allows remote control of the Dash Gauges through HA/MQTT in the same way as through the TCD keypad by injecting commands in the Dash Gauges command queue (hence the name). Commands are listed [here](#tcd-remote-command-reference); nearly all with a leading "9" are supported, but are to be entered _minus 9000_. For example:
 
 To set "full" percentage of "Percent Power" gauge to 50% (9450), issue the following command: **INJECT_450**
 
 To play "key2.mp3" (9502), issue **INJECT_502**
 
-To select the music1 folder (9051), issue **INJECT_51**
+To select the 'music1' folder (9051), issue **INJECT_51**
 
-_The Refill command (009) is not supported through INJECT; use the REFILL MQTT-command instead._
+_The Refill (009) command is not supported through INJECT; use the REFILL MQTT-command instead._
 
 ### Receive commands from Time Circuits Display
 
