@@ -176,7 +176,7 @@ As mentioned, the Dash Gauges are an add-on for a Time Circuits Display. Their b
 
 There is little to play with when the Dash Gauges aren't connected to a TCD:
 - To quickly trigger the "empty" sequence, flip the side switch of your Dash Gauges. To "refill", flip that switch again.
-- Press the time travel button to trigger a simple "surge" sequence. The time travel button is located behind the "Percent Power" gauge on the rear of the Control Board; you can also connect an [external button](hardware#connecting-a-time-travel-button).
+- Press the time travel button to trigger a simple "surge" sequence. The time travel button is located behind the "Percent Power" gauge on the rear of the Control Board; you can also connect an [external button](Hardware.md#connecting-a-time-travel-button).
 
 The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as well. The TCD is of special importance: When connected through BTTFN, the TCD can act as a remote control for the Dash Gauges.
 
