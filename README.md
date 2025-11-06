@@ -176,15 +176,9 @@ As mentioned, the Dash Gauges are an add-on for a Time Circuits Display. Their b
 
 There is little to play with when the Dash Gauges aren't connected to a TCD:
 - To quickly trigger the "empty" sequence, flip the side switch of your Dash Gauges. To "refill", flip that switch again.
-- Press the time travel button to trigger a simple "surge" sequence.
+- Press the time travel button to trigger a simple "surge" sequence. The time travel button is located behind the "Percent Power" gauge on the rear of the Control Board; you can also connect an [external button](hardware/#connecting-a-time-travel-button).
 
 The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as well. The TCD is of special importance: When connected through BTTFN, the TCD can act as a remote control for the Dash Gauges.
-
-## Time travel
-
-To trigger a "time travel" stand-alone, you need to install a "Time Travel" button. Pressing that button briefly will let the Dash Gauges play their time travel sequence. Please see [here](hardware/#connecting-a-time-travel-button) for how to wire that button.
-
-Other ways of triggering a time travel are available if a [Time Circuits Display](#connecting-a-time-circuits-display) is connected.
 
 ## SD card
 
@@ -440,7 +434,7 @@ The Dash Gauges can be controlled through messages sent to topic **bttf/dg/cmd**
 - MP_SHUFFLE_ON: Enables shuffle mode in [Music Player](#the-music-player)
 - MP_SHUFFLE_OFF: Disables shuffle mode in [Music Player](#the-music-player)
 - MP_FOLDER_x: x being 0-9, set folder number for [Music Player](#the-music-player)
-- PLAYKEY_x: Play keyX.mp3 (from SD card). X can range from 1 to 9.
+- PLAYKEY_x: Play keyX.mp3 (from SD card), X being in the range from 1 to 9.
 - STOPKEY: Stop playback of keyX file. Does nothing if no keyX file is currently played back.
 - INJECT_x: See immediately below.
 
