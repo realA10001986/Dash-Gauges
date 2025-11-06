@@ -14,16 +14,7 @@
 #ifndef WiFiManager_h
 #define WiFiManager_h
 
-//#define _A10001986_DBG
-//#define _A10001986_V_DBG
-
-#define WM_MDNS
-// #define WM_AP_STATIC_IP
-// #define WM_APCALLBACK
-// #define WM_PRECONNECTCB
-// #define WM_EVENTCB
-// #define WM_ADDLGETTERS
-// #define WM_ADDLSETTERS
+#include "wm_local.h"
 
 #include <WiFi.h>
 #include <esp_wifi.h>
@@ -47,11 +38,25 @@
 // menu ids
 #define WM_MENU_WIFI        0
 #define WM_MENU_PARAM       1
-#define WM_MENU_UPDATE      2
-#define WM_MENU_SEP         3
-#define WM_MENU_CUSTOM      4
+#define WM_MENU_PARAM2      2
+#define WM_MENU_UPDATE      3
+#define WM_MENU_SEP         4
+#define WM_MENU_CUSTOM      5
 #define WM_MENU_END        -1
 #define WM_MENU_MAX         WM_MENU_CUSTOM
+
+#ifdef WM_PARAM2
+#define WM_PARAM_ARRS 3
+#else
+#define WM_PARAM_ARRS 2
+#endif
+
+#ifndef WM_PARAM2_CAPTION
+#define WM_PARAM2_CAPTION "Settings 2"
+#endif
+#ifndef WM_PARAM2_TITLE
+#define WM_PARAM2_TITLE "Settings 2"
+#endif
 
 // params will autoincrement and realloc by this amount when max is reached
 // can (and should) be overruled by allocParms()/allocWiFiParms()
@@ -59,11 +64,15 @@
 #define WIFI_MANAGER_MAX_PARAMS 5
 #endif
 
+// Flags:
 // Label placement for parameters
 #define WFM_NO_LABEL      0
 #define WFM_LABEL_BEFORE  1
 #define WFM_LABEL_AFTER   2
 #define WFM_LABEL_DEFAULT WFM_LABEL_BEFORE
+#define WFM_LABEL_MASK    0x03
+// Parm is a checkbox
+#define WFM_IS_CHKBOX     8
 
 // HTML id:s of "static IP" parameters on "WiFi Configuration" page
 #define WMS_ip    "ip"
@@ -101,22 +110,22 @@ class WiFiManagerParameter {
     */
     WiFiManagerParameter(const char *custom);
     WiFiManagerParameter(const char *(*CustomHTMLGenerator)(const char *));
-    WiFiManagerParameter(const char *id, const char *label);
+    //WiFiManagerParameter(const char *id, const char *label);
     WiFiManagerParameter(const char *id, const char *label, const char *defaultValue, int length);
     WiFiManagerParameter(const char *id, const char *label, const char *defaultValue, int length, const char *custom);
-    WiFiManagerParameter(const char *id, const char *label, const char *defaultValue, int length, const char *custom, int labelPlacement);
+    WiFiManagerParameter(const char *id, const char *label, const char *defaultValue, int length, const char *custom, uint8_t flags);
     ~WiFiManagerParameter();
 
     const char *getID() const;
     const char *getValue() const;
     const char *getLabel() const;
     int         getValueLength() const;
-    int         getLabelPlacement() const;
+    uint8_t     getFlags() const;
     virtual const char *getCustomHTML() const;
     void        setValue(const char *defaultValue, int length);
 
   protected:
-    void init(const char *id, const char *label, const char *defaultValue, int length, const char *custom, int labelPlacement);
+    void init(const char *id, const char *label, const char *defaultValue, int length, const char *custom, uint8_t flags);
 
   private:
     WiFiManagerParameter& operator=(const WiFiManagerParameter&);
@@ -127,7 +136,7 @@ class WiFiManagerParameter {
         const char *(*_customHTMLGenerator)(const char *);
     };
     int         _length;
-    int         _labelPlacement;
+    uint8_t     _flags;
   protected:
     const char *_customHTML;
     friend class WiFiManager;
@@ -182,6 +191,14 @@ class WiFiManager
     // returns the Parameters Count
     int           getParametersCount();
 
+    // same as above for param2
+    #ifdef WM_PARAM2
+    void          allocParms2(int numParms);
+    bool          addParameter2(WiFiManagerParameter *p);
+    WiFiManagerParameter** getParameters2();
+    int           getParameters2Count();
+    #endif
+
     // same as above for WiFi Configuration page
     void          allocWiFiParms(int numParms);
     bool          addWiFiParameter(WiFiManagerParameter *p);
@@ -214,10 +231,12 @@ class WiFiManager
     void          setSaveWiFiCallback(void(*func)(const char *, const char *));
 
     // called when saving params before anything else happens
-    void          setPreSaveParamsCallback(void(*func)());
+    #ifdef WM_PRESAVECB
+    void          setPreSaveParamsCallback(void(*func)(int));
+    #endif
 
     // called when saving either params-in-wifi or params page
-    void          setSaveParamsCallback(void(*func)());
+    void          setSaveParamsCallback(void(*func)(int));
 
     // called just before/after OTA update
     void          setPreOtaUpdateCallback(void(*func)());
@@ -353,6 +372,7 @@ class WiFiManager
   private:
     // vars
     int8_t *      _menuIdArr = NULL;
+    bool          _menuArrConst = false;
 
     // ip configs
     #ifdef WM_AP_STATIC_IP
@@ -426,6 +446,7 @@ class WiFiManager
 	  void          _delay(unsigned int mydel);
 
 	  bool          CheckParmID(const char *id);
+	  bool          _addParameter(int idx, WiFiManagerParameter *p);
 
     void          setupConfigPortal();
     bool          shutdownConfigPortal();
@@ -482,9 +503,15 @@ class WiFiManager
     void          handleWifiSave();
 
   	// Param page
-  	int	  	      calcParmPageSize(unsigned int& maxItemSize);
+  	int	  	      calcParmPageSize(int aidx, unsigned int& maxItemSize, const char *title, const char *action);
+  	void          _handleParam(int aidx, const char *title, const char *action);
+  	void          _handleParamSave(int aidx, const char *title);
   	void          handleParam();
     void          handleParamSave();
+    #ifdef WM_PARAM2
+  	void          handleParam2();
+  	void          handleParam2Save();
+  	#endif
 
   	// OTA Update page
   	void          handleUpdate();
@@ -530,12 +557,9 @@ class WiFiManager
     bool          webPortalActive     = false;
 
     // WiFiManagerParameter
-    int           _paramsCount         = 0;
-    int           _max_params;
-    WiFiManagerParameter** _params     = NULL;
-    int           _wifiparamsCount     = 0;
-    int           _max_wifi_params;
-    WiFiManagerParameter** _wifiparams = NULL;
+    int           _paramsCount[WM_PARAM_ARRS]     = { 0 };
+    int           _max_params[WM_PARAM_ARRS];
+    WiFiManagerParameter** _params[WM_PARAM_ARRS] = { NULL };
 
     bool          _uplError            = false;
 
@@ -546,8 +570,10 @@ class WiFiManager
     void (*_webservercallback)(void);
     void (*_savewificallback)(const char *, const char *);
     void (*_presavewificallback)(void);
-    void (*_presaveparamscallback)(void);
-    void (*_saveparamscallback)(void);
+    #ifdef WM_PRESAVECB
+    void (*_presaveparamscallback)(int);
+    #endif
+    void (*_saveparamscallback)(int);
     void (*_preotaupdatecallback)(void);
     void (*_postotaupdatecallback)(bool);
 	  void (*_menuoutcallback)(String &page);

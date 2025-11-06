@@ -35,6 +35,7 @@ const char HTTP_ROOT_MAIN[]        PROGMEM = "<h1>{t}</h1><h3>{v}</h3>";
 const char * const HTTP_PORTAL_MENU[] PROGMEM = {
     "<form action='/wifi' method='get' onsubmit='d=ge(\"wbut\");if(d){d.disabled=true;d.innerHTML=\"Please wait\"}'><button id='wbut'>WiFi Configuration</button></form>\n",
     "<form action='/param' method='get'><button>Settings</button></form>\n",
+    "<form action='/param2' method='get'><button>" WM_PARAM2_CAPTION "</button></form>\n",
     "<form action='/update' method='get'><button>Update</button></form>\n",
     "<hr>", // sep
     ""      // custom, if _customMenuHTML is NULL
@@ -43,7 +44,7 @@ const char * const HTTP_PORTAL_MENU[] PROGMEM = {
 const char HTTP_FORM_START[]       PROGMEM = "<form method='POST' action='{v}'>";
 const char HTTP_FORM_LABEL[]       PROGMEM = "<label for='{i}'>{t}</label>";
 const char HTTP_FORM_PARAM_HEAD[]  PROGMEM = "<hr>";
-const char HTTP_FORM_PARAM[]       PROGMEM = "<input id='{i}' name='{n}' maxlength='{l}' value='{v}' {c}>";
+const char HTTP_FORM_PARAM[]       PROGMEM = "<input id='{i}' name='{n}' maxlength='{l}' value='{v}' {c} {f}>";
 const char HTTP_FORM_END[]         PROGMEM = "<button type='submit'>Save</button></form>";
 
 const char HTTP_FORM_WIFI[]        PROGMEM = "<div class='sects'><div class='headl'>WiFi connection: Network selection</div><label for='s'>Network name (SSID)</label><input id='s' name='s' maxlength='32' autocorrect='off' autocapitalize='none' placeholder='{V}' oninput='var x=ge(\"fg\");var y=ge(\"p\");y.disabled=false;if(!this.value.length&&this.placeholder.length){if(x&&!y.value.length){x.style.display=\"\"}y.placeholder=y.getAttribute(\"data-ph\")||\"********\";}else{if(x){x.style.display=\"none\"}y.placeholder=\"\"}'><br><label for='p'>Password</label><input id='p' name='p' maxlength='64' type='password' placeholder='{p}' data-ph='{p}' oninput='var x=ge(\"fg\");if(x){var y=ge(\"s\");if(!y.value.length&&y.placeholder.length){if(this.value.length){x.style.display=\"none\"}else{x.style.display=\"\"}}}'><label><input type='checkbox' onclick='f()' style='margin:0px 5px 10px 0px'>Show password when typing</label>";
@@ -87,12 +88,13 @@ const char HTTP_STATUS_NONE[]      PROGMEM = "<div class='sta'>No WiFi connectio
 
 const char HTTP_BR[]               PROGMEM = "<br>";
 const char HTTP_END[]              PROGMEM = "</div></body></html>";
+const char HTML_CHKBOX[]           PROGMEM = "type='checkbox' autocomplete='off'";  // ac=off to fix FF idiocy
 
 const char HTTP_STYLE[]            PROGMEM = "<style>"
     ".c,body{text-align:center;font-family:-apple-system,BlinkMacSystemFont,system-ui,'Segoe UI',Roboto,'Helvetica Neue',Verdana,Helvetica}"
     "div,input,select{padding:5px;font-size:1em;margin:5px 0;box-sizing:border-box}"
     "input,button,select,.msg{border-radius:.3rem;width: 100%}"
-    "input[type=checkbox]{display:inline-block;margin-top:10px;margin-right:5px;width:auto;}"
+    "input[type=checkbox],input[type=radio]{display:inline-block;margin-top:10px;margin-right:5px;width:auto;}"
     "button,input[type='button'],input[type='submit']{cursor:pointer;border:0;background-color:#225a98;color:#fff;line-height:2.4rem;font-size:1.2rem;width:100%}"
     "input[type='file']{border:1px solid #225a98}"
     ".h{display:none}"
@@ -150,10 +152,14 @@ const char HTTP_STYLE_QI[]         PROGMEM = "<style>"
     "</script>";
 
 const char A_paramsave[]          PROGMEM = "paramsave";
+const char A_param2save[]         PROGMEM = "param2save";
 const char A_wifisave[]           PROGMEM = "wifisave";
 
 const char S_titlewifi[]          PROGMEM = "WiFi Configuration";
 const char S_titleparam[]         PROGMEM = "Settings";
+#ifdef WM_PARAM2
+const char S_titleparam2[]        PROGMEM = WM_PARAM2_TITLE;
+#endif
 const char S_titleupd[]           PROGMEM = "Upload";
 
 const char S_passph[]             PROGMEM = "********";
@@ -178,6 +184,10 @@ const char R_wifi[]               PROGMEM = "/wifi";
 const char R_wifisave[]           PROGMEM = "/wifisave";
 const char R_param[]              PROGMEM = "/param";
 const char R_paramsave[]          PROGMEM = "/paramsave";
+#ifdef WM_PARAM2
+const char R_param2[]             PROGMEM = "/param2";
+const char R_param2save[]         PROGMEM = "/param2save";
+#endif
 const char R_update[]             PROGMEM = "/update";
 const char R_updatedone[]         PROGMEM = "/u";
 
@@ -202,6 +212,7 @@ const char T_q[]                  PROGMEM = "{q}"; // @token q
 const char T_r[]                  PROGMEM = "{r}"; // @token r
 const char T_R[]                  PROGMEM = "{R}"; // @token R
 const char T_h[]                  PROGMEM = "{h}"; // @token h
+const char T_f[]                  PROGMEM = "{f}"; // @token h
 
 // http
 const char HTTP_HEAD_CL[]         PROGMEM = "Content-Length";
