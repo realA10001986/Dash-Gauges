@@ -440,7 +440,7 @@ The Dash Gauges can be controlled through messages sent to topic **bttf/dg/cmd**
 
 #### The INJECT_x command
 
-This command allows remote control of the Dash Gauges through HA/MQTT in the same way as through the TCD keypad by injecting commands in the Dash Gauges command queue (hence the name). Commands are listed [here](#tcd-remote-command-reference); nearly all are supported. For example:
+This command allows remote control of the Dash Gauges through HA/MQTT in the same way as through the TCD keypad by injecting commands in the Dash Gauges' command queue (hence the name). Commands are listed [here](#tcd-remote-command-reference); nearly all are supported. For example:
 
 To set "full" percentage of "Percent Power" gauge to 50% (9450), issue the following command: **INJECT_9450**
 
