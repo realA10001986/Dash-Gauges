@@ -172,13 +172,13 @@ After this step, your Dash Gauges are ready to be used.
 
 ## Basic Operation
 
-As mentioned, the Dash Gauges are an add-on for a Time Circuits Display. Their basic function is to show some values on its gauges, and to play an "empty" alarm after a time travel.
+The Dash Gauges' basic function is to show some values on its gauges, and to play an "empty" alarm after a time travel.
 
-If the Dash Gauges aren't connected to a TCD:
+If the Dash Gauges are operated stand-alone:
 - To quickly trigger the "empty" sequence, flip the side switch of your Dash Gauges. To "refill", flip that switch again.
-- Press the time travel button to trigger a "surge" sequence. The time travel button is located behind the "Primary" gauge on the rear of the Control Board, next to the SD card reader; you can also connect an [external button](Hardware.md#connecting-a-time-travel-button).
+- To trigger a Time Travel sequence, press the time travel button located behind the "Primary" gauge on the rear of the Control Board, next to the SD card reader; you can also connect an [external button](Hardware.md#connecting-a-time-travel-button).
 
-The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as well. The TCD is of special importance: When connected through BTTFN, the TCD can act as a remote control for the Dash Gauges.
+Other features require a CircuitSetup [Time Circuits Display](#bttf-network-bttfn) and/or a connection to [Home Assistant](#home-assistant--mqtt) for control.
 
 ## SD card
 
@@ -251,7 +251,7 @@ The TCD can communicate with the Dash Gauges wirelessly, via the built-in "**B**
 |:--:|
 | Click to watch the video |
 
-BTTFN requires the props all to be connected to the same network, such as, for example, your home WiFi network. BTTFN does not work over the Internet.
+BTTFN requires the props all to be connected to the same network, such as, for example, your  WiFi network. BTTFN does not work over the Internet.
 
 ![STAmode-bttfn](img/stamode-bttfn.png)
 
@@ -271,7 +271,7 @@ Afterwards, the Dash Gauges and the TCD can communicate wirelessly and
 - the Dash Gauges queries the TCD for fake power and night mode, in order to react accordingly if so configured,
 - pressing the dash gauges' Time Travel button can trigger a synchronized Time Travel on all BTTFN-connected devices, just like if that Time Travel was triggered through the TCD.
 
-You can use BTTF-Network and MQTT at the same time, see [below](#home-assistant--mqtt).
+You can use BTTF-Network and MQTT at the same time, see [below](#-assistant--mqtt).
 
 #### TCD remote command reference
 
@@ -416,7 +416,7 @@ With the wiring in place, head to the Config Portal and set the option **_TCD co
 
 </details>
 
-## Home Assistant / MQTT
+##  Assistant / MQTT
 
 The Dash Gauges support the MQTT protocol version 3.1.1 for the following features:
 
@@ -492,7 +492,7 @@ After the Dash Gauges have restarted, re-enter the Dash Gauges' Config Portal (w
 
 In order to access the Dash Gauges' Config Portal in your car, connect your handheld or computer to the TCD's WiFi access point ("TCD-AP"), and direct your browser to http://gauges.local ; if that does not work, go to the TCD's keypad menu, press ENTER until "BTTFN CLIENTS" is shown, hold ENTER, and look for the Dash Gauges' IP address there; then direct your browser to that IP by using the URL http://a.b.c.d (a-d being the IP address displayed on the TCD display).
 
-This "car setup" can also be used in a home setup with no local WiFi network present.
+This "car setup" can also be used in a  setup with no local WiFi network present.
 
 ### Door Switches
 
@@ -510,7 +510,7 @@ The timer can be set to 0 (which disables it; WiFi is never switched off; this i
 
 After WiFi has been switched off due to timer expiration, it can be re-enabled by briefly pressing Button 1, in which case the timers are restarted (ie WiFi is again switched off after timer expiration). Button 1 is located behind the "Percent Power" gauge on the control board.
 
-> Briefly pressing Button 1 also triggers a re-connection attempt in case your configured WiFi network was not available when the Dash Gauges were trying to connect, see [here](#home-setup-with-a-pre-existing-local-wifi-network).
+> Briefly pressing Button 1 also triggers a re-connection attempt in case your configured WiFi network was not available when the Dash Gauges were trying to connect, see [here](#-setup-with-a-pre-existing-local-wifi-network).
 
 ## Flash Wear
 
@@ -738,15 +738,15 @@ If this option is checked, and your TCD is equipped with a fake power switch, th
 
 If the dash gauges are connected to a TCD through BTTFN, this option allows to trigger a synchronized time travel on all BTTFN-connected devices when pressing the Time Travel button, just as if the Time Travel was triggered by the TCD. If this option is unchecked, pressing the Time Travel button only triggers a Time Travel sequence on the Dash Gauges.
 
-#### <ins>Home Assistant / MQTT settings</ins>
+#### <ins> Assistant / MQTT settings</ins>
 
-##### &#9193; Use Home Assistant (MQTT 3.1.1)
+##### &#9193; Use  Assistant (MQTT 3.1.1)
 
-If checked, the Dash Gauges will connect to the broker (if configured) and send and receive messages via [MQTT](#home-assistant--mqtt)
+If checked, the Dash Gauges will connect to the broker (if configured) and send and receive messages via [MQTT](#-assistant--mqtt)
 
 ##### &#9193; Broker IP[:port] or domain[:port]
 
-The broker server address. Can be a domain (eg. "myhome.me") or an IP address (eg "192.168.1.5"). The default port is 1883. If different port is to be used, it can be specified after the domain/IP and a colon ":", for example: "192.168.1.5:1884". Specifying the IP address is preferred over a domain since the DNS call adds to the network overhead. Note that ".local" (MDNS) domains are not supported.
+The broker server address. Can be a domain (eg. "my.me") or an IP address (eg "192.168.1.5"). The default port is 1883. If different port is to be used, it can be specified after the domain/IP and a colon ":", for example: "192.168.1.5:1884". Specifying the IP address is preferred over a domain since the DNS call adds to the network overhead. Note that ".local" (MDNS) domains are not supported.
 
 ##### &#9193; User[:Password]
 
