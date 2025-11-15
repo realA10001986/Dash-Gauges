@@ -280,8 +280,9 @@ class WiFiManager
     // sets config for a static IP with DNS
     void          setSTAStaticIPConfig(IPAddress ip, IPAddress gw, IPAddress sn, IPAddress dns);
 
-    // set a custom hostname, sets sta and ap dhcp client id for esp32, and sta for esp8266
-    bool          setHostname(const char * hostname);
+    // set a custom hostname, sets sta and ap dhcp client id for esp32
+    // Given hostname is not copied but referenced by pointer
+    void          setHostname(const char * hostname);
 
     // set ap channel
     void          setWiFiAPChannel(int32_t channel);
@@ -307,6 +308,7 @@ class WiFiManager
     void          setMenu(const int8_t *menu, uint8_t size, bool doCopy = true);
 
     // set the webapp title, default WiFiManager
+    // Given title is not copied but referenced by pointer
     void          setTitle(const char *title);
 
     // show audio upload on Update page
@@ -398,9 +400,9 @@ class WiFiManager
     char          _ssid[34]               = "";    // currently used ssid
     char          _pass[66]               = "";    // currently used psk
 
-    char          _hostname[34]           = "";    // hostname for dhcp, and/or MDNS
+    const char *  _hostname               = "";    // hostname for dhcp, and/or MDNS
 
-    char          _title[64]              = "WiFiManager"; // app title
+    const char *  _title                  = NULL;  // app title
 
     // options & flags
     unsigned long _connectTimeout         = 0;     // ms stop trying to connect to ap if set
@@ -428,8 +430,8 @@ class WiFiManager
     bool          _showContMsg            = false;
     char          _sndContName[8]         = "";    // File name of BIN file to upload
 
-    const char*   _customHeadElement      = NULL;  // store custom head element html from user inside <head>
-    const char*   _customMenuHTML         = NULL;  // store custom element html from user inside menu
+    const char *  _customHeadElement      = NULL;  // store custom head element html from user inside <head>
+    const char *  _customMenuHTML         = NULL;  // store custom element html from user inside menu
 
     // internal options
     unsigned int  _scancachetime          = 30000; // ms cache time for preload scans
@@ -533,9 +535,6 @@ class WiFiManager
 
     void          WiFiEvent(WiFiEvent_t event, arduino_event_info_t info);
 
-    // helpers
-    bool          validApPassword();
-
     // helper for html
     String        htmlEntities(String& str, bool forprint = false);
 	  int           htmlEntitiesLen(String& str, bool forprint = false);
@@ -595,16 +594,6 @@ class WiFiManager
     String        getModeString(uint8_t mode);
     // debug output the softap config
     void          debugSoftAPConfig();
-    #endif
-
-    #if 0
-    template <class T>
-    auto optionalIPFromString(T *obj, const char *s) -> decltype(  obj->fromString(s)  ) {
-        return  obj->fromString(s);
-    }
-    auto optionalIPFromString(...) -> bool {
-        return false;
-    }
     #endif
 };
 

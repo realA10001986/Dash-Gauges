@@ -273,6 +273,7 @@ void WiFiManager::WiFiManagerInit()
     memset(_pass, 0, sizeof(_pass));
     memset(_apName, 0, sizeof(_apName));
     memset(_apPassword, 0, sizeof(_apPassword));
+    _title = S_brand;
 }
 
 // destructor
@@ -688,7 +689,12 @@ bool WiFiManager::startConfigPortal(char const *apName, char const *apPassword, 
 
     if(!*_apName) getDefaultAPName(_apName);
 
-    if(!validApPassword()) return false;
+    if(*_apPassword) {
+        size_t t = strlen(_apPassword);
+        if(t < 8 || t > 63) {
+            return false;
+        }
+    }
 
     // Install WiFi event handler
     WiFi_installEventHandler();
@@ -1513,6 +1519,15 @@ void WiFiManager::HTTPSend(const String& content)
 
     #ifdef _A10001986_DBG
     Serial.printf("HTTPSend: Heap before %d\n", ESP.getFreeHeap());
+    #endif
+
+    #if 0
+    if(server->client()) {
+        #ifdef _A10001986_DBG
+        Serial.printf("TCP_NODELAY is %d\n", server->client().getNoDelay());
+        #endif
+        server->client().setNoDelay(true);
+    }
     #endif
 
     server->send(200, HTTP_HEAD_CT, content);
@@ -3003,8 +3018,7 @@ void WiFiManager::setShowDnsFields(bool doShow)
 // setTitle(): Set page title
 void WiFiManager::setTitle(const char *title)
 {
-    memset(_title, 0, sizeof(_title));
-    strncpy(_title, title, sizeof(_title) - 1);
+    _title = title;
 }
 
 // showUploadContainer(): Toggle displaying the sound-pack upload fields
@@ -3056,11 +3070,9 @@ void WiFiManager::setCarMode(bool enable)
 // NETWORK-RELATED
 
 // setHostname(): Set the hostname (dhcp client id)
-bool WiFiManager::setHostname(const char * hostname)
+void WiFiManager::setHostname(const char * hostname)
 {
-    memset(_hostname, 0, sizeof(_hostname));
-    strncpy(_hostname, hostname, sizeof(_hostname) - 1);
-    return true;
+    _hostname = hostname;
 }
 
 // setWiFiAPChannel(): Set the softAP channel
@@ -3355,19 +3367,6 @@ void WiFiManager::getDefaultAPName(char *apName)
 void WiFiManager::reboot()
 {
     ESP.restart();
-}
-
-bool WiFiManager::validApPassword()
-{
-    // check that ap password has valid length
-    if(*_apPassword) {
-        size_t t = strlen(_apPassword);
-        if(t < 8 || t > 63) {
-            *_apPassword = 0;
-            return false;
-        }
-    }
-    return true;
 }
 
 // htmlEntities(): Encode for HTML, but do not garble UTF8 characters

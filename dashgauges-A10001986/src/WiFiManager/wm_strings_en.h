@@ -212,7 +212,7 @@ const char T_q[]                  PROGMEM = "{q}"; // @token q
 const char T_r[]                  PROGMEM = "{r}"; // @token r
 const char T_R[]                  PROGMEM = "{R}"; // @token R
 const char T_h[]                  PROGMEM = "{h}"; // @token h
-const char T_f[]                  PROGMEM = "{f}"; // @token h
+const char T_f[]                  PROGMEM = "{f}"; // @token f
 
 // http
 const char HTTP_HEAD_CL[]         PROGMEM = "Content-Length";
