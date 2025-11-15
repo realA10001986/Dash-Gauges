@@ -742,7 +742,7 @@ If the dash gauges are connected to a TCD through BTTFN, this option allows to t
 
 ##### &#9193; Use  Assistant (MQTT 3.1.1)
 
-If checked, the Dash Gauges will connect to the broker (if configured) and send and receive messages via [MQTT](#-assistant--mqtt)
+If checked, the Dash Gauges will connect to the broker (if configured) and send and receive messages via [MQTT](#-home-assistant--mqtt)
 
 ##### &#9193; Broker IP[:port] or domain[:port]
 
