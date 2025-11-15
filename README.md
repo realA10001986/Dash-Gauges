@@ -416,7 +416,7 @@ With the wiring in place, head to the Config Portal and set the option **_TCD co
 
 </details>
 
-##  Assistant / MQTT
+## Home Assistant / MQTT
 
 The Dash Gauges support the MQTT protocol version 3.1.1 for the following features:
 
