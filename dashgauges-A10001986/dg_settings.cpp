@@ -88,10 +88,10 @@
 #define DECLARE_D_JSON(x,n) DynamicJsonDocument n(x);
 #endif 
 
-#define NUM_AUDIOFILES 11+9
-#define SND_REQ_VERSION "DG02"
+#define NUM_AUDIOFILES 13+9
+#define SND_REQ_VERSION "DG03"
 #define AC_FMTV 2
-#define AC_TS   402225
+#define AC_TS   576571
 #define AC_OHSZ (14 + ((NUM_AUDIOFILES+1)*(32+4)))
 
 static const char *CONFN  = "/DGA.bin";

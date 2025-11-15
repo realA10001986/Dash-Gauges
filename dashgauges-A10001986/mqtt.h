@@ -128,7 +128,6 @@
 class PubSubClient {
 
     public:
-        PubSubClient();
         PubSubClient(WiFiClient& client);
     
         ~PubSubClient();

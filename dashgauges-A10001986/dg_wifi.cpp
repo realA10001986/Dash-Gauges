@@ -206,11 +206,7 @@ WiFiManagerParameter custom_Vol("Vol", "Volume level (0-19)", settings.Vol, 2, "
 WiFiManagerParameter custom_musicFolder("mfol", "Music folder (0-9)", settings.musicFolder, 2, "type='number' min='0' max='9'");
 WiFiManagerParameter custom_shuffle("musShu", "Shuffle mode enabled at startup", settings.shuffle, 1, "class='mt5'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
 
-#ifdef BTTFN_MC
 WiFiManagerParameter custom_tcdIP("tcdIP", "IP address or hostname of TCD", settings.tcdIP, 31, "pattern='(^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$)|([A-Za-z0-9\\-]+)' placeholder='Example: 192.168.4.1'");
-#else
-WiFiManagerParameter custom_tcdIP("tcdIP", "IP address of TCD", settings.tcdIP, 31, "pattern='^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$' placeholder='Example: 192.168.4.1'");
-#endif
 WiFiManagerParameter custom_uNM("uNM", "Follow TCD night-mode<br><span style='font-size:80%'>If checked, the Screen Saver will activate when TCD is in night-mode.</span>", settings.useNM, 1, "class='mb0'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
 WiFiManagerParameter custom_uFPO("uFPO", "Follow TCD fake power", settings.useFPO, 1, "", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
 WiFiManagerParameter custom_bttfnTT("bttfnTT", "TT button triggers BTTFN-wide TT<br><span style='font-size:80%'>If checked, pressing the Time Travel button triggers a BTTFN-wide TT</span>", settings.bttfnTT, 1, "class='mb0'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
@@ -286,9 +282,6 @@ static bool shouldDeleteIPConfig = false;
 // Did user configure a WiFi network to connect to?
 bool wifiHaveSTAConf = false;
 
-static unsigned long lastConnect = 0;
-static unsigned long consecutiveAPmodeFB = 0;
-
 // WiFi power management in AP mode
 bool          wifiInAPMode = false;
 bool          wifiAPIsOff = false;
@@ -311,13 +304,11 @@ static int  *opType = NULL;
 #ifdef DG_HAVEMQTT
 #define       MQTT_SHORT_INT  (30*1000)
 #define       MQTT_LONG_INT   (5*60*1000)
-static const char emptyStr[1] = { 0 };
-bool          useMQTT = false;
-char          *mqttUser = (char *)emptyStr;
-char          *mqttPass = (char *)emptyStr;
-char          *mqttServer = (char *)emptyStr;
-uint16_t      mqttPort = 1883;
-bool          pubMQTT = false;
+static const char    emptyStr[1] = { 0 };
+static bool          useMQTT = false;
+static char          *mqttUser = (char *)emptyStr;
+static char          *mqttPass = (char *)emptyStr;
+static char          *mqttServer = (char *)emptyStr;
 static unsigned long mqttReconnectNow = 0;
 static unsigned long mqttReconnectInt = MQTT_SHORT_INT;
 static uint16_t      mqttReconnFails = 0;
@@ -613,12 +604,15 @@ void wifi_setup2()
     
     if(useMQTT) {
 
+        uint16_t mqttPort = 1883;
         bool mqttRes = false;
         char *t;
         int tt;
 
         // No WiFi power save if we're using MQTT
         origWiFiOffDelay = wifiOffDelay = 0;
+
+        mqttClient.setBufferSize(MQTT_MAX_PACKET_SIZE);
 
         if((t = strchr(settings.mqttServer, ':'))) {
             size_t ts = (t - settings.mqttServer) + 1;
@@ -920,14 +914,7 @@ void wifi_loop()
         esp_restart();
     }
 
-    // For some reason (probably memory allocation doing some
-    // garbage collection), the first HTTPSend (triggered in
-    // wm.process()) after initiating mp3 playback takes
-    // unusally long, in bad cases 100s of ms. It's worse 
-    // closer to playback start.
-    // This hack skips Webserver-handling inside wm.process() 
-    // if an mp3 playback started within the last 3 seconds.
-    wm.process(!checkAudioStarted());
+    wm.process();
 
     // WiFi power management
     // If a delay > 0 is configured, WiFi is powered-down after timer has
@@ -1009,8 +996,6 @@ static void wifiConnect(bool deferConfigPortal)
         wifiOnNow = millis();
         wifiAPIsOff = false;  // Sic! Allows checks like if(wifiAPIsOff || wifiIsOff)
 
-        //consecutiveAPmodeFB = 0;  // Reset counter of consecutive AP-mode fall-backs
-
     } else {
 
         #ifdef DG_DBG
@@ -1052,14 +1037,7 @@ static void wifiConnect(bool deferConfigPortal)
         wifiAPModeNow = millis();
         wifiIsOff = false;    // Sic!
 
-        /*
-        if(wifiHaveSTAConf) {    
-            consecutiveAPmodeFB++;  // increase counter of consecutive AP-mode fall-backs
-        }
-        */
     }
-
-    //lastConnect = millis();
 }
 
 static void wifiOff(bool force)
@@ -1079,19 +1057,13 @@ void wifiOn(unsigned long newDelay, bool alsoInAPMode, bool deferCP)
     unsigned long desiredDelay;
     unsigned long Now = millis();
     
-    // wifiON() is called when the user XXXXXXXXXXXXXXXXX  (with alsoInAPMode
-    // TRUE) [and - UNUSED - (with alsoInAPMode FALSE)].
+    // wifiON() is called when the user pressed button 1 (with alsoInAPMode
+    // TRUE)
     //
-    // XXXX serves two purposes: To re-enable WiFi if in power save mode, and 
-    // to re-connect to a configured WiFi network if we failed to connect to 
-    // that network at the last connection attempt. In both cases, the Config
-    // Portal is started.
-    //
-    // [Unused:
-    // The call with alsoInAPMode=FALSE should only re-connect if we are in 
-    // power-save  mode after being connected to a user-configured network, 
-    // or if we are in AP mode but the user had config'd a network. Should  
-    // only be called when a short freeze is feasible.]
+    // Pressing button 1 serves two purposes: To re-enable WiFi if in power
+    // save mode, and to re-connect to a configured WiFi network if we failed
+    // to connect to that network at the last connection attempt. In both cases,
+    // the Config Portal is started.
     //    
     // "wifiInAPMode" only tells us our latest mode; if the configured WiFi
     // network was - for whatever reason - was not available when we
@@ -1100,7 +1072,7 @@ void wifiOn(unsigned long newDelay, bool alsoInAPMode, bool deferCP)
     // At this point, wifiInAPMode reflects the state after
     // the last connection attempt.
 
-    if(alsoInAPMode) {    // User XXXXXXXXXXX
+    if(alsoInAPMode) {    // User pressed button 1
         
         if(wifiInAPMode) {  // We are in AP mode
 
@@ -1135,67 +1107,6 @@ void wifiOn(unsigned long newDelay, bool alsoInAPMode, bool deferCP)
             }
 
         }
-
-    } else {      // unused
-
-        /*
-         
-        // If no user-config'd network - no point, bail
-        if(!wifiHaveSTAConf) return;
-
-        if(wifiInAPMode) {  // We are in AP mode (because connection failed)
-
-            #ifdef DG_DBG
-            Serial.printf("wifiOn: consecutiveAPmodeFB %d\n", consecutiveAPmodeFB);
-            #endif
-
-            // Reset counter of consecutive AP-mode fallbacks
-            // after a couple of days
-            if(Now - lastConnect > 4*24*60*60*1000)
-                consecutiveAPmodeFB = 0;
-
-            // Give up after so many attempts
-            if(consecutiveAPmodeFB > 5)
-                return;
-
-            // Do not try to switch from AP- to STA-mode
-            // if last fall-back to AP-mode was less than
-            // 15 (for the first 2 attempts, then 90) minutes ago
-            if(Now - lastConnect < ((consecutiveAPmodeFB <= 2) ? 15*60*1000 : 90*60*1000))
-                return;
-
-            if(!wifiAPIsOff) {
-
-                // If ON, disable WiFi at this point
-                // (in hope of successful connection below)
-                wifiOff(true);
-
-            }
-
-        } else {            // We are in STA mode
-
-            // If WiFi is not off, check if caller wanted
-            // to start the CP, and do so, if not running
-            if(!wifiIsOff && (WiFi.status() == WL_CONNECTED)) {
-                if(!deferCP) {
-                    if(!wm.getWebPortalActive()) {
-                        wm.startWebPortal();
-                    }
-                }
-                // Add 60 seconds to timer in case the NTP
-                // request might fall off the edge
-                if(origWiFiOffDelay > 0) {
-                    if((Now - wifiOnNow >= wifiOffDelay) ||
-                       ((wifiOffDelay - (Now - wifiOnNow)) < (60*1000))) {
-                        wifiOnNow += (60*1000);
-                    }
-                }
-                return;
-            }
-
-        }
-
-        */
 
     }
 
@@ -1487,13 +1398,6 @@ void gpCallback(int reason)
     if(audioInitDone) {
         switch(reason) {
         case WM_LP_PREHTTPSEND:
-            if(wifiInAPMode) {
-                if(checkMP3Running()) {
-                    mp_stop();
-                    stopAudio();
-                    return;
-                }
-            } // fall through
         case WM_LP_NONE:
         case WM_LP_POSTHTTPSEND:
             audio_loop();
@@ -2141,6 +2045,17 @@ static void mqttLooper()
     audio_loop();
 }
 
+static uint16_t a2i(char *p)
+{
+    unsigned int t;
+    t = (*p++ - '0') * 1000;
+    t += (*p++ - '0') * 100;
+    t += (*p++ - '0') * 10;
+    t += (*p - '0');
+
+    return (uint16_t)t;
+}
+
 static void mqttCallback(char *topic, byte *payload, unsigned int length)
 {
     int i = 0, j, ml = (length <= 255) ? length : 255;
@@ -2156,8 +2071,8 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
       "MP_NEXT",          // 7
       "MP_PREV",          // 8
       "MP_FOLDER_",       // 9  MP_FOLDER_0..MP_FOLDER_9
-      "PLAY_DOOR_OPEN",   // 10
-      "PLAY_DOOR_CLOSE",  // 11
+      "PLAY_DOOR_CLOSE",  // 10
+      "PLAY_DOOR_OPEN",   // 11
       "PLAYKEY_",         // 12  PLAYKEY_1..PLAYKEY_9
       "STOPKEY",          // 13
       "INJECT_",          // 14
@@ -2165,16 +2080,23 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
     };
     static const char *cmdList2[] = {
       "PREPARE",          // 0
-      "TIMETRAVEL",       // 1
+      "TIMETRAVEL",       // 1  or TIMETRAVEL_xxxx_yyyy
       "REENTRY",          // 2
       "ABORT_TT",         // 3
       "ALARM",            // 4
-      "REFILL",           // 5 - not sent by TCD >= 3.6.1 (only through BTTFN)
-      "WAKEUP",           // 6
+      "WAKEUP",           // 5
       NULL
     };
 
+    // Note: This might be called while we are in a
+    // wait-delay-loop. Best to just set flags here
+    // that are evaluated synchronously (=later).
+    // Do not stuff that messes with display, input,
+    // etc.
+
     if(!length) return;
+
+    if(dgBusy) return;
 
     memcpy(tempBuf, (const char *)payload, ml);
     tempBuf[ml] = 0;
@@ -2204,9 +2126,7 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
             // We disable our Screen Saver.
             // We don't ignore this if TCD is connected by wire,
             // because this signal does not come via wire.
-            if(!TTrunning) {
-                prepareTT();
-            }
+            doPrepareTT = true;
             break;
         case 1:
             // Trigger Time Travel (if not running already)
@@ -2216,8 +2136,13 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
                 networkTCDTT = true;
                 networkReentry = false;
                 networkAbort = false;
-                networkLead = ETTO_LEAD;
-                networkP1 = 6600;         // Assumption
+                if(strlen(tempBuf) == 20) {
+                    networkLead = a2i(&tempBuf[11]);
+                    networkP1 = a2i(&tempBuf[16]);
+                } else {
+                    networkLead = ETTO_LEAD;
+                    networkP1 = 6600;
+                }
             }
             break;
         case 2:   // Re-entry
@@ -2239,22 +2164,13 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
             // Eval this at our convenience
             break;
         case 5:
-            refill_plutonium();
-            break;
-        case 6:
-            if(!TTrunning) {
-                wakeup();
-            }
+            doWakeup = true;
             break;
         }
        
     } else if(!strcmp(topic, "bttf/dg/cmd")) {
 
         // User commands
-
-        // Not taking commands under these circumstances: (FPBUnitOn checked further down)
-        //if(TTrunning || startup || startAlarm || refill || refillWA)
-        //    return;
 
         while(cmdList[i]) {
             j = strlen(cmdList[i]);
@@ -2286,10 +2202,11 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
             #ifdef DG_HAVEDOORSWITCH
             // Commands ignored if "play door sounds" enabled in CP
             // (would interfere with switch logic otherwise)
+            // Also, ignore if sequence running, would come too late 
+            // if queued.
             if(dsPlay || TTrunning || startup || startAlarm || refill || refillWA)
                 return;
-
-            play_door_open(1, (i == 10));
+            doPlayDoorSound = 0x0100 | (i - 10);
             #endif
             break;
         case 12:
@@ -2304,76 +2221,7 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
             break;
         default:
             addCmdQueue(1000 + i);
-        }
-
-        /*
-        if(!FPBUnitIsOn) {
-            // Allow door sounds even if fake-power is off
-            if(i != 10 && i != 11)
-                return;
-        }
-
-        switch(i) {
-        case 0:
-            // Trigger Time Travel; treated like button, not
-            // like TT from TCD.
-            networkTimeTravel = true;
-            networkTCDTT = false;
-            break;
-        case 1:
-            set_empty();
-            break;
-        case 2:
-            refill_plutonium();
-            break;
-        case 3:
-        case 4:
-            if(haveMusic) mp_makeShuffle((i == 3));
-            break;
-        case 5:    
-            if(haveMusic) mp_play();
-            break;
-        case 6:
-            if(haveMusic && mpActive) {
-                mp_stop();
-            }
-            break;
-        case 7:
-            if(haveMusic) mp_next(mpActive);
-            break;
-        case 8:
-            if(haveMusic) mp_prev(mpActive);
-            break;
-        case 9:
-            if(haveSD) {
-                if(strlen(tempBuf) > j && tempBuf[j] >= '0' && tempBuf[j] <= '9') {
-                    switchMusicFolder((uint8_t)(tempBuf[j] - '0'));
-                }
-            }
-            break;
-        case 10:
-        case 11:
-            #ifdef DG_HAVEDOORSWITCH
-             // Commands ignored if "play door sounds" enabled in CP
-             // (would interfere with switch logic otherwise)
-            if(!dsPlay) {
-                play_door_open(1, (i == 10));
-            }
-            #endif
-            break;
-        case 12:
-            if(haveSD) {
-                if(strlen(tempBuf) > j && tempBuf[j] >= '1' && tempBuf[j] <= '9') {
-                    play_key((int)(tempBuf[j] - '0'));
-                }
-            }
-            break;
-        case 13:
-            stop_key();
-            break;
-        }
-        */
-            
+        }            
     } 
 }
 

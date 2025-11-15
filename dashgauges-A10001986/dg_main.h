@@ -61,6 +61,7 @@ extern Gauges gauges;
 extern bool TCDconnected;
 #ifdef DG_HAVEDOORSWITCH
 extern bool dsPlay;
+extern uint16_t doPlayDoorSound;
 #endif
 
 extern bool FPBUnitIsOn;
@@ -80,6 +81,11 @@ extern bool networkAbort;
 extern bool networkAlarm;
 extern uint16_t networkLead;
 extern uint16_t networkP1;
+
+extern bool doPrepareTT;
+extern bool doWakeup;
+
+extern bool dgBusy;
 
 void main_boot();
 void main_boot2();
@@ -103,16 +109,14 @@ void refill_plutonium();
 void set_empty();
 void wakeup();
 
-void switchMusicFolder(uint8_t nmf);
+bool switchMusicFolder(uint8_t nmf, bool isSetup = false);
+void showMPRPrecDone(unsigned int perc);
 
 void sideSwitch_scan();
 #ifdef DG_HAVEDOORSWITCH
 void doorSwitch_scan();
 void play_door_open(int doorNum, bool isOpen);
 #endif
-
-//uint8_t read_port();
-//uint8_t read_port_debounce();
 
 void addCmdQueue(uint32_t command);
 

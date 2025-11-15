@@ -87,7 +87,6 @@ void stopAudio();
 void stopAudioAtLoopEnd();
 bool stop_key();
 bool append_pending();
-bool checkAudioStarted();
 
 void     mp_init(bool isSetup);
 void     mp_play(bool forcePlay = true);

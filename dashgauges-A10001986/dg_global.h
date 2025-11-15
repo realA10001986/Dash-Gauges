@@ -15,8 +15,8 @@
  ***                          Version Strings                          ***
  *************************************************************************/
 
-#define DG_VERSION       "V1.26"
-#define DG_VERSION_EXTRA "NOV062025"
+#define DG_VERSION       "V1.27"
+#define DG_VERSION_EXTRA "NOV142025"
 
 //#define DG_DBG              // debug output on Serial
 
@@ -48,9 +48,6 @@
 // 5s lead" is set on the TCD, the DG option "TCD signals without lead" must
 // be set, too.
 #define ETTO_LEAD 5000
-
-// Uncomment to include BTTFN discover support (multicast)
-#define BTTFN_MC
 
 // Use SPIFFS (if defined) or LittleFS (if undefined; esp32-arduino >= 2.x)
 //#define USE_SPIFFS

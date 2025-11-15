@@ -67,32 +67,21 @@ static void defLooper()
 {
 }
 
-PubSubClient::PubSubClient()
-{
-    this->_state = MQTT_DISCONNECTED;
-    this->_client = NULL;
-    setCallback(NULL);
-    this->bufferSize = 0;
-    setBufferSize(MQTT_MAX_PACKET_SIZE);
-    setKeepAlive(MQTT_KEEPALIVE);
-    setSocketTimeout(MQTT_SOCKET_TIMEOUT);
-    setLooper(defLooper);
-}
-
 PubSubClient::PubSubClient(WiFiClient& client)
 {
     this->_state = MQTT_DISCONNECTED;
     setClient(client);
     this->bufferSize = 0;
-    setBufferSize(MQTT_MAX_PACKET_SIZE);
     setKeepAlive(MQTT_KEEPALIVE);
     setSocketTimeout(MQTT_SOCKET_TIMEOUT);
     setLooper(defLooper);
+    // user MUST call setBufferSize before connecting
 }
 
 PubSubClient::~PubSubClient()
 {
-    free(this->buffer);
+    if(this->bufferSize) 
+        free(this->buffer);
 }
 
 bool PubSubClient::connect(const char *id)

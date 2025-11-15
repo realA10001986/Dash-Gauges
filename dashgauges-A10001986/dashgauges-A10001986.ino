@@ -104,7 +104,7 @@
  * - Install the sound-pack: 
  *   Method 1:
  *   - Go to Config Portal, click "Update" and upload the sound-pack (DGA.bin, extracted
- *     from install/sound-pack-xxxxxxxx.zip) through the bottom file selector.
+ *     from install/sound-pack-dgXX.zip) through the bottom file selector.
  *     An SD card must be present in the slot during this operation.
  *   Method 2:
  *   - Copy DGA.bin to the top folder of a FAT32 (not ExFAT!) formatted SD card (max 
@@ -115,6 +115,28 @@
 
 /*  Changelog
  *  
+ *  2025/11/14 (A10001986) [1.27]
+ *    - Remove BTTFN_MC conditional
+ *  2025/11/13 (A10001986)
+ *    - Show MP3-Rename progress in right-most analog gauge
+ *    - Move Music Player init into main_setup()
+ *    - Allow using TCD command codes 9xxx with MQTT-INJECT command
+ *    - Block BTTFN/MQTT commands while busy
+ *  2025/11/12 (A10001986)
+ *    - Clean-up time travel
+ *  2025/11/10 (A10001986)
+ *    - Support MQTT-"TIMETRAVEL" command for inter-prop communication with lead
+ *      time and time tunnel duration attached ("TIMETRAVEL_1234_9876") (TCD 3.9)
+ *    - Enhance & fix stand-alone time travel (new sound pack, dg03)
+ *   2025/11/09 (A10001986)
+ *    - Add BTTFN_NOT_BUSY support (TCD 3.9)
+ *  2025/11/08 (A10001986)
+ *    - Allocate MQTT buffer only if MQTT is actually used
+ *  2025/11/07 (A10001986)
+ *    - Make TCD notifications synchronous (wakeup, prepareTT)
+ *    - MP3/File-Renamer: Ignore non-mp3 files
+ *    - Remove hack to skip web handling in on mp3-playback start, remove stopping
+ *      sound in AP mode on CP access.
  *  2025/11/05 (A10001986) [1.26]
  *    - Add MQTT command "INJECT_"
  *  2025/11/04 (A10001986)

@@ -160,6 +160,7 @@ static bool          d2sTimer = false;
 static unsigned long d2sADelay = 0;
 static bool          d2sOpen = false;
 #endif
+uint16_t             doPlayDoorSound = 0;
 #endif
 
 static unsigned long swInitNow = 0;
@@ -188,6 +189,9 @@ bool networkAlarm      = false;
 uint16_t networkLead   = ETTO_LEAD;
 uint16_t networkP1     = 6600;
 
+static bool tcdIsBusy  = false;
+bool        dgBusy     = false;
+
 static int16_t gpsSpeed = -1;
 static int16_t oldGpsSpeed = -1;
 static bool    spdIsRotEnc = false;
@@ -201,12 +205,16 @@ static bool tcdFPO = false;
 
 static bool bttfnTT = true;
 
+bool doPrepareTT = false;
+bool doWakeup = false;
+
 // Time travel status flags etc.
 bool                 TTrunning = false;  // TT sequence is running
 static bool          extTT = false;      // TT was triggered by TCD
 static unsigned long TTstart = 0;
 static unsigned long TTfUpdNow = 0;
 static unsigned long P0duration = ETTO_LEAD;
+static unsigned long P1_maxtimeout = 10000;
 static bool          TTP0 = false;
 static bool          TTP1 = false;
 static bool          TTP2 = false;
@@ -218,12 +226,21 @@ static unsigned long TTFIntC = 0;
 static unsigned long TTFIntR = 0;
 static int           TTStepL = 1, TTStepC = 1, TTStepR = 1;
 static bool          TTdrPri = true, TTdrPPo = true, TTdrRoe = true;
+static bool          playTTsounds = true; // for stand-alone TT
 
-// Durations of tt phases for internal tt
-#define P0_DUR          5000    // acceleration phase
-#define P1_DUR          5000    // time tunnel phase
-#define P2_ALARM_DELAY  2000    // Delay for alarm after reentry
-#define TT_SNDLAT        400    // DO NOT CHANGE (latency for sound/mp3)
+// Durations of tt phases for stand-alone tt
+#define TT_P1_TOTAL     8000
+#define TT_P1_DELAY_P1  1400  
+#define TT_P1_POINT88   1400
+#define TT_P1_EXT       TT_P1_TOTAL - TT_P1_DELAY_P1
+#define P0_DUR          TT_P1_POINT88  // acceleration phase (stand-alone)
+#define P1_DUR_TCD      6600           // time tunnel phase (synced; overruled by TCD network commands) 
+#define P1_DUR          TT_P1_EXT      // time tunnel phase (stand-alone)
+#define P2_ALARM_DELAY  2000           // Delay for alarm after reentry (sync'd)
+#define P2_ALARM_DLY_SA 2300           // Delay for alarm after reentry (stand-alone)
+
+// Volume-factor for "travelstart" sounds
+#define TT_SOUND_FACT 1.2f
 
 bool         TCDconnected = false;
 static bool  noETTOLead = false;
@@ -247,6 +264,9 @@ static unsigned long emptyAlarmNow = 0;
 static bool          FPOffemptyAlarm = false;
 static unsigned long FPOffemptyAlarmNow = 0;
 
+static int           mprengauge = -1;
+static bool          mprengaugetouched = false;
+
 // BTTF network
 #define BTTFN_VERSION              1
 #define BTTFN_SUP_MC            0x80
@@ -266,10 +286,11 @@ static unsigned long FPOffemptyAlarmNow = 0;
 #define BTTFN_NOT_AUX_CMD  11
 #define BTTFN_NOT_VSR_CMD  12
 #define BTTFN_NOT_SPD      15
+#define BTTFN_NOT_BUSY     16
 #define BTTFN_TYPE_ANY     0    // Any, unknown or no device
 #define BTTFN_TYPE_FLUX    1    // Flux Capacitor
 #define BTTFN_TYPE_SID     2    // SID
-#define BTTFN_TYPE_PCG     3    // Plutonium chamber gauge panel
+#define BTTFN_TYPE_PCG     3    // Dash Gauges
 #define BTTFN_TYPE_VSR     4    // VSR
 #define BTTFN_TYPE_AUX     5    // Aux (user custom device)
 #define BTTFN_TYPE_REMOTE  6    // Futaba remote control
@@ -284,10 +305,8 @@ static const uint8_t BTTFUDPHD[4] = { 'B', 'T', 'T', 'F' };
 static bool          useBTTFN = false;
 static WiFiUDP       bttfUDP;
 static UDP*          dgUDP;
-#ifdef BTTFN_MC
 static WiFiUDP       bttfMcUDP;
 static UDP*          dgMcUDP;
-#endif
 static byte          BTTFUDPBuf[BTTF_PACKET_SIZE];
 static byte          BTTFUDPTBuf[BTTF_PACKET_SIZE];
 static unsigned long BTTFNUpdateNow = 0;
@@ -303,11 +322,9 @@ static bool          haveTCDIP = false;
 static IPAddress     bttfnTcdIP;
 static uint32_t      bttfnTCDSeqCnt = 0;
 static uint8_t       bttfnReqStatus = 0x52; // Request capabilities, status, speed
-#ifdef BTTFN_MC
 static uint32_t      tcdHostNameHash = 0;
 static byte          BTTFMCBuf[BTTF_PACKET_SIZE];
 static IPAddress     bttfnMcIP(224, 0, 0, 224);
-#endif  
 
 static int      iCmdIdx = 0;
 static int      oCmdIdx = 0;
@@ -375,9 +392,7 @@ static void clr_port_pin(uint8_t bitnum);
 
 static void bttfn_setup();
 static void bttfn_loop_quick();
-#ifdef BTTFN_MC
 static bool bttfn_checkmc();
-#endif
 static void BTTFNCheckPacket();
 static bool BTTFNTriggerUpdate();
 static void BTTFNPreparePacketTemplate();
@@ -449,6 +464,7 @@ void main_setup()
 {
     int temp;
     unsigned long tempu;
+    bool waitShown = false;
     
     Serial.println("Dash Gauges version " DG_VERSION " " DG_VERSION_EXTRA);
 
@@ -565,10 +581,18 @@ void main_setup()
         }
     }
 
+    // Init music player (don't check for SD here)
+    for(mprengauge = 2; mprengauge >= 0 ; mprengauge--) {
+       if(gauges.supportVariablePercentage(mprengauge))
+           break;
+    }
+    switchMusicFolder(musFolderNum, true);
+        
     // Reset gauges to idle percentages
     gauges.setValuePercent(0, left_gauge_idle);
     gauges.setValuePercent(1, center_gauge_idle);
     gauges.setValuePercent(2, right_gauge_idle);
+    
 
     // Initialize BTTF network
     bttfn_setup();
@@ -657,6 +681,9 @@ void main_loop()
                 flushDelayedSave();
             }
 
+            doPrepareTT = false;
+            doWakeup = false;
+
             // FIXME - anything else?
             
         } else {
@@ -690,6 +717,20 @@ void main_loop()
  
         }
         fpoOld = tcdFPO;
+    }
+
+    // Eval flags set in handle_tcd_notification
+    if(doPrepareTT) {
+        if(FPBUnitIsOn && !TTrunning) {
+            prepareTT();
+        }
+        doPrepareTT = false;
+    }
+    if(doWakeup) {
+        if(FPBUnitIsOn && !TTrunning) {
+            wakeup();
+        }
+        doWakeup = false;
     }
 
     // Timers
@@ -796,6 +837,11 @@ void main_loop()
         isD2SwitchChange = false;
     }
     #endif
+    // Eval MQTT command
+    if(!dsPlay && doPlayDoorSound) {
+        play_door_open(1, !!(doPlayDoorSound & 0xff));
+        doPlayDoorSound = 0;
+    }
     #endif
 
     // Button 1 evaluation
@@ -852,7 +898,11 @@ void main_loop()
                     ssEnd();
                 }
                 if(TCDconnected || !bttfnTT || !bttfn_trigger_tt()) {
-                    timeTravel(TCDconnected, noETTOLead ? 0 : ETTO_LEAD);
+                    // stand-alone TT with P0_DUR lead, not ETTO_LEAD;
+                    // if no sound to be played, even 0.
+                    timeTravel(TCDconnected, (TCDconnected && noETTOLead) ? 
+                                              0 : (TCDconnected ? ETTO_LEAD : 
+                                                    (playTTsounds ? P0_DUR : 0)));
                 }
             }
         }
@@ -887,14 +937,15 @@ void main_loop()
 
                     TTP0 = false;
                     TTP1 = true;
-                    TTfUpdLNow = TTfUpdCNow = TTfUpdRNow = now;
+                    TTstart = TTfUpdLNow = TTfUpdCNow = TTfUpdRNow = now;
 
                 }
             }
-            if(TTP1) {   // Peak/"time tunnel" - ends with pin going LOW or BTTFN/MQTT "REENTRY"
+            if(TTP1) {   // Peak/"time tunnel" - ends with pin going LOW or BTTFN/MQTT "REENTRY" (or a long timeout)
 
-                if( (networkTCDTT && (!networkReentry && !networkAbort)) || (!networkTCDTT && digitalRead(TT_IN_PIN))) 
-                {
+                if(((networkTCDTT && (!networkReentry && !networkAbort)) || 
+                    (!networkTCDTT && digitalRead(TT_IN_PIN)))               &&
+                    (millis() - TTstart < P1_maxtimeout) ) {
 
                     bool doUpd = false;
                     
@@ -934,13 +985,13 @@ void main_loop()
                     gauges.setValuePercent(1, center_gauge_empty);
                     gauges.setValuePercent(2, right_gauge_empty);
                     gauges.UpdateAll();
-                    TTfUpdNow = now;
+                    TTstart = now;
                     
                 }
             }
             if(TTP2) {   // Reentry - up to us
 
-                if(now - TTfUpdNow > P2_ALARM_DELAY) {
+                if(now - TTstart > P2_ALARM_DELAY) {
 
                     // At very end:
                     checkGauges();
@@ -955,7 +1006,7 @@ void main_loop()
         } else {
 
             // ****************************************************************************
-            // TT triggered by button (if TCD not connected), MQTT or IR ******************
+            // TT triggered by button (if TCD not connected) or MQTT **********************
             // ****************************************************************************
           
             if(TTP0) {   // Acceleration - runs for P0_DUR ms
@@ -1009,20 +1060,24 @@ void main_loop()
                     
                 } else {
 
+                    if(playTTsounds) {
+                        play_file("/timetravel.mp3", PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL);
+                    }
+
                     TTP1 = false;
                     TTP2 = true;
                     gauges.setValuePercent(0, left_gauge_empty);
                     gauges.setValuePercent(1, center_gauge_empty);
                     gauges.setValuePercent(2, right_gauge_empty);
                     gauges.UpdateAll();
-                    TTfUpdNow = now;
+                    TTstart = now;
                     
                 }
             }
             
             if(TTP2) {   // Reentry - up to us
 
-                if(now - TTfUpdNow > P2_ALARM_DELAY) {
+                if(now - TTstart > P2_ALARM_DLY_SA) {
 
                     // At very end:
                     checkGauges();
@@ -1140,7 +1195,7 @@ static void timeTravel(bool TCDtriggered, uint16_t P0Dur, uint16_t P1Dur)
     flushDelayedSave();
     
     if(!TCDtriggered) {
-        // If "empty", button-triggered TT is refused (?)
+        // If "empty", stand-alone TT is refused
         if(emptyAlarm) return;
     } else {
         // If "empty" when TCD triggers TT, do a "quick refill"
@@ -1162,6 +1217,10 @@ static void timeTravel(bool TCDtriggered, uint16_t P0Dur, uint16_t P1Dur)
     //if(playTTsounds) {
         mp_stop();
     //}
+
+    if(!TCDtriggered && playTTsounds) {
+        play_file("/travelstart.mp3", PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL, TT_SOUND_FACT);
+    }
         
     TTrunning = true;
     TTstart = TTfUpdNow = millis();
@@ -1169,10 +1228,12 @@ static void timeTravel(bool TCDtriggered, uint16_t P0Dur, uint16_t P1Dur)
     TTP1 = TTP2 = false;
 
     // P1Dur, even if coming from TCD, is not used for timing, 
-    // but only to calculate steps.
+    // but only to calculate steps  and for a max timeout
     if(!P1Dur) {
-        P1Dur = TCDtriggered ? 6600 : P1_DUR;
+        P1Dur = TCDtriggered ? P1_DUR_TCD : P1_DUR;
     }
+    P1_maxtimeout = P1Dur + 3000;
+    
     TTStepL = TTStepC = TTStepR = 1;          // Stepping is 1
     TTFIntL = gauges.getValuePercent(0);
     if(TTFIntL < left_gauge_empty + (TTStepL * 2)) TTFIntL = 0;
@@ -1198,7 +1259,6 @@ static void timeTravel(bool TCDtriggered, uint16_t P0Dur, uint16_t P1Dur)
         #endif
     } else {              // button/MQTT-cmd triggered TT (stand-alone)
         extTT = false;
-        
     }
 }
 
@@ -1221,6 +1281,8 @@ void prepareTT()
     gauges.setValuePercent(1, center_gauge_idle);
     gauges.setValuePercent(2, right_gauge_idle);
     gauges.UpdateAll();
+
+    doPrepareTT = false;
 }
 
 // Wakeup: Sent by TCD upon entering dest date,
@@ -1229,11 +1291,10 @@ void prepareTT()
 // Also called when GPS/RotEnc speed is changed
 void wakeup()
 {
-
     // End screen saver
     ssEnd();
-    
-    // Anything else?
+
+    doWakeup = false;
 }
 
 void refill_plutonium()
@@ -1325,6 +1386,7 @@ static void execute_remote_command()
     bool injected = false;
 
     // We are only called if ON
+    // To check here:
     // No command execution during time travel
     // No command execution during timed sequences
     // ssActive checked by individual command
@@ -1339,6 +1401,13 @@ static void execute_remote_command()
     if(command & 0x80000000) {
         injected = true;
         command &= ~0x80000000;
+        // Allow user to directly use TCD code
+        if(command >= 9000 && command <= 9999) {
+            command -= 9000;
+        } else if(command >= 9000000 && command <= 9999999) {
+            command -= 9000000;
+        }
+        if(!command) return;
     }
 
     if(command < 10) {                                // 900x
@@ -1393,7 +1462,9 @@ static void execute_remote_command()
         } else if(command >= 50 && command <= 59) {
 
             if(haveSD) {
+                ssEnd();
                 switchMusicFolder((uint8_t)command - 50);
+                ssRestartTimer();
             }
 
         }
@@ -1497,10 +1568,9 @@ static void execute_remote_command()
     
             switch(command) {
             case 0:
-                // Trigger Time Travel; treated like button, not
-                // like TT from TCD.
-                networkTimeTravel = true;
-                networkTCDTT = false;
+                // Trigger stand-alone Time Travel
+                ssEnd();
+                timeTravel(false, ETTO_LEAD);
                 break;
             case 1:
                 ssEnd();
@@ -1543,9 +1613,9 @@ static void execute_remote_command()
         case 123456:
             flushDelayedSave();
             if(!injected) {
-                deleteIpSettings();                   // 123456: deletes IP settings
+                deleteIpSettings();               // 123456: deletes IP settings
                 if(settings.appw[0]) {
-                    settings.appw[0] = 0;             // and clears AP mode WiFi password
+                    settings.appw[0] = 0;         // and clears AP mode WiFi password
                     write_settings();
                 }
                 ssRestartTimer();
@@ -1559,7 +1629,9 @@ static void execute_remote_command()
             ssRestartTimer();
             break;
         case 1000000:
-            refill_plutonium();
+            if(!injected) {
+                refill_plutonium();
+            }
             break;
         default:                                  // 888xxx: goto song #xxx
             if((command / 1000) == 888) {
@@ -1577,7 +1649,7 @@ static void say_ip_address()
     uint8_t a, b, c, d;
     bool wasActive = false;
     char ipbuf[16];
-    char numfname[8] = "/x.mp3";
+    char numfname[] = "/x.mp3";
     if(haveMusic && mpActive) {
         mp_stop();
         wasActive = true;
@@ -1604,36 +1676,68 @@ static void say_ip_address()
     }
 }
 
-void switchMusicFolder(uint8_t nmf)
+bool switchMusicFolder(uint8_t nmf, bool isSetup)
 {
     bool waitShown = false;
 
-    if(nmf > 9) return;
-    
-    if(musFolderNum != nmf) {
-        musFolderNum = nmf;
-        // Initializing the MP can take a while;
-        // need to stop all audio before calling
-        // mp_init()
-        if(haveMusic && mpActive) {
-            mp_stop();
+    if(nmf > 9) return false;
+
+    if((musFolderNum != nmf) || isSetup) {
+        uint8_t tempperc;
+
+        dgBusy = true;
+        
+        if(!isSetup) {
+            musFolderNum = nmf;
+            // Initializing the MP can take a while;
+            // need to stop all audio before calling
+            // mp_init()
+            if(haveMusic && mpActive) {
+                mp_stop();
+            }
+            stopAudio();
         }
-        stopAudio();
-        if(mp_checkForFolder(musFolderNum) == -1) {
-            flushDelayedSave();
-            showWaitSequence();
-            waitShown = true;
-            play_file("/renaming.mp3", PA_INTRMUS|PA_ALLOWSD);
-            waitAudioDone();
+        if(haveSD) {
+            if(mp_checkForFolder(musFolderNum) == -1) {
+                if(!isSetup) flushDelayedSave();
+                showWaitSequence();
+                waitShown = true;
+                play_file("/renaming.mp3", PA_INTRMUS|PA_ALLOWSD);
+                waitAudioDone();
+            }
         }
-        saveMusFoldNum();
-        updateConfigPortalMFValues();
-        mp_init(false);
+        if(!isSetup) {
+            saveMusFoldNum();
+            updateConfigPortalMFValues();
+        }
+        if(mprengauge >= 0) {
+            tempperc = isSetup ? 0 : gauges.getValuePercent(mprengauge);
+        }
+        mprengaugetouched = false;
+        mp_init(isSetup);
+        if(mprengaugetouched && mprengauge >= 0) {
+            gauges.setValuePercent(mprengauge, tempperc);
+            gauges.UpdateAll();
+        }
         if(waitShown) {
             endWaitSequence();
         }
+
+        dgBusy = false;
     }
-}  
+
+    return waitShown;
+} 
+
+void showMPRPrecDone(unsigned int perc)
+{
+    if(mprengauge < 0)
+        return;
+
+    gauges.setValuePercent(mprengauge, perc);
+    gauges.UpdateAll();
+    mprengaugetouched = true;
+}
 
 /*
  * Helpers
@@ -1961,13 +2065,9 @@ static void bttfn_setup()
     haveTCDIP = isIp(settings.tcdIP);
     
     if(!haveTCDIP) {
-        #ifdef BTTFN_MC
         tcdHostNameHash = 0;
         unsigned char *s = (unsigned char *)settings.tcdIP;
         for ( ; *s; ++s) tcdHostNameHash = 37 * tcdHostNameHash + tolower(*s);
-        #else
-        return;
-        #endif
     } else {
         bttfnTcdIP.fromString(settings.tcdIP);
     }
@@ -1975,10 +2075,8 @@ static void bttfn_setup()
     dgUDP = &bttfUDP;
     dgUDP->begin(BTTF_DEFAULT_LOCAL_PORT);
 
-    #ifdef BTTFN_MC
     dgMcUDP = &bttfMcUDP;
     dgMcUDP->beginMulticast(bttfnMcIP, BTTF_DEFAULT_LOCAL_PORT + 2);
-    #endif
     
     BTTFNPreparePacketTemplate();
     
@@ -1988,16 +2086,12 @@ static void bttfn_setup()
 
 void bttfn_loop()
 {
-    #ifdef BTTFN_MC
     int t = 100;
-    #endif
     
     if(!useBTTFN)
         return;
 
-    #ifdef BTTFN_MC
     while(bttfn_checkmc() && t--) {}
-    #endif
             
     BTTFNCheckPacket();
     
@@ -2014,16 +2108,12 @@ void bttfn_loop()
 
 static void bttfn_loop_quick()
 {
-    #ifdef BTTFN_MC
     int t = 100;
-    #endif
     
     if(!useBTTFN)
         return;
 
-    #ifdef BTTFN_MC
     while(bttfn_checkmc() && t--) {}
-    #endif
 }
 
 static bool check_packet(uint8_t *buf)
@@ -2045,11 +2135,17 @@ static bool check_packet(uint8_t *buf)
 static void handle_tcd_notification(uint8_t *buf)
 {
     uint32_t seqCnt;
+
+    // Note: This might be called while we are in a
+    // wait-delay-loop. Best to just set flags here
+    // that are evaluated synchronously (=later).
+    // Do not stuff that messes with display, input,
+    // etc.
     
     switch(buf[5]) {
     case BTTFN_NOT_SPD:
         seqCnt = GET32(buf, 12);
-        if(seqCnt == 1 || seqCnt > bttfnTCDSeqCnt) {
+        if(seqCnt > bttfnTCDSeqCnt || seqCnt == 1) {
             gpsSpeed = (int16_t)(buf[6] | (buf[7] << 8));
             if(gpsSpeed > 88) gpsSpeed = 88;
             switch(buf[8] | (buf[9] << 8)) {
@@ -2073,14 +2169,12 @@ static void handle_tcd_notification(uint8_t *buf)
         // We disable our Screen Saver
         // We don't ignore this if TCD is connected by wire,
         // because this signal does not come via wire.
-        if(!TTrunning) {
-            prepareTT();
-        }
+        doPrepareTT = true;
         break;
     case BTTFN_NOT_TT:
         // Trigger Time Travel (if not running already)
         // Ignore command if TCD is connected by wire
-        if(!TCDconnected && !TTrunning) {
+        if(!TCDconnected && !TTrunning && !dgBusy) {
             networkTimeTravel = true;
             networkTCDTT = true;
             networkReentry = false;
@@ -2105,23 +2199,26 @@ static void handle_tcd_notification(uint8_t *buf)
         break;
     case BTTFN_NOT_ALARM:
         networkAlarm = true;
-        // Eval this at our convenience
         break;
     case BTTFN_NOT_REFILL:
-        addCmdQueue(1000000);
+        if(!dgBusy) {
+            addCmdQueue(1000000);
+        }
         break;
     case BTTFN_NOT_PCG_CMD:
-        addCmdQueue(GET32(buf, 6));
+        if(!dgBusy) {
+            addCmdQueue(GET32(buf, 6));
+        }
         break;
     case BTTFN_NOT_WAKEUP:
-        if(!TTrunning) {
-            wakeup();
-        }
+        doWakeup = true;
+        break;
+    case BTTFN_NOT_BUSY:
+        tcdIsBusy = !!(buf[8]);
         break;
     }
 }
 
-#ifdef BTTFN_MC
 static bool bttfn_checkmc()
 {
     int psize = dgMcUDP->parsePacket();
@@ -2142,30 +2239,25 @@ static bool bttfn_checkmc()
 
     if(haveTCDIP) {
         if(bttfnTcdIP != dgMcUDP->remoteIP())
-            return true; //false;
+            return true;
     } else {
         // Do not use tcdHostNameHash; let DISCOVER do its work
         // and wait for a result.
-        return true; //false;
+        return true;
     }
 
     if(!check_packet(BTTFMCBuf))
-        return true; //false;
+        return true;
 
     if((BTTFMCBuf[4] & 0x4f) == (BTTFN_VERSION | 0x40)) {
 
         // A notification from the TCD
         handle_tcd_notification(BTTFMCBuf);
     
-    } /*else {
-      
-        return false;
-
-    }*/
+    }
 
     return true;
 }
-#endif
 
 // Check for pending packet and parse it
 static void BTTFNCheckPacket()
@@ -2217,7 +2309,6 @@ static void BTTFNCheckPacket()
         // If it's our expected packet, no other is due for now
         BTTFNPacketDue = false;
 
-        #ifdef BTTFN_MC
         if(BTTFUDPBuf[5] & 0x80) {
             if(!haveTCDIP) {
                 bttfnTcdIP = dgUDP->remoteIP();
@@ -2231,7 +2322,6 @@ static void BTTFNCheckPacket()
                 #endif
             }
         }
-        #endif
 
         if(BTTFUDPBuf[5] & 0x02) {
             gpsSpeed = (int16_t)(BTTFUDPBuf[18] | (BTTFUDPBuf[19] << 8));
@@ -2242,6 +2332,7 @@ static void BTTFNCheckPacket()
         if(BTTFUDPBuf[5] & 0x10) {
             tcdNM  = (BTTFUDPBuf[26] & 0x01) ? true : false;
             tcdFPO = (BTTFUDPBuf[26] & 0x02) ? true : false;   // 1 means fake power off
+            tcdIsBusy = (BTTFUDPBuf[26] & 0x10) ? true : false;
         } else {
             tcdNM = false;
             tcdFPO = false;
@@ -2249,11 +2340,9 @@ static void BTTFNCheckPacket()
 
         if(BTTFUDPBuf[5] & 0x40) {
             bttfnReqStatus &= ~0x40;     // Do no longer poll capabilities
-            #ifdef BTTFN_MC
             if(BTTFUDPBuf[31] & 0x01) {
                 bttfnReqStatus &= ~0x02; // Do no longer poll speed, comes over multicast
             }
-            #endif
         }
 
         lastBTTFNpacket = mymillis;
@@ -2298,10 +2387,7 @@ static void BTTFNPreparePacketTemplate()
     BTTFUDPTBuf[10+13] = BTTFN_TYPE_PCG;
 
     // Version, MC-marker
-    BTTFUDPTBuf[4] = BTTFN_VERSION;
-    #ifdef BTTFN_MC
-    BTTFUDPTBuf[4] |= BTTFN_SUP_MC;
-    #endif
+    BTTFUDPTBuf[4] = BTTFN_VERSION | BTTFN_SUP_MC;
 }
 
 static void BTTFNPreparePacket()
@@ -2317,18 +2403,14 @@ static void BTTFNDispatch()
     }
     BTTFUDPBuf[BTTF_PACKET_SIZE - 1] = a;
 
-    #ifdef BTTFN_MC
     if(haveTCDIP) {
-    #endif  
         dgUDP->beginPacket(bttfnTcdIP, BTTF_DEFAULT_LOCAL_PORT);
-    #ifdef BTTFN_MC    
     } else {
         #ifdef DG_DBG
         Serial.printf("Sending multicast (hostname hash %x)\n", tcdHostNameHash);
         #endif
         dgUDP->beginPacket(bttfnMcIP, BTTF_DEFAULT_LOCAL_PORT + 1);
     }
-    #endif
     dgUDP->write(BTTFUDPBuf, BTTF_PACKET_SIZE);
     dgUDP->endPacket();
 }
@@ -2345,33 +2427,37 @@ static void BTTFNSendPacket()
     // Request status and speed
     BTTFUDPBuf[5] = bttfnReqStatus;
 
-    #ifdef BTTFN_MC
     if(!haveTCDIP) {
         BTTFUDPBuf[5] |= 0x80;
         SET32(BTTFUDPBuf, 31, tcdHostNameHash);
     }
-    #endif
 
     BTTFNDispatch();
 }
 
-static bool bttfn_trigger_tt()
+static bool BTTFNConnected()
 {
     if(!useBTTFN)
         return false;
 
-    #ifdef BTTFN_MC
     if(!haveTCDIP)
         return false;
-    #endif
-
+    
     if(WiFi.status() != WL_CONNECTED)
         return false;
 
     if(!lastBTTFNpacket)
         return false;
 
-    if(TTrunning)
+    return true;
+}
+
+static bool bttfn_trigger_tt()
+{
+    if(!BTTFNConnected())
+        return false;
+
+    if(TTrunning || tcdIsBusy)
         return false;
 
     BTTFNPreparePacket();
