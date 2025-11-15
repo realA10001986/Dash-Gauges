@@ -174,9 +174,9 @@ After this step, your Dash Gauges are ready to be used.
 
 As mentioned, the Dash Gauges are an add-on for a Time Circuits Display. Their basic function is to show some values on its gauges, and to play an "empty" alarm after a time travel.
 
-There is little to play with when the Dash Gauges aren't connected to a TCD:
+If the Dash Gauges aren't connected to a TCD:
 - To quickly trigger the "empty" sequence, flip the side switch of your Dash Gauges. To "refill", flip that switch again.
-- Press the time travel button to trigger a simple "surge" sequence. The time travel button is located behind the "Primary" gauge on the rear of the Control Board, next to the SD card reader; you can also connect an [external button](Hardware.md#connecting-a-time-travel-button).
+- Press the time travel button to trigger a "surge" sequence. The time travel button is located behind the "Primary" gauge on the rear of the Control Board, next to the SD card reader; you can also connect an [external button](Hardware.md#connecting-a-time-travel-button).
 
 The Dash Gauges are way more fun when other props (TCD, FC, SID) are present as well. The TCD is of special importance: When connected through BTTFN, the TCD can act as a remote control for the Dash Gauges.
 
@@ -203,9 +203,9 @@ Your replacements need to be put in the root (top-most) directory of the SD card
 
 The firmware supports some additional user-provided sound effects, which it will load from the SD card. If the respective file is present, it will be used. If that file is absent, no sound will be played.
 
-- "key1.mp3" - "key9.mp3": Will be played when you type 900x (x being 1, 3, 4, 6, 7 or 9) or 950x (1-9) on the TCD (connected through BTTFN).
+- "key1.mp3" - "key9.mp3": Will be played when you issue a 900x (x being 1, 3, 4, 6, 7 or 9) or 950x (1-9) command on the [TCD](#tcd-remote-command-reference) or through [HA/MQTT](#control-the-fc-via-mqtt)
 
-> The seemingly odd numbering for the 900x range is because of synchronicity with other props, especially the TCD and its keymap where the Music Player occupies keys 2, 5, 8. Likewise, 9002, 9005 and 9008 control the Dash Gauges' Music Player (prev, play/stop, next).
+> The seemingly odd way of accessing keyX files in the 900x range is because of synchronicity with other props, especially the TCD and its keymap where the Music Player occupies keys 2, 5, 8. Likewise, 9002, 9005 and 9008 control the Dash Gauges' Music Player (prev, play/stop, next).
 
 Those files are not provided here. You can use any mp3, with a bitrate of 128kpbs or less.
 
@@ -229,7 +229,7 @@ In order to be recognized, your mp3 files need to be organized in music folders 
 
 The names of the audio files must only consist of three-digit numbers, starting at 000.mp3, in consecutive order. No numbers should be left out. Each folder can hold up to 1000 files (000.mp3-999.mp3). *The maximum bitrate is 128kpbs.*
 
-Since manually renaming mp3 files is somewhat cumbersome, the firmware can do this for you - provided you can live with the files being sorted in alphabetical order: Just copy your files with their original filenames to the music folder; upon boot or upon selecting a folder containing such files, they will be renamed following the 3-digit name scheme (as mentioned: in alphabetic order). You can also add files to a music folder later, they will be renamed properly; when you do so, delete the file "TCD_DONE.TXT" from the music folder on the SD card so that the firmware knows that something has changed. The renaming process can take a while (10 minutes for 1000 files in bad cases). Mac users are advised to delete the ._ files from the SD before putting it back into the control board as this speeds up the process.
+Since manually renaming mp3 files is somewhat cumbersome, the firmware can do this for you - provided you can live with the files being sorted in alphabetical order: Just copy your files with their original filenames to the music folder; upon boot or upon selecting a folder containing such files, they will be renamed following the 3-digit name scheme (as mentioned: in alphabetic order). You can also add files to a music folder later, they will be renamed properly; when you do so, delete the file "TCD_DONE.TXT" from the music folder on the SD card so that the firmware knows that something has changed. The renaming process can take a while (11 minutes for 1000 files in bad cases). Mac users are advised to delete the ._ files from the SD before putting it back into the control board as this speeds up the process. _While the renaming is in progress, the Dash Gauges' right-most analog gauge shows the percentage of files yet to be processed._
 
 To start and stop music playback, enter 9005 followed by ENTER on your TCD. Entering 9002 jumps to the previous song, 9008 to the next one.
 
@@ -440,13 +440,13 @@ The Dash Gauges can be controlled through messages sent to topic **bttf/dg/cmd**
 
 #### The INJECT_x command
 
-This command allows remote control of the Dash Gauges through HA/MQTT in the same way as through the TCD keypad by injecting commands in the Dash Gauges command queue (hence the name). Commands are listed [here](#tcd-remote-command-reference); nearly all with a leading "9" are supported, but are to be entered _minus 9000_. For example:
+This command allows remote control of the Dash Gauges through HA/MQTT in the same way as through the TCD keypad by injecting commands in the Dash Gauges command queue (hence the name). Commands are listed [here](#tcd-remote-command-reference); nearly all are supported. For example:
 
-To set "full" percentage of "Percent Power" gauge to 50% (9450), issue the following command: **INJECT_450**
+To set "full" percentage of "Percent Power" gauge to 50% (9450), issue the following command: **INJECT_9450**
 
-To play "key2.mp3" (9502), issue **INJECT_502**
+To play "key2.mp3" (9502), issue **INJECT_9502**
 
-To select the 'music1' folder (9051), issue **INJECT_51**
+To select the 'music1' folder (9051), issue **INJECT_9051**
 
 _The Refill (009) command is not supported through INJECT; use the REFILL MQTT-command instead._
 
