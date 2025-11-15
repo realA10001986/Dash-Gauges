@@ -19,7 +19,7 @@ Firmware features include
 - support for analog gauges (with software-controlled arbitrary pointer position) and digital gauges (Empty/Full, without arbitrary pointer position)
 - selectable "full" percentages per analog gauge (besides for fun, useful for adjusting inaccurate readings)
 - selectable threshold percentage for Empty/Full position for digital gauges
-- [Time Travel](#time-travel) function, triggered by button, [Time Circuits Display](https://tcd.out-a-ti.me) (TCD) or via [MQTT](#home-assistant--mqtt)
+- [Time Travel](#basic-operation) function, triggered by button, [Time Circuits Display](https://tcd.out-a-ti.me) (TCD) or via [MQTT](#home-assistant--mqtt)
 - support for Side Switch to play "empty" and "refill" sequences
 - Automatic refill timer, automatic alarm mute timer (both optional)
 - support for door switches for playing sounds when opening/closing the car doors
