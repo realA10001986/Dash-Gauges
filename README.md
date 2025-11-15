@@ -203,7 +203,7 @@ Your replacements need to be put in the root (top-most) directory of the SD card
 
 The firmware supports some additional user-provided sound effects, which it will load from the SD card. If the respective file is present, it will be used. If that file is absent, no sound will be played.
 
-- "key1.mp3" - "key9.mp3": Will be played when you issue a 900x (x being 1, 3, 4, 6, 7 or 9) or 950x (1-9) command on the [TCD](#tcd-remote-command-reference) or through [HA/MQTT](#control-the-fc-via-mqtt)
+- "key1.mp3" - "key9.mp3": Will be played when you issue a 900x (x being 1, 3, 4, 6, 7 or 9) or 950x (1-9) command on the [TCD](#tcd-remote-command-reference) or through [HA/MQTT](#control-the-dash-gauges-via-mqtt).
 
 > The seemingly odd way of accessing keyX files in the 900x range is because of synchronicity with other props, especially the TCD and its keymap where the Music Player occupies keys 2, 5, 8. Likewise, 9002, 9005 and 9008 control the Dash Gauges' Music Player (prev, play/stop, next).
 
