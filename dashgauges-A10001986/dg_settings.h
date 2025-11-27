@@ -147,6 +147,7 @@ struct Settings {
 
 #ifdef DG_HAVEMQTT  
     char useMQTT[4]         = "0";
+    char mqttVers[4]        = "0"; // 0 = 3.1.1, 1 = 5.0
     char mqttServer[80]     = "";  // ip or domain [:port]  
     char mqttUser[128]      = "";  // user[:pass] (UTF8)
 #endif 

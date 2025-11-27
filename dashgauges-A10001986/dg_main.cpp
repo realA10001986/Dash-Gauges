@@ -933,6 +933,15 @@ void main_loop()
 
                     // Nothing.
                              
+                } else if(networkAbort) {
+
+                    // If we are aborted in P0,
+                    // the entire TT is over for us.
+                    TTP0 = false;
+                    TTrunning = false;
+                    isTTKeyPressed = false;
+                    ssRestartTimer();
+
                 } else {
 
                     TTP0 = false;
@@ -981,17 +990,21 @@ void main_loop()
 
                     TTP1 = false;
                     TTP2 = true;
+
+                    // P1 ends with empty; even if we were aborted in P1.
+                    // There is no "half empty".
                     gauges.setValuePercent(0, left_gauge_empty);
                     gauges.setValuePercent(1, center_gauge_empty);
                     gauges.setValuePercent(2, right_gauge_empty);
                     gauges.UpdateAll();
+                    
                     TTstart = now;
                     
                 }
             }
             if(TTP2) {   // Reentry - up to us
 
-                if(now - TTstart > P2_ALARM_DELAY) {
+                if(networkAbort || (now - TTstart > P2_ALARM_DELAY)) {
 
                     // At very end:
                     checkGauges();
@@ -2146,15 +2159,22 @@ static void handle_tcd_notification(uint8_t *buf)
     case BTTFN_NOT_SPD:
         seqCnt = GET32(buf, 12);
         if(seqCnt > bttfnTCDSeqCnt || seqCnt == 1) {
-            gpsSpeed = (int16_t)(buf[6] | (buf[7] << 8));
-            if(gpsSpeed > 88) gpsSpeed = 88;
             switch(buf[8] | (buf[9] << 8)) {
             case BTTFN_SSRC_GPS:
                 spdIsRotEnc = false;
                 break;
+            case BTTFN_SSRC_P1:
+                // If packets come out-of-order, we might
+                // get this one before TTrunning, and we
+                // don't want a switch to usingGPSS only 
+                // because of P1 speed
+                if(!TTrunning) return;
+                // fall through
             default:
                 spdIsRotEnc = true;
             }
+            gpsSpeed = (int16_t)(buf[6] | (buf[7] << 8));
+            if(gpsSpeed > 88) gpsSpeed = 88;
         } else {
             #ifdef DG_DBG
             Serial.printf("Out-of-sequence packet received from TCD %d %d\n", seqCnt, bttfnTCDSeqCnt);
