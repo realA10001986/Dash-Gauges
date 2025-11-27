@@ -27,7 +27,7 @@ Firmware features include
 - [music player](#the-music-player): Play mp3 files located on an SD card [requires TCD connected wirelessly or HA/MQTT for control]
 - [SD card](#sd-card) support for custom audio files for effects, and music for the Music Player
 - advanced network-accessible [Config Portal](#the-config-portal) for setup (http://gauges.local, hostname configurable)
-- [Home Assistant](#home-assistant--mqtt) (MQTT 3.1.1) support
+- [Home Assistant](#home-assistant--mqtt) (MQTT) support
 - built-in OTA installer for firmware updates and audio files
 
 ## Firmware Installation
@@ -418,7 +418,7 @@ With the wiring in place, head to the Config Portal and set the option **_TCD co
 
 ## Home Assistant / MQTT
 
-The Dash Gauges support the MQTT protocol version 3.1.1 for the following features:
+The Dash Gauges support MQTT protocol versions 3.1.1 and 5.0 for the following features:
 
 ### Control the Dash Gauges via MQTT
 
@@ -464,9 +464,11 @@ MQTT requires a "broker" (such as [mosquitto](https://mosquitto.org/), [EMQ X](h
 
 The broker's address needs to be configured in the Config Portal. It can be specified either by domain or IP (IP preferred, spares us a DNS call). The default port is 1883. If a different port is to be used, append a ":" followed by the port number to the domain/IP, such as "192.168.1.5:1884". 
 
+If your broker supports protocol version 3.1.1, stick with 3.1.1. Version 5.0 has no advantages, but more overhead.
+
 If your broker does not allow anonymous logins, a username and password can be specified.
 
-Limitations: MQTT Protocol version 3.1.1; TLS/SSL not supported; ".local" domains (MDNS) not supported; server/broker must respond to PING (ICMP) echo requests. For proper operation with low latency, it is recommended that the broker is on your local network. MQTT is disabled when the Dash Gauges are operated in AP-mode or when connected to the TCD run in AP-Mode (TCD-AP).
+Limitations: TLS/SSL not supported; ".local" domains (MDNS) not supported; server/broker must respond to PING (ICMP) echo requests. For proper operation with low latency, it is recommended that the broker is on your local network. MQTT is disabled when the Dash Gauges are operated in AP-mode or when connected to the TCD run in AP-Mode (TCD-AP).
 
 ## Car setup
 
@@ -529,6 +531,10 @@ This leads to the [WiFi configuration page](#wifi-configuration)
 ##### &#9193; Settings
 
 This leads to the [Settings page](#settings).
+
+##### &#9193; HA/MQTT Settings
+
+This leads to the [HomeAssistant/MQTT Settings page](#hamqtt-settings).
 
 ##### &#9193; Update
 
@@ -738,20 +744,6 @@ If this option is checked, and your TCD is equipped with a fake power switch, th
 
 If the dash gauges are connected to a TCD through BTTFN, this option allows to trigger a synchronized time travel on all BTTFN-connected devices when pressing the Time Travel button, just as if the Time Travel was triggered by the TCD. If this option is unchecked, pressing the Time Travel button only triggers a Time Travel sequence on the Dash Gauges.
 
-#### <ins> Assistant / MQTT settings</ins>
-
-##### &#9193; Use  Assistant (MQTT 3.1.1)
-
-If checked, the Dash Gauges will connect to the broker (if configured) and send and receive messages via [MQTT](#home-assistant--mqtt).
-
-##### &#9193; Broker IP[:port] or domain[:port]
-
-The broker server address. Can be a domain (eg. "my.me") or an IP address (eg "192.168.1.5"). The default port is 1883. If different port is to be used, it can be specified after the domain/IP and a colon ":", for example: "192.168.1.5:1884". Specifying the IP address is preferred over a domain since the DNS call adds to the network overhead. Note that ".local" (MDNS) domains are not supported.
-
-##### &#9193; User[:Password]
-
-The username (and optionally the password) to be used when connecting to the broker. Can be left empty if the broker accepts anonymous logins.
-
 #### <ins>Settings for wired connections</ins>
 
 ##### &#9193; TCD connected by wire
@@ -811,6 +803,24 @@ This selects the type of gauge hardware and the way of connection. In order to p
 - enter 9317931 on a wirelessly connected TCD,
 
 then reload the page in your browser.
+
+### HA/MQTT Settings
+
+##### &#9193; Home Assistant support (MQTT)
+
+If checked, the Dash Gauges will connect to the broker (if configured) and send and receive messages via [MQTT](#home-assistant--mqtt).
+
+##### &#9193; Broker IP[:port] or domain[:port]
+
+The broker server address. Can be a domain (eg. "my.me") or an IP address (eg "192.168.1.5"). The default port is 1883. If different port is to be used, it can be specified after the domain/IP and a colon ":", for example: "192.168.1.5:1884". Specifying the IP address is preferred over a domain since the DNS call adds to the network overhead. Note that ".local" (MDNS) domains are not supported.
+
+##### &#9193; Protocol version
+
+The firmware supports MQTT 3.1.1 and 5.0. There is no difference in features, so there is no advantage in selecting 5.0. This was implemented only for brokers that do not support 3.1.1.
+
+##### &#9193; User[:Password]
+
+The username (and optionally the password) to be used when connecting to the broker. Can be left empty if the broker accepts anonymous logins.
 
 ---
 _Text & images: (C) Thomas Winischhofer ("A10001986"). See LICENSE._ Source: https://dg.out-a-ti.me  
