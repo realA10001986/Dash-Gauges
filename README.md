@@ -44,17 +44,17 @@ The firmware comes with a sound-pack which needs to be installed separately. The
 
 The first step is to download "install/sound-pack-dgXX.zip" and extract it. It contains one file named "DGA.bin".
 
-Then there are two alternative ways to proceed. Note that both methods *require an SD card*.
+Next, head to the [Config Portal](#the-config-portal), click on *Update*, select the "DGA.bin" file in the bottom file selector and click on *Upload*.
 
-1) Through the [Config Portal](#the-config-portal). Click on *Update*, select the "DGA.bin" file in the bottom file selector and click on *Upload*.
+<details>
+<summary>More...</summary>
 
-2) Via SD card:
-- Copy "DGA.bin" to the root directory of a FAT32 formatted SD card;
+Alternatively, you can install the sound-pack the following way:
+- Using a computer, copy "DGA.bin" to the root directory of a FAT32 formatted SD card;
 - power down the Dash Gauges,
 - insert this SD card into the slot and 
 - power up the Dash Gauges; the sound-pack will be installed automatically.
-
-After installation, the SD card can be re-used for [other purposes](#sd-card).
+</details>
 
 ## Initial Configuration
 
