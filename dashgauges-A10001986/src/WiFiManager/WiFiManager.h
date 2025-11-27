@@ -73,6 +73,7 @@
 #define WFM_LABEL_MASK    0x03
 // Parm is a checkbox
 #define WFM_IS_CHKBOX     8
+#define WFM_NO_BR        16
 
 // HTML id:s of "static IP" parameters on "WiFi Configuration" page
 #define WMS_ip    "ip"
