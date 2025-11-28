@@ -407,7 +407,7 @@ You can use BTTF-Network and MQTT at the [same time](#receive-commands-from-time
 
 For wiring information, please see [here](Hardware.md#connecting-a-tcd-to-the-dash-gauges-by-wire).
 
-With the wiring in place, head to the Config Portal and set the option **_TCD connected by wire_**. On the TCD, the option "Control props connected by wire" must be set.
+With the wiring in place, head to the Config Portal and set the option **_TCD connected by wire_**. On the TCD, the option [TT-OUT] _"signals Time Travel"_ must be checked.
 
 <details>
 <summary>More...</summary>
