@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------------------
  * Dash Gauges Panel
- * (C) 2023-2025 Thomas Winischhofer (A10001986)
+ * (C) 2023-2026 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.out-a-ti.me
  *
@@ -104,6 +104,8 @@ extern uint8_t musFolderNum;
 #define DEF_DS_NC           0     // 0: door switch is NO, 1: door switch is NC
 #define DEF_DS_DELAY        0     // door switch sound delay
 
+#define DEF_DS_TTOUT        0     // 0: Door switch pin 2 is door switch, 1: Pin used for TT-out
+
 #define DEF_GAUGE_TYPE      0     // Default gauge type; to protect the hardware, this is zero by default (=NONE)
 
 struct Settings {
@@ -159,16 +161,20 @@ struct Settings {
     char sdFreq[4]          = MS(DEF_SD_FREQ);
 
     char dsPlay[4]          = MS(DEF_DS_PLAY);
+    char dsPlayO[4]         = "0";
     char dsCOnC[4]          = MS(DEF_DS_NC);
+    char dsPlayTCD[4]       = "0";
+    char dsPlayTCDO[4]      = "0";
+    char dsPlayTCDS[4]      = "1";
     char dsDelay[6]         = MS(DEF_DS_DELAY);
+    char dsDelayC[6]        = MS(DEF_DS_DELAY);
+
+    char dsTTout[4]         = MS(DEF_DS_TTOUT);
 
     char gaugeIDA[4]        = MS(DEF_GAUGE_TYPE);
     char gaugeIDB[4]        = MS(DEF_GAUGE_TYPE);
     char gaugeIDC[4]        = MS(DEF_GAUGE_TYPE);
 
-#ifdef DG_HAVEVOLKNOB
-    char FixV[4];   // Dynamically set for CP, not saved
-#endif
     char Vol[6];
     char musicFolder[6];
 };

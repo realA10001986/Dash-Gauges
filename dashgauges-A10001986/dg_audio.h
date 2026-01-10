@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------------------
  * Dash Gauges Panel
- * (C) 2023-2025 Thomas Winischhofer (A10001986)
+ * (C) 2023-2026 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.out-a-ti.me
  *
@@ -53,11 +53,7 @@
 #define _DG_AUDIO_H
 
 // Default volume (index)
-#ifdef DG_HAVEVOLKNOB
 #define DEFAULT_VOLUME 6
-#else
-#define DEFAULT_VOLUME 6    // NOT 255!
-#endif
 
 #define PA_LOOP    0x0001
 #define PA_INTRMUS 0x0002
@@ -72,8 +68,8 @@
 void audio_setup();
 void audio_loop();
 
-void play_file(const char *audio_file, uint32_t flags, float volumeFactor = 1.0);
-void append_file(const char *audio_file, uint32_t flags, float volumeFactor = 1.0);
+void play_file(const char *audio_file, uint32_t flags, float volumeFactor = 1.0f);
+void append_file(const char *audio_file, uint32_t flags, float volumeFactor = 1.0f);
 
 void play_empty();
 //void append_empty();

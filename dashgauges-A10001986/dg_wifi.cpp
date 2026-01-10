@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------------------
  * Dash Gauges Panel
- * (C) 2023-2025 Thomas Winischhofer (A10001986)
+ * (C) 2023-2026 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.out-a-ti.me
  *
@@ -103,6 +103,14 @@ static const char *acul_errs[]  = {
     "Extraneous .bin file"
 };
 
+static const char *dsttoutCustHTMLSrc[5] = {
+    "",
+    "\"Door 2\" pin</legend>",
+    "dstto",
+    "is connected to door switch",
+    "signals a time travel"
+};
+
 static const char gaTyCustHTML1[] = "<div class='cmp0'><label class='mp0' for='gaty";
 static const char gaTyCustHTML1a[] = "'>";
 static const char gaTyCustHTML1b[] = "</label><select class='sel0' value='";
@@ -160,6 +168,8 @@ static const char *wmBuildgaugeC(const char *dest);
 static const char *wmBuildgaugeLocked(const char *dest);
 static const char *wmBuildHaveSD(const char *dest);
 
+static const char *wmBuildDsTTOUT(const char *dest);
+
 #ifdef DG_HAVEMQTT
 static const char *wmBuildMQTTprot(const char *dest);
 static const char *wmBuildMQTTstate(const char *dest);
@@ -174,6 +184,10 @@ static const char custHTMLSelFmt[] = "' name='%s' id='%s' autocomplete='off'><op
 static const char col_g[] = "609b71";
 static const char col_r[] = "dc3630";
 static const char col_gr[] = "777";
+static const char rad0[] = "<div class='cmp0'><fieldset class='%s' style='border:none;padding:0;'><legend style='padding:0;margin-bottom:2px'>";
+static const char rad1[] = "<input type='radio' id='%s%d' name='%s' value='%d'%s style='margin:5px 5px 5px 10px'><label class='mp0' for='%s%d'>%s</label><br>";
+static const char radchk[] = " checked";
+static const char rad99[] = "</fieldset></div>";
 
 // double-% since this goes through sprintf!
 static const char bannerStart[] = "<div class='c' style='background-color:#";
@@ -230,12 +244,7 @@ WiFiManagerParameter custom_cTh("cTh", "'Percent Power' empty threshold (0-99)",
 WiFiManagerParameter custom_rTh("rTh", "'Roentgens' empty threshold (0-99)", settings.rThreshold, 2, "type='number' min='0' max='99' autocomplete='off'");
 WiFiManagerParameter custom_rHint("<div style='margin:0;padding:0;font-size:80%'>If gauges are on same pin, first applicable has priority.</div>");
 
-#ifdef DG_HAVEVOLKNOB
-WiFiManagerParameter custom_FixV("FixV", "Disable volume knob", settings.FixV, 1, "title='Check this if the audio volume should be set by software; if unchecked, the volume knob is used' class='mt5'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
-WiFiManagerParameter custom_Vol("Vol", "Software volume level (0-19)", settings.Vol, 2, "type='number' min='0' max='19' autocomplete='off'");
-#else
 WiFiManagerParameter custom_Vol("Vol", "Volume level (0-19)", settings.Vol, 2, "type='number' min='0' max='19' autocomplete='off'");
-#endif
 
 WiFiManagerParameter custom_musicFolder("mfol", "Music folder (0-9)", settings.musicFolder, 2, "type='number' min='0' max='9'");
 WiFiManagerParameter custom_shuffle("musShu", "Shuffle mode enabled at startup", settings.shuffle, 1, "class='mt5'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
@@ -253,9 +262,18 @@ WiFiManagerParameter custom_CfgOnSD("CfgOnSD", "Save secondary settings on SD<br
 //WiFiManagerParameter custom_sdFrq("sdFrq", "4MHz SD clock speed<br><span style='font-size:80%'>Checking this might help in case of SD card problems</span>", settings.sdFreq, 1, "style='margin-top:12px'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
 
 #ifdef DG_HAVEDOORSWITCH
-WiFiManagerParameter custom_dsPlay("dsPlay", "Play door sounds", settings.dsPlay, 1, "title='Check to have the device play a sound when door switch changes state' class='mt5'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
-WiFiManagerParameter custom_dsCOnC("dsCOnC", "Switch closes when door is closed", settings.dsCOnC, 1, "title='Check to play the door open sound when switch opens' class='mb10'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
-WiFiManagerParameter custom_dsDelay("dsDelay", "Door sound delay (0-5000[milliseconds])", settings.dsDelay, 4, "type='number' min='0' max='5000'");
+WiFiManagerParameter custom_dsPlay("dsPlay", "Enable use of door switches", settings.dsPlay, 1, "title='Check to play a sound when door switch changes state' class='mt5'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
+WiFiManagerParameter custom_dsCOnC("dsCOnC", "Switch closes when door is closed", settings.dsCOnC, 1, "title='If unchecked, switch assumed to open when door is closed' class='mt5' style='margin-left:20px'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
+WiFiManagerParameter custom_dsO("dsO", "Play sound only when TCD is fake-off", settings.dsPlayO, 1, "title='Check to play door sound only when the TCD is fake-powered down'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
+WiFiManagerParameter custom_dsTCD("dsTCD", "Play door sound through TCD", settings.dsPlayTCD, 1, "title='Check to play door sound on the TCD (line-out stereo recommended). If unchecked, sound is played locally.'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
+WiFiManagerParameter custom_dsTCDO("dsTCDO", "Only when TCD is fake-off", settings.dsPlayTCDO, 1, "title='Check to play door sound on the TCD only when TCD is fake-powered down; sound will be played locally otherwise.' class='mt5' style='margin-left:20px'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
+WiFiManagerParameter custom_dsTCDS("dsTCDS", "Enable panning", settings.dsPlayTCDS, 1, "title='Check to use left channel for left door, and vice versa. If unchecked, sound is played on both channels.' class='mt5 mb10' style='margin-left:20px'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
+WiFiManagerParameter custom_dsDelay("dsDel", "Door open sound delay (0-5000[milliseconds])", settings.dsDelay, 4, "type='number' min='0' max='5000'");
+WiFiManagerParameter custom_dsDelayC("dsDelC", "Door close sound delay (0-5000[milliseconds])", settings.dsDelayC, 4, "type='number' min='0' max='5000'");
+#endif
+
+#ifdef DG_HAVEDOORSWITCH
+WiFiManagerParameter custom_dsTTout(wmBuildDsTTOUT);
 #endif
 
 WiFiManagerParameter custom_gaugeIDA(wmBuildgaugeA);
@@ -370,7 +388,6 @@ static void wifiOff(bool force);
 
 static void saveParamsCallback(int);
 static void saveWiFiCallback(const char *ssid, const char *pass);
-static void preConnectCallback();
 static void preUpdateCallback();
 static void postUpdateCallback(bool);
 static void preSaveWiFiCallback();
@@ -381,7 +398,6 @@ static void gpCallback(int);
 static bool preWiFiScanCallback();
 
 static void setupStaticIP();
-static void ipToString(char *str, IPAddress ip);
 static IPAddress stringToIp(char *str);
 
 static void getParam(String name, char *destBuf, size_t length, int defaultVal);
@@ -464,9 +480,6 @@ void wifi_setup()
       &custom_rHint,
   
       &custom_sectstart,     // 2 (3)
-      #ifdef DG_HAVEVOLKNOB
-      &custom_FixV,
-      #endif
       &custom_Vol,
   
       &custom_sectstart_mp,  // 3
@@ -492,9 +505,19 @@ void wifi_setup()
       &custom_sectstart,     // 4
       &custom_dsPlay,
       &custom_dsCOnC,
+      &custom_dsO,
+      &custom_dsTCD,
+      &custom_dsTCDO,
+      &custom_dsTCDS,
       &custom_dsDelay,
+      &custom_dsDelayC,
       #endif
-  
+
+      #ifdef DG_HAVEDOORSWITCH
+      &custom_sectstart,     // 4
+      &custom_dsTTout,
+      #endif
+      
       &custom_sectstart,     // 5
       &custom_gaugeIDA,
       &custom_gaugeIDB,
@@ -669,7 +692,6 @@ void wifi_setup2()
     if(useMQTT) {
 
         uint16_t mqttPort = 1883;
-        bool mqttRes = false;
         char *t;
         int tt;
 
@@ -861,30 +883,15 @@ void wifi_loop()
             // Parameters on Settings page
 
             // Save volume setting
-            #ifdef DG_HAVEVOLKNOB
-            strcpyCB(settings.FixV, &custom_FixV);
-            #endif
-            
             mystrcpy(settings.Vol, &custom_Vol);
 
-            #ifdef DG_HAVEVOLKNOB
-            if(settings.FixV[0] == '0') {
-                if(curSoftVol != 255) {
-                    curSoftVol = 255;
+            if(strlen(settings.Vol) > 0) {
+                int newV = atoi(settings.Vol);
+                if(newV >= 0 && newV <= 19) {
+                    curSoftVol = newV;
                     saveCurVolume();
                 }
-            } else if(settings.FixV[0] == '1') {
-            #endif  // HAVEVOLKNOB
-                if(strlen(settings.Vol) > 0) {
-                    int newV = atoi(settings.Vol);
-                    if(newV >= 0 && newV <= 19) {
-                        curSoftVol = newV;
-                        saveCurVolume();
-                    }
-                }
-            #ifdef DG_HAVEVOLKNOB
             }
-            #endif
 
             // Save music folder number
             if(haveSD) {
@@ -937,8 +944,17 @@ void wifi_loop()
 
             #ifdef DG_HAVEDOORSWITCH
             strcpyCB(settings.dsPlay, &custom_dsPlay);
+            strcpyCB(settings.dsPlayO, &custom_dsO);
             strcpyCB(settings.dsCOnC, &custom_dsCOnC);
+            strcpyCB(settings.dsPlayTCD, &custom_dsTCD);
+            strcpyCB(settings.dsPlayTCDO, &custom_dsTCDO);
+            strcpyCB(settings.dsPlayTCDS, &custom_dsTCDS);
             mystrcpy(settings.dsDelay, &custom_dsDelay);
+            mystrcpy(settings.dsDelayC, &custom_dsDelayC);
+            #endif
+
+            #ifdef DG_HAVEDOORSWITCH
+            getParam("dstto", settings.dsTTout, 1, DEF_DS_TTOUT);
             #endif
 
             if(!gaugeTypeLocked) {
@@ -1120,7 +1136,17 @@ static void wifiOff(bool force)
         }
     }
 
-    wm.disableWiFi();
+    // Parm for disableWiFi() is "waitForOFF"
+    // which should be true if we stop in AP
+    // mode and immediately re-connect, without
+    // process()ing for a while after this call.
+    // "force" is true if we want to try to
+    // reconnect after disableWiFi(), false if 
+    // we disconnect upon timer expiration, 
+    // so it matches the purpose.
+    // "false" also does not cause any delays,
+    // while "true" may take up to 2 seconds.
+    wm.disableWiFi(force);
 }
 
 void wifiOn(unsigned long newDelay, bool alsoInAPMode, bool deferCP)
@@ -1179,7 +1205,8 @@ void wifiOn(unsigned long newDelay, bool alsoInAPMode, bool deferCP)
 
         }
 
-    }
+    } else
+        return;
 
     // (Re)connect
     wifiConnect(deferCP);
@@ -1533,8 +1560,15 @@ void updateConfigPortalValues()
     #ifdef DG_HAVEDOORSWITCH
     setCBVal(&custom_dsPlay, settings.dsPlay);
     setCBVal(&custom_dsCOnC, settings.dsCOnC);
+    setCBVal(&custom_dsO, settings.dsPlayO);
+    setCBVal(&custom_dsTCD, settings.dsPlayTCD);
+    setCBVal(&custom_dsTCDO, settings.dsPlayTCDO);
+    setCBVal(&custom_dsTCDS, settings.dsPlayTCDS);
     custom_dsDelay.setValue(settings.dsDelay, 4);
+    custom_dsDelayC.setValue(settings.dsDelayC, 4);
     #endif
+
+    // dsttout on-the-fly
 
     // Gauges types made on-the-fly
     // Gauge type locked made on-the-fly
@@ -1544,23 +1578,9 @@ void updateConfigPortalValues()
 
 void updateConfigPortalVolValues()
 {
-    #ifdef DG_HAVEVOLKNOB
-    if(curSoftVol == 255) {
-        strcpy(settings.FixV, "0");
-        strcpy(settings.Vol, "6");
-    } else {
-        strcpy(settings.FixV, "1");
-        sprintf(settings.Vol, "%d", curSoftVol);
-    }
-    #else
     if(curSoftVol > 19) curSoftVol = DEFAULT_VOLUME;
-    sprintf(settings.Vol, "%d", curSoftVol);
-    #endif
-
-    #ifdef DG_HAVEVOLKNOB
-    setCBVal(&custom_FixV, settings.FixV);
-    #endif
-    
+    sprintf(settings.Vol, "%d", curSoftVol);    
+   
     custom_Vol.setValue(settings.Vol, 2);
 }
 
@@ -1732,6 +1752,46 @@ static const char *wmBuildHaveSD(const char *dest)
         return NULL;
 
     return haveNoSD;
+}
+
+static unsigned int lengthRadioButtons(const char **theHTML, int cnt, char *setting)
+{
+    unsigned int mysize = STRLEN(rad0) + strlen(theHTML[0]) + strlen(theHTML[1]);
+    int i, j = strlen(theHTML[2]), sr = atoi(setting);
+    
+    for(i = 0; i < cnt; i++) {
+        mysize += STRLEN(rad1) + (3*j) + (3*2) + ((i==sr) ? STRLEN(radchk) : 0) + strlen(theHTML[3+i]);
+    }
+    mysize += STRLEN(rad99);
+
+    return mysize;
+}
+
+static void buildRadioButtons(char *target, const char **theHTML, int cnt, char *setting)
+{
+    int i, sr = atoi(setting);
+    
+    sprintf(target, rad0, theHTML[0]);
+    strcat(target, theHTML[1]);
+    
+    for(i = 0; i < cnt; i++) {
+        sprintf(target+strlen(target), rad1, theHTML[2], i, theHTML[2], i, (i==sr) ? radchk : "", theHTML[2], i, theHTML[3+i]);
+    }
+    strcat(target, rad99);
+}
+
+static const char *wmBuildDsTTOUT(const char *dest)
+{
+    if(dest) {
+        free((void *)dest);
+        return NULL;
+    }
+
+    size_t t = lengthRadioButtons(dsttoutCustHTMLSrc, 2,  settings.dsTTout);
+    char *str = (char *)malloc(t);
+    buildRadioButtons(str, dsttoutCustHTMLSrc, 2, settings.dsTTout);
+        
+    return str;
 }
 
 #ifdef DG_HAVEMQTT
@@ -2148,12 +2208,6 @@ bool isIp(char *str)
     return false;
 }
 
-// IPAddress to string
-static void ipToString(char *str, IPAddress ip)
-{
-    sprintf(str, "%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
-}
-
 // String to IPAddress
 static IPAddress stringToIp(char *str)
 {
@@ -2277,8 +2331,7 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
     // Note: This might be called while we are in a
     // wait-delay-loop. Best to just set flags here
     // that are evaluated synchronously (=later).
-    // Do not stuff that messes with display, input,
-    // etc.
+    // Do not mess with display, input, etc.
 
     if(!length) return;
 
@@ -2384,13 +2437,12 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
         case 10:
         case 11:
             #ifdef DG_HAVEDOORSWITCH
-            // Commands ignored if "play door sounds" enabled in CP
+            // Commands ignored if "use door switches" enabled in CP
             // (would interfere with switch logic otherwise)
-            // Also, ignore if sequence running, would come too late 
-            // if queued.
-            if(dsPlay || TTrunning || startup || startAlarm || refill || refillWA)
-                return;
-            doPlayDoorSound = 0x0100 | (i - 10);
+            if(!dsPlay) {
+                doPlayDoorSound = 0x0100 | (i - 10);
+                doPlayDoorSoundNow = millis();
+            }
             #endif
             break;
         case 12:

@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------------------
  * Dash Gauges Panel
- * (C) 2023-2025 Thomas Winischhofer (A10001986)
+ * (C) 2023-2026 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.out-a-ti.me
  *
@@ -70,7 +70,7 @@
  *   communications chip is used: Either SLAB CP210x USB-to-UART or CH340. Installing
  *   a driver might be required.
  *   Mac: 
- *   For the SLAB CP210x (which is used by NodeMCU-boards distributed by CircuitSetup)
+ *   For the SLAB CP210x (which is on NodeMCU-boards distributed by CircuitSetup)
  *   installing a driver is required:
  *   https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers?tab=downloads
  *   The port ("Tools -> "Port") is named /dev/cu.SLAB_USBtoUART, and the maximum
@@ -79,7 +79,7 @@
  *   /dev/cu.usbserial-XXXX (XXXX being some random number), and the maximum upload 
  *   speed is 460800.
  *   Windows:
- *   For the SLAB CP210x (which is used by NodeMCU-boards distributed by CircuitSetup)
+ *   For the SLAB CP210x (which is on the NodeMCU-boards distributed by CircuitSetup)
  *   installing a driver is required:
  *   https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers?tab=downloads
  *   After installing this driver, connect your ESP32, start the Device Manager, 
@@ -102,11 +102,10 @@
  * - Go to "Sketch" -> "Upload" to compile and upload the firmware to your ESP32 board.
  *
  * - Install the sound-pack: 
- *   Method 1:
  *   - Go to Config Portal, click "Update" and upload the sound-pack (DGA.bin, extracted
  *     from install/sound-pack-dgXX.zip) through the bottom file selector.
  *     An SD card must be present in the slot during this operation.
- *   Method 2:
+ *   Alternatively:
  *   - Copy DGA.bin to the top folder of a FAT32 (not ExFAT!) formatted SD card (max 
  *     32GB) and put this card into the slot while the Gauges are powered down. 
  *   - Now power-up. The sound-pack will now be installed. When finished, the Gauges 
@@ -114,7 +113,19 @@
  */
 
 /*  Changelog
- *  
+ *
+ *  2026/01/09 (A10001986) [1.29]
+ *    - Add way for Dash Gauges to play door open/close sounds through TCD
+ *      (TCD >=3.11)
+ *    - Add option to only play door sounds (in general) when TCD is fake-powered 
+ *      down; add option to play door sounds *on TCD* only while TCD is fake-powered 
+ *      down. The idea is to not be interrupted by door sounds as soon as the Time
+ *      Circuits are "on".
+ *    - New sound-pack (DG04): Timetravel sound and door sounds changed
+ *    - "Door 2" pin can alternatively be used to output a time travel signal
+ *      (HIGH on begin of temporal displacement, LOW on reentry)
+ *    - BTTFN enhancements in sync with TCD capabilities
+ *    - Code refinements
  *  2025/11/26 (A10001986) [1.28]
  *    - Prevent P1-speed from becoming the reason to switch to adapting to
  *      TCD-provided speed in speedo-less time-travel sequences

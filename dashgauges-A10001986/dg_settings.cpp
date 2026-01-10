@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------------------
  * Dash Gauges Panel
- * (C) 2023-2025 Thomas Winischhofer (A10001986)
+ * (C) 2023-2026 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.out-a-ti.me
  *
@@ -89,9 +89,9 @@
 #endif 
 
 #define NUM_AUDIOFILES 13+9
-#define SND_REQ_VERSION "DG03"
+#define SND_REQ_VERSION "DG04"
 #define AC_FMTV 2
-#define AC_TS   576571
+#define AC_TS   582422
 #define AC_OHSZ (14 + ((NUM_AUDIOFILES+1)*(32+4)))
 
 static const char *CONFN  = "/DGA.bin";
@@ -104,6 +104,7 @@ static char       *uploadFileNames[MAX_SIM_UPLOADS] = { NULL };
 static char       *uploadRealFileNames[MAX_SIM_UPLOADS] = { NULL };
 
 static const char *cfgName    = "/dgconfig.json";   // Main config (flash)
+static const char *idName     = "/dgid.json";       // DG remote ID (flash)
 static const char *ipCfgName  = "/dgipcfg.json";    // IP config (flash)
 static const char *volCfgName = "/dgvolcfg.json";   // Volume config (flash/SD)
 static const char *musCfgName = "/dgmcfg.json";     // Music config (SD)
@@ -152,8 +153,6 @@ static bool checkValidNumParm(char *text, int lowerLim, int upperLim, int setDef
 static bool checkValidNumParmF(char *text, float lowerLim, float upperLim, float setDefault);
 
 static bool copy_audio_files(bool& delIDfile);
-static void open_and_copy(const char *fn, int& haveErr, int& haveWriteErr);
-static bool filecopy(File source, File dest, int& haveWriteErr);
 static void cfc(File& sfile, bool doCopy, int& haveErr, int& haveWriteErr);
 
 static bool audio_files_present(int& alienVer);
@@ -519,8 +518,17 @@ static bool read_settings(File configFile, int cfgReadCount)
         
         #ifdef DG_HAVEDOORSWITCH
         wd |= CopyCheckValidNumParm(json["dsPlay"], settings.dsPlay, sizeof(settings.dsPlay), 0, 1, DEF_DS_PLAY);
+        wd |= CopyCheckValidNumParm(json["dsPlyO"], settings.dsPlayO, sizeof(settings.dsPlayO), 0, 1, 0);
         wd |= CopyCheckValidNumParm(json["dsCOnC"], settings.dsCOnC, sizeof(settings.dsCOnC), 0, 1, DEF_DS_NC);
+        wd |= CopyCheckValidNumParm(json["dsTCD"], settings.dsPlayTCD, sizeof(settings.dsPlayTCD), 0, 1, 0);
+        wd |= CopyCheckValidNumParm(json["dsTCDO"], settings.dsPlayTCDO, sizeof(settings.dsPlayTCDO), 0, 1, 0);
+        wd |= CopyCheckValidNumParm(json["dsTCDS"], settings.dsPlayTCDS, sizeof(settings.dsPlayTCDS), 0, 1, 1);
         wd |= CopyCheckValidNumParm(json["dsDelay"], settings.dsDelay, sizeof(settings.dsDelay), 0, 5000, DEF_DS_DELAY);
+        wd |= CopyCheckValidNumParm(json["dsDelC"], settings.dsDelayC, sizeof(settings.dsDelayC), 0, 5000, DEF_DS_DELAY);
+        #endif
+
+        #ifdef DG_HAVEDOORSWITCH
+        wd |= CopyCheckValidNumParm(json["dsTTO"], settings.dsTTout, sizeof(settings.dsTTout), 0, 1, DEF_DS_TTOUT);
         #endif
 
         wd |= CopyCheckValidNumParm(json["gaugeIDA"], settings.gaugeIDA, sizeof(settings.gaugeIDA), 0, gauges.max_id_small, DEF_GAUGE_TYPE);
@@ -607,8 +615,17 @@ void write_settings()
 
     #ifdef DG_HAVEDOORSWITCH
     json["dsPlay"] = (const char *)settings.dsPlay;
+    json["dsPlyO"] = (const char *)settings.dsPlayO;
     json["dsCOnC"] = (const char *)settings.dsCOnC;
+    json["dsTCD"] = (const char *)settings.dsPlayTCD;
+    json["dsTCDO"] = (const char *)settings.dsPlayTCDO;
+    json["dsTCDS"] = (const char *)settings.dsPlayTCDS;
     json["dsDelay"] = (const char *)settings.dsDelay;
+    json["dsDelC"] = (const char *)settings.dsDelayC;
+    #endif
+
+    #ifdef DG_HAVEDOORSWITCH
+    json["dsTTO"] = (const char *)settings.dsTTout;
     #endif
 
     json["gaugeIDA"] = (const char *)settings.gaugeIDA;
@@ -744,11 +761,7 @@ static bool openCfgFileRead(const char *fn, File& f, bool SDonly = false)
  *  Load/save the Volume
  */
 
-#ifdef DG_HAVEVOLKNOB
-#define T_V_MAX 255
-#else
 #define T_V_MAX 19
-#endif
 
 bool loadCurVolume()
 {
@@ -772,7 +785,7 @@ bool loadCurVolume()
         if(!readJSONCfgFile(json, configFile, funcName)) {
             if(!CopyCheckValidNumParm(json["volume"], temp, sizeof(temp), 0, T_V_MAX, DEFAULT_VOLUME)) {
                 uint8_t ncv = atoi(temp);
-                if((ncv >= 0 && ncv <= 19) || ncv == T_V_MAX) {
+                if(ncv <= 19 || ncv == T_V_MAX) {
                     curSoftVol = ncv;
                 } 
             }
@@ -1011,7 +1024,6 @@ bool check_if_default_audio_present()
     uint8_t dbuf[16];
     File file;
     size_t ts;
-    int i;
 
     ic = false;
 
@@ -1397,8 +1409,6 @@ static bool writeFileToFS(const char *fn, uint8_t *buf, int len)
 
 static char *allocateUploadFileName(const char *fn, int idx)
 {
-    char *t = NULL;
-
     if(uploadFileNames[idx]) {
         free(uploadFileNames[idx]);
     }

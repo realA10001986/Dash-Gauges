@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------------------
  * Dash Gauges Panel
- * (C) 2023-2025 Thomas Winischhofer (A10001986)
+ * (C) 2023-2026 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.out-a-ti.me
  *
@@ -97,8 +97,6 @@ static DGButton sideSwitch = DGButton(SIDESWITCH_PIN,
 
 static bool          isSSwitchPressed = false;
 static bool          isSSwitchChange = false;
-static unsigned long isSSwitchChangeNow = 0;
-static int           sideSwitchStatus = -1;
 
 // The tt button / TCD tt trigger
 static DGButton TTKey = DGButton(TT_IN_PIN,
@@ -124,43 +122,49 @@ static DGButton Button1 = DGButton(BUTTON1_PIN,
 static bool isB1Pressed = false;
 static bool isB1Held = false;
 
-// The door switch
+static bool dsTTout = false;
+
+// The door switches
 #ifdef DG_HAVEDOORSWITCH
 static DGButton doorSwitch = DGButton(DOOR_SWITCH_PIN,
     true,    // Switch is active LOW
-    true     // Enable internal pull-up resistor
+    true     // Enable internal pull-up resistor (does not have one though)
 );
 static bool          isDSwitchPressed = false;
 static bool          isDSwitchChange = false;
-static int           doorSwitchStatus = -1;
 static unsigned long isDSwitchChangeNow = 0;
 static bool          dsCloseOnClose = false;
-#ifdef DG_HAVEDOORSWITCH2
+
 static DGButton door2Switch = DGButton(DOOR2_SWITCH_PIN,
     true,    // Switch is active LOW
-    true     // Enable internal pull-up resistor (does not have one, though)
+    true     // Enable internal pull-up resistor
 );
 static bool          isD2SwitchPressed = false;
 static bool          isD2SwitchChange = false;
-static int           door2SwitchStatus = -1;
 static unsigned long isD2SwitchChangeNow = 0;
-#endif
-// Doorswitch sequence
+
+// Doorswitches flags & status
 bool                 dsPlay = false;
-static unsigned long dsNow = 0;
-static bool          dsTimer = false;
+static bool          dsPlayO = false;
+static bool          doorTCD = false;
+static bool          dsPlayTCDO = false;
+static bool          doorTCDS = true;
 static unsigned long dsDelay = 0;
+static unsigned long dsDelayC = 0;
+static unsigned long dsNow = 0;
+static unsigned long d2sNow = 0;
 static unsigned long dsADelay = 0;
+static unsigned long d2sADelay = 0;
 static bool          dsOpen = false;
+static bool          d2sOpen = false;
+static bool          dsTimer = false;
+static bool          d2sTimer = false;
+
 static unsigned long lastDoorSoundNow = 0;
 static int           lastDoorNum = 0;
-#ifdef DG_HAVEDOORSWITCH2
-static unsigned long d2sNow = 0;
-static bool          d2sTimer = false;
-static unsigned long d2sADelay = 0;
-static bool          d2sOpen = false;
-#endif
+
 uint16_t             doPlayDoorSound = 0;
+unsigned long        doPlayDoorSoundNow = 0;
 #endif
 
 static unsigned long swInitNow = 0;
@@ -202,6 +206,7 @@ bool        dgNM  = false;
 
 static bool useFPO = false;
 static bool tcdFPO = false;
+static bool doorTCDFPO = true;
 
 static bool bttfnTT = true;
 
@@ -240,7 +245,7 @@ static bool          playTTsounds = true; // for stand-alone TT
 #define P2_ALARM_DLY_SA 2300           // Delay for alarm after reentry (stand-alone)
 
 // Volume-factor for "travelstart" sounds
-#define TT_SOUND_FACT 1.2f
+#define TT_SOUND_FACT 0.60f
 
 bool         TCDconnected = false;
 static bool  noETTOLead = false;
@@ -270,9 +275,21 @@ static bool          mprengaugetouched = false;
 // BTTF network
 #define BTTFN_VERSION              1
 #define BTTFN_SUP_MC            0x80
+#define BTTFN_SUP_ND            0x40
 #define BTTF_PACKET_SIZE          48
 #define BTTF_DEFAULT_LOCAL_PORT 1338
-#define BTTFN_POLL_INT          1100
+#define BTTFN_POLL_INT          1200
+#define BTTFN_RESPONSE_TO        700
+#define BTTFN_KA_OFFSET            7
+#define BTTFN_KA_INTERVAL  ((60+BTTFN_KA_OFFSET)*1000)
+#define BTTFN_DATA_TO          17400
+#define BTTFN_TYPE_ANY     0    // Any, unknown or no device
+#define BTTFN_TYPE_FLUX    1    // Flux Capacitor
+#define BTTFN_TYPE_SID     2    // SID
+#define BTTFN_TYPE_PCG     3    // Dash Gauges
+#define BTTFN_TYPE_VSR     4    // VSR
+#define BTTFN_TYPE_AUX     5    // Aux (user custom device)
+#define BTTFN_TYPE_REMOTE  6    // Futaba remote control
 #define BTTFN_NOT_PREPARE  1
 #define BTTFN_NOT_TT       2
 #define BTTFN_NOT_REENTRY  3
@@ -286,14 +303,10 @@ static bool          mprengaugetouched = false;
 #define BTTFN_NOT_AUX_CMD  11
 #define BTTFN_NOT_VSR_CMD  12
 #define BTTFN_NOT_SPD      15
-#define BTTFN_NOT_BUSY     16
-#define BTTFN_TYPE_ANY     0    // Any, unknown or no device
-#define BTTFN_TYPE_FLUX    1    // Flux Capacitor
-#define BTTFN_TYPE_SID     2    // SID
-#define BTTFN_TYPE_PCG     3    // Dash Gauges
-#define BTTFN_TYPE_VSR     4    // VSR
-#define BTTFN_TYPE_AUX     5    // Aux (user custom device)
-#define BTTFN_TYPE_REMOTE  6    // Futaba remote control
+#define BTTFN_NOT_INFO     16
+#define BTTFN_NOT_DATA     128 // bit only, not value
+#define BTTFN_REMCMD_DOOR      100
+#define BTTFN_REMCMD_KEEPALIVE 101
 #define BTTFN_SSRC_NONE         0
 #define BTTFN_SSRC_GPS          1
 #define BTTFN_SSRC_ROTENC       2
@@ -301,6 +314,12 @@ static bool          mprengaugetouched = false;
 #define BTTFN_SSRC_P0           4
 #define BTTFN_SSRC_P1           5
 #define BTTFN_SSRC_P2           6
+#define BTTFN_TCDI1_NOREM   0x0001
+#define BTTFN_TCDI1_NOREMKP 0x0002
+#define BTTFN_TCDI1_EXT     0x0004
+#define BTTFN_TCDI1_OFF     0x0008
+#define BTTFN_TCDI1_NM      0x0010
+#define BTTFN_TCDI2_BUSY    0x0001
 static const uint8_t BTTFUDPHD[4] = { 'B', 'T', 'T', 'F' };
 static bool          useBTTFN = false;
 static WiFiUDP       bttfUDP;
@@ -310,40 +329,64 @@ static UDP*          dgMcUDP;
 static byte          BTTFUDPBuf[BTTF_PACKET_SIZE];
 static byte          BTTFUDPTBuf[BTTF_PACKET_SIZE];
 static unsigned long BTTFNUpdateNow = 0;
-static unsigned long BTFNTSAge = 0;
 static unsigned long BTTFNTSRQAge = 0;
+static unsigned long BTTFNLastCmdSent = 0;
 static bool          BTTFNPacketDue = false;
 static bool          BTTFNWiFiUp = false;
 static uint8_t       BTTFNfailCount = 0;
 static uint32_t      BTTFUDPID = 0;
 static unsigned long lastBTTFNpacket = 0;
+static unsigned long lastBTTFNKA = 0;
+static unsigned long bttfnLastNotData = 0;
 static bool          BTTFNBootTO = false;
 static bool          haveTCDIP = false;
 static IPAddress     bttfnTcdIP;
 static uint32_t      bttfnTCDSeqCnt = 0;
+static uint32_t      bttfnTCDDataSeqCnt = 0;
+static uint32_t      bttfnSessionID = 0;
 static uint8_t       bttfnReqStatus = 0x52; // Request capabilities, status, speed
+static bool          TCDSupportsNOTData = false;
+static bool          TCDSupportsCMDDOOR = false;
+static bool          bttfnDataNotEnabled = false;
 static uint32_t      tcdHostNameHash = 0;
 static byte          BTTFMCBuf[BTTF_PACKET_SIZE];
 static IPAddress     bttfnMcIP(224, 0, 0, 224);
+static uint32_t      bttfnSeqCnt = 1;
 
 static int      iCmdIdx = 0;
 static int      oCmdIdx = 0;
 static uint32_t commandQueue[16] = { 0 };
 
+#ifdef ESP32
+/*  "warning: taking address of packed member of 'struct <anonymous>' may 
+ *  result in an unaligned pointer value"
+ *  "GCC will issue this warning when accessing an unaligned member of 
+ *  a packed struct due to the incurred penalty of unaligned memory 
+ *  access. However, all ESP chips (on both Xtensa and RISC-V 
+ *  architectures) allow for unaligned memory access and incur no extra 
+ *  penalty."
+ *  https://docs.espressif.com/projects/esp-idf/en/v5.1/esp32s3/migration-guides/release-5.x/5.0/gcc.html
+ */
+#define GET32(a,b)    *((uint32_t *)((a) + (b)))
+#define SET32(a,b,c)  *((uint32_t *)((a) + (b))) = c
+#else
 #define GET32(a,b)          \
     (((a)[b])            |  \
     (((a)[(b)+1]) << 8)  |  \
     (((a)[(b)+2]) << 16) |  \
-    (((a)[(b)+3]) << 24))
+    (((a)[(b)+3]) << 24))   
 #define SET32(a,b,c)                        \
     (a)[b]       = ((uint32_t)(c)) & 0xff;  \
     ((a)[(b)+1]) = ((uint32_t)(c)) >> 8;    \
     ((a)[(b)+2]) = ((uint32_t)(c)) >> 16;   \
-    ((a)[(b)+3]) = ((uint32_t)(c)) >> 24;  
+    ((a)[(b)+3]) = ((uint32_t)(c)) >> 24; 
+#endif
 
 // Forward declarations ------
 
 static void timeTravel(bool TCDtriggered, uint16_t P0Dur, uint16_t P1Dur = 0);
+
+static void setTTOUT(uint8_t stat);
 
 static void execute_remote_command();
 static void say_ip_address();
@@ -355,19 +398,17 @@ static bool checkGauges();
 static void gauge_lights_on();
 static void gauge_lights_off();
 
-static void blink_empty();
-static void start_blink_empty();
-
+static void sideSwitch_scan();
 static void sideSwitchLongPress();
 static void sideSwitchLongPressStop();
 #ifdef DG_HAVEDOORSWITCH
+static void doorSwitch_scan();
 static void dsScan();
 static void doorSwitchLongPress();
 static void doorSwitchLongPressStop();
-#ifdef DG_HAVEDOORSWITCH2
 static void door2SwitchLongPress();
 static void door2SwitchLongPressStop();
-#endif
+static void play_door_snd(int doorNum, bool isOpen);
 #endif
 static void ttkeyScan();
 static void TTKeyPressed();
@@ -386,19 +427,12 @@ static void waitAudioDone();
 static uint8_t restrict_gauge_idle(int val, int minimum, int maximum, uint8_t def);
 static uint8_t restrict_gauge_empty(int val, int minimum, int maximum, uint8_t def);
 
-static void write_port(uint8_t val);
-static void set_port_pin(uint8_t bitnum);
-static void clr_port_pin(uint8_t bitnum);
-
+static bool bttfn_trigger_tt();
+#ifdef DG_HAVEDOORSWITCH
+static bool bttfn_send_door(bool doorOpen, int doorNum, unsigned long del);
+#endif
 static void bttfn_setup();
 static void bttfn_loop_quick();
-static bool bttfn_checkmc();
-static void BTTFNCheckPacket();
-static bool BTTFNTriggerUpdate();
-static void BTTFNPreparePacketTemplate();
-static void BTTFNSendPacket();
-
-static bool bttfn_trigger_tt();
 
 // Boot
 
@@ -407,8 +441,14 @@ void main_boot()
     while(millis() - powerupMillis < 100) {
         delay(10);
     }
-        
+
     // Some init
+
+    // Preliminarily set optional TT-OUT to LOW
+    #ifdef DG_HAVEDOORSWITCH
+    pinMode(DOOR2_SWITCH_PIN, OUTPUT);
+    digitalWrite(DOOR2_SWITCH_PIN, LOW);
+    #endif
     
     // Setup pin for lights
     pinMode(BACKLIGHTS_PIN, OUTPUT);
@@ -424,28 +464,34 @@ void main_boot()
     sideSwitch.attachLongPressStart(sideSwitchLongPress);
     sideSwitch.attachLongPressStop(sideSwitchLongPressStop);
     sideSwitch_scan();
-
-    // Init door switch
-    #ifdef DG_HAVEDOORSWITCH
-    doorSwitch.begin();
-    doorSwitch.setTiming(50, 10, 50);
-    doorSwitch.attachLongPressStart(doorSwitchLongPress);
-    doorSwitch.attachLongPressStop(doorSwitchLongPressStop);
-    #ifdef DG_HAVEDOORSWITCH2
-    door2Switch.begin();
-    door2Switch.setTiming(50, 10, 50);
-    door2Switch.attachLongPressStart(door2SwitchLongPress);
-    door2Switch.attachLongPressStop(door2SwitchLongPressStop);
-    #endif
-    doorSwitch_scan();
-    #endif
-
-    swInitNow = millis();
 }
 
 void main_boot2()
 {
     int8_t gaugeIDA = 0, gaugeIDB = 0, gaugeIDC = 0;
+
+    #ifdef DG_HAVEDOORSWITCH
+    dsTTout = (atoi(settings.dsTTout) > 0);
+    #else
+    dsTTout = true;
+    #endif
+    
+    // Init door switch(es)
+    #ifdef DG_HAVEDOORSWITCH
+    doorSwitch.begin();
+    doorSwitch.setTiming(50, 10, 50);
+    doorSwitch.attachLongPressStart(doorSwitchLongPress);
+    doorSwitch.attachLongPressStop(doorSwitchLongPressStop);
+    if(!dsTTout) {
+        door2Switch.begin();
+        door2Switch.setTiming(50, 10, 50);
+        door2Switch.attachLongPressStart(door2SwitchLongPress);
+        door2Switch.attachLongPressStop(door2SwitchLongPressStop);
+    }
+    doorSwitch_scan();
+    #endif
+
+    swInitNow = millis();
     
     gaugeIDA = atoi(settings.gaugeIDA);
     gaugeIDB = atoi(settings.gaugeIDB);
@@ -457,14 +503,13 @@ void main_boot2()
 
     gauges.setValuePercent(0, 0);
     gauges.setValuePercent(1, 0);
-    gauges.setValuePercent(2, 0);
+    gauges.setValuePercent(2, 0);    
 }
 
 void main_setup()
 {
     int temp;
     unsigned long tempu;
-    bool waitShown = false;
     
     Serial.println("Dash Gauges version " DG_VERSION " " DG_VERSION_EXTRA);
 
@@ -514,11 +559,19 @@ void main_setup()
 
     #ifdef DG_HAVEDOORSWITCH
     dsPlay = (atoi(settings.dsPlay) > 0);
+    dsPlayO = (atoi(settings.dsPlayO) > 0);
+    doorTCD = (atoi(settings.dsPlayTCD) > 0);
+    dsPlayTCDO = (atoi(settings.dsPlayTCDO) > 0);
+    doorTCDS = (atoi(settings.dsPlayTCDS) > 0);
     dsCloseOnClose = (atoi(settings.dsCOnC) > 0);
     temp = atoi(settings.dsDelay);
     if(temp < 0) temp = 0;
     else if(temp > 5000) temp = 5000;
     dsDelay = temp;
+    temp = atoi(settings.dsDelayC);
+    if(temp < 0) temp = 0;
+    else if(temp > 5000) temp = 5000;
+    dsDelayC = temp;
     #endif
     
     temp = atoi(settings.autoRefill);
@@ -529,8 +582,6 @@ void main_setup()
     if(temp < 0) temp = 0;
     else if(temp > 360) temp = 360;
     autoMute = temp * 1000;
-    
-    // [Formerly started CP here]
 
     // Determine if Time Circuits Display is connected
     // via wire, and is source of GPIO tt trigger
@@ -564,7 +615,7 @@ void main_setup()
     if(check_allow_CPA()) {
         showWaitSequence();
         if(prepareCopyAudioFiles()) {
-            play_file("/_installing.mp3", PA_ALLOWSD, 1.0);
+            play_file("/_installing.mp3", PA_ALLOWSD, 1.0f);
             waitAudioDone();
         }
         doCopyAudioFiles();
@@ -592,7 +643,6 @@ void main_setup()
     gauges.setValuePercent(0, left_gauge_idle);
     gauges.setValuePercent(1, center_gauge_idle);
     gauges.setValuePercent(2, right_gauge_idle);
-    
 
     // Initialize BTTF network
     bttfn_setup();
@@ -608,9 +658,7 @@ void main_setup()
     #ifdef DG_HAVEDOORSWITCH
     doorSwitch_scan();
     isDSwitchChange = false;
-    #ifdef DG_HAVEDOORSWITCH2
     isD2SwitchChange = false;
-    #endif
     #endif
 
     #ifdef DG_DBG
@@ -623,7 +671,7 @@ void main_setup()
     if(useBTTFN && useFPO && (WiFi.status() == WL_CONNECTED)) {
 
         FPBUnitIsOn = false;
-        tcdFPO = fpoOld = true;
+        tcdFPO = fpoOld = doorTCDFPO = true;
 
         Serial.println("Waiting for TCD fake power on");
 
@@ -649,7 +697,7 @@ void main_loop()
     // Execute scheduled digital gauge changes
     gauges.loop();
 
-    // Scan door switch
+    // Scan door switches
     #ifdef DG_HAVEDOORSWITCH
     dsScan();
     #endif
@@ -739,7 +787,7 @@ void main_loop()
         if(startup && (millis() - startupNow >= STARTUP_DELAY)) {
             gauges.on();
             if(checkGauges()) {    // Check if empty, and trigger alarm if so
-                play_file("/startup.mp3", PA_INTRMUS|PA_ALLOWSD, 1.0);
+                play_file("/startup.mp3", PA_INTRMUS|PA_ALLOWSD, 1.0f);
             }
             startup = false;
         }
@@ -750,7 +798,7 @@ void main_loop()
         }
         // Initiate refill after audio has finished
         if(refillWA && (!playingEmpty || checkAudioDone())) {
-            play_file("/refill.mp3", PA_INTRMUS|PA_ALLOWSD, 0.6);
+            play_file("/refill.mp3", PA_INTRMUS|PA_ALLOWSD, 0.6f);
             refillWA = false;
             if(!ssActive) {
                 refill = true;
@@ -793,53 +841,71 @@ void main_loop()
     if(dsTimer && now - dsNow >= dsADelay) {
         // delay door sound by max 500ms, otherwise effect is lost and we skip it
         if(now - dsNow <= dsADelay + 500) {
-            play_door_open(1, dsOpen);
+            play_door_snd(1, dsOpen);
         }
         dsTimer = false;
     }
-    #ifdef DG_HAVEDOORSWITCH2
     if(d2sTimer && now - d2sNow >= d2sADelay) {
         // delay door sound by max 500ms, otherwise effect is lost and we skip it
         if(now - d2sNow <= d2sADelay + 500) {
-            play_door_open(2, d2sOpen);
+            play_door_snd(2, d2sOpen);
         }
         d2sTimer = false;
     }
-    #endif
     
     if(dsPlay && isDSwitchChange) {
-        if(!refillWA) {
-            unsigned long timePassed = millis() - isDSwitchChangeNow;
-            dsOpen = (isDSwitchPressed != dsCloseOnClose);
-            if(dsDelay && (dsDelay > timePassed + 100)) {
-                dsTimer = true;
-                dsADelay = dsDelay;
-                dsNow = isDSwitchChangeNow;
-            } else if(timePassed < 500) {
-                play_door_open(1, dsOpen);
+        dsOpen = (isDSwitchPressed != dsCloseOnClose);
+        if(!dsPlayO || doorTCDFPO) {
+            unsigned long del = dsOpen ? dsDelay : dsDelayC;
+            if(!bttfn_send_door(dsOpen, 1, del)) {
+                if(!refillWA) {
+                    unsigned long timePassed = now - isDSwitchChangeNow;
+                    if(del && (del > timePassed + 100)) {
+                        dsTimer = true;
+                        dsADelay = del;
+                        dsNow = isDSwitchChangeNow;
+                    } else if(timePassed < 500) {
+                        play_door_snd(1, dsOpen);
+                    }
+                }
             }
         }
         isDSwitchChange = false;
     }
-    #ifdef DG_HAVEDOORSWITCH2
+    
     if(dsPlay && isD2SwitchChange) {
-        if(!refillWA) {
-            unsigned long timePassed = millis() - isD2SwitchChangeNow;
-            d2sOpen = (isD2SwitchPressed != dsCloseOnClose);
-            if(dsDelay && (dsDelay > timePassed + 100)) {
-                d2sTimer = true;
-                d2sADelay = dsDelay;
-                d2sNow = isD2SwitchChangeNow;
-            } else if(timePassed < 500) {
-                play_door_open(2, d2sOpen);
+        d2sOpen = (isD2SwitchPressed != dsCloseOnClose);
+        if(!dsPlayO || doorTCDFPO) {
+            unsigned long del = d2sOpen ? dsDelay : dsDelayC;
+            if(!bttfn_send_door(d2sOpen, 2, del)) {
+                if(!refillWA) {
+                    unsigned long timePassed = now - isD2SwitchChangeNow;
+                    if(del && (del > timePassed + 100)) {
+                        d2sTimer = true;
+                        d2sADelay = del;
+                        d2sNow = isD2SwitchChangeNow;
+                    } else if(timePassed < 500) {
+                        play_door_snd(2, d2sOpen);
+                    }
+                }
             }
         }
         isD2SwitchChange = false;
     }
-    #endif
+    
     // Eval MQTT command
     if(!dsPlay && doPlayDoorSound) {
-        play_door_open(1, !!(doPlayDoorSound & 0xff));
+        if(!dsPlayO || doorTCDFPO) {
+            // Play with max 500ms delay, otherwise skip - effect is lost
+            if(millis() - doPlayDoorSoundNow < 500) {
+                if(!bttfn_send_door(!!(doPlayDoorSound & 0xff), 0, 0)) {
+                    // Door sound is lowest prio, play_door_snd aborts if sound currently played
+                    if(!refillWA) {
+                        play_door_snd(1, !!(doPlayDoorSound & 0xff));
+                    }
+                }
+            }
+        }
         doPlayDoorSound = 0;
     }
     #endif
@@ -886,7 +952,7 @@ void main_loop()
                 updateConfigPortalValues();
             }
             //if() {
-                play_file("/buttonl.mp3", PA_ALLOWSD, 1.0);
+                play_file("/buttonl.mp3", PA_ALLOWSD, 1.0f);
             //}
         } else if(isTTKeyPressed) {
             isTTKeyPressed = false;
@@ -910,8 +976,10 @@ void main_loop()
         // Check for BTTFN/MQTT-induced TT
         if(networkTimeTravel) {
             networkTimeTravel = false;
-            ssEnd();
-            timeTravel(networkTCDTT, networkLead, networkP1);
+            if(!networkAbort) {
+                ssEnd();
+                timeTravel(networkTCDTT, networkLead, networkP1);
+            }
         }
     }
 
@@ -941,12 +1009,14 @@ void main_loop()
                     TTrunning = false;
                     isTTKeyPressed = false;
                     ssRestartTimer();
+                    setTTOUT(LOW);
 
                 } else {
 
                     TTP0 = false;
                     TTP1 = true;
                     TTstart = TTfUpdLNow = TTfUpdCNow = TTfUpdRNow = now;
+                    setTTOUT(HIGH);
 
                 }
             }
@@ -997,6 +1067,8 @@ void main_loop()
                     gauges.setValuePercent(1, center_gauge_empty);
                     gauges.setValuePercent(2, right_gauge_empty);
                     gauges.UpdateAll();
+
+                    setTTOUT(LOW);
                     
                     TTstart = now;
                     
@@ -1012,6 +1084,7 @@ void main_loop()
                     TTrunning = false;
                     isTTKeyPressed = false;
                     ssRestartTimer();
+                    setTTOUT(LOW);
 
                 }
             }
@@ -1033,6 +1106,7 @@ void main_loop()
                     TTP0 = false;
                     TTP1 = true;
                     TTstart = TTfUpdLNow = TTfUpdCNow = TTfUpdRNow = now;
+                    setTTOUT(HIGH);
                     
                 }
             }
@@ -1083,6 +1157,7 @@ void main_loop()
                     gauges.setValuePercent(1, center_gauge_empty);
                     gauges.setValuePercent(2, right_gauge_empty);
                     gauges.UpdateAll();
+                    setTTOUT(LOW);
                     TTstart = now;
                     
                 }
@@ -1145,10 +1220,12 @@ void main_loop()
 
     // If network is interrupted, return to stand-alone
     if(useBTTFN) {
-        if( (lastBTTFNpacket && (now - lastBTTFNpacket > 30*1000)) ||
-            (!BTTFNBootTO && !lastBTTFNpacket && (now - powerupMillis > 60*1000)) ) {
+        if( !bttfnDataNotEnabled &&
+            ((lastBTTFNpacket && (now - lastBTTFNpacket > 30*1000)) ||
+             (!BTTFNBootTO && !lastBTTFNpacket && (now - powerupMillis > 60*1000))) ) {
             tcdNM = false;
             tcdFPO = false;
+            doorTCDFPO = true;  // Allow door sounds if not connected
             gpsSpeed = -1;
             lastBTTFNpacket = 0;
             BTTFNBootTO = true;
@@ -1158,7 +1235,7 @@ void main_loop()
     if(networkAlarm && !TTrunning && !startup && !startAlarm && !refill && !refillWA) {
         networkAlarm = false;
         if(atoi(settings.playALsnd) > 0) {
-            play_file("/alarm.mp3", PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL, 1.0);
+            play_file("/alarm.mp3", PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL, 1.0f);
         }
         // No special handling for !FPBUnitIsOn needed, when
         // special signal ends, it restores the old state
@@ -1198,8 +1275,6 @@ void flushDelayedSave()
 
 static void timeTravel(bool TCDtriggered, uint16_t P0Dur, uint16_t P1Dur)
 {
-    int i = 0, tspd;
-    
     if(TTrunning)
         return;
 
@@ -1342,7 +1417,7 @@ void refill_plutonium()
     }
 
     // If not currently in alarm state (or sound was stopped), do timed refill
-    play_file("/refill.mp3", (ssActive ? 0 : PA_INTRMUS)|PA_ALLOWSD, 0.6);
+    play_file("/refill.mp3", (ssActive ? 0 : PA_INTRMUS)|PA_ALLOWSD, 0.6f);
 
     // Avoid updating the needles if ss is active
     if(ssActive)
@@ -1386,16 +1461,21 @@ void set_empty()
     
     #ifdef DG_HAVEDOORSWITCH
     dsTimer = false;
-    #ifdef DG_HAVEDOORSWITCH2
     d2sTimer = false;
     #endif
-    #endif
-}     
+}
+
+static void setTTOUT(uint8_t stat)
+{
+    if(dsTTout) {
+        digitalWrite(DOOR2_SWITCH_PIN, stat);
+    }
+}
 
 static void execute_remote_command()
 {
     uint32_t command = commandQueue[oCmdIdx];
-    bool pE = playingEmpty && !playingEmptyEnds;
+    //bool pE = playingEmpty && !playingEmptyEnds;
     bool injected = false;
 
     // We are only called if ON
@@ -1535,14 +1615,7 @@ static void execute_remote_command()
         } else if(command >= 300 && command <= 399) {
 
             command -= 300;                       // 300-319/399: Set fixed volume level / enable knob
-            if(command == 99) {
-                #ifdef DG_HAVEVOLKNOB
-                curSoftVol = 255;
-                volchanged = true;
-                volchgnow = millis();
-                updateConfigPortalVolValues();
-                #endif
-            } else if(command <= 19) {
+            if(command <= 19) {
                 curSoftVol = command;
                 volchanged = true;
                 volchgnow = millis();
@@ -1696,7 +1769,7 @@ bool switchMusicFolder(uint8_t nmf, bool isSetup)
     if(nmf > 9) return false;
 
     if((musFolderNum != nmf) || isSetup) {
-        uint8_t tempperc;
+        uint8_t tempperc = 0;
 
         dgBusy = true;
         
@@ -1803,7 +1876,7 @@ static void gauge_lights_off()
 
 /* Keys & buttons */
 
-void sideSwitch_scan()
+static void sideSwitch_scan()
 {
     sideSwitch.scan();
 }
@@ -1812,38 +1885,41 @@ static void sideSwitchLongPress()
 {
     isSSwitchPressed = true;
     isSSwitchChange = true;
-    Serial.println("Side switch is now pressed");
 }
 
 static void sideSwitchLongPressStop()
 {
     isSSwitchPressed = false;
     isSSwitchChange = true;
-    Serial.println("Side switch is now released");
 }
 
 #ifdef DG_HAVEDOORSWITCH
-void play_door_open(int doorNum, bool isOpen)
+static void play_door_snd(int doorNum, bool isOpen)
 {
-    // Sounds from same door may interrupt themselves; if sound from
+    // Sounds for same door may interrupt themselves; if sound for
     // other door is to be played while first door's is running, we 
-    // only interrupt if resonable part of the first door's sound is already 
-    // played back.
-    if((!lastDoorNum || lastDoorNum == doorNum) || (millis() - lastDoorSoundNow > 750)) {
+    // only interrupt if reasonable part of the first door's sound
+    // is already played back.
+    unsigned long now = millis();
+    if((lastDoorNum == doorNum) || !lastDoorNum || (now - lastDoorSoundNow > 750)) {
         if(playingDoor || checkAudioDone()) {
-            play_file(isOpen ? "/dooropen.mp3" : "/doorclose.mp3", PA_ALLOWSD|PA_DOOR, 1.0);
-            lastDoorSoundNow = millis();
+            play_file(isOpen ? "/dooropen.mp3" : "/doorclose.mp3", PA_ALLOWSD|PA_DOOR, 1.0f);
+            lastDoorSoundNow = now;
             lastDoorNum = doorNum;
         }
     }
 }
 
-void doorSwitch_scan()
+static void dsScan()
 {
+    // Use this after init
+    if(dsPlay) doorSwitch_scan();
+}
+static void doorSwitch_scan()
+{
+    // Don't use after init
     doorSwitch.scan();
-    #ifdef DG_HAVEDOORSWITCH2
-    door2Switch.scan();
-    #endif
+    if(!dsTTout) door2Switch.scan();
 }
 static void doorSwitchLongPress()
 {
@@ -1851,28 +1927,24 @@ static void doorSwitchLongPress()
     isDSwitchChange = true;
     isDSwitchChangeNow = millis();
 }
-
 static void doorSwitchLongPressStop()
 {
     isDSwitchPressed = false;
     isDSwitchChange = true;
     isDSwitchChangeNow = millis();
 }
-#ifdef DG_HAVEDOORSWITCH2
 static void door2SwitchLongPress()
 {
     isD2SwitchPressed = true;
     isD2SwitchChange = true;
     isD2SwitchChangeNow = millis();
 }
-
 static void door2SwitchLongPressStop()
 {
     isD2SwitchPressed = false;
     isD2SwitchChange = true;
     isD2SwitchChangeNow = millis();
 }
-#endif
 #endif
 
 static void ttkeyScan()
@@ -1885,13 +1957,6 @@ static void Button1Scan()
 {
     Button1.scan();
 }
-
-#ifdef DG_HAVEDOORSWITCH
-static void dsScan()
-{
-    if(dsPlay) doorSwitch_scan();
-}
-#endif
 
 static void TTKeyPressed()
 {
@@ -1993,6 +2058,7 @@ void prepareReboot()
     mp_stop();
     stopAudio();
     allOff();
+    setTTOUT(LOW);
     flushDelayedSave();
     delay(500);
     unmount_fs();
@@ -2058,6 +2124,20 @@ static uint8_t restrict_gauge_empty(int val, int minimum, int maximum, uint8_t d
  * Basic Telematics Transmission Framework (BTTFN)
  */
 
+static bool check_packet(uint8_t *buf)
+{
+    // Basic validity check
+    if(memcmp(buf, BTTFUDPHD, 4))
+        return false;
+
+    uint8_t a = 0;
+    for(int i = 4; i < BTTF_PACKET_SIZE - 1; i++) {
+        a += buf[i] ^ 0x55;
+    }
+
+    return (buf[BTTF_PACKET_SIZE - 1] == a);
+}
+
 void addCmdQueue(uint32_t command)
 {
     if(!command) return;
@@ -2067,82 +2147,36 @@ void addCmdQueue(uint32_t command)
     iCmdIdx &= 0x0f;
 }
 
-static void bttfn_setup()
+static void bttfn_eval_response(uint8_t *buf, bool checkCaps)
 {
-    useBTTFN = false;
-
-    // string empty? Disable BTTFN.
-    if(!settings.tcdIP[0])
-        return;
-
-    haveTCDIP = isIp(settings.tcdIP);
+    if(checkCaps && (buf[5] & 0x40)) {
+        bttfnReqStatus &= ~0x40;     // Do no longer poll capabilities
+        if(buf[31] & 0x01) {
+            bttfnReqStatus &= ~0x02; // Do no longer poll speed, comes over multicast
+        }
+        if(buf[31] & 0x10) {
+            TCDSupportsNOTData = true;
+        }
+        if(buf[31] & 0x20) {
+            TCDSupportsCMDDOOR = true;
+        }
+    }
     
-    if(!haveTCDIP) {
-        tcdHostNameHash = 0;
-        unsigned char *s = (unsigned char *)settings.tcdIP;
-        for ( ; *s; ++s) tcdHostNameHash = 37 * tcdHostNameHash + tolower(*s);
+    if(buf[5] & 0x02) {
+        gpsSpeed = (int16_t)(buf[18] | (buf[19] << 8));
+        if(gpsSpeed > 88) gpsSpeed = 88;
+        spdIsRotEnc = !!(buf[26] & (0x80|0x20));    // Speed is from RotEnc or Remote
+    }
+
+    if(buf[5] & 0x10) {
+        tcdNM  = !!(buf[26] & 0x01);
+        tcdFPO = doorTCDFPO = !!(buf[26] & 0x02);   // 1 means fake power off
+        tcdIsBusy = !!(buf[26] & 0x10);
     } else {
-        bttfnTcdIP.fromString(settings.tcdIP);
+        tcdNM = false;
+        tcdFPO = false;
+        doorTCDFPO = true;  // Allow door sounds in this unlikely case
     }
-    
-    dgUDP = &bttfUDP;
-    dgUDP->begin(BTTF_DEFAULT_LOCAL_PORT);
-
-    dgMcUDP = &bttfMcUDP;
-    dgMcUDP->beginMulticast(bttfnMcIP, BTTF_DEFAULT_LOCAL_PORT + 2);
-    
-    BTTFNPreparePacketTemplate();
-    
-    BTTFNfailCount = 0;
-    useBTTFN = true;
-}
-
-void bttfn_loop()
-{
-    int t = 100;
-    
-    if(!useBTTFN)
-        return;
-
-    while(bttfn_checkmc() && t--) {}
-            
-    BTTFNCheckPacket();
-    
-    if(!BTTFNPacketDue) {
-        // If WiFi status changed, trigger immediately
-        if(!BTTFNWiFiUp && (WiFi.status() == WL_CONNECTED)) {
-            BTTFNUpdateNow = 0;
-        }
-        if((!BTTFNUpdateNow) || (millis() - BTTFNUpdateNow > BTTFN_POLL_INT)) {
-            BTTFNTriggerUpdate();
-        }
-    }
-}
-
-static void bttfn_loop_quick()
-{
-    int t = 100;
-    
-    if(!useBTTFN)
-        return;
-
-    while(bttfn_checkmc() && t--) {}
-}
-
-static bool check_packet(uint8_t *buf)
-{
-    // Basic validity check
-    if(memcmp(BTTFUDPBuf, BTTFUDPHD, 4))
-        return false;
-
-    uint8_t a = 0;
-    for(int i = 4; i < BTTF_PACKET_SIZE - 1; i++) {
-        a += BTTFUDPBuf[i] ^ 0x55;
-    }
-    if(BTTFUDPBuf[BTTF_PACKET_SIZE - 1] != a)
-        return false;
-
-    return true;
 }
 
 static void handle_tcd_notification(uint8_t *buf)
@@ -2154,6 +2188,32 @@ static void handle_tcd_notification(uint8_t *buf)
     // that are evaluated synchronously (=later).
     // Do not stuff that messes with display, input,
     // etc.
+
+    if(buf[5] & BTTFN_NOT_DATA) {
+        if(TCDSupportsNOTData) {
+            bttfnDataNotEnabled = true;
+            bttfnLastNotData = millis();
+            seqCnt = GET32(buf, 27);
+            if(bttfnSessionID && (bttfnSessionID != seqCnt)) {
+                lastBTTFNKA = bttfnLastNotData - BTTFN_KA_INTERVAL + (BTTFN_KA_OFFSET*1000);
+                bttfnTCDDataSeqCnt = 1;
+            }
+            bttfnSessionID = seqCnt;
+            seqCnt = GET32(buf, 6);
+            if(seqCnt > bttfnTCDDataSeqCnt || seqCnt == 1) {
+                #ifdef DG_DBG
+                Serial.println("Valid NOT_DATA packet received");
+                #endif
+                bttfn_eval_response(buf, false);
+            } else {
+                #ifdef DG_DBG
+                Serial.printf("Out-of-sequence NOT_DATA packet received %d %d\n", seqCnt, bttfnTCDDataSeqCnt);
+                #endif
+            }
+            bttfnTCDDataSeqCnt = seqCnt;
+        }
+        return;
+    }
     
     switch(buf[5]) {
     case BTTFN_NOT_SPD:
@@ -2206,14 +2266,14 @@ static void handle_tcd_notification(uint8_t *buf)
     case BTTFN_NOT_REENTRY:
         // Start re-entry (if TT currently running)
         // Ignore command if TCD is connected by wire
-        if(!TCDconnected && TTrunning && networkTCDTT) {
+        if(!TCDconnected && (TTrunning || networkTimeTravel) && networkTCDTT) {
             networkReentry = true;
         }
         break;
     case BTTFN_NOT_ABORT_TT:
         // Abort TT (if TT currently running)
         // Ignore command if TCD is connected by wire
-        if(!TCDconnected && TTrunning && networkTCDTT) {
+        if(!TCDconnected && (TTrunning || networkTimeTravel) && networkTCDTT) {
             networkAbort = true;
         }
         break;
@@ -2233,19 +2293,27 @@ static void handle_tcd_notification(uint8_t *buf)
     case BTTFN_NOT_WAKEUP:
         doWakeup = true;
         break;
-    case BTTFN_NOT_BUSY:
-        tcdIsBusy = !!(buf[8]);
+    case BTTFN_NOT_INFO:
+        {
+            uint16_t tcdi1 = buf[6] | (buf[7] << 8);
+            uint16_t tcdi2 = buf[8] | (buf[9] << 8);
+            if(tcdi1 & BTTFN_TCDI1_EXT) {
+                tcdNM  = !!(tcdi1 & BTTFN_TCDI1_NM);
+                tcdFPO = !!(tcdi1 & BTTFN_TCDI1_OFF);
+            }
+            tcdIsBusy = !!(tcdi2 & BTTFN_TCDI2_BUSY);
+        }
         break;
     }
 }
 
+// Check for pending MC packet and parse it
 static bool bttfn_checkmc()
 {
     int psize = dgMcUDP->parsePacket();
 
-    if(!psize) {
+    if(!psize)
         return false;
-    }
 
     // This returns true as long as a packet was received
     // regardless whether it was for us or not. Point is
@@ -2286,8 +2354,8 @@ static void BTTFNCheckPacket()
     
     int psize = dgUDP->parsePacket();
     if(!psize) {
-        if(BTTFNPacketDue) {
-            if((mymillis - BTTFNTSRQAge) > 700) {
+        if(!bttfnDataNotEnabled && BTTFNPacketDue) {
+            if((mymillis - BTTFNTSRQAge) > BTTFN_RESPONSE_TO) {
                 // Packet timed out
                 BTTFNPacketDue = false;
                 // Immediately trigger new request for
@@ -2343,53 +2411,12 @@ static void BTTFNCheckPacket()
             }
         }
 
-        if(BTTFUDPBuf[5] & 0x02) {
-            gpsSpeed = (int16_t)(BTTFUDPBuf[18] | (BTTFUDPBuf[19] << 8));
-            if(gpsSpeed > 88) gpsSpeed = 88;
-            spdIsRotEnc = (BTTFUDPBuf[26] & (0x80|0x20)) ? true : false;    // Speed is from RotEnc or Remote
-        }
+        // TCD did register us, so use current millis as
+        // baseline for KEEP_ALIVE (lastBTTFNKA)
+        lastBTTFNpacket = lastBTTFNKA = mymillis;
 
-        if(BTTFUDPBuf[5] & 0x10) {
-            tcdNM  = (BTTFUDPBuf[26] & 0x01) ? true : false;
-            tcdFPO = (BTTFUDPBuf[26] & 0x02) ? true : false;   // 1 means fake power off
-            tcdIsBusy = (BTTFUDPBuf[26] & 0x10) ? true : false;
-        } else {
-            tcdNM = false;
-            tcdFPO = false;
-        }
-
-        if(BTTFUDPBuf[5] & 0x40) {
-            bttfnReqStatus &= ~0x40;     // Do no longer poll capabilities
-            if(BTTFUDPBuf[31] & 0x01) {
-                bttfnReqStatus &= ~0x02; // Do no longer poll speed, comes over multicast
-            }
-        }
-
-        lastBTTFNpacket = mymillis;
+        bttfn_eval_response(BTTFUDPBuf, true);
     }
-}
-
-// Send a new data request
-static bool BTTFNTriggerUpdate()
-{
-    BTTFNPacketDue = false;
-
-    BTTFNUpdateNow = millis();
-
-    if(WiFi.status() != WL_CONNECTED) {
-        BTTFNWiFiUp = false;
-        return false;
-    }
-
-    BTTFNWiFiUp = true;
-
-    // Send new packet
-    BTTFNSendPacket();
-    BTTFNTSRQAge = millis();
-    
-    BTTFNPacketDue = true;
-    
-    return true;
 }
 
 static void BTTFNPreparePacketTemplate()
@@ -2406,8 +2433,8 @@ static void BTTFNPreparePacketTemplate()
 
     BTTFUDPTBuf[10+13] = BTTFN_TYPE_PCG;
 
-    // Version, MC-marker
-    BTTFUDPTBuf[4] = BTTFN_VERSION | BTTFN_SUP_MC;
+    // Version, MC-marker, ND-marker
+    BTTFUDPTBuf[4] = BTTFN_VERSION | BTTFN_SUP_MC | BTTFN_SUP_ND;
 }
 
 static void BTTFNPreparePacket()
@@ -2435,9 +2462,21 @@ static void BTTFNDispatch()
     dgUDP->endPacket();
 }
 
+// Send a new data request
+static bool BTTFNSendRequest()
+{
+    BTTFNPacketDue = false;
 
-static void BTTFNSendPacket()
-{   
+    BTTFNUpdateNow = millis();
+
+    if(WiFi.status() != WL_CONNECTED) {
+        BTTFNWiFiUp = false;
+        return false;
+    }
+
+    BTTFNWiFiUp = true;
+
+    // Send new packet
     BTTFNPreparePacket();
 
     // Serial
@@ -2453,9 +2492,15 @@ static void BTTFNSendPacket()
     }
 
     BTTFNDispatch();
+
+    BTTFNTSRQAge = millis();
+    
+    BTTFNPacketDue = true;
+    
+    return true;
 }
 
-static bool BTTFNConnected()
+static bool bttfn_connected()
 {
     if(!useBTTFN)
         return false;
@@ -2474,21 +2519,154 @@ static bool BTTFNConnected()
 
 static bool bttfn_trigger_tt()
 {
-    if(!BTTFNConnected())
+    if(!bttfn_connected())
         return false;
 
     if(TTrunning || tcdIsBusy)
         return false;
 
     BTTFNPreparePacket();
+
+    // Trigger BTTFN-wide TT
+    BTTFUDPBuf[5] = 0x80;           
+
+    BTTFNDispatch();
+
+    return true;
+}
+
+static bool bttfn_send_command(uint8_t cmd, uint8_t p1, uint8_t p2)
+{       
+    if(!bttfn_connected())
+        return false;
+
+    BTTFNPreparePacket();
     
-    BTTFUDPBuf[5] = 0x80;           // Trigger BTTFN-wide TT
+    //BTTFUDPBuf[5] = 0x00; // 0 already
+
+    SET32(BTTFUDPBuf, 6, bttfnSeqCnt);         // Seq counter
+    bttfnSeqCnt++;
+    if(!bttfnSeqCnt) bttfnSeqCnt++;
+
+    BTTFUDPBuf[25] = cmd;                      // Cmd + parms
+    BTTFUDPBuf[26] = p1;
+    BTTFUDPBuf[27] = p2;
 
     BTTFNDispatch();
 
     #ifdef DG_DBG
-    Serial.println("Triggered BTTFN-wide TT");
+    Serial.printf("Sent command %d\n", cmd);
+    #endif
+
+    BTTFNLastCmdSent = millis();
+
+    return true;
+}
+
+#ifdef DG_HAVEDOORSWITCH
+static bool bttfn_send_door(bool doorOpen, int doorNum, unsigned long del)
+{
+    if(!TCDSupportsCMDDOOR || !doorTCD || tcdIsBusy || (dsPlayTCDO && !tcdFPO))
+        return false;
+
+    if(!doorTCDS) doorNum = 0;
+
+    uint8_t p1 = (del >> 8) & 0x1f;
+    if(!doorOpen) p1 |= 0x80;
+    p1 |= (doorNum & 0x03) << 5;
+
+    bttfn_send_command(BTTFN_REMCMD_DOOR, p1, del & 0xff);
+
+    #ifdef DG_DBG
+    Serial.println("Door sound triggered");
     #endif
 
     return true;
+}
+#endif
+
+static void bttfn_setup()
+{
+    useBTTFN = false;
+
+    // string empty? Disable BTTFN.
+    if(!settings.tcdIP[0])
+        return;
+
+    haveTCDIP = isIp(settings.tcdIP);
+    
+    if(!haveTCDIP) {
+        tcdHostNameHash = 0;
+        unsigned char *s = (unsigned char *)settings.tcdIP;
+        for ( ; *s; ++s) tcdHostNameHash = 37 * tcdHostNameHash + tolower(*s);
+    } else {
+        bttfnTcdIP.fromString(settings.tcdIP);
+    }
+    
+    dgUDP = &bttfUDP;
+    dgUDP->begin(BTTF_DEFAULT_LOCAL_PORT);
+
+    dgMcUDP = &bttfMcUDP;
+    dgMcUDP->beginMulticast(bttfnMcIP, BTTF_DEFAULT_LOCAL_PORT + 2);
+    
+    BTTFNPreparePacketTemplate();
+    
+    BTTFNfailCount = 0;
+    useBTTFN = true;
+}
+
+void bttfn_loop()
+{
+    if(!useBTTFN)
+        return;
+
+    int t = 100;
+
+    while(bttfn_checkmc() && t--) {}
+
+    unsigned long now = millis();
+            
+    BTTFNCheckPacket();
+    
+    if(bttfnDataNotEnabled) {
+        if(now - lastBTTFNKA > BTTFN_KA_INTERVAL) {
+            if(!BTTFNLastCmdSent || (now - BTTFNLastCmdSent > (BTTFN_KA_INTERVAL/2))) {
+                bttfn_send_command(BTTFN_REMCMD_KEEPALIVE, 0, 0);
+            }
+            BTTFNLastCmdSent = 0;
+            do {
+                lastBTTFNKA += BTTFN_KA_INTERVAL;
+            } while(now - lastBTTFNKA >= BTTFN_KA_INTERVAL);
+        }
+        if(now - bttfnLastNotData > BTTFN_DATA_TO) {
+            // Return to polling if no NOT_DATA for too long
+            bttfnDataNotEnabled = false;
+            bttfnTCDDataSeqCnt = 1;
+            // Re-do DISCOVER, TCD might have got new IP address
+            if(tcdHostNameHash) {
+                haveTCDIP = false;
+            }
+            #ifdef DG_DBG
+            Serial.println("NOT_DATA timeout, returning to polling");
+            #endif
+        }
+    } else if(!BTTFNPacketDue) {
+        // If WiFi status changed, trigger immediately
+        if(!BTTFNWiFiUp && (WiFi.status() == WL_CONNECTED)) {
+            BTTFNUpdateNow = 0;
+        }
+        if((!BTTFNUpdateNow) || (millis() - BTTFNUpdateNow > BTTFN_POLL_INT)) {
+            BTTFNSendRequest();
+        }
+    }
+}
+
+static void bttfn_loop_quick()
+{
+    if(!useBTTFN)
+        return;
+    
+    int t = 100;
+    
+    while(bttfn_checkmc() && t--) {}
 }

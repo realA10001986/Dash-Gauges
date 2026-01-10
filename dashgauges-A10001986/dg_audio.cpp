@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------------------
  * Dash Gauges Panel
- * (C) 2023-2025 Thomas Winischhofer (A10001986)
+ * (C) 2023-2026 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.out-a-ti.me
  *
@@ -85,25 +85,17 @@ static int  mpCurrIdx = 0;
 static bool mpShuffle = false;
 
 static const float volTable[20] = {
-    0.00, 0.02, 0.04, 0.06,
-    0.08, 0.10, 0.13, 0.16,
-    0.19, 0.22, 0.26, 0.30,
-    0.35, 0.40, 0.50, 0.60,
-    0.70, 0.80, 0.90, 1.00
+    0.00f, 0.02f, 0.04f, 0.06f,
+    0.08f, 0.10f, 0.13f, 0.16f,
+    0.19f, 0.22f, 0.26f, 0.30f,
+    0.35f, 0.40f, 0.50f, 0.60f,
+    0.70f, 0.80f, 0.90f, 1.00f
 };
 uint8_t         curSoftVol = DEFAULT_VOLUME;
-#ifdef DG_HAVEVOLKNOB
-// Resolution for pot, 9-12 allowed
-#define POT_RESOLUTION 9
-#define VOL_SMOOTH_SIZE 4
-static int      rawVol[VOL_SMOOTH_SIZE];
-static int      rawVolIdx = 0;
-static int      anaReadCount = 0;
-static long     prev_avg, prev_raw, prev_raw2;
-#endif
+
 static uint32_t g(uint32_t a, int o) { return a << (PA_MASKA - o); }
 
-static float    curVolFact = 1.0;
+static float    curVolFact = 1.0f;
 static bool     dynVol     = true;
 static int      sampleCnt = 0;
 
@@ -146,14 +138,8 @@ void audio_setup()
     audioLogger = &Serial;
     #endif
 
-    // Set resolution for volume pot
-    #ifdef DG_HAVEVOLKNOB
-    analogReadResolution(POT_RESOLUTION);
-    analogSetWidth(POT_RESOLUTION);
-    #endif
-
     out = new AudioOutputI2S(0, 0, 32, 0);
-    out->SetOutputModeMono(true);
+    out->SetOutputModeMono(false);  // Hardware does auto-mono
     out->SetPinout(I2S_BCLK_PIN, I2S_LRCLK_PIN, I2S_DIN_PIN);
 
     mp3  = new AudioGeneratorMP3();
@@ -249,17 +235,6 @@ static int skipID3(char *buf)
     return 0;
 }
 
-static int findWAVdata(char *buf)
-{
-    // Q&D: Assume 'data' within buffer at 32-bit aligned positions
-    for(int i = 0; i <= 60; i += 4) {
-        if(buf[i] == 'd' && buf[i+1] == 'a' && buf[i+2] == 't' && buf[i+3] == 'a')
-            return i+8;   // Return actual data start
-    }
-
-    return 0;
-}
-
 void append_file(const char *audio_file, uint32_t flags, float volumeFactor)
 {
     strcpy(append_audio_file, audio_file);
@@ -311,14 +286,12 @@ void play_file(const char *audio_file, uint32_t flags, float volumeFactor)
     buf[0] = 0;
 
     if(haveSD && ((flags & PA_ALLOWSD) || FlashROMode) && mySD0L->open(audio_file)) {
+
         mySD0L->setPlayLoop((flags & PA_LOOP));
 
         if(flags & PA_WAV) {
-            mySD0L->read((void *)buf, 64);
-            curSeek = findWAVdata(buf);
-            mySD0L->setStartPos(curSeek);
-            mySD0L->seek(0, SEEK_SET);
             wav->begin(mySD0L, out);
+            mySD0L->setStartPos(wav->startPos);
         } else {
             mySD0L->read((void *)buf, 10);
             curSeek = skipID3(buf);
@@ -337,12 +310,10 @@ void play_file(const char *audio_file, uint32_t flags, float volumeFactor)
     #endif
     {
         myFS0L->setPlayLoop((flags & PA_LOOP));
+
         if(flags & PA_WAV) {
-            myFS0L->read((void *)buf, 64);
-            curSeek = findWAVdata(buf);
-            myFS0L->setStartPos(curSeek);
-            myFS0L->seek(0, SEEK_SET);
             wav->begin(myFS0L, out);
+            myFS0L->setStartPos(wav->startPos);
         } else {
             myFS0L->read((void *)buf, 10);
             curSeek = skipID3(buf);
@@ -369,12 +340,12 @@ void play_file(const char *audio_file, uint32_t flags, float volumeFactor)
 
 void play_empty()
 {
-    play_file("/empty.wav", PA_LOOP|PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL|PA_WAV|PA_ISEMPTY, 0.6);
+    play_file("/empty.wav", PA_LOOP|PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL|PA_WAV|PA_ISEMPTY, 0.6f);
 }
 
 //void append_empty()
 //{
-//    append_file("/empty.wav", PA_LOOP|PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL|PA_WAV|PA_ISEMPTY, 0.6);
+//    append_file("/empty.wav", PA_LOOP|PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL|PA_WAV|PA_ISEMPTY, 0.6f);
 //}
 
 void remove_appended_empty()
@@ -404,92 +375,22 @@ void play_key(int k, bool stopOnly)
     play_file(keySnd, pa_key|PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL);
 }
 
-// Returns value for volume based on the position of the pot
-// Since the values vary we do some noise reduction
-#ifdef DG_HAVEVOLKNOB
-static float getRawVolume()
-{
-    float vol_val;
-    long avg = 0, avg1 = 0, avg2 = 0;
-    long raw;
-
-    raw = analogRead(VOLUME_PIN);
-
-    if(anaReadCount > 1) {
-      
-        rawVol[rawVolIdx] = raw;
-
-        if(anaReadCount < VOL_SMOOTH_SIZE) {
-        
-            avg = 0;
-            for(int i = rawVolIdx; i > rawVolIdx - anaReadCount; i--) {
-                avg += rawVol[i & (VOL_SMOOTH_SIZE-1)];
-            }
-            avg /= anaReadCount;
-            anaReadCount++;
-
-        } else {
-
-            for(int i = rawVolIdx; i > rawVolIdx - anaReadCount; i--) {
-                if(i & 1) { 
-                    avg1 += rawVol[i & (VOL_SMOOTH_SIZE-1)];
-                } else {
-                    avg2 += rawVol[i & (VOL_SMOOTH_SIZE-1)];
-                }
-            }
-            avg1 = round((float)avg1 / (float)(VOL_SMOOTH_SIZE/2));
-            avg2 = round((float)avg2 / (float)(VOL_SMOOTH_SIZE/2));
-            avg = (abs(avg1-prev_avg) < abs(avg2-prev_avg)) ? avg1 : avg2;
-
-            //Serial.printf("%d %d %d %d\n", raw, avg1, avg2, avg);
-            
-            prev_avg = avg;
-        }
-        
-    } else {
-      
-        anaReadCount++;
-        rawVol[rawVolIdx] = avg = prev_avg = prev_raw = prev_raw2 = raw;
-        
-    }
-
-    rawVolIdx++;
-    rawVolIdx &= (VOL_SMOOTH_SIZE-1);
-
-    vol_val = (float)avg / (float)((1<<POT_RESOLUTION)-1);
-
-    if((raw + prev_raw + prev_raw2 > 0) && vol_val < 0.01) vol_val = 0.01;
-
-    prev_raw2 = prev_raw;
-    prev_raw = raw;
-
-    //Serial.println(vol_val);
-
-    return vol_val;
-}
-#endif
-
 static float getVolume()
 {
     float vol_val;
 
-    #ifdef DG_HAVEVOLKNOB
-    if(curSoftVol == 255) {
-        vol_val = getRawVolume();
-    } else 
-    #endif
-        vol_val = volTable[curSoftVol];
+    vol_val = volTable[curSoftVol];
 
     // If user muted, return 0
-    if(vol_val == 0.0) return vol_val;
+    if(vol_val == 0.0f) return vol_val;
 
     vol_val *= curVolFact;
 
-    if(dgNM) vol_val *= 0.3;
+    if(dgNM) vol_val *= 0.3f;
       
     // Do not totally mute
     // 0.02 is the lowest audible gain
-    if(vol_val < 0.02) vol_val = 0.02;
+    if(vol_val < 0.02f) vol_val = 0.02f;
 
     return vol_val;
 }
@@ -572,7 +473,6 @@ void mp_init(bool isSetup)
     mpCurrIdx = 0;
     
     if(haveSD) {
-        int i, j;
 
         #ifdef DG_DBG
         Serial.println("MusicPlayer: Checking for music files");
@@ -762,7 +662,7 @@ static bool mp_play_int(bool force)
 
     mp_buildFileName(fnbuf, playList[mpCurrIdx]);
     if(SD.exists(fnbuf)) {
-        if(force) play_file(fnbuf, PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL, 1.0);
+        if(force) play_file(fnbuf, PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL, 1.0f);
         return true;
     }
     return false;
@@ -894,7 +794,6 @@ static bool mp_renameFilesInDir(bool isSetup)
     int fileNum = 0;
     int strLength;
     int nameOffs = 8;
-    int allocBufs = 1;
     int allocBufIdx = 0;
     const unsigned long bufSizes[8] = {
         16384, 16384, 8192, 8192, 8192, 8192, 8192, 4096 
@@ -1149,7 +1048,7 @@ static bool mpren_strLT(const char *a, const char *b)
         unsigned char bbb = mpren_toUpper(*b);
         if(aaa < bbb) return true;
         if(aaa > bbb) return false;
-        *a++; *b++;
+        a++; b++;
     }
 
     return false;

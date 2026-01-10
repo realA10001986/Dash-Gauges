@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------------------
  * Dash Gauges Panel
- * (C) 2023-2025 Thomas Winischhofer (A10001986)
+ * (C) 2023-2026 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.out-a-ti.me
  *
@@ -62,6 +62,7 @@ extern bool TCDconnected;
 #ifdef DG_HAVEDOORSWITCH
 extern bool dsPlay;
 extern uint16_t doPlayDoorSound;
+extern unsigned long doPlayDoorSoundNow;
 #endif
 
 extern bool FPBUnitIsOn;
@@ -111,12 +112,6 @@ void wakeup();
 
 bool switchMusicFolder(uint8_t nmf, bool isSetup = false);
 void showMPRPrecDone(unsigned int perc);
-
-void sideSwitch_scan();
-#ifdef DG_HAVEDOORSWITCH
-void doorSwitch_scan();
-void play_door_open(int doorNum, bool isOpen);
-#endif
 
 void addCmdQueue(uint32_t command);
 
