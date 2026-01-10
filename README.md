@@ -817,6 +817,21 @@ If unchecked, door sounds are always played on both stereo channels.
 
 Depending on the position of the switch and its reaction point, a delay for sound playback might be desired. You can configure delays for the "open" and "close" sound here. Enter the number of milliseconds into the text field; 0 means no delay. The maximum is 5000ms (=5 seconds).
 
+##### &#9193; "Door 2" pin
+
+The connector for "Door 2" can, instead of for a door switch, also be used as an output to signal a time travel. The pin goes HIGH on entering the temporal displacement, and "LOW" on re-entry.
+
+Please do not power any peripheral through this pin; instead, use a relay, and connect "C"(=GND) and "D2" as relay triggers. In case of a standard "Aruino relay module", connect "C" to GND, "D2" to "S"(or "IN"), and 5V as well as GND to a 5V power supply.
+
+<details>
+<summary>For experts...</summary>
+  
+You can grab the +5V also from the Control Board, if you connect all three joints of the "Light Power" solder jumper; +5V will then be on the left pin of the "Ext. Light Pwr" connector; of course, this connector cannot be used for external light power after this modification.
+
+![D2RelayModule](img/d2ttoutscrm.png)
+
+</details>
+
 #### <ins>Gauge Hardware settings</ins>
 
 ##### &#9193; Gauges hardware type
