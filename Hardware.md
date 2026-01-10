@@ -44,7 +44,7 @@ In order to make the Control Board as versatile as possible, there are some sold
 - Red_1: 5V input for analog gauges and electronics
 - Red_2: 12V input for electronics ("+"/"-" pins) and for digital gauges ("DG+"/"-" pins)
 - Red_3: [Time Travel button](#connecting-a-time-travel-button): To trigger a time travel, the button must connect "TT" to "3V3". The connector is also used to connect the Dash Gauges to a TCD [by wire](#connecting-a-tcd-to-the-dash-gauges-by-wire).
-- Red_4: Door switches: Switches need to connect "C" and "1" for door 1, and "C" and "2" for door 2.
+- Red_4: Door switches: See [here](#door-switches)
 
 #### Power supply:
 
@@ -128,6 +128,16 @@ Note: The "Digital Roentgens" connector [green 6] also has pins for illuminating
 #### Connecting a Time Travel button
 
 The Control Board has a Time Travel button (marked "TT"). If you want to connect an external Time Travel button, connect it to the "TT" and "3V3" pins of the "Time Travel" connector [red_3].
+
+#### Door switches
+
+The Control Board has two connectors for switches meant to signal when a car door is opened or closed, in order to play a "door open" or "door close" sound.
+
+"Door 1" is the left hand side door, "Door 2" on the right hand side. This is important because the sound can optionally be played through the TCD's line-out in stereo, and it can be configured to play door sounds on only one stereo channel matching the door location.
+
+The switches need to short/open "D1" and "C", and "D2" and "C" respectively.
+
+The D2 pin can alternatively be used to output a signal on time travel; the pin goes HIGH at the start of the temporal displacement, and LOW on "re-entry". It mirrors a respective signal on the TCD. This can be used to connect, for instance, flux bands to light up during the "time travel". Please do not use the pin to power the connected prop, use a relay instead.
 
 #### Connecting a TCD to the Dash Gauges by wire
 
