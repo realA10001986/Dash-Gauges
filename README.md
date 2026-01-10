@@ -22,7 +22,7 @@ Firmware features include
 - [Time Travel](#basic-operation) function, triggered by button, [Time Circuits Display](https://tcd.out-a-ti.me) (TCD) or via [MQTT](#home-assistant--mqtt)
 - support for Side Switch to play "empty" and "refill" sequences
 - Automatic refill timer, automatic alarm mute timer (both optional)
-- support for door switches for playing sounds when opening/closing the car doors
+- support for door switches for playing sounds when opening/closing the car doors, optionally through the TCD
 - [wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://tcd.out-a-ti.me); used for synchronized time travels, alarm, night mode, fake power and remote control through TCD keypad
 - [music player](#the-music-player): Play mp3 files located on an SD card [requires TCD connected wirelessly or HA/MQTT for control]
 - [SD card](#sd-card) support for custom audio files for effects, and music for the Music Player
@@ -426,7 +426,7 @@ The Dash Gauges can be controlled through messages sent to topic **bttf/dg/cmd**
 - TIMETRAVEL: Start a time travel
 - EMPTY: "Drain" Plutonium and trigger alarm
 - REFILL: Refill the Plutonium chamber
-- PLAY_DOOR_OPEN, PLAY_DOOR_CLOSED: Play respective door sounds; these commands are only executed if the option **_Play door sounds_** in the Config Portal is unchecked.
+- PLAY_DOOR_OPEN, PLAY_DOOR_CLOSED: Play respective door sounds; these commands are only executed if the option **_Enable use of door switches_** in the Config Portal is unchecked. The sound is played through the TCD if so configured in the Config Portal.
 - MP_PLAY: Starts the [Music Player](#the-music-player)
 - MP_STOP: Stops the [Music Player](#the-music-player)
 - MP_NEXT: Jump to next song
@@ -779,9 +779,9 @@ This procedure ensures that all your settings are copied from the old to the new
 
 #### <ins>Door Switches Hardware settings</ins>
 
-##### &#9193; Play door sounds
+##### &#9193; Enable use of door switches
 
-The Control Board has a connector for two door switches; these switches change state whenever a door is opened or closed. The firmware can play a sound for each such event. To enable door sounds, check this.
+The Control Board has a connector for two door switches; these switches change state whenever a door is opened or closed. The firmware can play a sound for each such event. To enable the use of those switches (if connected), check this.
 
 This option must be unchecked in order to use the MQTT commands PLAY_DOOR_OPEN and PLAY_DOOR_CLOSED.
 
@@ -789,9 +789,33 @@ This option must be unchecked in order to use the MQTT commands PLAY_DOOR_OPEN a
 
 This selects what type of door switch is being used. Check this, if the switch closes contact when the door closes. Leave unchecked if the switch opens when the door closes.
 
-##### &#9193; Door sound delay
+##### &#9193; Play sound only when TCD is fake-off
 
-Depending on the position of the switch and its reaction point, a delay for sound playback might be desired. You can configure such a delay here. Enter the number of milliseconds into the text field; 0 means no delay. The maximum is 5000ms (=5 seconds).
+If this is checked, a door sound is only played while the TCD is fake-powered down. If unchecked, a sound is played at any time. The idea is not to be interrupted or disturbed by door sounds as soon as the Time Circuits are on.
+
+##### &#9193; Play door sound through TCD
+
+If checked, the door sounds are played through the TCD, which is especially useful if the TCD is connected to a stereo through its line-out connector.
+
+If unchecked, the door sound is played on the Dash Gauges. 
+
+Playing door sounds through the TCD requires TCD firmware 3.11 or later.
+
+##### &#9193; Only when TCD is fake-off
+
+If checked, a door sound is played through the TCD only while it is fake-powered down; it will be played on the Dash Gauges while the TCD is fake-powered up.
+
+If unchecked, a door sound is always played through the TCD.
+
+##### &#9193; Enable panning
+
+If door sounds are played through the TCD, and your TCD's line-out connector is connected to a stereo, you can make use of panning: If this option is checked, the TCD will play a sound for "Door 1" (left) on the left stereo channel only, and "Door 2" (right) on the right stereo channel.
+
+If unchecked, door sounds are always played on both stereo channels.
+
+##### &#9193; Door open sound delay / Door close sound delay
+
+Depending on the position of the switch and its reaction point, a delay for sound playback might be desired. You can configure delays for the "open" and "close" sound here. Enter the number of milliseconds into the text field; 0 means no delay. The maximum is 5000ms (=5 seconds).
 
 #### <ins>Gauge Hardware settings</ins>
 
