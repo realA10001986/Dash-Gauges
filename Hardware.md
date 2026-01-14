@@ -178,9 +178,9 @@ Tested meter options and configuration:
 <table>
   <tr><td><b>Meter</b></td><td><b>Modification</b></td><td><b>R1/R2, R3/R4</b></td><td><b>Gauge type setting</b></td></tr>
   <tr><td>H&P <b>631-14672</b> 0-0.5V DC voltmeter</td><td>Pointer color changed from red to black using an Edding permanent marker</td><td>470R/8k2</td><td>H&P 631-14672</td></tr>
-  <tr><td>Phaostron 0-5KV DC voltmeter (<b>300-07970</b>)</td><td>None</td><td>470R/4k7</td><td>Generic Analog (0-5V)</td></tr>
-  <tr><td>Phaostron "Cyclic Trim" meter (<b>631-15099</b>)</td><td>The two resistors and the pot inside the meter need to be removed, and the wire (which lead to the pot) needs to be re-attached to the input terminal.</td><td>470R/4k7</td><td>Generic Analog (0-5V)</td></tr>
-  <tr><td>Phaostron 0-75V DC voltmeter (<b>631-16471A</b>)</td><td>Internal resistor and caps need to be removed, the input terminals need to be connected directly to the meter's coil.</td><td>470R/4k7</td><td>Generic Analog (0-5V)</td></tr>
+  <tr><td>Phaostron 0-5KV DC voltmeter (<b>300-07970</b>)</td><td>None</td><td>470R/4k7</td><td>Generic Analog 0-5V</td></tr>
+  <tr><td>Phaostron "Cyclic Trim" meter (<b>631-15099</b>)</td><td>The two resistors and the pot inside the meter need to be removed, and the wire (which lead to the pot) needs to be re-attached to the input terminal.</td><td>470R/4k7</td><td>Generic Analog 0-5V</td></tr>
+  <tr><td>Phaostron 0-75V DC voltmeter (<b>631-16471A</b>)</td><td>Internal resistor and caps need to be removed, the input terminals need to be connected directly to the meter's coil.</td><td>470R/4k7</td><td>Generic Analog 0-5V</td></tr>
   <tr><td>Phaostron R/h (<b>630-14457</b>)</td><td>Bottom adjustment screw needs to be removed, the metal "fork" (into which the screw reached) bent away to make room for the LED, but it MUST NOT touch any other metal part; the wire between this "fork" and the "+" terminal must remain.</td><td>47k/13k</td><td>Generic Analog 0-2.048V</td></tr>
 </table>
 
@@ -251,12 +251,12 @@ Tested meter options and configuration:
 
 <table>
   <tr><td><b>Meter</b></td><td><b>Modification</b></td><td><b>R5/R6</b></td><td><b>Gauge type setting</b></td></tr>
-  <tr><td>Simpson Roentgens meter</td><td>Internal resistors (one axial, one that looks like a wire wrapped around paper) need to be removed, black wire from meter coil leading to v-shaped terminal in center needs to be attached to input terminal directly.</td><td>8k2/10k</td><td>Generic Analog (0-2.048V)</td></tr>  
-  <tr><td>Simpson model 29 0-50V DC voltmeter</td><td>Internal resistor needs to be bridged</td><td>680R/4k7</td><td>Generic Analog (0-5V)</td></tr>
-  <tr><td>Simpson model 29 0-100V DC voltmeter</td><td>Internal resistor needs to be bridged</td><td>680R/4k7</td><td>Generic Analog (0-5V)</td></tr>
+  <tr><td>Simpson Roentgens meter</td><td>Internal resistors (one axial, one that looks like a wire wrapped around paper) need to be removed, black wire from meter coil leading to v-shaped terminal in center needs to be attached to input terminal directly.</td><td>8k2/10k</td><td>Generic Analog 0-2.048V</td></tr>  
+  <tr><td>Simpson model 29 0-50V DC voltmeter</td><td>Internal resistor needs to be bridged</td><td>680R/4k7</td><td>Generic Analog 0-5V</td></tr>
+  <tr><td>Simpson model 29 0-100V DC voltmeter</td><td>Internal resistor needs to be bridged</td><td>680R/4k7</td><td>Generic Analog 0-5V</td></tr>
   <tr><td>Simpson model 29 0-50uA DC ammeter</td><td>None</td><td>TBD</td><td>TBD</td></tr>
-  <tr><td>Simpson model 29 0-1.0mA DC ammeter</td><td>All built-in resistors, caps etc, if any, must be removed. The meter's input terminals must be directly connected to the meter's coil. (My "NOS" sample was configured this way when I got it, but given its 50+ years of age it could as well be that it was modified at some point.)</td><td>470R/4k7</td><td>Generic Analog (0-5V)</td></tr>
-  <tr><td>Simpson model 29 0-50mA DC ammeter</td><td>Internal coil resistor (looks like wire wrapped around paper) in the rear, close to the bottom, needs to be removed: Open the meter, remove the face and just cut the two blank wires leading from the terminals towards the center, the coil resistor will fall out then (be sure to bend down the remaining stubs so that they don't touch anything), the other resistor can remain.</td><td>0R/1k0</td><td>Generic Analog (0-5V)</td></tr>
+  <tr><td>Simpson model 29 0-1.0mA DC ammeter</td><td>All built-in resistors, caps etc, if any, must be removed. The meter's input terminals must be directly connected to the meter's coil. (My "NOS" sample was configured this way when I got it, but given its 50+ years of age it could as well be that it was modified at some point.)</td><td>470R/4k7</td><td>Generic Analog 0-5V</td></tr>
+  <tr><td>Simpson model 29 0-50mA DC ammeter</td><td>Internal coil resistor (looks like wire wrapped around paper) in the rear, close to the bottom, needs to be removed: Open the meter, remove the face and just cut the two blank wires leading from the terminals towards the center, the coil resistor will fall out then (be sure to bend down the remaining stubs so that they don't touch anything), the other resistor can remain.</td><td>0R/1k0</td><td>Generic Analog 0-5V</td></tr>
   <tr><td>Simpson models 49, 142 VU meters</td><td>None</td><td>330R/3k3</td><td>Standard VU-Meter</td></tr>
 </table>
 
