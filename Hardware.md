@@ -181,7 +181,7 @@ Tested meter options and configuration:
   <tr><td>Phaostron 0-5KV DC voltmeter (<b>300-07970</b>)</td><td>None</td><td>470R/4k7</td><td>Generic Analog 0-5V</td></tr>
   <tr><td>Phaostron "Cyclic Trim" meter (<b>631-15099</b>)</td><td>The two resistors and the pot inside the meter need to be removed, and the wire (which lead to the pot) needs to be re-attached to the input terminal.</td><td>470R/4k7</td><td>Generic Analog 0-5V</td></tr>
   <tr><td>Phaostron 0-75V DC voltmeter (<b>631-16471A</b>)</td><td>Internal resistor and caps need to be removed, the input terminals need to be connected directly to the meter's coil.</td><td>470R/4k7</td><td>Generic Analog 0-5V</td></tr>
-  <tr><td>Phaostron R/h (<b>630-14457</b>)</td><td>Bottom adjustment screw needs to be removed, the metal "fork" (into which the screw reached) bent away to make room for the LED, but it MUST NOT touch any other metal part; the wire between this "fork" and the "+" terminal must remain.</td><td>47k/13k</td><td>Generic Analog 0-2.048V</td></tr>
+  <tr><td>Phaostron R/h (<b>630-14457</b>)</td><td>Bottom adjustment screw needs to be removed, the metal "fork" (into which the screw reached) bent away to make room for the LED, but it MUST NOT touch any other metal part; the wire between this "fork" and the "+" terminal must remain. <b>Note</b>: The trim pots on CircuitSetup boards allow only between 2k and 6k resistance; this means that named wire must be replaced with a 56k resistor for reaching the total required resistance.</td><td>47k/13k</td><td>Generic Analog 0-2.048V</td></tr>
 </table>
 
 Unusable:
@@ -385,7 +385,7 @@ In the Config Portal, set the gauge type to "Generic Analog (0-5V)".
 
 CircuitSetup-produced boards have pre-installed trimpots (trimmer potentiometers). In order to adjust those for your very gauges, proceed as follows, for each meter:
 
-- Remove all built-in resistors, caps etc from the meter. The meter's input terminals must be directly connected to the meter's coil.
+- Remove all built-in resistors, caps etc from the meter. The meter's input terminals must be directly connected to the meter's coil. **Note**: The trimpots allow for a total resistance of between 2k and 6k for the Phaostron gauges, and between 10k+20R and 60k+20R for the Roentgens gauge. This covers nearly all meters I have tested. However: If your required resistance is beyond that, you will need to either replace the additional THT resistor on the board (R3, R2 for the Phaostron gauges, R6 for the Roentgens) or add another resistor elsewhere (eg. inside the meter).
 - Check that the trimpot for the meter [purple_3, purple_1, purple_5] is at its maximum resistance; turn it until either you hear a "click" or the screw blocks.
 - Connect the meter to the Control Board.
 - Power up; after the startup-sequence, hold the "Time Travel" button for 5 seconds.
