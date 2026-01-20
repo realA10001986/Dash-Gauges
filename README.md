@@ -30,19 +30,21 @@ Firmware features include
 - [Home Assistant](#home-assistant--mqtt) (MQTT) support
 - built-in OTA installer for firmware updates and audio files
 
+>This [repository](https://dg.out-a-ti.me) is the upstream source for CircuitSetup's releases. The only difference is that both code and documentation [here](https://dg.out-a-ti.me) might be ahead in development.
+
 ## Firmware Installation
 
-If a previous version of the Dash Gauges firmware is installed on your device's ESP32, you can update easily using the pre-compiled binary. Enter the [Config Portal](#the-config-portal), click on "Update" and select the pre-compiled binary file provided in this repository ([install/dashgauges-A10001986.ino.nodemcu-32s.bin](https://github.com/realA10001986/Dash-Gauges/blob/main/install/dashgauges-A10001986.ino.nodemcu-32s.bin)) in the top file selector.
+If a previous version of the Dash Gauges firmware is installed on your device's ESP32, you can update easily using the pre-compiled binary. Enter the [Config Portal](#the-config-portal), click on *Update*, select the pre-compiled binary file ("xxx.bin") provided in the Release package, and click on *Update*.
 
 If you are using a fresh ESP32 board, please see [dashgauges-A10001986.ino](https://github.com/realA10001986/Dash-Gauges/blob/main/dashgauges-A10001986/dashgauges-A10001986.ino) for detailed build and upload information, or, if you don't want to deal with source code, compilers and all that nerd stuff, go [here](https://install.out-a-ti.me) and follow the instructions.
 
- *Important: After a firmware update, the "empty" light might blink for short while after reboot. Do NOT unplug the device during this time.*
+*After a firmware update, the "empty" light might blink for short while after reboot. Do NOT unplug the device during this time.*
 
 ### Sound-pack installation
 
 The firmware comes with a sound-pack which needs to be installed separately. The sound-pack is not updated as often as the firmware itself. If you have previously installed the latest version of the sound-pack, you normally don't have to re-install it when you update the firmware. Only if the "Empty" LED signals "SOS" (three short blinks, three long blinks, three short blinks) during boot, a re-installation/update is needed.
 
-The first step is to download "install/sound-pack-dgXX.zip" and extract it. It contains one file named "DGA.bin".
+The first step is to extract "sound-pack-dgXX.zip" (which is included in the Release package). It contains one file, named "DGA.bin".
 
 Next, head to the [Config Portal](#the-config-portal), click on *Update*, select the "DGA.bin" file in the bottom file selector and click on *Upload*.
 
