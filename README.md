@@ -867,6 +867,8 @@ The username (and optionally the password) to be used when connecting to the bro
 
 ## Appendix B: LED signals
 
+The "Empty" light is used for the following signals:
+
 <table>
     <tr>
      <td align="left">Blinking at 2Hz</td>
@@ -889,6 +891,7 @@ The username (and optionally the password) to be used when connecting to the bro
      <td align="left">Firmware update available; shown briefly at power-up (optional)</td>
     </tr>
 </table>
+
 ---
 _Text & images: (C) Thomas Winischhofer ("A10001986"). See LICENSE._ Source: https://dg.out-a-ti.me  
 _Other props: [Time Circuits Display](https://tcd.out-a-ti.me) ... [Flux Capacitor](https://fc.out-a-ti.me) ... [SID](https://sid.out-a-ti.me) ... [VSR](https://vsr.out-a-ti.me) ... [Remote Control](https://remote.out-a-ti.me) ... [TFC](https://tfc.out-a-ti.me)_
