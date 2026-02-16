@@ -865,6 +865,30 @@ The firmware supports MQTT 3.1.1 and 5.0. There is no difference in features, so
 
 The username (and optionally the password) to be used when connecting to the broker. Can be left empty if the broker accepts anonymous logins.
 
+## Appendix B: LED signals
+
+<table>
+    <tr>
+     <td align="left">Blinking at 2Hz</td>
+     <td align="left">Please wait, busy</td>
+    </tr>
+    <tr>
+     <td align="left">3 long blinks, 3 short blinks, 3 long blinks (SOS in morse)</td>
+     <td align="left">Error: Sound pack <a href="#sound-pack-installation">not installed</a> or outdated</td>
+    </tr>
+    <tr>
+     <td align="left">4 1-second-blinks</td>
+     <td align="left"><a href="#receive-commands-from-time-circuits-display">Alarm</a> (from TCD via BTTFN/MQTT)</td>
+    </tr>
+    <tr>
+     <td align="left">2 brief blinks, 1 second pause, repeat</td>
+     <td align="left">Error: Sound pack installation error</td>
+    </tr>
+    <tr>
+     <td align="left">6 very quick blinks</td>
+     <td align="left">Firmware update available; shown briefly at power-up (optional)</td>
+    </tr>
+</table>
 ---
 _Text & images: (C) Thomas Winischhofer ("A10001986"). See LICENSE._ Source: https://dg.out-a-ti.me  
 _Other props: [Time Circuits Display](https://tcd.out-a-ti.me) ... [Flux Capacitor](https://fc.out-a-ti.me) ... [SID](https://sid.out-a-ti.me) ... [VSR](https://vsr.out-a-ti.me) ... [Remote Control](https://remote.out-a-ti.me) ... [TFC](https://tfc.out-a-ti.me)_
