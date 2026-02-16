@@ -100,20 +100,12 @@ AudioFileSourceFSLoop::AudioFileSourceFSLoop(const char *filename)
     open(filename);
 }
 
-#ifdef USE_SPIFFS   // ------------------------------
-
 bool AudioFileSourceFSLoop::open(const char *filename)
 {
+    #ifdef USE_SPIFFS   // ------------------------------
     f = SPIFFS.open(filename, FILE_READ);
-    return f;
-}
-
-#else   // -----------------------------------------
-
-bool AudioFileSourceFSLoop::open(const char *filename)
-{
+    #else   // ------------------------------------------
     f = LittleFS.open(filename, FILE_READ);
+    #endif // -------------------------------------------
     return f;
 }
-
-#endif  // -----------------------------------------

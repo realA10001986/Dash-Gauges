@@ -15,10 +15,8 @@
  ***                          Version Strings                          ***
  *************************************************************************/
 
-#define DG_VERSION       "V1.29"
-#define DG_VERSION_EXTRA "JAN092026"
-
-//#define DG_DBG              // debug output on Serial
+#define DG_VERSION       "V1.30"
+#define DG_VERSION_EXTRA "FEB162026"
 
 /*************************************************************************
  ***             Configuration for peripherals/features                ***
@@ -34,7 +32,6 @@
 // Version of Control Board
 #define CB_VERSION 4
 
-
 /*************************************************************************
  ***                           Miscellaneous                           ***
  *************************************************************************/
@@ -47,6 +44,13 @@
 
 // Use SPIFFS (if defined) or LittleFS (if undefined; esp32-arduino >= 2.x)
 //#define USE_SPIFFS
+
+/*************************************************************************
+ ***                               Debug                               ***
+ *************************************************************************/
+
+//#define DG_DBG              // Generic except below
+//#define DG_DBG_NET          // Prop network related
 
 /*************************************************************************
  ***                  esp32-arduino version detection                  ***

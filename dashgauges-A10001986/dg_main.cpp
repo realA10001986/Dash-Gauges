@@ -169,6 +169,8 @@ unsigned long        doPlayDoorSoundNow = 0;
 
 static unsigned long swInitNow = 0;
 
+bool showUpdAvail = true;
+
 #define STARTUP_DELAY 2300
 bool                 startup = false;
 static unsigned long startupNow = 0;
@@ -471,7 +473,7 @@ void main_boot2()
     int8_t gaugeIDA = 0, gaugeIDB = 0, gaugeIDC = 0;
 
     #ifdef DG_HAVEDOORSWITCH
-    dsTTout = (atoi(settings.dsTTout) > 0);
+    dsTTout = evalBool(settings.dsTTout);
     #else
     dsTTout = true;
     #endif
@@ -517,7 +519,7 @@ void main_setup()
         left_gauge_idle = restrict_gauge_idle(atoi(settings.lIdle), 0, 100, DEF_L_GAUGE_IDLE);
         left_gauge_empty = restrict_gauge_empty(atoi(settings.lEmpty), 0, left_gauge_idle, DEF_L_GAUGE_EMPTY);
         if(left_gauge_empty >= left_gauge_idle) { left_gauge_idle = DEF_L_GAUGE_IDLE; left_gauge_empty = DEF_L_GAUGE_EMPTY; }
-        TTdrPri = (atoi(settings.drPri) > 0);
+        TTdrPri = evalBool(settings.drPri);
     } else {
         left_gauge_idle = 100;
         left_gauge_empty = 0;
@@ -528,7 +530,7 @@ void main_setup()
         center_gauge_idle = restrict_gauge_idle(atoi(settings.cIdle), 0, 100, DEF_C_GAUGE_IDLE);
         center_gauge_empty = restrict_gauge_empty(atoi(settings.cEmpty), 0, center_gauge_idle, DEF_C_GAUGE_EMPTY);
         if(center_gauge_empty >= center_gauge_idle) { center_gauge_idle = DEF_C_GAUGE_IDLE; center_gauge_empty = DEF_C_GAUGE_EMPTY; }
-        TTdrPPo = (atoi(settings.drPPo) > 0);
+        TTdrPPo = evalBool(settings.drPPo);
     } else {
         center_gauge_idle = 100;
         center_gauge_empty = 0;
@@ -539,7 +541,7 @@ void main_setup()
         right_gauge_idle = restrict_gauge_idle(atoi(settings.rIdle), 0, 100, DEF_R_GAUGE_IDLE);
         right_gauge_empty = restrict_gauge_empty(atoi(settings.rEmpty), 0, right_gauge_idle, DEF_R_GAUGE_EMPTY);
         if(right_gauge_empty >= right_gauge_idle) { right_gauge_idle = DEF_R_GAUGE_IDLE; right_gauge_empty = DEF_R_GAUGE_EMPTY; }
-        TTdrRoe = (atoi(settings.drRoe) > 0);
+        TTdrRoe = evalBool(settings.drRoe);
     } else {
         right_gauge_idle = 100;
         right_gauge_empty = 0;
@@ -553,17 +555,17 @@ void main_setup()
 
     // Other options
     ssDelay = ssOrigDelay = atoi(settings.ssTimer) * 60 * 1000;    
-    useNM = (atoi(settings.useNM) > 0);
-    useFPO = (atoi(settings.useFPO) > 0);
-    bttfnTT = (atoi(settings.bttfnTT) > 0);
+    useNM = evalBool(settings.useNM);
+    useFPO = evalBool(settings.useFPO);
+    bttfnTT = evalBool(settings.bttfnTT);
 
     #ifdef DG_HAVEDOORSWITCH
-    dsPlay = (atoi(settings.dsPlay) > 0);
-    dsPlayO = (atoi(settings.dsPlayO) > 0);
-    doorTCD = (atoi(settings.dsPlayTCD) > 0);
-    dsPlayTCDO = (atoi(settings.dsPlayTCDO) > 0);
-    doorTCDS = (atoi(settings.dsPlayTCDS) > 0);
-    dsCloseOnClose = (atoi(settings.dsCOnC) > 0);
+    dsPlay = evalBool(settings.dsPlay);
+    dsPlayO = evalBool(settings.dsPlayO);
+    doorTCD = evalBool(settings.dsPlayTCD);
+    dsPlayTCDO = evalBool(settings.dsPlayTCDO);
+    doorTCDS = evalBool(settings.dsPlayTCDS);
+    dsCloseOnClose = evalBool(settings.dsCOnC);
     temp = atoi(settings.dsDelay);
     if(temp < 0) temp = 0;
     else if(temp > 5000) temp = 5000;
@@ -585,8 +587,8 @@ void main_setup()
 
     // Determine if Time Circuits Display is connected
     // via wire, and is source of GPIO tt trigger
-    TCDconnected = (atoi(settings.TCDpresent) > 0);
-    noETTOLead = (atoi(settings.noETTOLead) > 0);
+    TCDconnected = evalBool(settings.TCDpresent);
+    noETTOLead = evalBool(settings.noETTOLead);
 
     // Set up TT button / TCD trigger
     TTKey.begin();
@@ -627,6 +629,11 @@ void main_setup()
         Serial.println("Current audio data not installed");
         #endif
         emptyLED.specialSignal(DGSEQ_NOAUDIO);
+        while(emptyLED.specialDone()) {
+            mydelay(100);
+        }
+    } else if(showUpdAvail && updateAvailable()) {
+        emptyLED.specialSignal(DGSEQ_UPDAVAIL);
         while(emptyLED.specialDone()) {
             mydelay(100);
         }
@@ -947,10 +954,7 @@ void main_loop()
             ssEnd();
             isTTKeyHeld = isTTKeyPressed = false;
             // TT button hold unlocks gaugeType in Config Portal
-            if(gaugeTypeLocked) {
-                gaugeTypeLocked = false;
-                updateConfigPortalValues();
-            }
+            gaugeTypeLocked = false;
             //if() {
                 play_file("/buttonl.mp3", PA_ALLOWSD, 1.0f);
             //}
@@ -1234,7 +1238,7 @@ void main_loop()
 
     if(networkAlarm && !TTrunning && !startup && !startAlarm && !refill && !refillWA) {
         networkAlarm = false;
-        if(atoi(settings.playALsnd) > 0) {
+        if(evalBool(settings.playALsnd)) {
             play_file("/alarm.mp3", PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL, 1.0f);
         }
         // No special handling for !FPBUnitIsOn needed, when
@@ -1249,16 +1253,6 @@ void main_loop()
             saveCurVolume();
         }
     }
-
-    #ifdef DG_DBG
-    if(millis() - debugTimer > 10*1000) {
-        debugTimer = millis();
-        Serial.printf("WiFi status %d (Connected = %d)\n", WiFi.status(), WL_CONNECTED);
-        Serial.printf("ssActive %d\n", ssActive);
-        Serial.printf("FPBUnitIsOn %d\n", FPBUnitIsOn);
-        Serial.printf("now %d, lastBTTFNpacket %d, ssLastActivity %d\n", millis(), lastBTTFNpacket, ssLastActivity);
-    }
-    #endif
 }
 
 void flushDelayedSave()
@@ -1614,11 +1608,12 @@ static void execute_remote_command()
 
         } else if(command >= 300 && command <= 399) {
 
-            command -= 300;                       // 300-319/399: Set fixed volume level / enable knob
+            command -= 300;                       // 300-319: Set volume level
             if(command <= 19) {
                 curSoftVol = command;
                 volchanged = true;
                 volchgnow = millis();
+                storeCurVolume();
                 updateConfigPortalVolValues();
             }
 
@@ -1631,9 +1626,7 @@ static void execute_remote_command()
             switch(command) {
             case 222:                             // 222/555 Disable/enable shuffle
             case 555:
-                if(haveMusic) {
-                    mp_makeShuffle((command == 555));
-                }
+                mp_makeShuffle((command == 555));
                 break;
             case 888:                             // 888 go to song #0
                 if(haveMusic) {
@@ -1689,6 +1682,11 @@ static void execute_remote_command()
     } else {
       
         switch(command) {
+        case 53281:                               // 53281: Toggle "update available" signal at boot
+            showUpdAvail = !showUpdAvail;
+            saveUpdAvail();
+            updateConfigPortalUpdValues();
+            break;
         case 64738:                               // 64738: reboot
             if(!injected) {
                 prepareReboot();
@@ -1708,10 +1706,7 @@ static void execute_remote_command()
             }
             break;
         case 317931:                              // 317931: Unlock Gauge Type selection in Config Portal
-            if(gaugeTypeLocked) {
-                gaugeTypeLocked = false;
-                updateConfigPortalValues();
-            }
+            gaugeTypeLocked = false;
             ssRestartTimer();
             break;
         case 1000000:
@@ -2201,12 +2196,12 @@ static void handle_tcd_notification(uint8_t *buf)
             bttfnSessionID = seqCnt;
             seqCnt = GET32(buf, 6);
             if(seqCnt > bttfnTCDDataSeqCnt || seqCnt == 1) {
-                #ifdef DG_DBG
+                #ifdef DG_DBG_NET
                 Serial.println("Valid NOT_DATA packet received");
                 #endif
                 bttfn_eval_response(buf, false);
             } else {
-                #ifdef DG_DBG
+                #ifdef DG_DBG_NET
                 Serial.printf("Out-of-sequence NOT_DATA packet received %d %d\n", seqCnt, bttfnTCDDataSeqCnt);
                 #endif
             }
@@ -2236,7 +2231,7 @@ static void handle_tcd_notification(uint8_t *buf)
             gpsSpeed = (int16_t)(buf[6] | (buf[7] << 8));
             if(gpsSpeed > 88) gpsSpeed = 88;
         } else {
-            #ifdef DG_DBG
+            #ifdef DG_DBG_NET
             Serial.printf("Out-of-sequence packet received from TCD %d %d\n", seqCnt, bttfnTCDSeqCnt);
             #endif
         }
@@ -2321,7 +2316,7 @@ static bool bttfn_checkmc()
     
     dgMcUDP->read(BTTFMCBuf, BTTF_PACKET_SIZE);
 
-    #ifdef DG_DBG
+    #ifdef DG_DBG_NET
     Serial.printf("Received multicast packet from %s\n", dgMcUDP->remoteIP().toString());
     #endif
 
@@ -2401,11 +2396,11 @@ static void BTTFNCheckPacket()
             if(!haveTCDIP) {
                 bttfnTcdIP = dgUDP->remoteIP();
                 haveTCDIP = true;
-                #ifdef DG_DBG
+                #ifdef DG_DBG_NET
                 Serial.printf("Discovered TCD IP %d.%d.%d.%d\n", bttfnTcdIP[0], bttfnTcdIP[1], bttfnTcdIP[2], bttfnTcdIP[3]);
                 #endif
             } else {
-                #ifdef DG_DBG
+                #ifdef DG_DBG_NET
                 Serial.println("Internal error - received unexpected DISCOVER response");
                 #endif
             }
@@ -2453,7 +2448,7 @@ static void BTTFNDispatch()
     if(haveTCDIP) {
         dgUDP->beginPacket(bttfnTcdIP, BTTF_DEFAULT_LOCAL_PORT);
     } else {
-        #ifdef DG_DBG
+        #ifdef DG_DBG_NET
         Serial.printf("Sending multicast (hostname hash %x)\n", tcdHostNameHash);
         #endif
         dgUDP->beginPacket(bttfnMcIP, BTTF_DEFAULT_LOCAL_PORT + 1);
@@ -2554,7 +2549,7 @@ static bool bttfn_send_command(uint8_t cmd, uint8_t p1, uint8_t p2)
 
     BTTFNDispatch();
 
-    #ifdef DG_DBG
+    #ifdef DG_DBG_NET
     Serial.printf("Sent command %d\n", cmd);
     #endif
 
@@ -2577,7 +2572,7 @@ static bool bttfn_send_door(bool doorOpen, int doorNum, unsigned long del)
 
     bttfn_send_command(BTTFN_REMCMD_DOOR, p1, del & 0xff);
 
-    #ifdef DG_DBG
+    #ifdef DG_DBG_NET
     Serial.println("Door sound triggered");
     #endif
 
@@ -2646,7 +2641,9 @@ void bttfn_loop()
             if(tcdHostNameHash) {
                 haveTCDIP = false;
             }
-            #ifdef DG_DBG
+            // Avoid immediate return to stand-alone in main_loop()
+            lastBTTFNpacket = now;
+            #ifdef DG_DBG_NET
             Serial.println("NOT_DATA timeout, returning to polling");
             #endif
         }

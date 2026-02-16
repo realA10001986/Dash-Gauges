@@ -37,16 +37,14 @@ AudioGeneratorWAVLoop::AudioGeneratorWAVLoop()
 
 AudioGeneratorWAVLoop::~AudioGeneratorWAVLoop()
 {
-    free(buff);
-    buff = NULL;
+    freeBuf();
 }
 
 bool AudioGeneratorWAVLoop::stop()
 {
     if(!running) return true;
     running = false;
-    free(buff);
-    buff = NULL;
+    freeBuf();
     output->stop();
     return file->close();
 }
@@ -54,6 +52,13 @@ bool AudioGeneratorWAVLoop::stop()
 bool AudioGeneratorWAVLoop::isRunning()
 {
     return running;
+}
+
+bool AudioGeneratorWAVLoop::freeBuf()
+{
+    if(buff) free(buff);
+    buff = NULL;
+    return false;
 }
 
 // Handle buffered reading, reload each time we run out of data
@@ -114,6 +119,7 @@ bool AudioGeneratorWAVLoop::loop()
     if(!output->ConsumeSample(sL, sR)) goto done; // Can't send, but no error detected
 
     // Try and stuff the buffer one sample at a time
+    // TW: Unroll this
     if(bitsPerSample == 16) {
         if(channels == 2) {
             do
@@ -132,11 +138,11 @@ bool AudioGeneratorWAVLoop::loop()
         do
         {
             if(!GetBufferedData8(l)) stop();
+            sL = ((int16_t)l - 128) << 8;
             if(channels == 2) {
                 if(!GetBufferedData8(r)) stop();
+                sR = ((int16_t)r - 128) << 8;
             }
-            sL = l;
-            sR = r;
         } while (running && output->ConsumeSample(sL, sR));
     }
 
@@ -334,21 +340,22 @@ bool AudioGeneratorWAVLoop::begin(AudioFileSource *source, AudioOutput *output)
         return false;
     }
   
-    if(!output->SetRate( sampleRate )) {
+    if(!output->SetRate(sampleRate)) {
         DBG_OUT(PSTR("AudioGeneratorWAVLoop::begin: failed to SetRate in output\n"));
-        return false;
+        return freeBuf();
     }
-    if(!output->SetBitsPerSample( bitsPerSample )) {
+    // Output is always 16bit
+    if(!output->SetBitsPerSample(16)) {
         DBG_OUT(PSTR("AudioGeneratorWAVLoop::begin: failed to SetBitsPerSample in output\n"));
-        return false;
+        return freeBuf();
     }
-    if(!output->SetChannels( channels )) {
+    if(!output->SetChannels(channels)) {
         DBG_OUT(PSTR("AudioGeneratorWAVLoop::begin: failed to SetChannels in output\n"));
-        return false;
+        return freeBuf();
     }
     if(!output->begin()) {
         DBG_OUT(PSTR("AudioGeneratorWAVLoop::begin: output's begin did not return true\n"));
-        return false;
+        return freeBuf();
     }
   
     running = true;
@@ -374,7 +381,7 @@ bool AudioGeneratorWAVLoop::beginQuick(AudioFileSource *source, AudioOutput *out
     buff = reinterpret_cast<uint8_t *>(malloc(buffSize));
     if(!buff) {
         return false;
-    };
+    }
     buffPtr = 0;
     buffLen = 0;
 
@@ -382,17 +389,17 @@ bool AudioGeneratorWAVLoop::beginQuick(AudioFileSource *source, AudioOutput *out
     sL = sR = 0;
   
     if(!output->SetRate(sampleRate)) {
-        return false;
+        return freeBuf();
     }
     if(!output->SetBitsPerSample(bitsPerSample)) {
-        return false;
+        return freeBuf();
     }
     if(!output->SetChannels(channels)) {
-        return false;
+        return freeBuf();
     }
   
     if(!output->begin()) {
-        return false;
+        return freeBuf();
     }
   
     running = true;

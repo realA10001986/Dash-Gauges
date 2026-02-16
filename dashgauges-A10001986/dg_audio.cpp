@@ -77,12 +77,12 @@ static AudioOutputI2S *out;
 bool audioInitDone = false;
 bool audioMute = false;
 
-bool haveMusic = false;
-bool mpActive = false;
+bool            haveMusic = false;
+bool            mpActive = false;
 static uint16_t maxMusic = 0;
 static uint16_t *playList = NULL;
-static int  mpCurrIdx = 0;
-static bool mpShuffle = false;
+static int      mpCurrIdx = 0;
+bool            mpShuffle = false;
 
 static const float volTable[20] = {
     0.00f, 0.02f, 0.04f, 0.06f,
@@ -111,7 +111,7 @@ static uint32_t append_flags;
 static bool     appendFile = false;
 
 static char     keySnd[] = "/key3.mp3";   // not const
-static bool     haveKeySnd[10];
+static uint32_t haveKeySnd = 0;
 
 static const char *tcdrdone = "/TCD_DONE.TXT";   // leave "TCD", SD is interchangable this way
 unsigned long   renNow1;
@@ -157,15 +157,16 @@ void audio_setup()
     loadMusFoldNum();
     updateConfigPortalMFValues();
     
-    mpShuffle = (settings.shuffle[0] != '0');
+    loadShuffle();
+    updateConfigPortalShufValues();
 
     // MusicPlayer init
     // done in main_setup()
     
     // Check for keyX sounds to avoid unsuccessful file-lookups every time
-    for(int i = 1; i < 10; i++) {
+    for(int i = 1, bm = 1 << 8; i < 10; i++, bm <<= 1) {
         keySnd[4] = '0' + i;
-        haveKeySnd[i] = check_file_SD(keySnd);
+        if(check_file_SD(keySnd)) haveKeySnd |= bm;
     }
 
     audioInitDone = true;
@@ -359,7 +360,7 @@ void play_key(int k, bool stopOnly)
 {
     uint16_t pa_key = (1 << (7+k));
     
-    if(!haveKeySnd[k]) return;    
+    if(!(haveKeySnd & pa_key)) return;    
 
     if(pa_key == key_playing) {
         mp3->stop();
@@ -552,6 +553,7 @@ void mp_makeShuffle(bool enable)
     int numMsx = maxMusic + 1;
 
     mpShuffle = enable;
+    saveShuffle();
 
     if(!haveMusic) return;
     

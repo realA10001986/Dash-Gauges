@@ -79,7 +79,8 @@ class EmptyLED {
 #define DGSEQ_WAIT       2
 #define DGSEQ_ALARM      3
 #define DGSEQ_ERRCOPY    4
-#define DGSEQ_MAX        DGSEQ_ERRCOPY
+#define DGSEQ_UPDAVAIL   5
+#define DGSEQ_MAX        DGSEQ_UPDAVAIL
 
 /*
  * Gauges Class

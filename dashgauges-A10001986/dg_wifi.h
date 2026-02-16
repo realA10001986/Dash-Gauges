@@ -65,12 +65,16 @@ void wifi_loop();
 void wifiOn(unsigned long newDelay = 0, bool alsoInAPMode = false, bool deferConfigPortal = false);
 bool wifiOnWillBlock();
 void wifiStartCP();
+bool updateAvailable();
 
-void updateConfigPortalValues();
 void updateConfigPortalVolValues();
 void updateConfigPortalMFValues();
+void updateConfigPortalShufValues();
+void updateConfigPortalUpdValues();
 
 bool wifi_getIP(uint8_t& a, uint8_t& b, uint8_t& c, uint8_t& d);
 bool isIp(char *str);
+
+bool checkIPConfig();
 
 #endif

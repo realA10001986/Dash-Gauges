@@ -114,6 +114,15 @@
 
 /*  Changelog
  *
+ *  2026/02/16 (A10001986) [1.30]
+ *    - New file format settings. This version of the firmware converts old to new.
+ *    - "Shuffle" setting changes through 9222/9555 are saved (SD required).
+ *    - Display MAC address (STA) on WiFi Configuration Page
+ *    - Avoid falling back to stand-alone mode too early when TCD stops sending
+ *      packets
+ *    - Config files are now only written if actually changed which prolongs
+ *      Flash life-span.
+ *    - Code optimizations and fixes.
  *  2026/01/09 (A10001986) [1.29]
  *    - Add way for Dash Gauges to play door open/close sounds through TCD
  *      (TCD >=3.11)
@@ -516,3 +525,7 @@ void loop()
     audio_loop();
     bttfn_loop();
 }
+
+#if defined(DG_DBG) || defined(DG_DBG_NET)
+#warning "Debug output is enabled. Binary not suitable for release."
+#endif

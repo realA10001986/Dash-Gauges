@@ -55,6 +55,7 @@
 extern bool haveFS;
 extern bool haveSD;
 extern bool FlashROMode;
+extern const char rspv[];
 
 extern bool haveAudioFiles;
 
@@ -85,8 +86,6 @@ extern uint8_t musFolderNum;
 #define DEF_DR_PRI          1     // 0: Meter jumps to zero after TT; 1: slowly drain during TT
 #define DEF_DR_PPO          1     // 0: Meter jumps to zero after TT; 1: slowly drain during TT
 #define DEF_DR_ROE          1     // 0: Meter jumps to zero after TT; 1: slowly drain during TT
-
-#define DEF_SHUFFLE         0     // Music Player: Do not shuffle by default
 
 #define DEF_TCD_IP          ""    // TCD ip address for BTTFN
 #define DEF_USE_GPSS        0     // 0: Ignore GPS speed; 1: Use it for chase speed
@@ -139,8 +138,6 @@ struct Settings {
     char cThreshold[6]      = "0";
     char rThreshold[6]      = "0";
 
-    char shuffle[4]         = MS(DEF_SHUFFLE);
-
     char tcdIP[32]          = DEF_TCD_IP;
     //char useGPSS[4]         = MS(DEF_USE_GPSS);
     char useNM[4]           = MS(DEF_USE_NM);
@@ -175,8 +172,11 @@ struct Settings {
     char gaugeIDB[4]        = MS(DEF_GAUGE_TYPE);
     char gaugeIDC[4]        = MS(DEF_GAUGE_TYPE);
 
+    // Kludge for CP
     char Vol[6];
     char musicFolder[6];
+    char shuffle[4];
+    char upd[4];
 };
 
 struct IPSettings {
@@ -196,13 +196,22 @@ void unmount_fs();
 void write_settings();
 bool checkConfigExists();
 
-bool loadCurVolume();
-void saveCurVolume(bool useCache = true);
+bool evalBool(char *s);
 
-bool loadMusFoldNum();
+void loadCurVolume();
+void storeCurVolume();
+void saveCurVolume();
+
+void saveUpdAvail();
+
+void saveAllSecCP();
+
+void loadMusFoldNum();
 void saveMusFoldNum();
 
-void copySettings();
+void loadShuffle();
+void saveShuffle();
+void saveAllTerCP();
 
 bool loadIpSettings();
 void writeIpSettings();
@@ -214,6 +223,8 @@ void doCopyAudioFiles();
 
 bool check_allow_CPA();
 void delete_ID_file();
+
+void moveSettings();
 
 #define MAX_SIM_UPLOADS 16
 #define UPL_OPENERR 1

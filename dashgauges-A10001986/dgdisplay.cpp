@@ -235,7 +235,13 @@ static const DRAM_ATTR uint8_t _specialArray[DGSEQ_MAX][64] = {
       SS_LOOP,
       1, 20, 0, 20, 1, 20, 0, 100,
       SS_END
-    }
+    },
+    {                                               // 5: Update available
+      SS_ONESHOT,
+      1, 10, 0, 10, 1, 10, 0, 10, 1, 10, 0, 10,
+      1, 10, 0, 10, 1, 10, 0, 10, 1, 10, 0, 10,
+      SS_END
+    },
 };
 
 // ISR: "Empty" LED blinking

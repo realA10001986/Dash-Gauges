@@ -65,6 +65,8 @@ extern uint16_t doPlayDoorSound;
 extern unsigned long doPlayDoorSoundNow;
 #endif
 
+extern bool showUpdAvail;
+
 extern bool FPBUnitIsOn;
 extern bool dgNM;
 
