@@ -845,6 +845,8 @@ This selects the type of gauge hardware and the way of connection. In order to p
 
 then reload the page in your browser.
 
+---
+
 ### HA/MQTT Settings
 
 ##### &#9193; Home Assistant support (MQTT)
