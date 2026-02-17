@@ -478,9 +478,9 @@ This "car setup" can also be used in a  setup with no local WiFi network present
 
 The Dash Gauges have a connector for two door switches. These switches trigger door open/close sounds.
 
-By default, the "Door Open" sound is played when the switch is closed; "Door close" is played when the switch opens.
+For information on wiring, see [here](Hardware.md#door-switches), section "Door switches".
 
-In the Config Portal, you can invert this setting, so that the "Door Open" sound is played when the switch is closed.
+There are several options for door sounds in the Config Portal, please see [here](#door-switches-hardware-settings).
 
 ## WiFi power saving features
 
@@ -799,7 +799,7 @@ This option must be unchecked in order to use the MQTT commands PLAY_DOOR_OPEN a
 
 ##### &#9193; Switch closes when door is closed
 
-This selects what type of door switch is being used. Check this, if the switch closes contact when the door closes. Leave unchecked if the switch opens when the door closes.
+This selects what type of door switch is being used. Check this option if the switch closes contact when the door closes. Leave this option unchecked if the switch opens when the door closes.
 
 ##### &#9193; Play sound only when TCD is fake-off
 
