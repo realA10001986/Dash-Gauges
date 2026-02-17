@@ -528,6 +528,7 @@ Alternatively, you can install the sound-pack the following way:
 - power up the Dash Gauges; the sound-pack will be installed automatically.
 </details>
 
+---
 
 ## Appendix A: The Config Portal
 
