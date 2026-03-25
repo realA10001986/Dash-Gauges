@@ -519,7 +519,7 @@ _Note that installing the sound-pack requires an [SD card](#sd-card)._
 
 The first step is to extract "sound-pack-dgXX.zip" (which is included in every [Release package](https://github.com/realA10001986/Dash-Gauges/releases)). It contains one file, named "DGA.bin".
 
-Next, head to the [Config Portal](#the-config-portal), click on "Update 6 Upload", select the "DGA.bin" file in the _bottom_ file selector and click on *Upload*.
+Next, head to the [Config Portal](#the-config-portal), click on "Update & Upload", select the "DGA.bin" file in the _bottom_ file selector and click on *Upload*.
 
 <details>
 <summary>Alternative way</summary>
