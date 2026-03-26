@@ -476,7 +476,7 @@ In order to access the Dash Gauges' Config Portal in your car, connect your hand
 
 This "car setup" can also be used in a  setup with no local WiFi network present.
 
-### Door Switches
+## Door Switches
 
 The Dash Gauges have a connector for two door switches. These switches trigger door open/close sounds.
 
