@@ -2101,6 +2101,13 @@ void mydelay(unsigned long mydel)
     }
 }
 
+unsigned long millisNonZero()
+{
+    unsigned long now = millis();
+    if(!now) now--;
+    return now;
+}
+
 static uint8_t restrict_gauge_idle(int val, int minimum, int maximum, uint8_t def)
 {
     if(val <= minimum) return def;
@@ -2345,7 +2352,7 @@ static bool bttfn_checkmc()
 // Check for pending packet and parse it
 static void BTTFNCheckPacket()
 {
-    unsigned long mymillis = millis();
+    unsigned long mymillis = millisNonZero();
     
     int psize = dgUDP->parsePacket();
     if(!psize) {
@@ -2462,7 +2469,7 @@ static bool BTTFNSendRequest()
 {
     BTTFNPacketDue = false;
 
-    BTTFNUpdateNow = millis();
+    BTTFNUpdateNow = millisNonZero();
 
     if(WiFi.status() != WL_CONNECTED) {
         BTTFNWiFiUp = false;
@@ -2553,7 +2560,7 @@ static bool bttfn_send_command(uint8_t cmd, uint8_t p1, uint8_t p2)
     Serial.printf("Sent command %d\n", cmd);
     #endif
 
-    BTTFNLastCmdSent = millis();
+    BTTFNLastCmdSent = millisNonZero();
 
     return true;
 }
@@ -2619,7 +2626,7 @@ void bttfn_loop()
 
     while(bttfn_checkmc() && t--) {}
 
-    unsigned long now = millis();
+    unsigned long now = millisNonZero();
             
     BTTFNCheckPacket();
     

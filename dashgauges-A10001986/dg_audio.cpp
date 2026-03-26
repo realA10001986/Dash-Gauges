@@ -288,7 +288,7 @@ void play_file(const char *audio_file, uint32_t flags, float volumeFactor)
 
     if(haveSD && ((flags & PA_ALLOWSD) || FlashROMode) && mySD0L->open(audio_file)) {
 
-        mySD0L->setPlayLoop((flags & PA_LOOP));
+        mySD0L->setPlayLoop(!!(flags & PA_LOOP));
 
         if(flags & PA_WAV) {
             wav->begin(mySD0L, out);
@@ -310,7 +310,7 @@ void play_file(const char *audio_file, uint32_t flags, float volumeFactor)
       else if(haveFS && myFS0L->open(audio_file))
     #endif
     {
-        myFS0L->setPlayLoop((flags & PA_LOOP));
+        myFS0L->setPlayLoop(!!(flags & PA_LOOP));
 
         if(flags & PA_WAV) {
             wav->begin(myFS0L, out);

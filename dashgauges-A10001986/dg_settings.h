@@ -68,7 +68,6 @@ extern uint8_t musFolderNum;
 
 #define DEF_HOSTNAME        "gauges"
 #define DEF_WIFI_RETRY      3     // 1-10; Default: 3 retries
-#define DEF_WIFI_TIMEOUT    7     // 7-25; Default: 7 seconds
 #define DEF_AP_CHANNEL      1     // 1-13; 0 = random(1-13)
 #define DEF_WIFI_APOFFDELAY 0
 
@@ -110,73 +109,73 @@ extern uint8_t musFolderNum;
 struct Settings {
     char ssid[34]           = "";
     char pass[66]           = "";
+    char bssid[18]          = "";
 
     char hostName[32]       = DEF_HOSTNAME;
     char wifiConRetries[4]  = MS(DEF_WIFI_RETRY);
-    char wifiConTimeout[4]  = MS(DEF_WIFI_TIMEOUT);
     char systemID[8]        = "";
     char appw[10]           = "";
     char apChnl[4]          = MS(DEF_AP_CHANNEL);
     char wifiAPOffDelay[4]  = MS(DEF_WIFI_APOFFDELAY);
     
-    char autoRefill[6]      = MS(DEF_AUTO_REFILL);
-    char autoMute[6]        = MS(DEF_AUTO_MUTE);
-    char playALsnd[4]       = MS(DEF_PLAY_ALM_SND);
-    char ssTimer[6]         = MS(DEF_SS_TIMER);
+    char autoRefill[4]      = MS(DEF_AUTO_REFILL);
+    char autoMute[4]        = MS(DEF_AUTO_MUTE);
+    char playALsnd[2]       = MS(DEF_PLAY_ALM_SND);
+    char ssTimer[4]         = MS(DEF_SS_TIMER);
 
-    char lIdle[6]           = MS(DEF_L_GAUGE_IDLE);
-    char cIdle[6]           = MS(DEF_C_GAUGE_IDLE);
-    char rIdle[6]           = MS(DEF_R_GAUGE_IDLE);
-    char lEmpty[6]          = MS(DEF_L_GAUGE_EMPTY);
-    char cEmpty[6]          = MS(DEF_C_GAUGE_EMPTY);
-    char rEmpty[6]          = MS(DEF_R_GAUGE_EMPTY);
-    char drPri[4]           = MS(DEF_DR_PRI);
-    char drPPo[4]           = MS(DEF_DR_PPO);
-    char drRoe[4]           = MS(DEF_DR_ROE);
+    char lIdle[4]           = MS(DEF_L_GAUGE_IDLE);
+    char cIdle[4]           = MS(DEF_C_GAUGE_IDLE);
+    char rIdle[4]           = MS(DEF_R_GAUGE_IDLE);
+    char lEmpty[4]          = MS(DEF_L_GAUGE_EMPTY);
+    char cEmpty[4]          = MS(DEF_C_GAUGE_EMPTY);
+    char rEmpty[4]          = MS(DEF_R_GAUGE_EMPTY);
+    char drPri[2]           = MS(DEF_DR_PRI);
+    char drPPo[2]           = MS(DEF_DR_PPO);
+    char drRoe[2]           = MS(DEF_DR_ROE);
 
-    char lThreshold[6]      = "0";
-    char cThreshold[6]      = "0";
-    char rThreshold[6]      = "0";
+    char lThreshold[4]      = "0";
+    char cThreshold[4]      = "0";
+    char rThreshold[4]      = "0";
 
     char tcdIP[32]          = DEF_TCD_IP;
     //char useGPSS[4]         = MS(DEF_USE_GPSS);
-    char useNM[4]           = MS(DEF_USE_NM);
-    char useFPO[4]          = MS(DEF_USE_FPO);
-    char bttfnTT[4]         = MS(DEF_BTTFN_TT);
+    char useNM[2]           = MS(DEF_USE_NM);
+    char useFPO[2]          = MS(DEF_USE_FPO);
+    char bttfnTT[2]         = MS(DEF_BTTFN_TT);
 
-#ifdef DG_HAVEMQTT  
-    char useMQTT[4]         = "0";
-    char mqttVers[4]        = "0"; // 0 = 3.1.1, 1 = 5.0
-    char mqttServer[80]     = "";  // ip or domain [:port]  
-    char mqttUser[128]      = "";  // user[:pass] (UTF8)
-#endif 
+    char TCDpresent[2]      = MS(DEF_TCD_PRES);
+    char noETTOLead[2]      = MS(DEF_NO_ETTO_LEAD);
 
-    char TCDpresent[4]      = MS(DEF_TCD_PRES);
-    char noETTOLead[4]      = MS(DEF_NO_ETTO_LEAD);
+    char CfgOnSD[2]         = MS(DEF_CFG_ON_SD);
+    char sdFreq[2]          = MS(DEF_SD_FREQ);
 
-    char CfgOnSD[4]         = MS(DEF_CFG_ON_SD);
-    char sdFreq[4]          = MS(DEF_SD_FREQ);
-
-    char dsPlay[4]          = MS(DEF_DS_PLAY);
-    char dsPlayO[4]         = "0";
-    char dsCOnC[4]          = MS(DEF_DS_NC);
-    char dsPlayTCD[4]       = "0";
-    char dsPlayTCDO[4]      = "0";
-    char dsPlayTCDS[4]      = "1";
+    char dsPlay[2]          = MS(DEF_DS_PLAY);
+    char dsPlayO[2]         = "0";
+    char dsCOnC[2]          = MS(DEF_DS_NC);
+    char dsPlayTCD[2]       = "0";
+    char dsPlayTCDO[2]      = "0";
+    char dsPlayTCDS[2]      = "1";
     char dsDelay[6]         = MS(DEF_DS_DELAY);
     char dsDelayC[6]        = MS(DEF_DS_DELAY);
 
-    char dsTTout[4]         = MS(DEF_DS_TTOUT);
+    char dsTTout[2]         = MS(DEF_DS_TTOUT);
 
     char gaugeIDA[4]        = MS(DEF_GAUGE_TYPE);
     char gaugeIDB[4]        = MS(DEF_GAUGE_TYPE);
     char gaugeIDC[4]        = MS(DEF_GAUGE_TYPE);
 
+#ifdef DG_HAVEMQTT  
+    char useMQTT[2]         = "0";
+    char mqttVers[2]        = "0"; // 0 = 3.1.1, 1 = 5.0
+    char mqttServer[80]     = "";  // ip or domain [:port]  
+    char mqttUser[128]      = "";  // user[:pass] (UTF8)
+#endif 
+
     // Kludge for CP
-    char Vol[6];
-    char musicFolder[6];
-    char shuffle[4];
-    char upd[4];
+    char Vol[4];
+    char musicFolder[2];
+    char shuffle[2];
+    char upd[2];
 };
 
 struct IPSettings {
@@ -203,6 +202,9 @@ void storeCurVolume();
 void saveCurVolume();
 
 void saveUpdAvail();
+
+void loadUpdVers(int &v, int& r);
+void saveUpdVers(int v, int r);
 
 void saveAllSecCP();
 

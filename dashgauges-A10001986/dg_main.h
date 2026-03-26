@@ -106,6 +106,7 @@ void allOff();
 void prepareReboot();
 
 void mydelay(unsigned long mydel);
+unsigned long millisNonZero();
 
 void prepareTT();
 void refill_plutonium();

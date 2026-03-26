@@ -114,8 +114,24 @@
 
 /*  Changelog
  *
+ *  2026/03/25 (A10001986) [1.31]
+ *    **********************************************************************************
+ *    ** If updating from below 1.30, please install 1.30 first to have your          **
+ *    ** settings converted. If 1.30 is skipped, some of your settings (static IP,    **
+ *    ** volume, music folder number) will be restored to default values. It suffices **
+ *    ** to install 1.30 and boot once; you can then immediately update to a later    **
+ *    ** version.                                                                     **
+ *    ** https://github.com/realA10001986/Dash-Gauges/releases/tag/V1.30              **
+ *    **********************************************************************************
+ *    - WiFi: Allow defining a BSSID (AP MAC address) to connect to a specific AP
+ *      if multiple APs with identical SSID are available.
+ *    - MQTT: Disable if server can't be resolved
+ *    - WiFi: Do not power down AP long as a client is connected
+ *    - Brush up Config Portal a bit
+ *    - Code optimizations and fixes.
  *  2026/02/16 (A10001986) [1.30]
- *    - New file format settings. This version of the firmware converts old to new.
+ *    - New file format for secondary and IP settings. This version of the firmware
+ *      converts old to new.
  *    - "Shuffle" setting changes through 9222/9555 are saved (SD required).
  *    - Display MAC address (STA) on WiFi Configuration Page
  *    - Avoid falling back to stand-alone mode too early when TCD stops sending
