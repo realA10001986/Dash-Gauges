@@ -839,7 +839,8 @@ Please do not power any peripheral through this pin; instead, use a relay, and c
 
 <details>
 <summary>Advanced...</summary>
-  
+
+
 You can grab the +5V also from the Control Board, if you connect all three joints of the "Light Power" solder jumper; +5V will then be on the left pin of the "Ext. Light Pwr" connector; of course, this connector cannot be used for external light power after this modification.
 
 ![D2RelayModule](img/d2ttoutscrm.png)
