@@ -548,7 +548,7 @@ This leads to the [Settings page](#settings).
 
 This leads to the [HomeAssistant/MQTT Settings page](#hamqtt-settings).
 
-##### &#9193; Update
+##### &#9193; Update & Upload
 
 This leads to the firmware update and audio upload page.
 
