@@ -22,7 +22,7 @@ Firmware features include
 - [Time Travel](#basic-operation) function, triggered by button, [Time Circuits Display](https://tcd.out-a-ti.me) (TCD) or via [MQTT](#home-assistant--mqtt)
 - support for Side Switch to play "empty" and "refill" sequences
 - Automatic refill timer, automatic alarm mute timer (both optional)
-- support for door switches for playing sounds when opening/closing the car doors, optionally through the TCD
+- support for [door switches](#door-switches) for playing sounds when opening/closing the car doors, optionally through the TCD (and hence through your stereo)
 - [wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://tcd.out-a-ti.me); used for synchronized time travels, alarm, night mode, fake power and remote control through TCD keypad
 - [music player](#the-music-player): Play mp3 files located on an SD card [requires TCD connected wirelessly or HA/MQTT for control]
 - [SD card](#sd-card) support for custom audio files for effects, and music for the Music Player
@@ -502,7 +502,7 @@ In order to reduce the number of write operations and thereby prolong the life o
 
 ## Firmware Installation / Firmware Update
 
-If a previous version of the Dash Gauges firmware is installed on your device's ESP32, you can update easily using the pre-compiled binary. Enter the [Config Portal](#the-config-portal), click on "Update & Upload", select the pre-compiled binary file ("**dashgauges-A10001986.ino.nodemcu-32s.bin**" or "**Dash-Gauges_vX.YY.bin**") provided in the [Release package](https://github.com/realA10001986/Dash-Gauges/releases), and click on *Update*.
+If a previous version of the Dash Gauges firmware is installed on your device's ESP32, you can update easily using the pre-compiled binary. Enter the [Config Portal](#the-config-portal), click on "Update & Upload", select the pre-compiled binary file ("**dashgauges-A10001986-Vx.xx.bin**" or "**Dash-Gauges_vX.YY.bin**") provided in the [Release package](https://github.com/realA10001986/Dash-Gauges/releases), and click on *Update*.
 
 <details>
 <summary>Installing on a fresh ESP32...</summary>
@@ -552,9 +552,9 @@ This leads to the [HomeAssistant/MQTT Settings page](#hamqtt-settings).
 
 This leads to the firmware update and audio upload page.
 
-In order to upload a new firmware, such as published in the [Release packages](https://github.com/realA10001986/Dash-Gauges/releases), select the "**dashgauges-A10001986.ino.nodemcu-32s.bin**" or "**Dash-Gauges_vX.YY.bin**" file as contained in the Release package in the _top_ file selector and click *Update*.
+In order to upload a new firmware, such as published in the [Release packages](https://github.com/realA10001986/Dash-Gauges/releases), select the "**dashgauges-A10001986-Vx.xx.bin**" or "**Dash-Gauges_vX.YY.bin**" file as contained in the Release package in the _top_ file selector and click *Update*.
 
-You can also install the Dash Gauges' sound-pack on this page; download the sound-pack (which is included in every [Release package](https://github.com/realA10001986/Dash-Gauges/releases)), extract it and select the resulting DGA.bin file in the _bottom_ file selector. Finally, click "Upload". Note that an SD card is required for this operation.
+You can also install the Dash Gauges' sound-pack on this page: Download the sound-pack (which is included in every [Release package](https://github.com/realA10001986/Dash-Gauges/releases)), extract it and select the resulting DGA.bin file in the _bottom_ file selector. Finally, click *Upload*. Note that an SD card is required for this operation.
 
 See also [here](#firmware-installation--firmware-update).
 
