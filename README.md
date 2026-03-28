@@ -95,7 +95,7 @@ If the Dash Gauges fail to connect, they fall back to AP-mode. You can trigger a
 
 #### Places without WiFi network
 
-In this case and with no [Time Circuits Display](https://tcd.out-a-ti.me) at hand, keep your Dash Gauges operating in AP-mode.
+In this case and with no [Time Circuits Display](https://circuitsetup.us/product/complete-time-circuits-display-kit/) at hand, keep your Dash Gauges operating in AP-mode.
 
 If you have a TCD, you can connect your Dash Gauges to the TCD's own WiFi network: 
 
