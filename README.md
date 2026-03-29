@@ -4,7 +4,7 @@ This [repository](https://dg.out-a-ti.me) holds
 - [instructions](Hardware.md) for building a Dash Gauge panel, as seen in the Delorean Time Machine,
 - and a suitable firmware.
 
-This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](https://tcd.out-a-ti.me) as it relies on the TCD's keypad to control many of its functions.
+This panel is meant as an add-on for the CircuitSetup [Time Circuits Display](https://circuitsetup.us/product/complete-time-circuits-display-kit/) as it relies on the TCD's keypad to control many of its functions.
 
 [<img src="img/mydg1.jpg">](img/mydg1_l.jpg)
 [<img src="img/mydg2.jpg">](img/mydg2_l.jpg)
@@ -379,7 +379,7 @@ You can use BTTF-Network and MQTT at the [same time](#receive-commands-from-time
 
 1: Not supported through HA/MQTT [_INJECT_](#the-inject_x-command) command
 
-[Here](https://github.com/realA10001986/Dash-Gauges/blob/main/CheatSheet.pdf) is a cheat sheet for printing or screen-use. (Note that MacOS' preview application has a bug that scrambles the links in the document. Acrobat Reader does it correctly.)
+[Here](CheatSheet.pdf) is a cheat sheet for printing or screen-use. (Note that MacOS' preview application has a bug that scrambles the links in the document. Acrobat Reader does it correctly.)
 
 ### Connecting a TCD by wire
 
