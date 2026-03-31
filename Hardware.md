@@ -7,7 +7,7 @@ The Dash Gauges consist of several parts:
 - The **gauges**: These are vintage meters made by Phaostron and Simpson and need to be sourced by the prop builder. In the picture above you see two modified Phaostron 631-15099 "Cyclic Trim" meters, and a Simpson model 49MC VU Meter disguised as the "Roentgens" gauge. Many other types of meters can be used.
 - Aluminium (Aluminum) **bezel**; can be purchased at [CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-plutonium-gauge-bezel/). The measurements are in the ["enclosure"](https://github.com/realA10001986/Dash-Gauges/tree/main/hardware/enclosure) folder of this repository. 
 
-This prop was made to be compatible with the CircuitSetup line of movie props ([Time Circuits Display](https://tcd.out-a-ti.me), [Flux Capacitor](https://fc.out-a-ti.me), [SID](https://sid.out-a-ti.me)).
+This prop was made to be compatible with the CircuitSetup/A10001986 line of movie props ([Time Circuits Display](https://circuitsetup.us/product/complete-time-circuits-display-kit/), [Flux Capacitor](https://circuitsetup.us/product/flux-capacitor-light-sound-kit/), [SID](https://circuitsetup.us/product/delorean-time-machine-status-indicator-display-sid/), [VSR](https://vsr.out-a-ti.me), [Futaba Remote Control](https://circuitsetup.us/product/futaba-remote-stanley-display-wireless-control-kit/)).
 
 ## Control board
 
