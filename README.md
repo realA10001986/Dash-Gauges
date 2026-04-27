@@ -485,7 +485,7 @@ If everthing is in place, you can enable Car mode on the Dash Gauges by holding 
 
 You can switch between your "normal" (home, iPhone, ..) WiFi connection and Car Mode holding _Button 1_ for six seconds as described, or through the Config Portal.
 
-In order to access the Dash Gauges' Config Portal in *Car mode*, connect your handheld or computer to the TCD's WiFi network ("TCD-AP"), and direct your browser to http://gauges.local.
+In order to access the Dash Gauges' Config Portal in Car mode, connect your handheld or computer to the TCD's WiFi network ("TCD-AP"), and direct your browser to http://gauges.local.
 
   ><details><summary>If that fails...</summary>
   >If connecting to http://gauges.local fails due to a name resolution error, go to the TCD's keypad menu, navigate to "BTTFN CLIENTS", and look for the Dash Gauges' IP address there; then direct your browser to that IP by using the URL http://a.b.c.d (a-d being the IP address displayed on the TCD display)</details>
