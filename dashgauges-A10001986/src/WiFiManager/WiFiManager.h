@@ -31,11 +31,7 @@
 #include <DNSServer.h>
 #include <memory>
 
-// prep string concat vars
-#define WM_STRING2(x) #x
-#define WM_STRING(x) WM_STRING2(x)
-
-// menu ids
+// Menu IDs
 #define WM_MENU_WIFI        0
 #define WM_MENU_PARAM       1
 #define WM_MENU_PARAM2      2
@@ -44,48 +40,18 @@
 #define WM_MENU_SEP         5
 #define WM_MENU_SEP_F       6
 #define WM_MENU_CUSTOM      7
-#define WM_MENU_END        -1
+#if defined(WM_PARAM2) && defined(WM_DYNPARM3)
+#define WM_MENU_PARAM2A     8
+#define WM_MENU_MAX         WM_MENU_PARAM2A
+#else
 #define WM_MENU_MAX         WM_MENU_CUSTOM
+#endif
+#define WM_MENU_END        -1
 
-// operator for generated HTML params
+// Operator for generated HTML params
 #define WM_CP_LEN           1
 #define WM_CP_CREATE        2
 #define WM_CP_DESTROY       3
-
-#ifdef WM_PARAM2
-#ifndef WM_PARAM2_CAPTION
-#define WM_PARAM2_CAPTION   "Settings 2"
-#endif
-#ifndef WM_PARAM2_TITLE
-#define WM_PARAM2_TITLE     "Settings 2"
-#endif
-#ifdef WM_PARAM3
-#ifndef WM_PARAM3_CAPTION
-#define WM_PARAM3_CAPTION   "Settings 3"
-#endif
-#ifndef WM_PARAM3_TITLE
-#define WM_PARAM3_TITLE     "Settings 3"
-#endif
-#define WM_PARAM_ARRS       4
-#else
-#define WM_PARAM_ARRS       3
-#endif
-#else
-#define WM_PARAM_ARRS       2
-#endif
-
-#ifndef WM_PARAM2_TITLE
-#define WM_PARAM2_TITLE     ""
-#endif
-#ifndef WM_PARAM3_TITLE
-#define WM_PARAM3_TITLE     ""
-#endif
-
-// params will autoincrement and realloc by this amount when max is reached
-// can (and should) be overruled by allocParms()
-#ifndef WIFI_MANAGER_MAX_PARAMS
-#define WIFI_MANAGER_MAX_PARAMS 5
-#endif
 
 // Selector for allocParms, addParameter, getParameters, getParameterCount
 #define WM_PARM_WIFI       0
@@ -118,30 +84,22 @@
 #define WMS_sn    "sn"
 #define WMS_dns   "dns"
 
-// Parm handed to GPCallback
+// Parm handed to GPCallback()
 #define WM_LP_NONE          0   // No special reason (just do over-due stuff)
 #define WM_LP_PREHTTPSEND   1   // pre-HTTPSend()
 #define WM_LP_POSTHTTPSEND  2   // post-HTTPSend() (just do over-due stuff, ...)
 
-#define WM_WIFI_SCAN_BUSY -133
-
-#define DNS_PORT           53
-
-// Maximum buffer for scan list on WiFi Config page
-#define MAX_SCAN_OUTPUT_SIZE  6144
-
-#if defined(ESP_ARDUINO_VERSION) && defined(ESP_ARDUINO_VERSION_VAL)
-    #if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(2,0,0)
-        #define WM_NOCOUNTRY
-    #endif
-    //#if ESP_ARDUINO_VERSION <= ESP_ARDUINO_VERSION_VAL(2,0,5)
-        #define WM_DISCONWORKAROUND
-    //#endif
+#ifdef WM_PARAM2
+#ifdef WM_PARAM3
+#define WM_PARAM_ARRS       4
 #else
-    #define WM_NOCOUNTRY
+#define WM_PARAM_ARRS       3
+#endif
+#else
+#define WM_PARAM_ARRS       2
 #endif
 
-// Extentions to WL_XXX status
+// Private extentions to WL_XXX status
 #define TWL_DHCP_TIMEOUT 0x1000
 #define TWL_STATUS_NONE  0x2000
 
@@ -290,6 +248,12 @@ class WiFiManager
   	void          setPreWiFiScanCallback(bool(*func)())
   	                              { _prewifiscancallback = func; };
 
+    // Callback for changing client carmode
+    #ifdef WM_CCM
+    void          setCCarModeCallback(void(*func)(bool))
+  	                              { _setCCarMode = func; };
+    #endif
+
   	// Set connection parameters
 
     // sets timeout for which to attempt connecting, useful if you get a lot of failed connects
@@ -358,6 +322,11 @@ class WiFiManager
     // Custom
     void          setCarMode(bool enable)
                                   { _carMode = enable; };
+
+    #ifdef WM_CCM
+    void          setCCarMode(bool enable)
+                                  { _cCarMode = enable; };
+    #endif
 
     // add custom html at inside <head> for all pages
     void          setCustomHeadElement(const char* html)
@@ -495,6 +464,9 @@ class WiFiManager
     bool          _autoforcerescan        = false; // automatically force rescan if scan networks is 0, ignoring cache
 
     bool          _carMode                = false; // Custom
+    #ifdef WM_CCM
+    bool          _cCarMode               = false;
+    #endif
 
     volatile bool _beginSemaphore         = false;
 
@@ -637,6 +609,9 @@ class WiFiManager
 	  #endif
 	  #ifdef WM_EVENTCB
 	  void (_wifieventcallback)(WiFiEvent_t event)                        = NULL;
+	  #endif
+	  #ifdef WM_CCM
+	  void (*_setCCarMode)(bool)                                          = NULL;
 	  #endif
 
     #ifdef _A10001986_DBG

@@ -10,10 +10,45 @@
  * Adapted by Thomas Winischhofer (A10001986)
  */
 
+// prep string concat vars
+#define WM_STRING2(x) #x
+#define WM_STRING(x) WM_STRING2(x)
+
 #include "WiFiManager.h"
+
+#ifdef WM_PARAM2
+#ifndef WM_PARAM2_CAPTION
+#define WM_PARAM2_CAPTION   "Settings 2"
+#endif
+#ifndef WM_PARAM2_TITLE
+#define WM_PARAM2_TITLE     "Settings 2"
+#endif
+#ifdef WM_PARAM3
+#ifndef WM_PARAM3_CAPTION
+#define WM_PARAM3_CAPTION   "Settings 3"
+#endif
+#ifndef WM_PARAM3_TITLE
+#define WM_PARAM3_TITLE     "Settings 3"
+#endif
+#endif
+#endif
+
+#ifndef WM_PARAM2_TITLE
+#define WM_PARAM2_TITLE     ""
+#endif
+#ifndef WM_PARAM3_TITLE
+#define WM_PARAM3_TITLE     ""
+#endif
+
 #include "wm_strings_en.h"
 
 //#include <freertos/atomic.h>
+
+// params will autoincrement and realloc by this amount when max is reached
+// can (and should) be overruled by allocParms()
+#ifndef WIFI_MANAGER_MAX_PARAMS
+#define WIFI_MANAGER_MAX_PARAMS 5
+#endif
 
 // Internal event bits (converted from system WiFi events)
 #define WM_EVB_APSTART      (1<<0)
@@ -35,6 +70,21 @@
 #define incUPLF    0x40
 
 #define STRLEN(x) (sizeof(x)-1)
+
+#define WM_WIFI_SCAN_BUSY -133
+
+#define DNS_PORT           53
+
+// Maximum buffer for scan list on WiFi Config page
+#define MAX_SCAN_OUTPUT_SIZE  6144
+
+#if defined(ESP_ARDUINO_VERSION) && defined(ESP_ARDUINO_VERSION_VAL)
+    #if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(2,0,0)
+        #define WM_NOCOUNTRY
+    #endif
+#else
+    #define WM_NOCOUNTRY
+#endif
 
 /**********************************************************************************
  * --------------------------------------------------------------------------------
@@ -1925,7 +1975,6 @@ void WiFiManager::buildRootPage(String& page, unsigned int repSize, unsigned int
  */
 void WiFiManager::handleRoot()
 {
-    unsigned int headSize = 0;
     unsigned int repSize = 0;
     unsigned int appExtraSize = 0;
 
@@ -2451,8 +2500,8 @@ void WiFiManager::buildWifiPage(String& page, bool scan)
     if(SSID_len) {
         bufSize += STRLEN(HTTP_ERASE_BUTTON);
     }
-    bufSize += STRLEN(HTTP_FORM_WIFI_END);
     bufSize += getStaticLen();
+    bufSize += STRLEN(HTTP_FORM_WIFI_END);
     bufSize += getParamOutSize(_params[0], _paramsCount[0], maxItemSize);
     bufSize += STRLEN(HTTP_FORM_END);
     bufSize += STRLEN(HTTP_SCAN_LINK);
@@ -2504,8 +2553,8 @@ void WiFiManager::buildWifiPage(String& page, bool scan)
     if(SSID_len) {
         page += FPSTR(HTTP_ERASE_BUTTON);
     }
-    page += FPSTR(HTTP_FORM_WIFI_END);
     getStaticOut(page);
+    page += FPSTR(HTTP_FORM_WIFI_END);
     getParamOut(page, _params[0], _paramsCount[0], maxItemSize);
     page += FPSTR(HTTP_FORM_END);
     page += FPSTR(HTTP_SCAN_LINK);
@@ -2536,7 +2585,22 @@ void WiFiManager::handleWifi(bool scan)
     Serial.println("<- HTTP Wifi");
     #endif
 
-    buildWifiPage(page, scan);
+    #ifdef WM_CCM
+    if(_cCarMode) {
+        unsigned long bufSize = getHTTPHeadLength(S_titlewifi, incSET);
+        bufSize += STRLEN(HTTP_DCM_LINK) + STRLEN(HTTP_END);
+        page.reserve(bufSize + 16);
+        getHTTPHeadNew(page, S_titlewifi, incSET);
+        page += FPSTR(HTTP_DCM_LINK);
+        page += FPSTR(HTTP_END);
+    } else {
+    #endif
+
+        buildWifiPage(page, scan);
+
+    #ifdef WM_CCM
+    }
+    #endif
 
     if(_gpcallback) {
         _gpcallback(WM_LP_PREHTTPSEND);
@@ -2554,120 +2618,141 @@ void WiFiManager::handleWifi(bool scan)
  */
 void WiFiManager::handleWifiSave()
 {
-    unsigned long s, headSize;
+    unsigned long s = getHTTPHeadLength(S_titlewifi, incGFXMSG);
     bool haveNewSSID = false;
     bool networkDeleted = false;
+    String page;
 
     #ifdef _A10001986_V_DBG
     Serial.println("<- HTTP WiFi save ");
     #endif
 
-    // grab new ssid/pass
-    {
-        String newSSID = server->arg(F("s"));
-        String newPASS = server->arg(F("p"));
-        String newBSSID = server->arg(F("b"));
-        bool forgetNW = server->hasArg(F("fgn"));
-        bool pwchg = false;
-
-        if(newSSID != "") {
-            memset(_ssid, 0, sizeof(_ssid));
-            memset(_pass, 0, sizeof(_pass));
-            strncpy(_ssid, newSSID.c_str(), sizeof(_ssid) - 1);
-            strncpy(_pass, newPASS.c_str(), sizeof(_pass) - 1);
-            haveNewSSID = true;
-        } else if(newPASS != "") {
-            memset(_pass, 0, sizeof(_pass));
-            // Don't save password if we have no SSID
-            if(*_ssid) {
-                strncpy(_pass, newPASS.c_str(), sizeof(_pass) - 1);
-                #ifdef _A10001986_DBG
-                Serial.println("password change detected");
-                #endif
-                pwchg = true;
-            }
+    #ifdef WM_CCM
+    if(_cCarMode) {
+        if(server->hasArg(F("cmo")) && _setCCarMode) {
+            _setCCarMode(false);
+            s += STRLEN(HTTP_CCMOFF) + STRLEN(HTTP_PARAMSAVED_END) + STRLEN(HTTP_END);
+            page.reserve(s + 16);
+            getHTTPHeadNew(page, S_titlewifi, incGFXMSG);
+            page += FPSTR(HTTP_CCMOFF);
+            page += FPSTR(HTTP_PARAMSAVED_END);
+            page += FPSTR(HTTP_END);
+        } else {
+            server->sendHeader("Location", "/", true);
+            server->send(302, FPSTR(HTTP_HEAD_CT2), "");
+            return;
         }
-
-        memset(_bssid, 0, sizeof(_bssid));
-        strncpy(_bssid, newBSSID.c_str(), sizeof(_bssid) - 1);
-
-        if(!haveNewSSID && !pwchg) {
-            if(forgetNW) {
-                if(*_ssid) networkDeleted = true;
-                *_ssid = *_pass = *_bssid = 0;
-            }
-        }
-    }
-
-    // At this point, _ssid and _pass are either the newly entered ones,
-    // the previous ones (if the server-provided ones were empty), or
-    // 0-strings (if the user checked "Forget" while SSID and password
-    // fields were empty)
-
-    // set static ips from server args
-    // We skip this because we reboot as a result of "save", there
-    // is no point is settings this here.
-    #if 0
-    {
-        String temp;
-        temp.reserve(16);
-        if((temp = server->arg(FPSTR(S_ip))) != "") {
-            optionalIPFromString(&_sta_static_ip, temp.c_str());
-        }
-        if((temp = server->arg(FPSTR(S_sn))) != "") {
-            optionalIPFromString(&_sta_static_sn, temp.c_str());
-        }
-        if((temp = server->arg(FPSTR(S_gw))) != "") {
-            optionalIPFromString(&_sta_static_gw, temp.c_str());
-        }
-        if((temp = server->arg(FPSTR(S_dns))) != "") {
-            optionalIPFromString(&_sta_static_dns, temp.c_str());
-        }
-    }
+    } else {
     #endif
 
-    // callback before saving
-    if(_presavewificallback) {
-        _presavewificallback();
+        // grab new ssid/pass
+        {
+            String newSSID = server->arg(F("s"));
+            String newPASS = server->arg(F("p"));
+            String newBSSID = server->arg(F("b"));
+            bool forgetNW = server->hasArg(F("fgn"));
+            bool pwchg = false;
+
+            if(newSSID != "") {
+                memset(_ssid, 0, sizeof(_ssid));
+                memset(_pass, 0, sizeof(_pass));
+                strncpy(_ssid, newSSID.c_str(), sizeof(_ssid) - 1);
+                strncpy(_pass, newPASS.c_str(), sizeof(_pass) - 1);
+                haveNewSSID = true;
+            } else if(newPASS != "") {
+                memset(_pass, 0, sizeof(_pass));
+                // Don't save password if we have no SSID
+                if(*_ssid) {
+                    strncpy(_pass, newPASS.c_str(), sizeof(_pass) - 1);
+                    #ifdef _A10001986_DBG
+                    Serial.println("password change detected");
+                    #endif
+                    pwchg = true;
+                }
+            }
+
+            memset(_bssid, 0, sizeof(_bssid));
+            strncpy(_bssid, newBSSID.c_str(), sizeof(_bssid) - 1);
+
+            if(!haveNewSSID && !pwchg) {
+                if(forgetNW) {
+                    if(*_ssid) networkDeleted = true;
+                    *_ssid = *_pass = *_bssid = 0;
+                }
+            }
+        }
+
+        // At this point, _ssid and _pass are either the newly entered ones,
+        // the previous ones (if the server-provided ones were empty), or
+        // 0-strings (if the user checked "Forget" while SSID and password
+        // fields were empty)
+
+        // set static ips from server args
+        // We skip this because we reboot as a result of "save", there
+        // is no point is settings this here.
+        #if 0
+        {
+            String temp;
+            temp.reserve(16);
+            if((temp = server->arg(FPSTR(S_ip))) != "") {
+                optionalIPFromString(&_sta_static_ip, temp.c_str());
+            }
+            if((temp = server->arg(FPSTR(S_sn))) != "") {
+                optionalIPFromString(&_sta_static_sn, temp.c_str());
+            }
+            if((temp = server->arg(FPSTR(S_gw))) != "") {
+                optionalIPFromString(&_sta_static_gw, temp.c_str());
+            }
+            if((temp = server->arg(FPSTR(S_dns))) != "") {
+                optionalIPFromString(&_sta_static_dns, temp.c_str());
+            }
+        }
+        #endif
+
+        // callback before saving
+        if(_presavewificallback) {
+            _presavewificallback();
+        }
+
+        // Copy server parms to wifi params array
+        doParamSave(_params[0], _paramsCount[0]);
+
+        // callback for saving or grabbing other parameters from server
+        if(_savewificallback) {
+            _savewificallback(_ssid, _pass, _bssid);
+        }
+
+        // Build page
+
+        s += STRLEN(HTTP_PARAMSAVED) + STRLEN(HTTP_PARAMSAVED_END) + STRLEN(HTTP_END);
+
+        if(!haveNewSSID) {
+            if(networkDeleted) s += STRLEN(HTTP_SAVED_ERASED);
+        } else {
+            if(_carMode) s += STRLEN(HTTP_SAVED_CARMODE);
+            else         s += STRLEN(HTTP_SAVED_NORMAL);
+        }
+
+        page.reserve(s + 16);
+
+        getHTTPHeadNew(page, S_titlewifi, incGFXMSG);
+
+        page += FPSTR(HTTP_PARAMSAVED);
+        if(!haveNewSSID) {
+            if(networkDeleted) page += FPSTR(HTTP_SAVED_ERASED);
+        } else {
+            if(_carMode) page += FPSTR(HTTP_SAVED_CARMODE);
+            else         page += FPSTR(HTTP_SAVED_NORMAL);
+        }
+        page += FPSTR(HTTP_PARAMSAVED_END);
+        page += FPSTR(HTTP_END);
+
+        #ifdef _A10001986_DBG
+        Serial.printf("handleWiFiSave: calced content size %d\n", s);
+        #endif
+
+    #ifdef WM_CCM
     }
-
-    // Copy server parms to wifi params array
-    doParamSave(_params[0], _paramsCount[0]);
-
-    // callback for saving or grabbing other parameters from server
-    if(_savewificallback) {
-        _savewificallback(_ssid, _pass, _bssid);
-    }
-
-    // Build page
-
-    s = getHTTPHeadLength(S_titlewifi, incGFXMSG);
-    s += STRLEN(HTTP_PARAMSAVED) + STRLEN(HTTP_PARAMSAVED_END) + STRLEN(HTTP_END);
-
-    if(!haveNewSSID) {
-        if(networkDeleted) s += STRLEN(HTTP_SAVED_ERASED);
-    } else {
-        if(_carMode) s += STRLEN(HTTP_SAVED_CARMODE);
-        else         s += STRLEN(HTTP_SAVED_NORMAL);
-    }
-
-    String page;
-    page.reserve(s + 16);
-
-    getHTTPHeadNew(page, S_titlewifi, incGFXMSG);
-
-    page += FPSTR(HTTP_PARAMSAVED);
-    if(!haveNewSSID) {
-        if(networkDeleted) page += FPSTR(HTTP_SAVED_ERASED);
-    } else {
-        if(_carMode) page += FPSTR(HTTP_SAVED_CARMODE);
-        else         page += FPSTR(HTTP_SAVED_NORMAL);
-    }
-    page += FPSTR(HTTP_PARAMSAVED_END);
-    page += FPSTR(HTTP_END);
-
-    #ifdef _A10001986_DBG
-    Serial.printf("handleWiFiSave: calced content size %d\n", s);
     #endif
 
     if(_gpcallback) {
@@ -2774,7 +2859,6 @@ void WiFiManager::handleParam3()
 void WiFiManager::_handleParamSave(int aidx, const char *title)
 {
     unsigned int mySize = 0;
-    unsigned int headSize = 0;
 
     #ifdef _A10001986_V_DBG
     Serial.printf("<- HTTP Param save %d\n", aidx);
@@ -2852,7 +2936,6 @@ void WiFiManager::handleParam3Save()
 void WiFiManager::handleUpdate()
 {
     unsigned int mySize = 0;
-    unsigned int headSize = 0;
 
     #ifdef _A10001986_V_DBG
     Serial.println("<- Handle update");
@@ -3055,7 +3138,6 @@ void WiFiManager::handleUpdating()
 void WiFiManager::handleUpdateDone()
 {
     unsigned int mySize = 0;
-    unsigned int headSize = 0;
     uint32_t incFlags = 0;
     bool res = !Update.hasError();
 
@@ -3170,7 +3252,7 @@ void WiFiManager::setSTAStaticIPConfig(IPAddress& ip, IPAddress& gw, IPAddress& 
 // Set static IP + DNS for STA
 void WiFiManager::setSTAStaticIPConfig(IPAddress& ip, IPAddress& gw, IPAddress& sn, IPAddress& dns)
 {
-    setSTAStaticIPConfig(ip,gw,sn);
+    setSTAStaticIPConfig(ip, gw, sn);
     _sta_static_dns = dns;
 }
 
