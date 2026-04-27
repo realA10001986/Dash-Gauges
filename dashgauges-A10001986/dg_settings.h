@@ -8,7 +8,7 @@
  * Settings handling
  *
  * -------------------------------------------------------------------
- * License: MIT NON-AI
+ * License: Modified MIT NON-AI
  * 
  * Permission is hereby granted, free of charge, to any person 
  * obtaining a copy of this software and associated documentation 
@@ -20,6 +20,9 @@
  *
  * The above copyright notice and this permission notice shall be 
  * included in all copies or substantial portions of the Software.
+ * 
+ * Links inside the Software pointing to the original source must not 
+ * be changed or removed.
  *
  * In addition, the following restrictions apply:
  * 
@@ -52,17 +55,68 @@
 #ifndef _DG_SETTINGS_H
 #define _DG_SETTINGS_H
 
-extern bool haveFS;
-extern bool haveSD;
-extern bool FlashROMode;
-extern const char rspv[];
-
-extern bool haveAudioFiles;
-
-extern uint8_t musFolderNum;
-
 #define MS(s) XMS(s)
 #define XMS(s) #s
+
+void settings_setup();
+
+void unmount_fs();
+
+void write_settings();
+bool checkConfigExists();
+
+bool evalBool(char *s);
+
+void loadCurVolume();
+void storeCurVolume();
+void saveCurVolume();
+
+void saveUpdAvail();
+
+void loadUpdVers(int &v, int& r);
+void saveUpdVers(int v, int r);
+
+void saveAllSecCP();
+
+void saveCarMode();
+
+void loadMusFoldNum();
+void saveMusFoldNum();
+
+void loadShuffle();
+void saveShuffle();
+void saveAllTerCP();
+
+bool loadIpSettings();
+void writeIpSettings();
+void deleteIpSettings();
+
+bool check_if_default_audio_present();
+bool prepareCopyAudioFiles();
+void doCopyAudioFiles();
+
+bool check_allow_CPA();
+void delete_ID_file();
+
+void moveSettings();
+
+#define MAX_SIM_UPLOADS 16
+#define UPL_OPENERR 1
+#define UPL_NOSDERR 2
+#define UPL_WRERR   3
+#define UPL_BADERR  4
+#define UPL_MEMERR  5
+#define UPL_UNKNOWN 6
+#define UPL_DPLBIN  7
+#include <FS.h>
+bool   openUploadFile(String& fn, File& file, int idx, bool haveAC, int& opType, int& errNo);
+size_t writeACFile(File& file, uint8_t *buf, size_t len);
+void   closeACFile(File& file);
+void   removeACFile(int idx);
+void   renameUploadFile(int idx);
+char   *getUploadFileName(int idx);
+int    getUploadFileNameLen(int idx);
+void   freeUploadFileNames();
 
 // Default settings
 
@@ -86,7 +140,7 @@ extern uint8_t musFolderNum;
 #define DEF_DR_PPO          1     // 0: Meter jumps to zero after TT; 1: slowly drain during TT
 #define DEF_DR_ROE          1     // 0: Meter jumps to zero after TT; 1: slowly drain during TT
 
-#define DEF_TCD_IP          ""    // TCD ip address for BTTFN
+#define DEF_TCD_IP          ""    // TCD hostname (or ip address) for BTTFN
 #define DEF_USE_GPSS        0     // 0: Ignore GPS speed; 1: Use it for chase speed
 #define DEF_USE_NM          0     // 0: Ignore TCD night mode; 1: Follow TCD night mode
 #define DEF_USE_FPO         0     // 0: Ignore TCD fake power; 1: Follow TCD fake power
@@ -110,6 +164,10 @@ struct Settings {
     char ssid[34]           = "";
     char pass[66]           = "";
     char bssid[18]          = "";
+
+    char cm_ssid[14]        = "TCD-AP";
+    char cm_pass[10]        = "";
+    char cm_bssid[18]       = "";
 
     char hostName[32]       = DEF_HOSTNAME;
     char wifiConRetries[4]  = MS(DEF_WIFI_RETRY);
@@ -176,6 +234,7 @@ struct Settings {
     char musicFolder[2];
     char shuffle[2];
     char upd[2];
+    char ecmKludge[2]       = "0";  // MUST BE 0
 };
 
 struct IPSettings {
@@ -188,62 +247,13 @@ struct IPSettings {
 extern struct Settings settings;
 extern struct IPSettings ipsettings;
 
-void settings_setup();
+extern bool   haveFS;
+extern bool   haveSD;
+extern bool   FlashROMode;
+extern const char rspv[];
 
-void unmount_fs();
+extern bool   haveAudioFiles;
 
-void write_settings();
-bool checkConfigExists();
-
-bool evalBool(char *s);
-
-void loadCurVolume();
-void storeCurVolume();
-void saveCurVolume();
-
-void saveUpdAvail();
-
-void loadUpdVers(int &v, int& r);
-void saveUpdVers(int v, int r);
-
-void saveAllSecCP();
-
-void loadMusFoldNum();
-void saveMusFoldNum();
-
-void loadShuffle();
-void saveShuffle();
-void saveAllTerCP();
-
-bool loadIpSettings();
-void writeIpSettings();
-void deleteIpSettings();
-
-bool check_if_default_audio_present();
-bool prepareCopyAudioFiles();
-void doCopyAudioFiles();
-
-bool check_allow_CPA();
-void delete_ID_file();
-
-void moveSettings();
-
-#define MAX_SIM_UPLOADS 16
-#define UPL_OPENERR 1
-#define UPL_NOSDERR 2
-#define UPL_WRERR   3
-#define UPL_BADERR  4
-#define UPL_MEMERR  5
-#define UPL_UNKNOWN 6
-#define UPL_DPLBIN  7
-#include <FS.h>
-bool   openUploadFile(String& fn, File& file, int idx, bool haveAC, int& opType, int& errNo);
-size_t writeACFile(File& file, uint8_t *buf, size_t len);
-void   closeACFile(File& file);
-void   removeACFile(int idx);
-void   renameUploadFile(int idx);
-char   *getUploadFileName(int idx);
-int    getUploadFileNameLen(int idx);
-void   freeUploadFileNames();
+extern uint8_t musFolderNum;
 
 #endif

@@ -8,7 +8,7 @@
  * Settings & file handling
  * 
  * -------------------------------------------------------------------
- * License: MIT NON-AI
+ * License: Modified MIT NON-AI
  * 
  * Permission is hereby granted, free of charge, to any person 
  * obtaining a copy of this software and associated documentation 
@@ -20,6 +20,9 @@
  *
  * The above copyright notice and this permission notice shall be 
  * included in all copies or substantial portions of the Software.
+ * 
+ * Links inside the Software pointing to the original source must not 
+ * be changed or removed.
  *
  * In addition, the following restrictions apply:
  * 
@@ -80,10 +83,10 @@
 // If defined, old settings files will be used
 // and converted if no new settings file is found.
 // Keep this defined for a few versions/months.
-#define SETTINGS_TRANSITION
+//#define SETTINGS_TRANSITION
 // Stage 2: Assume new settings are present, but
 // still delete obsolete files.
-//#define SETTINGS_TRANSITION_2
+#define SETTINGS_TRANSITION_2
 
 #ifdef SETTINGS_TRANSITION
 #undef SETTINGS_TRANSITION_2
@@ -101,10 +104,10 @@
 #define DECLARE_D_JSON(x,n) DynamicJsonDocument n(x);
 #endif 
 
-#define NUM_AUDIOFILES 13+9
-#define SND_REQ_VERSION "DG04"
+#define NUM_AUDIOFILES 14+9
+#define SND_REQ_VERSION "DG05"
 #define AC_FMTV 2
-#define AC_TS   582422
+#define AC_TS   588690
 #define AC_OHSZ (14 + ((NUM_AUDIOFILES+1)*(32+4)))
 
 static const char *CONFN  = "/DGA.bin";
@@ -125,6 +128,7 @@ static struct [[gnu::packed]] {
     uint8_t  showUpdAvail = 1;
     uint8_t  updateV      = 0;
     uint8_t  updateR      = 0;
+    uint8_t  carMode      = 0;
 } secSettings;
 
 // Tertiary settings (SD only)
@@ -202,6 +206,7 @@ static bool checkValidNumParm(char *text, int lowerLim, int upperLim, int setDef
 static bool checkValidNumParmF(char *text, float lowerLim, float upperLim, float setDefault);
 
 static void loadUpdAvail();
+static void loadCarMode();
 
 static bool copy_audio_files(bool& delIDfile);
 static void cfc(File& sfile, bool doCopy, int& haveErr, int& haveWriteErr);
@@ -427,6 +432,11 @@ void settings_setup()
         }
     }
 
+    // Load car mode
+    if(*settings.cm_ssid) {
+        loadCarMode();
+    }
+
     loadUpdAvail();
     updateConfigPortalUpdValues();
     
@@ -564,6 +574,10 @@ static bool read_settings(File configFile, int cfgReadCount)
             }
         }
 
+        wd |= CopyTextParm(json["cmsid"], settings.cm_ssid, sizeof(settings.cm_ssid));
+        wd |= CopyTextParm(json["cmpwd"], settings.cm_pass, sizeof(settings.cm_pass));
+        wd |= CopyTextParm(json["cmbid"], settings.cm_bssid, sizeof(settings.cm_bssid));
+
         wd |= CopyTextParm(json["hostName"], settings.hostName, sizeof(settings.hostName));
         wd |= CopyCheckValidNumParm(json["wifiConRetries"], settings.wifiConRetries, sizeof(settings.wifiConRetries), 1, 10, DEF_WIFI_RETRY);
 
@@ -661,6 +675,10 @@ void write_settings()
         json["pass"] = (const char *)settings.pass;
         json["bssid"] = (const char *)settings.bssid;
     }
+
+    json["cmsid"] = (const char *)settings.cm_ssid;
+    json["cmpwd"] = (const char *)settings.cm_pass;
+    json["cmbid"] = (const char *)settings.cm_bssid;
 
     json["hostName"] = (const char *)settings.hostName;
     json["wifiConRetries"] = (const char *)settings.wifiConRetries;
@@ -945,6 +963,23 @@ void saveAllSecCP()
 {
     secSettings.showUpdAvail = showUpdAvail ? 1 : 0;
     storeCurVolume();
+    saveSecSettings(true);
+}
+
+/*
+ *  Load/save carMode
+ */
+
+static void loadCarMode()
+{
+    if(haveSecSettings) {
+        carMode = !!secSettings.carMode;
+    }
+}
+
+void saveCarMode()
+{
+    secSettings.carMode = carMode ? 1 : 0;
     saveSecSettings(true);
 }
 

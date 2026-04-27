@@ -15,8 +15,8 @@
  ***                          Version Strings                          ***
  *************************************************************************/
 
-#define DG_VERSION       "V1.31"            // Do NOT change format.
-#define DG_VERSION_EXTRA "MAR252026"
+#define DG_VERSION       "V1.32"            // Do NOT change format.
+#define DG_VERSION_EXTRA "APR272026"
 
 /*************************************************************************
  ***             Configuration for peripherals/features                ***

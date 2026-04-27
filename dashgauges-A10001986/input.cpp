@@ -8,7 +8,7 @@
  * Input
  *
  * -------------------------------------------------------------------
- * License: MIT NON-AI
+ * License: Modified MIT NON-AI
  * 
  * Permission is hereby granted, free of charge, to any person 
  * obtaining a copy of this software and associated documentation 
@@ -20,7 +20,10 @@
  *
  * The above copyright notice and this permission notice shall be 
  * included in all copies or substantial portions of the Software.
- *
+ * 
+ * Links inside the Software pointing to the original source must not 
+ * be changed or removed.
+ * 
  * In addition, the following restrictions apply:
  * 
  * 1. The Software and any modifications made to it may not be used 
@@ -83,14 +86,16 @@ void DGButton::begin()
 }
 
 // Setup buttom timin:
-// dticks: Number of millisec for a stable click to be assumed
-// pticks: Number of millisec to pass for a short press 
-// lticks: Number of millisec to pass for a long press
-void DGButton::setTiming(const int debounceDur, const int pressDur, const int lPressDur)
+// debounceDur: Number of millisec for a stable click to be assumed
+// pressDur: Number of millisec to pass for a short press 
+// lPressDur: Number of millisec to pass for a long press
+// elPressDur: Number of millisec to pass for an extra long press
+void DGButton::setTiming(const int debounceDur, const int pressDur, const int lPressDur, const int elPressDur)
 {
     _debounceDur = debounceDur;
     _pressDur = pressDur;
     _longPressDur = lPressDur;
+    _elongPressDur = elPressDur;
 }
 
 // Register function for short press event
@@ -109,6 +114,18 @@ void DGButton::attachLongPressStart(void (*newFunction)(void))
 void DGButton::attachLongPressStop(void (*newFunction)(void))
 {
     _longPressStopFunc = newFunction;
+}
+
+// Register function for extra long press start event
+void DGButton::attachELongPressStart(void (*newFunction)(void))
+{
+    _elongPressStartFunc = newFunction;
+}
+
+// Register function for extra long press stop event
+void DGButton::attachELongPressStop(void (*newFunction)(void))
+{
+    _elongPressStopFunc = newFunction;
 }
 
 // Check input of the pin and advance the state machine
@@ -158,6 +175,9 @@ void DGButton::scan(void)
         if(!active) {
             transitionTo(TCBS_LONGPRESSEND);
             _startTime = now;
+        } else if(_elongPressDur && (waitTime > _elongPressDur)) {
+            if(_elongPressStartFunc) _elongPressStartFunc(); 
+            transitionTo(TCBS_ELONGPRESS);
         }
         break;
 
@@ -170,15 +190,27 @@ void DGButton::scan(void)
         }
         break;
 
+    case TCBS_ELONGPRESS:
+        if(!active) {
+            transitionTo(TCBS_ELONGPRESSEND);
+            _startTime = now;
+        }
+        break;
+
+    case TCBS_ELONGPRESSEND:
+        if((active) && (waitTime < _debounceDur)) { // de-bounce
+            transitionTo(_lastState);
+        } else if(waitTime >= _debounceDur) {
+            if(_elongPressStopFunc) _elongPressStopFunc();
+            reset();
+        }
+        break;
+        
     default:
         transitionTo(TCBS_IDLE);
         break;
     }
 }
-
-/*
- * Private
- */
 
 void DGButton::reset(void)
 {
@@ -187,6 +219,10 @@ void DGButton::reset(void)
     _startTime = 0;
     _pressNotified = false;
 }
+
+/*
+ * Private
+ */
 
 // Advance to new state
 void DGButton::transitionTo(ButtonState nextState)

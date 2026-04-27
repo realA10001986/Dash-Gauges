@@ -8,7 +8,7 @@
  * Main controller
  *
  * -------------------------------------------------------------------
- * License: MIT NON-AI
+ * License: Modified MIT NON-AI
  * 
  * Permission is hereby granted, free of charge, to any person 
  * obtaining a copy of this software and associated documentation 
@@ -20,6 +20,9 @@
  *
  * The above copyright notice and this permission notice shall be 
  * included in all copies or substantial portions of the Software.
+ * 
+ * Links inside the Software pointing to the original source must not 
+ * be changed or removed.
  *
  * In addition, the following restrictions apply:
  * 
@@ -111,16 +114,20 @@ static bool isTTKeyPressed = false;
 static bool isTTKeyHeld = false;
 
 // "Button 1"
-#define B1_DEBOUNCE    50    // button debounce time in ms
-#define B1_PRESS_TIME 200    // button will register a short press
-#define B1_HOLD_TIME 2000    // time in ms holding the button will count as a long press
+#define B1_DEBOUNCE     50   // button debounce time in ms
+#define B1_PRESS_TIME  200   // button will register a short press
+#define B1_HOLD_TIME  2000   // time in ms holding the button will count as a long press
+#define B1_EHOLD_TIME 6000   // time in ms holding the button will count as an extra long press
 static DGButton Button1 = DGButton(BUTTON1_PIN,
     false,    // Button is active HIGH
     false     // Disable internal pull-up resistor (non-existent on GPIO36 anyway)
 );
 
 static bool isB1Pressed = false;
-static bool isB1Held = false;
+static bool isB1HeldStart = false;
+static bool isB1HeldEnd = false;
+static bool isB1EHeldStart = false;
+static bool isB1EHeldEnd = false;
 
 static bool dsTTout = false;
 
@@ -346,9 +353,13 @@ static IPAddress     bttfnTcdIP;
 static uint32_t      bttfnTCDSeqCnt = 0;
 static uint32_t      bttfnTCDDataSeqCnt = 0;
 static uint32_t      bttfnSessionID = 0;
+int                  bttfnHaveTCDSSID = 0;
+char                 TCDSSID[8] = { 0 };
+uint8_t              TCDpwMarker = 0;
 static uint8_t       bttfnReqStatus = 0x52; // Request capabilities, status, speed
 static bool          TCDSupportsNOTData = false;
 static bool          TCDSupportsCMDDOOR = false;
+static bool          TCDSupportsSSID = false;
 static bool          bttfnDataNotEnabled = false;
 static uint32_t      tcdHostNameHash = 0;
 static byte          BTTFMCBuf[BTTF_PACKET_SIZE];
@@ -418,7 +429,10 @@ static void TTKeyHeld();
 
 static void Button1Scan();
 static void Button1Pressed();
-static void Button1Held();
+static void Button1HeldStart();
+static void Button1HeldEnd();
+static void Button1EHeldStart();
+static void Button1EHeldEnd();
 
 static void ssStart();
 static void ssEnd();
@@ -607,8 +621,11 @@ void main_setup()
     // Set up Button 1
     Button1.begin();
     Button1.attachPress(Button1Pressed);
-    Button1.attachLongPressStart(Button1Held);
-    Button1.setTiming(B1_DEBOUNCE, B1_PRESS_TIME, B1_HOLD_TIME);
+    Button1.attachLongPressStart(Button1HeldStart);
+    Button1.attachLongPressStop(Button1HeldEnd);
+    Button1.attachELongPressStart(Button1EHeldStart);
+    Button1.attachELongPressStop(Button1EHeldEnd);
+    Button1.setTiming(B1_DEBOUNCE, B1_PRESS_TIME, B1_HOLD_TIME, B1_EHOLD_TIME);
 
     // Invoke audio file installer if SD content qualifies
     #ifdef DG_DBG
@@ -711,7 +728,7 @@ void main_loop()
 
     // Follow TCD fake power
     if(useFPO && (tcdFPO != fpoOld)) {
-        if(tcdFPO) {
+        if((fpoOld = tcdFPO)) {
 
             // Power off:
             FPBUnitIsOn = false;
@@ -755,6 +772,7 @@ void main_loop()
                 FPOffemptyAlarm = false;   
             }
 
+            TTKey.reset();
             isTTKeyHeld = isTTKeyPressed = false;
             networkTimeTravel = false;
             isSSwitchChange = false;
@@ -771,7 +789,6 @@ void main_loop()
             // FIXME - anything else?
  
         }
-        fpoOld = tcdFPO;
     }
 
     // Eval flags set in handle_tcd_notification
@@ -920,11 +937,28 @@ void main_loop()
     // Button 1 evaluation
     if(!TTrunning && !startup && !startAlarm && !refill && !refillWA) {
         Button1Scan();
-        if(isB1Held) {
+        if(isB1EHeldEnd) {
+            bool ocm = carMode;
+            carMode = !carMode;
+            if(!*settings.cm_ssid) carMode = false;
+            if(ocm != carMode) {
+                saveCarMode();
+                prepareReboot();
+                delay(500);
+                esp_restart();
+            }
+            isB1EHeldEnd = isB1Pressed = false;
+        } else if(isB1EHeldStart) {
+            isB1EHeldStart = false;
+            play_file("/buttonel.mp3", PA_INTRMUS|PA_ALLOWSD, 1.0f);
+        } else if(isB1HeldEnd) {
             // Say IP address
-            isB1Held = isB1Pressed = false;
+            isB1HeldEnd = isB1Pressed = false;
             flushDelayedSave();
             say_ip_address();
+        } else if(isB1HeldStart) {
+            isB1HeldStart = false;
+            play_file("/buttonl.mp3", PA_INTRMUS|PA_ALLOWSD, 1.0f);
         } else if(isB1Pressed) {
             // WiFi re-connect / restart from Power Save
             bool wasActiveM = false, waitShown = false;
@@ -945,6 +979,9 @@ void main_loop()
             // Restart mp if active before
             if(wasActiveM) mp_play();
         }
+    } else {
+        isB1EHeldStart = isB1EHeldEnd = isB1HeldStart = isB1HeldEnd = isB1Pressed = false;
+        Button1.reset();
     }
     
     // TT button evaluation
@@ -985,6 +1022,9 @@ void main_loop()
                 timeTravel(networkTCDTT, networkLead, networkP1);
             }
         }
+    } else {
+        isTTKeyHeld = isTTKeyPressed = false;
+        TTKey.reset();
     }
 
     now = millis();
@@ -1633,6 +1673,23 @@ static void execute_remote_command()
                     mp_gotonum(0, mpActive);
                 }
                 break;
+            case 990:                             // 990/991: Disable/enable car mode
+            case 991:
+                if(!injected) {
+                    bool ocm = carMode;          
+                    if(command == 991) {
+                        if(*settings.cm_ssid) carMode = true;
+                    } else {
+                        carMode = false;
+                    }
+                    if(ocm != carMode) {
+                        saveCarMode();
+                        prepareReboot();
+                        delay(500);
+                        esp_restart();
+                    }
+                }
+                break;
             }
         }
 
@@ -1968,9 +2025,25 @@ static void Button1Pressed()
     isB1Pressed = true;
 }
 
-static void Button1Held()
+static void Button1HeldStart()
 {
-    isB1Held = true;
+    isB1HeldStart = true;
+}
+
+static void Button1HeldEnd()
+{
+    isB1HeldEnd = true;
+}
+
+static void Button1EHeldStart()
+{
+    isB1HeldStart = false;
+    isB1EHeldStart = true;
+}
+
+static void Button1EHeldEnd()
+{
+    isB1EHeldEnd = true;
 }
 
 /* 
@@ -2158,10 +2231,9 @@ static void bttfn_eval_response(uint8_t *buf, bool checkCaps)
         }
         if(buf[31] & 0x10) {
             TCDSupportsNOTData = true;
+            TCDSupportsSSID = !!(buf[31] & 0x40);
         }
-        if(buf[31] & 0x20) {
-            TCDSupportsCMDDOOR = true;
-        }
+        TCDSupportsCMDDOOR = !!(buf[31] & 0x20);
     }
     
     if(buf[5] & 0x02) {
@@ -2178,6 +2250,13 @@ static void bttfn_eval_response(uint8_t *buf, bool checkCaps)
         tcdNM = false;
         tcdFPO = false;
         doorTCDFPO = true;  // Allow door sounds in this unlikely case
+    }
+
+    if(!bttfnHaveTCDSSID && !checkCaps && TCDSupportsSSID) {
+        bttfnHaveTCDSSID = 1;
+        memcpy((void *)TCDSSID, (void *)&buf[41], 6);
+        TCDSSID[6] = buf[18];
+        TCDpwMarker = buf[19] & 0x01;
     }
 }
 
@@ -2199,6 +2278,7 @@ static void handle_tcd_notification(uint8_t *buf)
             if(bttfnSessionID && (bttfnSessionID != seqCnt)) {
                 lastBTTFNKA = bttfnLastNotData - BTTFN_KA_INTERVAL + (BTTFN_KA_OFFSET*1000);
                 bttfnTCDDataSeqCnt = 1;
+                bttfnHaveTCDSSID = 0;
             }
             bttfnSessionID = seqCnt;
             seqCnt = GET32(buf, 6);
@@ -2645,9 +2725,9 @@ void bttfn_loop()
             bttfnDataNotEnabled = false;
             bttfnTCDDataSeqCnt = 1;
             // Re-do DISCOVER, TCD might have got new IP address
-            if(tcdHostNameHash) {
-                haveTCDIP = false;
-            }
+            if(tcdHostNameHash) haveTCDIP = false;
+            // Don't assume TCD comes back with same SSID/pwMarker
+            bttfnHaveTCDSSID = 0;
             // Avoid immediate return to stand-alone in main_loop()
             lastBTTFNpacket = now;
             #ifdef DG_DBG_NET

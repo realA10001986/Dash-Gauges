@@ -8,7 +8,7 @@
  * Input
  *
  * -------------------------------------------------------------------
- * License: MIT NON-AI
+ * License: Modified MIT NON-AI
  * 
  * Permission is hereby granted, free of charge, to any person 
  * obtaining a copy of this software and associated documentation 
@@ -20,6 +20,9 @@
  *
  * The above copyright notice and this permission notice shall be 
  * included in all copies or substantial portions of the Software.
+ * 
+ * Links inside the Software pointing to the original source must not 
+ * be changed or removed.
  *
  * In addition, the following restrictions apply:
  * 
@@ -61,7 +64,9 @@ typedef enum {
     TCBS_PRESSED,
     TCBS_RELEASED,
     TCBS_LONGPRESS,
-    TCBS_LONGPRESSEND
+    TCBS_LONGPRESSEND,
+    TCBS_ELONGPRESS,
+    TCBS_ELONGPRESSEND
 } ButtonState;
 
 class DGButton {
@@ -71,22 +76,26 @@ class DGButton {
 
         void begin();
         
-        void setTiming(const int dticks, const int pticks, const int lticks);
+        void setTiming(const int dticks, const int pticks, const int lticks, const int elPressDur = 0);
       
         void attachPress(void (*newFunction)(void));
         void attachLongPressStart(void (*newFunction)(void));
         void attachLongPressStop(void (*newFunction)(void));
+        void attachELongPressStart(void (*newFunction)(void));
+        void attachELongPressStop(void (*newFunction)(void));
 
         void scan(void);
+        void reset(void);
 
     private:
 
-        void reset(void);
         void transitionTo(ButtonState nextState);
 
         void (*_pressFunc)(void) = NULL;
         void (*_longPressStartFunc)(void) = NULL;
         void (*_longPressStopFunc)(void) = NULL;
+        void (*_elongPressStartFunc)(void) = NULL;
+        void (*_elongPressStopFunc)(void) = NULL;
 
         int _pin;
         bool _pullupActive;
@@ -94,6 +103,7 @@ class DGButton {
         unsigned int _debounceDur = 50;
         unsigned int _pressDur = 400;
         unsigned int _longPressDur = 800;
+        unsigned int _elongPressDur = 0;
       
         int _buttonPressed;
       

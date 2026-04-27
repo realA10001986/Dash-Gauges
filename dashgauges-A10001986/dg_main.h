@@ -8,7 +8,7 @@
  * Main controller
  *
  * -------------------------------------------------------------------
- * License: MIT NON-AI
+ * License: Modified MIT NON-AI
  * 
  * Permission is hereby granted, free of charge, to any person 
  * obtaining a copy of this software and associated documentation 
@@ -20,6 +20,9 @@
  *
  * The above copyright notice and this permission notice shall be 
  * included in all copies or substantial portions of the Software.
+ * 
+ * Links inside the Software pointing to the original source must not 
+ * be changed or removed.
  *
  * In addition, the following restrictions apply:
  * 
@@ -53,6 +56,36 @@
 #define _DG_MAIN_H
 
 #include "dgdisplay.h"
+
+void main_boot();
+void main_boot2();
+void main_setup();
+void main_loop();
+
+void flushDelayedSave();
+
+void showWaitSequence();
+void endWaitSequence();
+
+void showCopyError();
+
+void allOff();
+void prepareReboot();
+
+void mydelay(unsigned long mydel);
+unsigned long millisNonZero();
+
+void prepareTT();
+void refill_plutonium();
+void set_empty();
+void wakeup();
+
+bool switchMusicFolder(uint8_t nmf, bool isSetup = false);
+void showMPRPrecDone(unsigned int perc);
+
+void addCmdQueue(uint32_t command);
+
+void bttfn_loop();
 
 extern unsigned long powerupMillis;
 
@@ -90,34 +123,8 @@ extern bool doWakeup;
 
 extern bool dgBusy;
 
-void main_boot();
-void main_boot2();
-void main_setup();
-void main_loop();
-
-void flushDelayedSave();
-
-void showWaitSequence();
-void endWaitSequence();
-
-void showCopyError();
-
-void allOff();
-void prepareReboot();
-
-void mydelay(unsigned long mydel);
-unsigned long millisNonZero();
-
-void prepareTT();
-void refill_plutonium();
-void set_empty();
-void wakeup();
-
-bool switchMusicFolder(uint8_t nmf, bool isSetup = false);
-void showMPRPrecDone(unsigned int perc);
-
-void addCmdQueue(uint32_t command);
-
-void bttfn_loop();
+extern int     bttfnHaveTCDSSID;
+extern char    TCDSSID[];
+extern uint8_t TCDpwMarker;
 
 #endif

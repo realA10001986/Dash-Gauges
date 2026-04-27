@@ -8,7 +8,7 @@
  * WiFi and Config Portal handling
  *
  * -------------------------------------------------------------------
- * License: MIT NON-AI
+ * License: Modified MIT NON-AI
  * 
  * Permission is hereby granted, free of charge, to any person 
  * obtaining a copy of this software and associated documentation 
@@ -20,6 +20,9 @@
  *
  * The above copyright notice and this permission notice shall be 
  * included in all copies or substantial portions of the Software.
+ * 
+ * Links inside the Software pointing to the original source must not 
+ * be changed or removed.
  *
  * In addition, the following restrictions apply:
  * 
@@ -52,15 +55,7 @@
 #ifndef _DG_WIFI_H
 #define _DG_WIFI_H
 
-extern bool gaugeTypeLocked;
-
-extern bool wifiSetupDone;
-extern bool wifiIsOff;
-extern bool wifiAPIsOff;
-extern bool wifiInAPMode;
-
 void wifi_setup();
-void wifi_setup2();
 void wifi_loop();
 void wifiOn(unsigned long newDelay = 0, bool alsoInAPMode = false, bool deferConfigPortal = false);
 bool wifiOnWillBlock();
@@ -76,5 +71,14 @@ bool wifi_getIP(uint8_t& a, uint8_t& b, uint8_t& c, uint8_t& d);
 bool isIp(char *str);
 
 bool checkIPConfig();
+
+extern bool gaugeTypeLocked;
+
+extern bool wifiSetupDone;
+extern bool wifiIsOff;
+extern bool wifiAPIsOff;
+extern bool wifiInAPMode;
+
+extern bool carMode;
 
 #endif

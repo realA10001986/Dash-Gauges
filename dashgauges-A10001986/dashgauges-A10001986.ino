@@ -5,7 +5,7 @@
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.out-a-ti.me
  *
- * License: MIT NON-AI
+ * License: Modified MIT NON-AI
  * 
  * Permission is hereby granted, free of charge, to any person 
  * obtaining a copy of this software and associated documentation 
@@ -17,6 +17,9 @@
  *
  * The above copyright notice and this permission notice shall be 
  * included in all copies or substantial portions of the Software.
+ * 
+ * Links inside the Software pointing to the original source must not 
+ * be changed or removed.
  *
  * In addition, the following restrictions apply:
  * 
@@ -102,8 +105,8 @@
  * - Go to "Sketch" -> "Upload" to compile and upload the firmware to your ESP32 board.
  *
  * - Install the sound-pack: 
- *   - Go to Config Portal, click "Update" and upload the sound-pack (DGA.bin, extracted
- *     from install/sound-pack-dgXX.zip) through the bottom file selector.
+ *   - Go to Config Portal, click "Update & Upload" and upload the sound-pack (DGA.bin,
+ *     extracted from install/sound-pack-dgXX.zip) through the bottom file selector.
  *     An SD card must be present in the slot during this operation.
  *   Alternatively:
  *   - Copy DGA.bin to the top folder of a FAT32 (not ExFAT!) formatted SD card (max 
@@ -114,6 +117,26 @@
 
 /*  Changelog
  *
+ *  2026/04/27 (A10001986) [1.32]
+ *    **********************************************************************************
+ *    ** If updating from below 1.30, please install 1.30 first to have your          **
+ *    ** settings converted. If 1.30 is skipped, some of your settings (static IP,    **
+ *    ** volume, music folder number) will be restored to default values. It suffices **
+ *    ** to install 1.30 and boot once; you can then immediately update to a later    **
+ *    ** version.                                                                     **
+ *    ** https://github.com/realA10001986/Dash-Gauges/releases/tag/V1.30              **
+ *    **********************************************************************************
+ *    - Add Car Mode: In addition to existing WiFi network connection settings, you 
+ *      can now pre-configure TCD-AP SSID and password in WiFi Settings and quickly
+ *      switch between normal (home, iPhone...) WiFi connection and Car WiFi connection 
+ *      (through TCD-AP) by holding "Button 1" for 6 seconds (triple-beep) or through 
+ *      the Config Portal.
+ *    - Behavior of Button 1 changed: Press is still a brief press. Holding the button
+ *      to read out the IP address means holding it until a double-beep sounds, then
+ *      the button must be released. (Previously, the IP read-out started automatically
+ *      after 2 seconds, without releasing the button, and no sound was played.)
+ *    - Fix race condition in Fake Power logic
+ *    - New sound-pack (DG05)
  *  2026/03/25 (A10001986) [1.31]
  *    **********************************************************************************
  *    ** If updating from below 1.30, please install 1.30 first to have your          **
