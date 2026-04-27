@@ -481,7 +481,7 @@ One-time configuration steps:
 - Enter the Config Portal on the Dash Gauges, click on *Settings* and check that the hostname of the TCD (usually "timecircuits") is present in the  **_Hostname or IP address of TCD_** under *Wireless communication (BTTF-Network)* settings; do not use an IP address.
 - Furthermore, on the *WiFi Configuration* page, check that the TCD's WiFi network name (SSID; usually "TCD-AP") and password (if the TCD is configured with a password) are present under *Car mode settings*.
 
-If everthing is in place, you can enable *Car Mode* on the Dash Gauges by holding _Button 1_ for six seconds, until a triple-beep sounds, and then release it. The Dash Gauges will reboot and attempt to connect to the TCD's AP. (_Button 1_ is located behind the "Percent Power" gauge on the control board.)
+If everthing is in place, you can enable Car mode on the Dash Gauges by holding _Button 1_ for six seconds, until a triple-beep sounds, and then release it. The Dash Gauges will reboot and attempt to connect to the TCD's AP. (_Button 1_ is located behind the "Percent Power" gauge on the control board.)
 
 You can switch between your "normal" (home, iPhone, ..) WiFi connection and Car Mode holding _Button 1_ for six seconds as described, or through the Config Portal.
 
@@ -594,7 +594,7 @@ Checking this box (and clicking SAVE) deletes the currently saved WiFi network (
 
 ##### &#9193; Car mode settings
 
-In *Car mode*, the device connects to the TCD-AP as configured here instead of the WiFi network configured above. 
+In Car mode, the device connects to the TCD-AP as configured here instead of the WiFi network configured above. 
 
 Enter your TCD's network name (usually "TCD-AP") in **_Network name (SSID) of TCD-AP_** and the TCD's AP password (if configured on the TCD) in **_Password for TCD-AP_**. 
 
