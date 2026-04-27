@@ -19,7 +19,7 @@ Firmware features include
 - support for analog gauges (with software-controlled arbitrary pointer position) and digital gauges (Empty/Full, without arbitrary pointer position)
 - selectable "full" percentages per analog gauge (besides for fun, useful for adjusting inaccurate readings)
 - selectable threshold percentage for Empty/Full position for digital gauges
-- [Time Travel](#basic-operation) function, triggered by button, [Time Circuits Display](https://circuitsetup.us/product/complete-time-circuits-display-kit/) (TCD) or via [MQTT](#home-assistant--mqtt)
+- [Time Travel](#basic-operation) function, triggered by button, [Time Circuits Display](https://circuitsetup.us/product/complete-time-circuits-display-kit/) (TCD) or via [Home Assistant](#home-assistant--mqtt)
 - support for Side Switch to play "empty" and "refill" sequences
 - Automatic refill timer, automatic alarm mute timer (both optional)
 - support for [door switches](#door-switches) for playing sounds when opening/closing the car doors, optionally through the TCD (and hence through your stereo)
@@ -48,7 +48,7 @@ The first step is to establish access to the configuration web site ("Config Por
 
 Your Dash Gauges know two ways of WiFi operation: Either they create their own WiFi network, or they connect to a pre-existing WiFi network.
 
-As long as the device is unconfigured, it creates its own WiFi network named "DG-AP". This mode of operation is called "**Access point mode**", or "AP-mode". or **"AP-mode"**. In this mode, computers/handhelds can connect to your Dash Gauges in order to access the Config Portal, but ways of communication end right here. There is no inter-prop-communication ([BTTFN](#bttf-network-bttfn)) and no [HA/MQTT](#home-assistant--mqtt).
+As long as the device is unconfigured, it creates its own WiFi network named "DG-AP". This mode of operation is called "**Access point mode**", or **"AP-mode"**. In this mode, computers/handhelds can connect to your Dash Gauges in order to access the Config Portal, but ways of communication end right here. There is no inter-prop-communication ([BTTFN](#bttf-network-bttfn)) and no [HA/MQTT](#home-assistant--mqtt).
 
 ![APmode](img/apmode.png)
 
@@ -91,9 +91,9 @@ Click on "WiFi Configuration" and either select a network from the top of the pa
 
 </details>
 
-If the Dash Gauges fail to connect, they fall back to AP-mode. You can trigger another connection attempt by briefly pressing "Button 1" (located behind the "Percent Power" gauge on the control board).
+If the Dash Gauges fail to connect, they fall back to AP-mode. You can trigger another connection attempt by briefly pressing _Button 1_ (located behind the "Percent Power" gauge on the control board).
 
-#### Places without WiFi network
+#### Places without a WiFi network
 
 In this case and with no [Time Circuits Display](https://circuitsetup.us/product/complete-time-circuits-display-kit/) at hand, keep your Dash Gauges operating in AP-mode.
 
@@ -103,7 +103,7 @@ If you have a TCD, you can connect your Dash Gauges to the TCD's own WiFi networ
 
 This setup is meant for cars, but suitable for any place with no WiFi network. See [here](#car-setup) for details.
 
-After completing this step, your Dash Gauges are ready to be configured through the "Config Portal".
+After completing WiFi setup, your Dash Gauges are ready for use; you can also continue configuring them to your personal preferences through the Config Portal.
 
 ## The Config Portal
 
@@ -128,7 +128,7 @@ It can be accessed as follows:
 
   >Accessing the Config Portal through this address requires the operating system of your handheld/computer to support Bonjour/mDNS: Windows 10 version TH2     (1511) [other sources say 1703] and later, Android 13 and later; MacOS and iOS since the dawn of time.
 
-  >If connecting to http://gauges.local fails due to a name resolution error, you need to find out the Gauges' IP address. In order to do so, hold "Button 1" on the Control Board for 2 seconds, and listen. The IP address will be spoken out loud. Then, on your handheld or computer, navigate to http://a.b.c.d (a.b.c.d being the IP address as just given by the Dash Gauges) in order to enter the Config Portal.</details>
+  >If connecting to http://gauges.local fails due to a name resolution error, you need to find out the Gauges' IP address. In order to do so, hold _Button 1_ on the Control Board for 2 seconds until you hear a double-beep, release the button and listen. The IP address will be spoken out loud. Then, on your handheld or computer, navigate to http://a.b.c.d (a.b.c.d being the IP address as just given by the Dash Gauges) in order to enter the Config Portal.</details>
 
 In the main menu, click on "Settings" to configure your Dash Gauges. 
 
@@ -231,9 +231,13 @@ The TCD can communicate with the Dash Gauges wirelessly, via the built-in "**B**
 |:--:|
 | Click to watch the video |
 
-BTTFN requires the props all to be connected to the same network, such as, for example, your  WiFi network. BTTFN does not work over the Internet.
+BTTFN requires the props all to be connected to the same network, such as, for example, your home WiFi network, or the TCD acting as access point. BTTFN does not work over the Internet.
 
-![STAmode-bttfn](img/stamode-bttfn.png)
+![STAmode-home](img/stamode-home.png)
+
+<p>&nbsp;</p>
+
+![STAmode-car](img/stamode-car.png)
 
 <details>
 <summary>More...</summary>
@@ -242,7 +246,7 @@ BTTFN requires the props all to be connected to the same network, such as, for e
 
 </details>
 
-In order to connect your Dash Gauges to the TCD using BTTFN, just enter the TCD's IP address or hostname in the **_IP address or hostname of TCD_** field in the Dash Gauges' Config Portal. On the TCD, no special configuration is required.
+In order to connect your Dash Gauges to the TCD using BTTFN, just enter the TCD's hostname - usually "timecircuits" - in the **_Hostname or IP address of TCD_** field in the Dash Gauges' Config Portal. On the TCD, no special configuration is required. 
   
 Afterwards, the Dash Gauges and the TCD can communicate wirelessly and 
 - play time travel sequences in sync,
@@ -362,6 +366,14 @@ You can use BTTF-Network and MQTT at the [same time](#receive-commands-from-time
     <tr>
      <td align="left">Say current IP address</td>
      <td align="left">9090&#9166;</td>
+    </tr>
+    <tr>
+     <td align="left">Disable <a href='#car-setup'>Car mode</a><sup>1</sup></td>
+     <td align="left">9990&#9166;</td>
+    </tr>   
+    <tr>
+     <td align="left">Enable <a href='#car-setup'>Car mode</a><sup>1</sup></td>
+     <td align="left">9991&#9166;</td>
     </tr>   
     <tr>
      <td align="left">Reboot the device<sup>1</sup></td>
@@ -452,29 +464,31 @@ Limitations: TLS/SSL not supported; ".local" domains (MDNS) not supported; serve
 
 ## Car setup
 
-If your Dash Gauges, along with a [Time Circuits Display](https://tcd.out-a-ti.me/), is mounted in a car, the following network configuration is recommended:
+If your Dash Gauges, along with a [Time Circuits Display](https://tcd.out-a-ti.me/), are mounted in a car or other places without a local WiFi network, the following network configuration is recommended:
 
 ![STAmode-car](img/stamode-car2.png)
 
+This configuration can easily achieved by putting both the TCD and the Dash Gauges in *Car Mode*:
+
 #### TCD
 
-- Run your TCD in [*car mode*](https://tcd.out-a-ti.me/#car-mode);
-- disable WiFi power-saving on the TCD by setting **_Power save timer_** to 0 (zero) in the "AP-mode settings" section on the WiFi Configuration page.
+- Set **_Power save timer_** to 0 (zero) in the "AP-mode settings" section on the *WiFi Configuration* page
+- Put your TCD in [*Car Mode*](https://tcd.out-a-ti.me/#car-mode) by issuing keypad command 991.
 
 #### Dash Gauges
 
-Enter the Config Portal on the Dash Gauges (as described above), click on *Settings* and
-  - enter *192.168.4.1* into the field **_IP address or hostname of TCD_** under BTTFN settings;
-  - click on *Save*.
+One-time configuration steps:
+- Enter the Config Portal on the Dash Gauges, click on *Settings* and check that the hostname of the TCD (usually "timecircuits") is present in the  **_Hostname or IP address of TCD_** under *Wireless communication (BTTF-Network)* settings; do not use an IP address.
+- Furthermore, on the *WiFi Configuration* page, check that the TCD's WiFi network name (SSID; usually "TCD-AP") and password (if the TCD is configured with a password) are present under *Car mode settings*.
 
-After the Dash Gauges have restarted, re-enter the Dash Gauges' Config Portal (while the TCD is powered and in *car mode*) and
-  - click on *WiFi Configuration*,
-  - select the TCD's access point name in the list at the top ("TCD-AP"; if there is no list, click on "Scan For Networks") or enter *TCD-AP* into the *Network name (SSID)* field; if you password-protected your TCD's AP, enter this password in the *password* field. Leave all other fields empty,
-  - click on *Save*.
+If everthing is in place, you can enable *Car Mode* on the Dash Gauges by holding _Button 1_ for six seconds, until a triple-beep sounds, and then release it. The Dash Gauges will reboot and attempt to connect to the TCD's AP. (_Button 1_ is located behind the "Percent Power" gauge on the control board.)
 
-In order to access the Dash Gauges' Config Portal in your car, connect your handheld or computer to the TCD's WiFi access point ("TCD-AP"), and direct your browser to http://gauges.local ; if that does not work, go to the TCD's keypad menu, press ENTER until "BTTFN CLIENTS" is shown, hold ENTER, and look for the Dash Gauges' IP address there; then direct your browser to that IP by using the URL http://a.b.c.d (a-d being the IP address displayed on the TCD display).
+You can switch between your "normal" (home, iPhone, ..) WiFi connection and Car Mode holding _Button 1_ for six seconds as described, or through the Config Portal.
 
-This "car setup" can also be used in a  setup with no local WiFi network present.
+In order to access the Dash Gauges' Config Portal in *Car mode*, connect your handheld or computer to the TCD's WiFi network ("TCD-AP"), and direct your browser to http://gauges.local.
+
+  ><details><summary>If that fails...</summary>
+  >If connecting to http://gauges.local fails due to a name resolution error, go to the TCD's keypad menu, navigate to "BTTFN CLIENTS", and look for the Dash Gauges' IP address there; then direct your browser to that IP by using the URL http://a.b.c.d (a-d being the IP address displayed on the TCD display)</details>
 
 ## Door Switches
 
@@ -490,9 +504,9 @@ The Config Portal offers an option for WiFi power saving for AP-mode (ie when th
 
 The timer can be set to 0 (which disables it; WiFi is never switched off; this is the default), or 10-99 minutes. 
 
-After WiFi has been switched off due to timer expiration, it can be re-enabled by briefly pressing Button 1, in which case the timers are restarted (ie WiFi is again switched off after timer expiration). Button 1 is located behind the "Percent Power" gauge on the control board.
+After WiFi has been switched off due to timer expiration, it can be re-enabled by briefly pressing _Button 1_, in which case the timers are restarted (ie WiFi is again switched off after timer expiration). _Button 1_ is located behind the "Percent Power" gauge on the control board.
 
-> Briefly pressing Button 1 also triggers a re-connection attempt in case your configured WiFi network was not available when the Dash Gauges were trying to connect, see [here](#home-setup-with-a-pre-existing-local-wifi-network).
+> Briefly pressing _Button 1_ also triggers a re-connection attempt in case your configured WiFi network was not available when the Dash Gauges were trying to connect, see [here](#home-setup-with-a-pre-existing-local-wifi-network).
 
 ## Flash Wear
 
@@ -577,6 +591,16 @@ If there are several APs with identical SSID in your area, you can select a spec
 ##### &#9193; Forget Saved WiFi Network
 
 Checking this box (and clicking SAVE) deletes the currently saved WiFi network (SSID and password as well as static IP data) and reboots the device; it will restart in "access point" (AP) mode. See [here](#connecting-to-a-wifi-network).
+
+##### &#9193; Car mode settings
+
+In *Car mode*, the device connects to the TCD-AP as configured here instead of the WiFi network configured above. 
+
+Enter your TCD's network name (usually "TCD-AP") in **_Network name (SSID) of TCD-AP_** and the TCD's AP password (if configured on the TCD) in **_Password for TCD-AP_**. 
+
+>In the unlikely case, multiple TCD's are in range, you can single out your TCD by its BSSID. The TCD displays its BSSID on its *WiFi Configuration* page (starting version 3.23).
+
+If you want to enter Car mode immediately, check **_Enable car mode_**. You can also later enable Car mode by holding _Button 1_ for six seconds (until a triple-beep is emitted).
 
 ##### &#9193; Hostname
 
@@ -740,11 +764,9 @@ This can also be set/changed through a TCD keypad via BTTFN (9222 / 9555). Such 
 
 #### <ins>Settings for BTTFN communication</ins>
 
-##### &#9193; IP address or hostname of TCD
+##### &#9193; Hostname or IP address of TCD
 
-If you want to have your Dash Gauges to communicate with a Time Circuits Display wirelessly ("BTTF-Network"), enter the TCD's hostname - usually 'timecircuits' - or IP address here.
-
-If you connect your Dash Gauges to the TCD's access point ("TCD-AP"), the TCD's IP address is 192.168.4.1.
+If you want to have your Dash Gauges to communicate with a Time Circuits Display wirelessly ("BTTF-Network"), enter the TCD's hostname - usually 'timecircuits' - or IP address here. Hostname is preferred because it makes the setup independent of the network environment.
 
 ##### &#9193; Follow TCD night-mode
 
