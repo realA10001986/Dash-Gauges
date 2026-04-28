@@ -160,7 +160,7 @@ If the Dash Gauges are operated stand-alone:
 
 Other features require a CircuitSetup [Time Circuits Display](#bttf-network-bttfn) and/or a connection to [Home Assistant](#home-assistant--mqtt) for control.
 
-## SD card
+## SD Card
 
 >Preface note on SD cards: For unknown reasons, some SD cards simply do not work with this device. For instance, I had no luck with Sandisk Ultra 32GB and  "Intenso" cards. If your SD card is not recognized, check if it is formatted in FAT32 format (not exFAT!). Also, the size must not exceed 32GB (as larger cards cannot be formatted with FAT32). Transcend, Sandisk Industrial, Verbatim Premium and Samsung Pro Endurance SDHC cards work fine in my experience.
 
@@ -462,7 +462,7 @@ If your broker does not allow anonymous logins, a username and password can be s
 
 Limitations: TLS/SSL not supported; ".local" domains (MDNS) not supported; server/broker must respond to PING (ICMP) echo requests. For proper operation with low latency, it is recommended that the broker is on your local network. MQTT is disabled when the Dash Gauges are operated in AP-mode or when connected to the TCD run in AP-Mode (TCD-AP).
 
-## Car setup
+## Car Setup
 
 If your Dash Gauges, along with a [Time Circuits Display](https://tcd.out-a-ti.me/), are mounted in a car or other places without a local WiFi network, the following network configuration is recommended:
 
@@ -498,7 +498,7 @@ For information on wiring, see [here](Hardware.md#door-switches), section "Door 
 
 There are several options for door sounds in the Config Portal, please see [here](#door-switches-hardware-settings).
 
-## WiFi power saving features
+## WiFi Power Saving Features
 
 The Config Portal offers an option for WiFi power saving for AP-mode (ie when the device acts as an access point). This option configures a timer after whose expiration WiFi is switched off; the device is no longer transmitting or receiving data over WiFi.
 
