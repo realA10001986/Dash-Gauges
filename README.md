@@ -246,7 +246,7 @@ BTTFN requires the props all to be connected to the same network, such as, for e
 
 </details>
 
-In order to connect your Dash Gauges to the TCD, just enter the TCD's hostname - usually "timecircuits" - in the **_Hostname or IP address of TCD_** field in the Dash Gauges' Config Portal. On the TCD, no special configuration is required. 
+To connect your Dash Gauges to the TCD, just enter the TCD's hostname - usually "timecircuits" - in the **_Hostname or IP address of TCD_** field in the Dash Gauges' Config Portal. On the TCD, no special configuration is required. 
   
 Afterwards, the Dash Gauges and the TCD can communicate wirelessly and 
 - play time travel sequences in sync,
