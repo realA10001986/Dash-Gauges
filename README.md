@@ -26,7 +26,7 @@ Firmware features include
 - [wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://circuitsetup.us/product/complete-time-circuits-display-kit/); used for synchronized time travels, alarm, night mode, fake power and remote control through TCD keypad
 - [music player](#the-music-player): Play mp3 files located on an SD card [requires TCD connected wirelessly or HA/MQTT for control]
 - [SD card](#sd-card) support for custom audio files for effects, and music for the Music Player
-- advanced network-accessible [Config Portal](#the-config-portal) for setup (http://gauges.local, hostname configurable)
+- advanced network-accessible [Config Portal](#the-config-portal) for setup (http://gauges.local)
 - [Home Assistant](#home-assistant--mqtt) (MQTT) support
 - built-in OTA installer for firmware updates and audio files
 
