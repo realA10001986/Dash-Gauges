@@ -199,23 +199,27 @@ To delete a file from the SD card, upload a file whose name is prefixed with "de
 
 For technical reasons, the Dash Gauges must reboot after mp3 files are uploaded in this way.
 
-Please remember that the maximum bitrate for mp3 files is 128kbps. Also note that the uploaded file is stored to the root folder of the SD card, so this way of uploading cannot be used to upload songs for the Music Player. 
+Please remember that the maximum bitrate for mp3 files is 128kbps. Also note that the uploaded file is stored to the root folder of the SD card, so this way of uploading cannot be used to upload tracks for the Music Player. 
 
 ## The Music Player
 
-The firmware contains a simple music player to play mp3 files located on the SD card. This player requires a TCD connected through BTTFN for control.
+The firmware contains a simple music player to play mp3 files located on the SD card. This player is controlled by a TCD connected through BTTFN, or through [HA/MQTT](#control-the-dash-gauges-via-mqtt).
 
-In order to be recognized, your mp3 files need to be organized in music folders named *music0* through *music9*. The folder number is 0 by default, ie the player starts searching for music in folder *music0*. This folder number can be changed in the Config Portal or through the TCD keypad (905x).
+*The maximum bitrate is __128kpbs__. The free [Adapter](https://macroplant.com/adapter/audio-converter) tool can re-encode your mp3 files in batches.*
 
-The names of the audio files must only consist of three-digit numbers, starting at 000.mp3, in consecutive order. No numbers should be left out. Each folder can hold up to 1000 files (000.mp3-999.mp3). *The maximum bitrate is 128kpbs.*
+To be recognized, your mp3 files need to be organized in music folders named *music0* through *music9*. The folder number is 0 by default, i.e. the player starts searching for music in folder *music0*. To select a different folder, select it in the Config Portal ("Settings") or through the TCD (905x).
 
-Since manually renaming mp3 files is somewhat cumbersome, the firmware can do this for you - provided you can live with the files being sorted in alphabetical order: Just copy your files with their original filenames to the music folder; upon boot or upon selecting a folder containing such files, they will be renamed following the 3-digit name scheme (as mentioned: in alphabetic order). You can also add files to a music folder later, they will be renamed properly; when you do so, delete the file "TCD_DONE.TXT" from the music folder on the SD card so that the firmware knows that something has changed. The renaming process can take a while (11 minutes for 1000 files in bad cases). Mac users are advised to delete the ._ files from the SD before putting it back into the control board as this speeds up the process. _While the renaming is in progress, the Dash Gauges' right-most analog gauge shows the percentage of files yet to be processed._
+The names of the audio files must only consist of three-digit numbers, starting at 000.mp3, in consecutive order. No numbers should be left out. Each folder can hold up to 1000 files (000.mp3-999.mp3). 
 
-To start and stop music playback, enter 9005 followed by ENTER on your TCD. Entering 9002 jumps to the previous song, 9008 to the next one.
+Since manually renaming mp3 files is somewhat cumbersome, the firmware can do this for you: Just copy your files with their original filenames to a music folder of your choice; when selecting that folder (*5Xok), the files will be sorted alphabetically and renamed according to the 3-digit name scheme. (If you want your tracks in a specific order, you must rename them, for instance by inserting a letter or number at the start.) The renaming process can take a while (11 minutes for 1000 files in bad cases). Mac users are advised to delete the ._ files from the SD before putting it back into the Dash Gauges as this speeds up the process. While the renaming is in progress, the Dash Gauges' right-most analog gauge shows the percentage of files yet to be processed.
 
-By default, the songs are played in order, starting at 000.mp3, followed by 001.mp3 and so on. By entering 9555 on the TCD, you can switch to shuffle mode, in which the songs are played in random order. Type 9222 followed by ENTER to switch back to consecutive mode.
+To add files to a music folder later, just copy them to the folder and delete the file "TCD_DONE.TXT" (so that the firmware knows that something has changed). 
 
-Entering 9888 followed by OK re-starts the player at song 000, and 9888xxx (xxx = three-digit number) jumps to song #xxx.
+To start and stop music playback, enter 9005 followed by ENTER on your TCD. Entering 9002 jumps to the previous track, 9008 to the next one.
+
+By default, the tracks are played in order, starting at 000.mp3, followed by 001.mp3 and so on. By entering 9555 on the TCD, you can switch to shuffle mode, in which the tracks are played in random order. Type 9222 followed by ENTER to switch back to consecutive mode.
+
+Entering 9888 followed by OK re-starts the player at track 000, and 9888xxx (xxx = three-digit number) jumps to track #xxx.
 
 See [here](#tcd-remote-command-reference) for a list of controls of the music player.
 
@@ -293,19 +297,19 @@ You can use BTTF-Network and MQTT at the [same time](#receive-commands-from-time
      <td align="left">9700&#9166;</td>
     </tr>    
     <tr>
-     <td align="left">Set volume level (00-19)</td>
-     <td align="left">9300&#9166; - 9319&#9166;</td>
+     <td align="left">Set volume level (00-20)</td>
+     <td align="left">9300&#9166; - 9320&#9166;</td>
     </tr>
     <tr>
      <td align="left"><a href="#the-music-player">Music Player</a>: Play/Stop</td>
      <td align="left">9005&#9166;</td>
     </tr>
     <tr>
-     <td align="left"><a href="#the-music-player">Music Player</a>: Previous song</td>
+     <td align="left"><a href="#the-music-player">Music Player</a>: Previous track</td>
      <td align="left">9002&#9166;</td>
     </tr>
     <tr>
-     <td align="left"><a href="#the-music-player">Music Player</a>: Next song</td>
+     <td align="left"><a href="#the-music-player">Music Player</a>: Next track</td>
      <td align="left">9008&#9166;</td>
     </tr>
     <tr>
@@ -321,11 +325,11 @@ You can use BTTF-Network and MQTT at the [same time](#receive-commands-from-time
      <td align="left">9555&#9166;</td>
     </tr> 
     <tr>
-     <td align="left"><a href="#the-music-player">Music Player</a>: Go to song 0</td>
+     <td align="left"><a href="#the-music-player">Music Player</a>: Go to track 0</td>
      <td align="left">9888&#9166;</td>
     </tr>
     <tr>
-     <td align="left"><a href="#the-music-player">Music Player</a>: Go to song xxx</td>
+     <td align="left"><a href="#the-music-player">Music Player</a>: Go to track xxx</td>
      <td align="left">9888xxx&#9166;</td>
     </tr>
     <tr>
@@ -421,11 +425,14 @@ The Dash Gauges can be controlled through messages sent to topic **bttf/dg/cmd**
 - PLAY_DOOR_OPEN, PLAY_DOOR_CLOSED: Play respective door sounds; these commands are only executed if the option **_Enable use of door switches_** in the Config Portal is unchecked. The sound is played through the TCD if so configured in the Config Portal.
 - MP_PLAY: Starts the [Music Player](#the-music-player)
 - MP_STOP: Stops the [Music Player](#the-music-player)
-- MP_NEXT: Jump to next song
-- MP_PREV: Jump to previous song
+- MP_NEXT: Jump to next track
+- MP_PREV: Jump to previous track
 - MP_SHUFFLE_ON: Enables shuffle mode in [Music Player](#the-music-player)
 - MP_SHUFFLE_OFF: Disables shuffle mode in [Music Player](#the-music-player)
 - MP_FOLDER_x: x being 0-9, set folder number for [Music Player](#the-music-player)
+- MP_REQSTATUS: Publish current [music player status](#-publish-music-player-status-to-bttffcmpstatus) to bttf/dg/mpstatus
+- VOLUME_UP, VOLUME_DOWN: Increase/decrease volume by a notch
+- VOLUME_SET_x: Set volume to x% (x=0-100)
 - PLAYKEY_x: Play keyX.mp3 (from SD card), X being in the range from 1 to 9.
 - STOPKEY: Stop playback of keyX file. Does nothing if no keyX file is currently played back.
 - INJECT_x: See immediately below.
@@ -758,7 +765,7 @@ This can also be set/changed through a TCD keypad via BTTFN (9050 - 9059). Such 
 
 ##### &#9193; Shuffle mode enabled
 
-When checked, songs are shuffled. When unchecked, songs will be played in order.
+When checked, tracks are shuffled. When unchecked, tracks will be played in order.
 
 This can also be set/changed through a TCD keypad via BTTFN (9222 / 9555). Such a change will be saved immediately.
 
@@ -899,6 +906,27 @@ The firmware supports MQTT 3.1.1 and 5.0. There is no difference in features, so
 ##### &#9193; User[:Password]
 
 The username (and optionally the password) to be used when connecting to the broker. Can be left empty if the broker accepts anonymous logins.
+
+##### &#9193; Publish Music Player status to bttf/dg/mpstatus
+
+This option enables the Music Player's backchannel. The backchannel carries feedback and status information on the Music Player which can be used to comfortably remote-control the Dash Gauges' Music Player through HomeAssistant/MQTT.
+
+This option should be left unchecked if not used.
+
+Backchannel data is sent to _bttf/dg/mpstatus_ on every change. It can also be triggered at any point by sending __MP_REQSTATUS__ to _bttf/dg/cmd_.
+
+The data published on the backchannel is a JSON object, containing the following keys:
+- __S__: State. _Value_ can be "P" for playing, "I" for idle, and "O" for off/busy. In 'off' state, the Dash Gauges do not take commands.
+- __C__: Current track. _Value_ is an unsigned integer >= 0 as a string.
+- __F__: First track. This tells the remote control where to start counting track numbers. _Value_ is always 0 (zero) as a string.
+- __L__: Last track. This tells the remote control the last and highest possible track number. _Value_ is an unsigned integer >= 0 and <= 999 as a string.
+- __V__: Volume. This is an integer as a string. If -1, volume control is unavailable. Otherwise 0-100.
+- __SH__: Shuffle. This is an integer as a string, either "0" for 'off', or "1" for 'on'.
+
+Example: __{"S":"I","C":"1","V":"20","F":"0","L":"67","SH":"0"}__
+
+The backchannel is used/required by the upcoming A10001986 [Lou's Cafe Jukebox](https://jb.out-a-ti.me).
+
 
 ## Appendix B: LED signals
 
