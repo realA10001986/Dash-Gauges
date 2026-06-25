@@ -15,8 +15,8 @@
  ***                          Version Strings                          ***
  *************************************************************************/
 
-#define DG_VERSION       "V1.32"            // Do NOT change format.
-#define DG_VERSION_EXTRA "APR272026"
+#define DG_VERSION       "V1.33"            // Do NOT change format.
+#define DG_VERSION_EXTRA "JUN252026"
 
 /*************************************************************************
  ***             Configuration for peripherals/features                ***
@@ -41,9 +41,6 @@
 // 5s lead" is set on the TCD, the DG option "TCD signals without lead" must
 // be set, too.
 #define ETTO_LEAD 5000
-
-// Use SPIFFS (if defined) or LittleFS (if undefined; esp32-arduino >= 2.x)
-//#define USE_SPIFFS
 
 /*************************************************************************
  ***                               Debug                               ***

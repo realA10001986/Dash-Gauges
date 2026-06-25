@@ -1078,4 +1078,4 @@ void PubSubClient::cancelPing()
     _pstate = PING_IDLE;   
 }
 
-#endif  // TC_HAVEMQTT
+#endif  // DG_HAVEMQTT

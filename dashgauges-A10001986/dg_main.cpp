@@ -438,6 +438,10 @@ static void ssStart();
 static void ssEnd();
 static void ssRestartTimer();
 
+static void prepareTT();
+static void wakeup();
+
+static void volWasChanged();
 static void waitAudioDone();
 
 static uint8_t restrict_gauge_idle(int val, int minimum, int maximum, uint8_t def);
@@ -633,6 +637,7 @@ void main_setup()
     #endif
     if(check_allow_CPA()) {
         showWaitSequence();
+        dgBusy = true;  // Force MP "off" state, if state happens to be sent
         if(prepareCopyAudioFiles()) {
             play_file("/_installing.mp3", PA_ALLOWSD, 1.0f);
             waitAudioDone();
@@ -646,17 +651,18 @@ void main_setup()
         Serial.println("Current audio data not installed");
         #endif
         emptyLED.specialSignal(DGSEQ_NOAUDIO);
-        while(emptyLED.specialDone()) {
+        while(!emptyLED.specialDone()) {
             mydelay(100);
         }
     } else if(showUpdAvail && updateAvailable()) {
         emptyLED.specialSignal(DGSEQ_UPDAVAIL);
-        while(emptyLED.specialDone()) {
+        while(!emptyLED.specialDone()) {
             mydelay(100);
         }
     }
 
     // Init music player (don't check for SD here)
+    // Find gauge capable of displaying mp init progress
     for(mprengauge = 2; mprengauge >= 0 ; mprengauge--) {
        if(gauges.supportVariablePercentage(mprengauge))
            break;
@@ -747,7 +753,7 @@ void main_loop()
             gauges.off(); 
             gauge_lights_off();
 
-            mp_stop();
+            mp_stop(true);
             if(!playingDoor) {
                 stopAudio();
                 flushDelayedSave();
@@ -762,6 +768,10 @@ void main_loop()
 
             // Power on: 
             FPBUnitIsOn = true;
+
+            #ifdef DG_HAVEMQTT
+            mp_sendStatus();
+            #endif
 
             // Check if autoRefill timer ran out during our "off" period
             if(autoRefill && FPOffemptyAlarm && (millis() - FPOffemptyAlarmNow >= autoRefill)) {
@@ -944,7 +954,7 @@ void main_loop()
             if(ocm != carMode) {
                 saveCarMode();
                 prepareReboot();
-                delay(500);
+                delay(1000);
                 esp_restart();
             }
             isB1EHeldEnd = isB1Pressed = false;
@@ -964,10 +974,7 @@ void main_loop()
             bool wasActiveM = false, waitShown = false;
             isB1Pressed = false;
             if(wifiOnWillBlock()) {
-                if(haveMusic && mpActive) {
-                    mp_stop();
-                    wasActiveM = true;
-                }
+                wasActiveM = mp_stop();
                 stopAudio();
                 showWaitSequence();
                 waitShown = true;
@@ -1312,8 +1319,6 @@ static void timeTravel(bool TCDtriggered, uint16_t P0Dur, uint16_t P1Dur)
     if(TTrunning)
         return;
 
-    //dbgcnt = 0;
-
     flushDelayedSave();
     
     if(!TCDtriggered) {
@@ -1336,15 +1341,18 @@ static void timeTravel(bool TCDtriggered, uint16_t P0Dur, uint16_t P1Dur)
     // Cancel startAlarm sequence
     startAlarm = false;
 
-    //if(playTTsounds) {
+    TTrunning = true;
+
+    // All props stop the musicplayer on TT if playTTsounds is true
+    // (regardless of whether they are playing sound immediately or not)
+    if(playTTsounds) {
         mp_stop();
-    //}
+    }
 
     if(!TCDtriggered && playTTsounds) {
         play_file("/travelstart.mp3", PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL, TT_SOUND_FACT);
     }
         
-    TTrunning = true;
     TTstart = TTfUpdNow = millis();
     TTP0 = true;   // phase 0
     TTP1 = TTP2 = false;
@@ -1384,7 +1392,7 @@ static void timeTravel(bool TCDtriggered, uint16_t P0Dur, uint16_t P1Dur)
     }
 }
 
-void prepareTT()
+static void prepareTT()
 {
     ssEnd();
 
@@ -1404,6 +1412,8 @@ void prepareTT()
     gauges.setValuePercent(2, right_gauge_idle);
     gauges.UpdateAll();
 
+    // Clear here since this is called from two
+    // places, no need to execute this twice
     doPrepareTT = false;
 }
 
@@ -1411,11 +1421,13 @@ void prepareTT()
 // return from tt, triggering delayed tt via ETT
 // For audio-visually synchronized behavior
 // Also called when GPS/RotEnc speed is changed
-void wakeup()
+static void wakeup()
 {
     // End screen saver
     ssEnd();
 
+    // Clear here since this is called from two
+    // places, no need to execute this twice
     doWakeup = false;
 }
 
@@ -1543,9 +1555,7 @@ static void execute_remote_command()
             play_key(1);
             break;
         case 2:
-            if(haveMusic) {
-                mp_prev(mpActive);
-            }
+            mp_prev(mpActive);
             break;
         case 3:
             play_key(3);
@@ -1554,13 +1564,11 @@ static void execute_remote_command()
             play_key(4);
             break;
         case 5:
-            if(haveMusic) {
-                if(mpActive) {
-                    mp_stop();
-                    //if(emptyAlarm) play_empty(); // would be async
-                } else {
-                    mp_play();
-                }
+            if(mpActive) {
+                mp_stop();
+                //if(emptyAlarm) play_empty(); // would be async
+            } else {
+                mp_play();
             }
             break;
         case 6:
@@ -1570,9 +1578,7 @@ static void execute_remote_command()
             play_key(7);
             break;
         case 8:
-            if(haveMusic) {
-                mp_next(mpActive);
-            }
+            mp_next(mpActive);
             break;
         case 9:
             play_key(9);
@@ -1648,13 +1654,12 @@ static void execute_remote_command()
 
         } else if(command >= 300 && command <= 399) {
 
-            command -= 300;                       // 300-319: Set volume level
-            if(command <= 19) {
-                curSoftVol = command;
-                volchanged = true;
-                volchgnow = millis();
-                storeCurVolume();
-                updateConfigPortalVolValues();
+            command -= 300;                       // 300-320: Set volume level
+            if(command <= VOL_LEVELS - 1) {
+                if(aud_state.curVolume != command) {
+                    aud_state.curVolume = command;
+                    volWasChanged();
+                }
             }
 
         } else if(command >= 501 && command <= 509) {
@@ -1669,9 +1674,7 @@ static void execute_remote_command()
                 mp_makeShuffle((command == 555));
                 break;
             case 888:                             // 888 go to song #0
-                if(haveMusic) {
-                    mp_gotonum(0, mpActive);
-                }
+                mp_gotonum(0, true);
                 break;
             case 990:                             // 990/991: Disable/enable car mode
             case 991:
@@ -1685,7 +1688,7 @@ static void execute_remote_command()
                     if(ocm != carMode) {
                         saveCarMode();
                         prepareReboot();
-                        delay(500);
+                        delay(1000);
                         esp_restart();
                     }
                 }
@@ -1717,21 +1720,33 @@ static void execute_remote_command()
                 refill_plutonium();
                 break;
             case 5:    
-                if(haveMusic) mp_play();
+                mp_play();
                 break;
             case 6:
-                if(haveMusic && mpActive) {
-                    mp_stop();
-                }
+                mp_stop();
                 break;
             case 7:
-                if(haveMusic) mp_next(mpActive);
+                mp_next(mpActive);
                 break;
             case 8:
-                if(haveMusic) mp_prev(mpActive);
+                mp_prev(mpActive);
                 break;
             case 13:
                 stop_key();
+                break;
+            case 15:
+            case 16:
+                {
+                    int oldV = aud_state.curVolume;
+                    if(command == 15) {
+                        if(aud_state.curVolume < VOL_LEVELS - 1) aud_state.curVolume++;
+                    } else {
+                        if(aud_state.curVolume > 0) aud_state.curVolume--;
+                    }
+                    if(oldV != aud_state.curVolume) {
+                        volWasChanged();
+                    }
+                }
                 break;
             }
         }
@@ -1747,7 +1762,7 @@ static void execute_remote_command()
         case 64738:                               // 64738: reboot
             if(!injected) {
                 prepareReboot();
-                delay(500);
+                delay(1000);
                 esp_restart();
             }
             break;
@@ -1774,7 +1789,7 @@ static void execute_remote_command()
         default:                                  // 888xxx: goto song #xxx
             if((command / 1000) == 888) {
                 uint16_t num = command - 888000;
-                num = mp_gotonum(num, mpActive);
+                num = mp_gotonum(num, true);
             }
             break;
         }
@@ -1785,14 +1800,21 @@ static void execute_remote_command()
 static void say_ip_address()
 {
     uint8_t a, b, c, d;
-    bool wasActive = false;
     char ipbuf[16];
     char numfname[] = "/x.mp3";
-    if(haveMusic && mpActive) {
-        mp_stop();
-        wasActive = true;
-    }
+    
+    dgBusy = true;
+    
+    bool wasActive = mp_stop(true);
+    
     stopAudio();
+    
+    flushDelayedSave();
+    
+    #ifdef DG_HAVEMQTT
+    if(!wasActive) mp_sendStatus();
+    #endif
+                        
     wifi_getIP(a, b, c, d);
     sprintf(ipbuf, "%d.%d.%d.%d", a, b, c, d);
     numfname[1] = ipbuf[0];
@@ -1809,9 +1831,11 @@ static void say_ip_address()
         }
     }
     waitAudioDone();
-    if(wasActive) {
-        mp_play();
-    }
+    
+    dgBusy = false;
+    
+    if(wasActive) mp_play();
+    // Let audio_loop take care of updating MP status (if not playing at this point)
 }
 
 bool switchMusicFolder(uint8_t nmf, bool isSetup)
@@ -1830,9 +1854,7 @@ bool switchMusicFolder(uint8_t nmf, bool isSetup)
             // Initializing the MP can take a while;
             // need to stop all audio before calling
             // mp_init()
-            if(haveMusic && mpActive) {
-                mp_stop();
-            }
+            mp_stop(true);
             stopAudio();
         }
         if(haveSD) {
@@ -1846,7 +1868,6 @@ bool switchMusicFolder(uint8_t nmf, bool isSetup)
         }
         if(!isSetup) {
             saveMusFoldNum();
-            updateConfigPortalMFValues();
         }
         if(mprengauge >= 0) {
             tempperc = isSetup ? 0 : gauges.getValuePercent(mprengauge);
@@ -1862,6 +1883,8 @@ bool switchMusicFolder(uint8_t nmf, bool isSetup)
         }
 
         dgBusy = false;
+
+        // Let audio_loop take care of updating MP status
     }
 
     return waitShown;
@@ -2123,7 +2146,8 @@ void allOff()
 
 void prepareReboot()
 {
-    mp_stop();
+    dgBusy = true;
+    mp_stop(true);
     stopAudio();
     allOff();
     setTTOUT(LOW);
@@ -2136,6 +2160,17 @@ void prepareReboot()
 /*
  * Others
  */
+
+static void volWasChanged()
+{
+    volchanged = true;
+    volchgnow = millis();
+    storeCurVolume();
+    updateConfigPortalVolValues();
+    #ifdef DG_HAVEMQTT
+    mp_sendStatus();
+    #endif
+}
 
 static void waitAudioDone()
 {

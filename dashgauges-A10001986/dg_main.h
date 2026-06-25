@@ -75,10 +75,8 @@ void prepareReboot();
 void mydelay(unsigned long mydel);
 unsigned long millisNonZero();
 
-void prepareTT();
 void refill_plutonium();
 void set_empty();
-void wakeup();
 
 bool switchMusicFolder(uint8_t nmf, bool isSetup = false);
 void showMPRPrecDone(unsigned int perc);
