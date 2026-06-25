@@ -207,7 +207,7 @@ The firmware contains a simple music player to play mp3 files located on the SD 
 
 *The maximum bitrate is __128kpbs__. The free [Adapter](https://macroplant.com/adapter/audio-converter) tool can re-encode your mp3 files in batches.*
 
-To be recognized, your mp3 files need to be organized in music folders named *music0* through *music9*. The folder number is 0 by default, i.e. the player starts searching for music in folder *music0*. To select a different folder, select it in the Config Portal ("Settings") or through the TCD (905x).
+To be recognized, your mp3 files need to be organized in music folders named *music0* through *music9*. The folder number is 0 by default, i.e. the player starts searching for music in folder *music0*. To select a different folder, select it in the Config Portal ("Settings"), through the TCD (905x) or HA/MQTT (MP_FOLDER_x).
 
 The names of the audio files must only consist of three-digit numbers, starting at 000.mp3, in consecutive order. No numbers should be left out. Each folder can hold up to 1000 files (000.mp3-999.mp3). 
 
@@ -221,7 +221,7 @@ By default, the tracks are played in order, starting at 000.mp3, followed by 001
 
 Entering 9888 followed by OK re-starts the player at track 000, and 9888xxx (xxx = three-digit number) jumps to track #xxx.
 
-See [here](#tcd-remote-command-reference) for a list of controls of the music player.
+See [here](#tcd-remote-command-reference) and [here](#control-the-dash-gauges-via-mqtt) for a list of controls of the music player.
 
 While the music player is playing music, other sound effects are disabled/muted. Initiating a time travel stops the music player. The TCD-triggered alarm will, if so configured, sound and stop the music player.
 
