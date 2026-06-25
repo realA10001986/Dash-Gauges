@@ -430,7 +430,7 @@ The Dash Gauges can be controlled through messages sent to topic **bttf/dg/cmd**
 - MP_SHUFFLE_ON: Enables shuffle mode in [Music Player](#the-music-player)
 - MP_SHUFFLE_OFF: Disables shuffle mode in [Music Player](#the-music-player)
 - MP_FOLDER_x: x being 0-9, set folder number for [Music Player](#the-music-player)
-- MP_REQSTATUS: Publish current [music player status](#-publish-music-player-status-to-bttffcmpstatus) to bttf/dg/mpstatus
+- MP_REQSTATUS: Publish current [music player status](#-publish-music-player-status-to-bttfdgmpstatus) to bttf/dg/mpstatus
 - VOLUME_UP, VOLUME_DOWN: Increase/decrease volume by a notch
 - VOLUME_SET_x: Set volume to x% (x=0-100)
 - PLAYKEY_x: Play keyX.mp3 (from SD card), X being in the range from 1 to 9.
