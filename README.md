@@ -749,11 +749,11 @@ Same as [this](#-primary-empty-threshold), but for the 'Roentgens' gauge. In lig
 
 #### <ins>Volume settings</ins>
 
-##### Volume level (0-19)
+##### Volume level (0-20)
 
-Enter a value between 0 (mute) or 19 (very loud) here.
+Enter a value between 0 (mute) or 20 (very loud) here.
 
-This can also be set/changed through a TCD keypad via BTTFN (9300 - 9319). Such a change will be saved 10 seconds after it occurred.
+This can also be set/changed through a TCD keypad via BTTFN (9300 - 9320). Such a change will be saved 10 seconds after it occurred.
 
 #### <ins>Music Player settings</ins>
 
