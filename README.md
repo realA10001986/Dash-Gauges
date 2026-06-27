@@ -479,7 +479,7 @@ This configuration can easily achieved by putting both the TCD and the Dash Gaug
 #### Dash Gauges
 
 One-time configuration steps:
-- Enter the Config Portal on the Dash Gauges, click on *Settings* and check that the hostname of the TCD (usually "timecircuits") is present in the  **_Hostname or IP address of TCD_** under *Wireless communication (BTTF-Network)* settings; do not use an IP address.
+- Enter the Config Portal on the Dash Gauges, click on *Settings* and check that the hostname of the TCD (usually "timecircuits") is present in the  **_Hostname or IP address of TCD_** under *Wireless communication (BTTF-Network)* settings; do _not_ use an IP address.
 - Furthermore, on the *WiFi Configuration* page, check that the TCD's WiFi network name (SSID; usually "TCD-AP") and password (if the TCD is configured with a password) are present under *Car mode settings*.
 
 If everything is in place, you can enable Car mode on the Dash Gauges by holding _Button 1_ for six seconds, until a triple-beep sounds, and then release it. The Dash Gauges will reboot and attempt to connect to the TCD's AP. (_Button 1_ is located behind the "Percent Power" gauge on the control board.)
