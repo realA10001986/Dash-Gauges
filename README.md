@@ -414,6 +414,8 @@ With the wiring in place, head to the Config Portal and set the option **_TCD co
 
 ## Home Assistant / MQTT
 
+By means of MQTT, the Dash Gauges can be remote controlled through commands sent to **bttf/dg/cmd**.
+
 The Dash Gauges support MQTT protocol versions 3.1.1 and 5.0.
 
 ### Control the Dash Gauges via MQTT
