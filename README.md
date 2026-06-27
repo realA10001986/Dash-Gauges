@@ -414,7 +414,7 @@ With the wiring in place, head to the Config Portal and set the option **_TCD co
 
 ## Home Assistant / MQTT
 
-The Dash Gauges support MQTT protocol versions 3.1.1 and 5.0 for the following features:
+The Dash Gauges support MQTT protocol versions 3.1.1 and 5.0.
 
 ### Control the Dash Gauges via MQTT
 
@@ -448,12 +448,6 @@ To play "key2.mp3" (9502), issue **INJECT_9502**
 To select the 'music1' folder (9051), issue **INJECT_9051**
 
 _The Refill (009) command is not supported through INJECT; use the REFILL MQTT-command instead._
-
-### Receive commands from Time Circuits Display
-
-If both TCD and Dash Gauges are connected to the same broker, and the option **_Publish time travel and alarm events_** is checked on the TCD's side, the Dash Gauges will receive information on time travel and alarm and play their sequences in sync with the TCD. Unlike BTTFN, however, no other communication takes place.
-
-MQTT and BTTFN can co-exist. However, the TCD only sends out time travel and alarm notifications through either MQTT or BTTFN, never both. If you have other MQTT-aware devices listening to the TCD's public topic (bttf/tcd/pub) in order to react to time travel or alarm messages, use MQTT (ie check **_Publish time travel and alarm events_**). If only BTTFN-aware devices are to be used, uncheck this option to use BTTFN as it has less latency.
 
 ### Setup
 
