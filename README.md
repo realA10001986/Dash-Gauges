@@ -166,7 +166,7 @@ Other features require a CircuitSetup [Time Circuits Display](#bttf-network-bttf
 
 The SD card, apart from being required for [installing](#sound-pack-installation) of the sound-pack, can be used for substituting built-in sound effects and for music played back by the [Music player](#the-music-player). Also, it is _strongly recommended_ to store [secondary settings](#-save-secondary-settings-on-sd) on the SD card to minimize [Flash Wear](#flash-wear).
 
-Note that the SD card must be inserted before powering up the device. It is not recognized if inserted while the Dash Gauges are running. Furthermore, do not remove the SD card while the device is powered.
+The SD card must be inserted before powering up the device. It is not recognized if inserted while the Dash Gauges are running. Furthermore, do not remove the SD card while the device is powered.
 
 ### Sound substitution
 
@@ -199,7 +199,9 @@ To delete a file from the SD card, upload a file whose name is prefixed with "de
 
 For technical reasons, the Dash Gauges must reboot after mp3 files are uploaded in this way.
 
-Please remember that the maximum bitrate for mp3 files is 128kbps. Also note that the uploaded file is stored to the root folder of the SD card, so this way of uploading cannot be used to upload tracks for the Music Player. 
+The maximum bitrate for mp3 files is 128kbps. 
+
+The uploaded files are stored to the root folder of the SD card, so this way of uploading cannot be used to upload tracks for the Music Player. 
 
 ## The Music Player
 
@@ -397,7 +399,7 @@ Afterwards, the Dash Gauges and the TCD can communicate wirelessly and
 
 ### Connecting a TCD by wire
 
->Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place, and there is no way to remote-control the Gauges through the TCD by wire. A wireless connection over BTTFN/WiFi is much more powerful and therefore recommended over a wired connection.
+>A wired connection only allows for synchronized time travel sequences, no other communication takes place, and there is no way to remote-control the Gauges through the TCD by wire. A wireless connection over BTTFN/WiFi is much more powerful and therefore recommended over a wired connection.
 
 For wiring information, please see [here](Hardware.md#connecting-a-tcd-to-the-dash-gauges-by-wire).
 
@@ -530,7 +532,7 @@ If you are using a fresh ESP32, please go <a href="https://install.out-a-ti.me">
 
 The firmware comes with a sound-pack which needs to be installed separately. The sound-pack is not updated as often as the firmware itself. There will be a message in the Config Portal and the "Empty" LED will signal "SOS" (three short blinks, three long blinks, three short blinks) during boot when/if the sound-pack needs to be updated.
 
-_Note that installing the sound-pack requires an [SD card](#sd-card)._
+_Installing the sound-pack requires an [SD card](#sd-card)._
 
 The first step is to extract "sound-pack-dgXX.zip" (which is included in every [Release package](https://github.com/realA10001986/Dash-Gauges/releases)). It contains one file, named "DGA.bin".
 
@@ -569,7 +571,7 @@ This leads to the firmware update and audio upload page.
 
 In order to upload a new firmware, such as published in the [Release packages](https://github.com/realA10001986/Dash-Gauges/releases), select the "**dashgauges-A10001986-Vx.xx.bin**" or "**Dash-Gauges_vX.YY.bin**" file as contained in the Release package in the _top_ file selector and click *Update*.
 
-You can also install the Dash Gauges' sound-pack on this page: Download the sound-pack (which is included in every [Release package](https://github.com/realA10001986/Dash-Gauges/releases)), extract it and select the resulting DGA.bin file in the _bottom_ file selector. Finally, click *Upload*. Note that an SD card is required for this operation.
+You can also install the Dash Gauges' sound-pack on this page: Download the sound-pack (which is included in every [Release package](https://github.com/realA10001986/Dash-Gauges/releases)), extract it and select the resulting DGA.bin file in the _bottom_ file selector. Finally, click *Upload*. An SD card is required for this operation.
 
 See also [here](#firmware-installation--firmware-update).
 
@@ -891,7 +893,7 @@ If checked, the Dash Gauges will connect to the broker (if configured) and send 
 
 ##### &#9193; Broker IP[:port] or domain[:port]
 
-The broker server address. Can be a domain (eg. "my.me") or an IP address (eg "192.168.1.5"). The default port is 1883. If a different port is to be used, it can be specified after the domain/IP and a colon ":", for example: "192.168.1.5:1884". Specifying the IP address is preferred over a domain since the DNS call adds to the network overhead. Note that ".local" (MDNS) domains are not supported.
+The broker server address. Can be a domain (eg. "my.me") or an IP address (eg "192.168.1.5"). The default port is 1883. If a different port is to be used, it can be specified after the domain/IP and a colon ":", for example: "192.168.1.5:1884". Specifying the IP address is preferred over a domain since the DNS call adds to the network overhead. ".local" (MDNS) domains are not supported.
 
 ##### &#9193; Protocol version
 
