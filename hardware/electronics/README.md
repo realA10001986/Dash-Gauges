@@ -1,6 +1,8 @@
 
 ## The Control Board
 
+_[CircuitSetup](https://circuitsetup.us/product/delorean-time-machine-dash-gauge-control-board/) has an updated version of the Control Board for sale. There is no difference in features._
+
 To have [JCLPCB](https://jlcpcb.com) make your board:
 1) Create an account at jlcpcb.com
 2) Click "Upload Gerber file" or "order now"
