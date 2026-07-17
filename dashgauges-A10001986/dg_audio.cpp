@@ -55,7 +55,7 @@
 #include "dg_global.h"
 
 #include <Arduino.h>
-#include <SD.h>
+#include "src/SD/SD.h"
 #include <FS.h>
 
 #include "AudioFileSourceLoop.h"

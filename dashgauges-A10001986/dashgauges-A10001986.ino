@@ -117,14 +117,16 @@
 
 /*  Changelog
  *
+ *  2026/07/17 (A10001986) [1.34]
+ *    **********************************************************************************
+ *    ** If updating from below 1.30, please see boxed note at version 1.31 below     **
+ *    **********************************************************************************
+ *    - Bugfix: Fix SD initialization in ESP32-Arduino to conform to specs.
+ *      Sandisk Ultra 32GB cards (and possibly others that previously were
+ *      not usable) are now recognized.
  *  2026/06/25 (A10001986) [1.33]
  *    **********************************************************************************
- *    ** If updating from below 1.30, please install 1.30 first to have your          **
- *    ** settings converted. If 1.30 is skipped, some of your settings (static IP,    **
- *    ** volume, music folder number) will be restored to default values. It suffices **
- *    ** to install 1.30 and boot once; you can then immediately update to a later    **
- *    ** version.                                                                     **
- *    ** https://github.com/realA10001986/Dash-Gauges/releases/tag/V1.30              **
+ *    ** If updating from below 1.30, please see boxed note at version 1.31 below     **
  *    **********************************************************************************
  *    - MQTT: Add "VOLUME_UP"/"VOLUME_DOWN"/"VOLUME_SET_xxx" commands
  *    - MQTT: Add publishing Music Player status to bttf/dg/mpstatus
@@ -134,12 +136,7 @@
  *      large number of already sorted files (due to excessive recursion).
  *  2026/04/27 (A10001986) [1.32]
  *    **********************************************************************************
- *    ** If updating from below 1.30, please install 1.30 first to have your          **
- *    ** settings converted. If 1.30 is skipped, some of your settings (static IP,    **
- *    ** volume, music folder number) will be restored to default values. It suffices **
- *    ** to install 1.30 and boot once; you can then immediately update to a later    **
- *    ** version.                                                                     **
- *    ** https://github.com/realA10001986/Dash-Gauges/releases/tag/V1.30              **
+ *    ** If updating from below 1.30, please see boxed note at version 1.31 below     **
  *    **********************************************************************************
  *    - Add Car Mode: In addition to existing WiFi network connection settings, you 
  *      can now pre-configure TCD-AP SSID and password in WiFi Settings and quickly
