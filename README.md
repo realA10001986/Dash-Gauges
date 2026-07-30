@@ -32,7 +32,7 @@ Firmware features include
 
 >This [repository](https://dg.out-a-ti.me) is the upstream source for CircuitSetup's releases. The only difference is that both code and documentation [here](https://dg.out-a-ti.me) might be ahead in development.
 
-For information on updating the firmware on your Dash Gauges, see [here](#firmware-installation--firmware-update).
+For information on updating the firmware of your Dash Gauges, see [here](#firmware-installation--firmware-update).
 
 ## Initial Configuration
 
