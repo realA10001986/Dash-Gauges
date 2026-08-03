@@ -861,13 +861,12 @@ Depending on the position of the switch and its reaction point, a delay for soun
 The connector for "Door 2" can, instead of for a door switch, also be used as an output to signal a time travel. The pin goes HIGH (2.7-3.3V) on entering the temporal displacement, and LOW on re-entry.
 
 Please do not power any peripheral through this pin; instead, use a relay ("1 Channel 5V relay module" or "Arduino 1 channel relay module"), and connect 
-- "COM" on the Control Board to GND on the relay module,
-- "D2" on the Control Board to "S"(or "IN") on the relay module,
-- if the Control board is powered by a 5V power supply: the control board's 5V input to "+"/"VCC"/"5V" on the relay module.
+- "COM" on the Control Board to "-"/"GND" on the relay module,
+- "D2" on the Control Board to "S"/"IN" on the relay module,
+- if the Control board is powered by a 5V power supply: the Control Board's 5V input to "+"/"VCC"/"5V" on the relay module.
 
 <details>
 <summary>Advanced...</summary>
-
 
 If you are using a 12V power supply or want to avoid cramming two wires into the 5V input connector, you can grab +5V also from the Control Board's "Ext. Light Pwr" connector: To do so, connect all three joints of the "Light Power" solder jumper; +5V will then be on the left pin of the "Ext. Light Pwr" connector; of course, this connector cannot be used for external light power after this modification.
 
