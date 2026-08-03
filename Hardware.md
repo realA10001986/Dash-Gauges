@@ -135,7 +135,7 @@ The Control Board has two connectors for switches meant to signal when a car doo
 
 "Door 1" is the left hand side door, "Door 2" on the right hand side. This is important because the sound can optionally be played through the TCD's line-out in stereo, and it can be configured to play door sounds on only one stereo channel matching the door location.
 
-The switches need to short/open "D1" and "C", and "D2" and "C" respectively.
+The switches need to short/open "D1" and "COM", and "D2" and "COM" respectively.
 
 The D2 pin can **alternatively** be used to output a **signal on time travel**; the pin goes HIGH at the start of the temporal displacement, and LOW on "re-entry". It mirrors a respective signal on the TCD. This can be used to connect, for instance, flux bands to light up during the "time travel". Please do not use the pin to power the connected prop, use a relay instead. A standard single-channel "Arduino relay module" works fine, and can be connected as depicted below. (Those relays need 5V, which you can grab from the connector for External lighting [yellow_5] after closing all three solder joints. Of course, you must not connect any power source to [yellow_5] after this modification.)
 
