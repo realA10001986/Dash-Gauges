@@ -421,33 +421,33 @@ The Dash Gauges support MQTT protocol versions 3.1.1 and 5.0.
 ### Control the Dash Gauges via MQTT
 
 The Dash Gauges can be controlled through messages sent to topic **bttf/dg/cmd**. Supported commands are
-- TIMETRAVEL: Start a time travel
-- EMPTY: "Drain" Plutonium and trigger alarm
-- REFILL: Refill the Plutonium chamber
-- PLAY_DOOR_OPEN, PLAY_DOOR_CLOSED: Play respective door sounds; these commands are only executed if the option **_Enable use of door switches_** in the Config Portal is unchecked. The sound is played through the TCD if so configured in the Config Portal.
-- MP_PLAY: Starts the [Music Player](#the-music-player)
-- MP_STOP: Stops the [Music Player](#the-music-player)
-- MP_NEXT: Jump to next track
-- MP_PREV: Jump to previous track
-- MP_SHUFFLE_ON: Enables shuffle mode in [Music Player](#the-music-player)
-- MP_SHUFFLE_OFF: Disables shuffle mode in [Music Player](#the-music-player)
-- MP_FOLDER_x: x being 0-9, set folder number for [Music Player](#the-music-player)
-- MP_REQSTATUS: Publish current [music player status](#-publish-music-player-status-to-bttfdgmpstatus) to bttf/dg/mpstatus
-- VOLUME_UP, VOLUME_DOWN: Increase/decrease volume by a notch
-- VOLUME_SET_x: Set volume to x% (x=0-100)
-- PLAYKEY_x: Play keyX.mp3 (from SD card), X being in the range from 1 to 9.
-- STOPKEY: Stop playback of keyX file. Does nothing if no keyX file is currently played back.
-- INJECT_x: See immediately below.
+- ```TIMETRAVEL```: Start a time travel
+- ```EMPTY```: "Drain" Plutonium and trigger alarm
+- ```REFILL```: Refill the Plutonium chamber
+- ```PLAY_DOOR_OPEN```, ```PLAY_DOOR_CLOSED```: Play respective door sound; these commands are only executed if the option **_Enable use of door switches_** in the Config Portal is unchecked. The sound is played through the TCD if so configured in the Config Portal.
+- ```MP_PLAY```: Starts the [Music Player](#the-music-player)
+- ```MP_STOP```: Stops the [Music Player](#the-music-player)
+- ```MP_NEXT```: Jump to next track
+- ```MP_PREV```: Jump to previous track
+- ```MP_SHUFFLE_ON```: Enables shuffle mode in [Music Player](#the-music-player)
+- ```MP_SHUFFLE_OFF```: Disables shuffle mode in [Music Player](#the-music-player)
+- ```MP_FOLDER_x```: x being 0-9, set folder number for [Music Player](#the-music-player)
+- ```MP_REQSTATUS```: Publish current [music player status](#-publish-music-player-status-to-bttfdgmpstatus) to bttf/dg/mpstatus
+- ```VOLUME_UP```, ```VOLUME_DOWN```: Increase/decrease volume by a notch
+- ```VOLUME_SET_x```: Set volume to x% (x=0-100)
+- ```PLAYKEY_x```: Play keyX.mp3 (from SD card), X being in the range from 1 to 9.
+- ```STOPKEY```: Stop playback of keyX file. Does nothing if no keyX file is currently played back.
+- ```INJECT_x```: See immediately below.
 
 #### The INJECT_x command
 
 This command allows remote control of the Dash Gauges through HA/MQTT in the same way as through the TCD keypad by injecting commands in the Dash Gauges' command queue (hence the name). Commands are listed [here](#tcd-remote-command-reference); nearly all are supported. For example:
 
-To set "full" percentage of "Percent Power" gauge to 50% (9450), issue the following command: **INJECT_9450**
+To set "full" percentage of "Percent Power" gauge to 50% (9450), issue the following command: ```INJECT_9450```
 
-To play "key2.mp3" (9502), issue **INJECT_9502**
+To play "key2.mp3" (9502), issue ```INJECT_9502```
 
-To select the 'music1' folder (9051), issue **INJECT_9051**
+To select the 'music1' folder (9051), issue ```INJECT_9051```
 
 _The Refill (009) command is not supported through INJECT; use the REFILL MQTT-command instead._
 
