@@ -914,7 +914,7 @@ This option enables the Music Player's backchannel. The backchannel carries feed
 
 This option should be left unchecked if not used.
 
-Backchannel data is sent to _bttf/dg/mpstatus_ on every change. It can also be triggered at any point by sending __MP_REQSTATUS__ to _bttf/dg/cmd_.
+Backchannel data is sent to _bttf/dg/mpstatus_ on every change. It can also be triggered at any point by sending ```MP_REQSTATUS``` to _bttf/dg/cmd_.
 
 The data published on the backchannel is a JSON object, containing the following keys:
 - __S__: State. _Value_ can be "P" for playing, "I" for idle, and "O" for off/busy. In 'off' state, the Dash Gauges do not take commands.
@@ -924,7 +924,7 @@ The data published on the backchannel is a JSON object, containing the following
 - __V__: Volume. This is an integer as a string. If -1, volume control is unavailable. Otherwise 0-100.
 - __SH__: Shuffle. This is an integer as a string, either "0" for 'off', or "1" for 'on'.
 
-Example: __{"S":"I","C":"1","V":"20","F":"0","L":"67","SH":"0"}__
+Example: ```{"S":"I","C":"1","V":"20","F":"0","L":"67","SH":"0"}```
 
 The backchannel is used/required by the A10001986 [Lou's Cafe Jukebox](https://jb.out-a-ti.me).
 
