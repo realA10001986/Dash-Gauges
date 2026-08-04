@@ -540,11 +540,14 @@ Next, head to the [Config Portal](#the-config-portal), click on "Update & Upload
 
 <details>
 <summary>Alternative way</summary>
+<br>
 Alternatively, you can install the sound-pack the following way:
-- Using a computer, copy "DGA.bin" to the root directory of a FAT32 formatted SD card;
-- power down the Dash Gauges,
-- insert this SD card into the slot and 
-- power up the Dash Gauges; the sound-pack will be installed automatically.
+<ul>
+<li>Using a computer, copy "DGA.bin" to the root directory of a FAT32 formatted SD card;</li>
+<li>power down the Dash Gauges,</li>
+<li>insert this SD card into the slot and</li>
+<li>power up the Dash Gauges; the sound-pack will be installed automatically.</li>
+</ul>
 </details>
 
 ---
