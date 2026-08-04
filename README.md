@@ -449,7 +449,7 @@ To play "key2.mp3" (9502), issue ```INJECT_9502```
 
 To select the 'music1' folder (9051), issue ```INJECT_9051```
 
-_The Refill (009) command is not supported through INJECT; use the REFILL MQTT-command instead._
+_The Refill (009) command is not supported through INJECT; use the ```REFILL``` MQTT-command instead._
 
 ### Setup
 
