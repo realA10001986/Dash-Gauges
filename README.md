@@ -457,13 +457,13 @@ MQTT requires a "broker" (such as [mosquitto](https://mosquitto.org/), [EMQ X](h
 
 ![STAmode-mqtt](img/stamode-mqtt.png)
 
-The broker's address needs to be configured in the Config Portal. It can be specified either by domain or IP (IP preferred, spares us a DNS call). The default port is 1883. If a different port is to be used, append a ":" followed by the port number to the domain/IP, such as "192.168.1.5:1884". 
+The broker's address needs to be configured in the Config Portal. It can be specified by either domain or IP (IP preferred). The default port is 1883. If a different port is to be used, append a ":" followed by the port number to the domain/IP, such as "192.168.1.5:1884". 
 
 If your broker supports protocol version 3.1.1, stick with 3.1.1. Version 5.0 has no advantages, but more overhead.
 
 If your broker does not allow anonymous logins, a username and password can be specified.
 
-Limitations: TLS/SSL not supported; ".local" domains (MDNS) not supported; server/broker must respond to PING (ICMP) echo requests. For proper operation with low latency, it is recommended that the broker is on your local network. MQTT is disabled when the Dash Gauges are operated in AP-mode or when connected to the TCD run in AP-Mode (TCD-AP).
+Limitations: TLS/SSL not supported; ".local" domains (MDNS, Bonjour) not supported; the machine running the broker must respond to PING (ICMP) echo requests. For proper operation with low latency, it is recommended that the broker is on your local network. MQTT is disabled when the Dash Gauges are operated in AP-mode or when connected to the TCD run in AP-Mode (TCD-AP).
 
 ## Car Setup
 
