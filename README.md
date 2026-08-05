@@ -453,7 +453,7 @@ _The Refill (009) command is not supported through INJECT; use the ```REFILL``` 
 
 ### Setup
 
-MQTT requires a "broker" (such as [mosquitto](https://mosquitto.org/), [EMQ X](https://www.emqx.io/), [Cassandana](https://github.com/mtsoleimani/cassandana), [RabbitMQ](https://www.rabbitmq.com/), [Ejjaberd](https://www.ejabberd.im/), [HiveMQ](https://www.hivemq.com/) to name a few).
+MQTT requires a "broker" such as [mosquitto](https://mosquitto.org/), [Cassandana](https://github.com/mtsoleimani/cassandana), [RabbitMQ](https://www.rabbitmq.com/), [Ejjaberd](https://www.ejabberd.im/), [HiveMQ](https://www.hivemq.com/) or [EMQX](https://www.emqx.com/), to name a few. For proper operation with low latency, running the broker on your local network is recommended.
 
 ![STAmode-mqtt](img/stamode-mqtt.png)
 
@@ -463,7 +463,7 @@ If your broker supports protocol version 3.1.1, stick with 3.1.1. Version 5.0 ha
 
 If your broker does not allow anonymous logins, a username and password can be specified.
 
-Limitations: TLS/SSL not supported; ".local" domains (MDNS, Bonjour) not supported; the machine running the broker must respond to PING (ICMP) echo requests. For proper operation with low latency, it is recommended that the broker is on your local network. MQTT is disabled when the Dash Gauges are operated in AP-mode or when connected to the TCD run in AP-Mode (TCD-AP).
+Limitations: TLS/SSL not supported; ".local" domains (MDNS, Bonjour) not supported; the machine running the broker must respond to PING (ICMP) echo requests. MQTT is disabled when the Dash Gauges are operated in AP-mode or when connected to the TCD run in AP-Mode (TCD-AP).
 
 ## Car Setup
 
