@@ -282,7 +282,7 @@ Afterwards, the Dash Gauges and the TCD can communicate wirelessly and
     </tr>
     <tr>
      <td align="left">Set "full" percentage of "Percent Power" gauge (01-99%)</td>
-     <td align="left"><code>9401</code> - 9499</code></td>
+     <td align="left"><code>9401</code> - <code>9499</code></td>
     </tr>
     <tr>
      <td align="left">Reset "full" percentage of "Percent Power" gauge</td>
@@ -290,7 +290,7 @@ Afterwards, the Dash Gauges and the TCD can communicate wirelessly and
     </tr>
     <tr>
      <td align="left">Set "full" percentage of "Roentgens" gauge (01-99%)</td>
-     <td align="left"><code>9701</code> - 9799</code></td>
+     <td align="left"><code>9701</code> - <code>9799</code></td>
     </tr>
     <tr>
      <td align="left">Reset "full" percentage of "Roentgens" gauge</td>
@@ -298,7 +298,7 @@ Afterwards, the Dash Gauges and the TCD can communicate wirelessly and
     </tr>    
     <tr>
      <td align="left">Set volume level (00-20)</td>
-     <td align="left"><code>9300</code> - 9320</code></td>
+     <td align="left"><code>9300</code> - <code>9320</code></td>
     </tr>
     <tr>
      <td align="left"><a href="#the-music-player">Music Player</a>: Play/Stop</td>
@@ -334,7 +334,7 @@ Afterwards, the Dash Gauges and the TCD can communicate wirelessly and
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key1.mp3</a>"</td>
-     <td align="left"><code>9001</code> / 9501</code></td>
+     <td align="left"><code>9001</code> / <code>9501</code></td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key2.mp3</a>"</td>
@@ -342,11 +342,11 @@ Afterwards, the Dash Gauges and the TCD can communicate wirelessly and
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key3.mp3</a>"</td>
-     <td align="left"><code>9003</code> / 9503</code></td>
+     <td align="left"><code>9003</code> / <code>9503</code></td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key4.mp3</a>"</td>
-     <td align="left"><code>9004</code> / 9504</code></td>
+     <td align="left"><code>9004</code> / <code>9504</code></td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key5.mp3</a>"</td>
@@ -354,18 +354,18 @@ Afterwards, the Dash Gauges and the TCD can communicate wirelessly and
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key6.mp3</a>"</td>
-     <td align="left"><code>9006</code> / 9506</code></td>
+     <td align="left"><code>9006</code> / <code>9506</code></td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key7.mp3</a>"</td>
-     <td align="left"><code>9007</code> / 9507</code></td>
+     <td align="left"><code>9007</code> / <code>9507</code></td>
     </tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key8.mp3</a>"</td>
      <td align="left"><code>9508</code></td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key9.mp3</a>"</td>
-     <td align="left"><code>9009</code> / 9509</code></td>
+     <td align="left"><code>9009</code> / <code>9509</code></td>
     </tr>
     <tr>
      <td align="left">Say current IP address</td>
