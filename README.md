@@ -183,9 +183,9 @@ Your replacements need to be put in the root (top-most) directory of the SD card
 
 The firmware supports some additional user-provided sound effects, which it will load from the SD card. If the respective file is present, it will be used. If that file is absent, no sound will be played.
 
-- "key1.mp3" - "key9.mp3": Will be played when you issue a 900x (x being 1, 3, 4, 6, 7 or 9) or 950x (1-9) command on the [TCD](#tcd-remote-command-reference) or through [HA/MQTT](#control-the-dash-gauges-via-mqtt).
+- "key1.mp3" - "key9.mp3": Will be played when you issue a 900x (x being 1, 3, 4, 6, 7 or 9) or ```950x``` (1-9) command on the [TCD](#tcd-remote-command-reference) or through [HA/MQTT](#control-the-dash-gauges-via-mqtt).
 
-> The seemingly odd way of accessing keyX files in the 900x range is because of synchronicity with other props, especially the TCD and its keymap where the Music Player occupies keys 2, 5, 8. Likewise, 9002, 9005 and 9008 control the Dash Gauges' Music Player (prev, play/stop, next).
+> The seemingly odd way of accessing keyX files in the 900x range is because of synchronicity with other props, especially the TCD and its keymap where the Music Player occupies keys 2, 5, 8. Likewise, ```9002```, ```9005``` and ```9008``` control the Dash Gauges' Music Player (prev, play/stop, next).
 
 Those files are not provided here. You can use any mp3, with a bitrate of 128kpbs or less.
 
@@ -217,11 +217,11 @@ Since manually renaming mp3 files is somewhat cumbersome, the firmware can do th
 
 To add files to a music folder later, just copy them to the folder and delete the file "TCD_DONE.TXT" (so that the firmware knows that something has changed). 
 
-To start and stop music playback, enter 9005 followed by ENTER on your TCD. Entering 9002 jumps to the previous track, 9008 to the next one.
+To start and stop music playback, enter keypad command ```9005``` on your TCD. Keypad command ```9002``` jumps to the previous track, ```9008``` to the next one.
 
-By default, the tracks are played in order, starting at 000.mp3, followed by 001.mp3 and so on. By entering 9555 on the TCD, you can switch to shuffle mode, in which the tracks are played in random order. Type 9222 followed by ENTER to switch back to consecutive mode.
+By default, the tracks are played in order, starting at 000.mp3, followed by 001.mp3 and so on. Through keypad command ```9555``` on the TCD, you can switch to shuffle mode, in which the tracks are played in random order. Keypad command ```9222``` switches back to consecutive mode.
 
-Entering 9888 followed by OK re-starts the player at track 000, and 9888xxx (xxx = three-digit number) jumps to track #xxx.
+Keypad command ```9888``` re-starts the player at track 000, and ```9888xxx``` (xxx = three-digit number) jumps to track #xxx.
 
 See [here](#tcd-remote-command-reference) and [here](#control-the-dash-gauges-via-mqtt) for a list of controls of the music player.
 
@@ -259,13 +259,13 @@ Afterwards, the Dash Gauges and the TCD can communicate wirelessly and
 - both play an alarm-sequence when the TCD's alarm occurs,
 - the Dash Gauges can be remote controlled through the TCD's keypad (command codes 9xxx),
 - the Dash Gauges queries the TCD for fake power and night mode, in order to react accordingly if so configured,
-- pressing the dash gauges' Time Travel button can trigger a synchronized Time Travel on all BTTFN-connected devices, just like if that Time Travel was triggered through the TCD.
+- pressing the dash gauges' _Time Travel_ button can trigger a synchronized Time Travel on all BTTFN-connected devices, just like if that Time Travel was triggered through the TCD.
 
 #### TCD remote command reference
 
 <table>
     <tr>
-     <td align="center" colspan="2">Special sequences<br>(&#9166; = ENTER key)</td>
+     <td align="center" colspan="2">Special sequences</td>
     </tr>
    <tr><td>Function</td><td>Code on TCD</td></tr>
     <tr>
@@ -443,13 +443,13 @@ The Dash Gauges can be controlled through messages sent to topic **bttf/dg/cmd**
 
 This command allows remote control of the Dash Gauges through HA/MQTT in the same way as through the TCD keypad by injecting commands in the Dash Gauges' command queue (hence the name). Commands are listed [here](#tcd-remote-command-reference); nearly all are supported. For example:
 
-To set "full" percentage of "Percent Power" gauge to 50% (9450), issue the following command: ```INJECT_9450```
+To set "full" percentage of "Percent Power" gauge to 50% (```9450```), issue the following command: ```INJECT_9450```
 
-To play "key2.mp3" (9502), issue ```INJECT_9502```
+To play "key2.mp3" (```9502```), issue ```INJECT_9502```
 
-To select the 'music1' folder (9051), issue ```INJECT_9051```
+To select the 'music1' folder (```9051```), issue ```INJECT_9051```
 
-_The Refill (009) command is not supported through INJECT; use the ```REFILL``` MQTT-command instead._
+_The Refill (```009```) command is not supported through INJECT; use the ```REFILL``` MQTT-command instead._
 
 ### Setup
 
@@ -476,7 +476,7 @@ This configuration can easily be achieved by putting both the TCD and the Dash G
 #### TCD
 
 - Set **_Power save timer_** to 0 (zero) in the "AP-mode settings" section on the *WiFi Configuration* page
-- Put your TCD in [*Car Mode*](https://tcd.out-a-ti.me/#car-mode) by issuing keypad command 991.
+- Put your TCD in [*Car Mode*](https://tcd.out-a-ti.me/#car-mode) by issuing keypad command ```991```.
 
 #### Dash Gauges
 
@@ -632,12 +632,12 @@ By default, and if this field is empty, the Dash Gauges' own WiFi network ("DG-A
 
 If you forget this password and are thereby locked out of your Dash Gauges, 
 - power-down the device,
-- hold the Time Travel button,
-- power-up the device (while still holding the Time Travel button)
+- hold the _Time Travel_ button,
+- power-up the device (while still holding the _Time Travel_ button)
 - wait until the "Empty" LED flashes briefly,
 - flip the Side Switch twice within 10 seconds,
 - wait until the "Empty" LED lights up,
-- then release the Time Travel button.
+- then release the _Time Travel_ button.
 
 This procedure temporarily (until a reboot) clears the WiFi password, allowing unprotected access to the Config Portal. (Note that this procedure also deletes static IP address data; the device will return to using DHCP after a reboot.)
 
@@ -666,7 +666,7 @@ See [here](#wifi-power-saving-features).
 
 ##### &#9193; Auto-refill timer
 
-After a time travel, the plutonium is depleted, and the chamber needs to be refilled. This timer allows for an automatic "Refill" after the given number of seconds; 0 means never. In the latter case, a manual Refill is in order: Either flip the side switch or enter "009" on the TCD (if connected wirelessly).
+After a time travel, the plutonium is depleted, and the chamber needs to be refilled. This timer allows for an automatic "Refill" after the given number of seconds; 0 means never. In the latter case, a manual Refill is in order: Either flip the side switch or enter ```009``` on the TCD (if connected wirelessly).
 
 ##### &#9193; Mute 'empty' alarm timer
 
@@ -694,7 +694,7 @@ For analog gauges only.
 
 Here you can select the reading the "Primary" meter should give when "full". You can enter a value between 0 and 100 here. 0 will reset the "full" percentage to a default; 1-100 select a specific percentage. Values below 10 don't really make sense, though.
 
-The "full" percentage can be changed through the TCD keypad (91xx for the "Primary" gauge, 93xx for the "Percent Power" one, and 97xx for the "Roentgens"). 9x00 resets the "full" position the default value. Note that changing the "full" percentage through the TCD keypad is not persistent. The boot-up values are only set through the Config Portal.
+The "full" percentage can be changed through the TCD keypad (```91xx``` for the "Primary" gauge, ```93xx``` for the "Percent Power" one, and ```97xx``` for the "Roentgens"). ```9x00``` resets the "full" position the default value. Note that changing the "full" percentage through the TCD keypad is not persistent. The boot-up values are only set through the Config Portal.
 
 ##### &#9193; 'Primary' empty percentage
 
@@ -752,7 +752,7 @@ Same as [this](#-primary-empty-threshold), but for the 'Roentgens' gauge. In lig
 
 Enter a value between 0 (mute) or 20 (very loud) here.
 
-This can also be set/changed through a TCD keypad via BTTFN (9300 - 9320). Such a change will be saved 10 seconds after it occurred.
+This can also be set/changed through a TCD keypad via BTTFN (```9300``` - ```9320```). Such a change will be saved 10 seconds after it occurred.
 
 #### <ins>Music Player settings</ins>
 
@@ -760,13 +760,13 @@ This can also be set/changed through a TCD keypad via BTTFN (9300 - 9320). Such 
 
 Selects the current music folder, can be 0 through 9. 
 
-This can also be set/changed through a TCD keypad via BTTFN (9050 - 9059). Such a change will be saved immediately.
+This can also be set/changed through a TCD keypad via BTTFN (```9050``` - ```9059```). Such a change will be saved immediately.
 
 ##### &#9193; Shuffle mode enabled
 
 When checked, tracks are shuffled. When unchecked, tracks will be played in order.
 
-This can also be set/changed through a TCD keypad via BTTFN (9222 / 9555). Such a change will be saved immediately.
+This can also be set/changed through a TCD keypad via BTTFN (```9222``` / ```9555```). Such a change will be saved immediately.
 
 #### <ins>Settings for BTTFN communication</ins>
 
@@ -784,7 +784,7 @@ If this option is checked, and your TCD is equipped with a fake power switch, th
 
 ##### &#9193; TT button triggers BTTFN-wide TT
 
-If the dash gauges are connected to a TCD through BTTFN, this option allows to trigger a synchronized time travel on all BTTFN-connected devices when pressing the Time Travel button, just as if the Time Travel was triggered by the TCD. If this option is unchecked, pressing the Time Travel button only triggers a Time Travel sequence on the Dash Gauges.
+If the dash gauges are connected to a TCD through BTTFN, this option allows to trigger a synchronized time travel on all BTTFN-connected devices when pressing the _Time Travel_ button, just as if the Time Travel was triggered by the TCD. If this option is unchecked, pressing the _Time Travel_ button only triggers a Time Travel sequence on the Dash Gauges.
 
 #### <ins>Settings for wired connections</ins>
 
@@ -825,7 +825,7 @@ This procedure ensures that all your settings are copied from the old to the new
 
 The Control Board has a connector for two door switches; these switches change state whenever a door is opened or closed. The firmware can play a sound for each such event. To enable the use of those switches (if connected), check this.
 
-This option must be unchecked in order to use the MQTT commands PLAY_DOOR_OPEN and PLAY_DOOR_CLOSED.
+This option must be unchecked in order to use the MQTT commands ```PLAY_DOOR_OPEN``` and ```PLAY_DOOR_CLOSED```.
 
 ##### &#9193; Switch closes when door is closed
 
@@ -883,7 +883,7 @@ If you are using a 12V power supply or want to avoid cramming two wires into the
 
 This selects the type of gauge hardware and the way of connection. In order to protect your props, this is locked by default. To unlock this setting
 
-- either hold the Time Travel button for 5 seconds or
+- either hold the _Time Travel_ button for 5 seconds or
 - enter 9317931 on a wirelessly connected TCD,
 
 then reload the page in your browser.
