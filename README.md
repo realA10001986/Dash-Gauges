@@ -270,11 +270,11 @@ Afterwards, the Dash Gauges and the TCD can communicate wirelessly and
    <tr><td>Function</td><td>Code on TCD</td></tr>
     <tr>
      <td align="left">"Refill"<sup>1</sup></td>
-     <td><code>009</code></td>
+     <td align="left"><code>009</code></td>
     </tr>
    <tr>
      <td align="left">Set "full" percentage of "Primary" gauge (01-99%)</td>
-     <td><code>9101</code> - 9199</code></td>
+     <td align="left"><code>9101</code> - 9199</code></td>
     </tr>
     <tr>
      <td align="left">Reset "full" percentage of "Primary" gauge</td>
