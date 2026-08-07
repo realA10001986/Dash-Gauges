@@ -267,7 +267,7 @@ Afterwards, the Dash Gauges and the TCD can communicate wirelessly and
     <tr>
      <td align="center" colspan="2">Special sequences</td>
     </tr>
-   <tr><td>Function</td><td>Code on TCD</td></tr>
+   <tr><td align="center>Function</td><td align="center>Code on TCD</td></tr>
     <tr>
      <td align="left">"Refill"<sup>1</sup></td>
      <td align="left"><code>009</code></td>
