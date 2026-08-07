@@ -331,7 +331,7 @@ Afterwards, the Dash Gauges and the TCD can communicate wirelessly and
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key1.mp3</a>"</td>
-     <td align="left"><code>9001</code> / <code>9501</code></td>
+     <td align="left"><code>9501</code> / <code>9001</code></td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key2.mp3</a>"</td>
@@ -339,11 +339,11 @@ Afterwards, the Dash Gauges and the TCD can communicate wirelessly and
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key3.mp3</a>"</td>
-     <td align="left"><code>9003</code> / <code>9503</code></td>
+     <td align="left"><code>9503</code> / <code>9003</code></td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key4.mp3</a>"</td>
-     <td align="left"><code>9004</code> / <code>9504</code></td>
+     <td align="left"><code>9504</code> / <code>9004</code></td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key5.mp3</a>"</td>
@@ -351,18 +351,18 @@ Afterwards, the Dash Gauges and the TCD can communicate wirelessly and
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key6.mp3</a>"</td>
-     <td align="left"><code>9006</code> / <code>9506</code></td>
+     <td align="left"><code>9506</code> / <code>9006</code></td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key7.mp3</a>"</td>
-     <td align="left"><code>9007</code> / <code>9507</code></td>
+     <td align="left"><code>9507</code> / <code>9007</code></td>
     </tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key8.mp3</a>"</td>
      <td align="left"><code>9508</code></td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key9.mp3</a>"</td>
-     <td align="left"><code>9009</code> / <code>9509</code></td>
+     <td align="left"><code>9509</code> / <code>9009</code></td>
     </tr>
     <tr>
      <td align="left">Say current IP address</td>
