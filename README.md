@@ -606,7 +606,7 @@ Enter your TCD's network name (usually "TCD-AP") in **_Network name (SSID) of TC
 
 >In the unlikely case that multiple TCD's are in range, you can single out your TCD by its BSSID. The TCD displays its BSSID on its *WiFi Configuration* page (starting version 3.23).
 
-If you want to enter Car mode immediately, check **_Enable car mode_**. You can also later enable Car mode by holding _Button 1_ for six seconds (until a triple-beep is emitted).
+If you want to enter Car mode immediately after saving your settings, check **_Enable car mode now_**. You can also later enable Car mode by holding _Button 1_ for six seconds (until a triple-beep is emitted).
 
 ##### &#9193; Hostname
 
