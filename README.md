@@ -80,12 +80,12 @@ Click on "WiFi Configuration" and either select a network from the top of the pa
 
 >The device requests an IP address via DHCP, unless you entered valid data in the fields for static IP addresses (IP, gateway, netmask, DNS). If the device is inaccessible as a result of incorrect static IPs, 
 >- power-down the device,
->- hold the Time Travel button,
->- power-up the device (while still holding the Time Travel button)
+>- hold the _Time Travel_ button,
+>- power-up the device (while still holding the _Time Travel_ button)
 >- wait until the "Empty" LED flashes briefly,
 >- flip the Side Switch twice within 10 seconds,
 >- wait until the "Empty" LED lights up,
->- then release the Time Travel button.
+>- then release the _Time Travel_ button.
 >
 >This procedure causes static IP data to be deleted; the device will return to DHCP after a reboot.
 
@@ -143,7 +143,7 @@ A full reference of the Config Portal is [here](#appendix-a-the-config-portal).
 The firmware needs to know the type of gauges installed; by default, power output to the gauges is disabled.
 
 In order to configure the Dash Gauges for your specific hardware,
-- hold the "Time Travel" button for 5 seconds (until a beep is emitted),
+- hold the _Time Travel_ button for 5 seconds (until a beep is emitted),
 - then enter the Config Portal as described above, and click on "Settings".
 
 Near the bottom of this page, there are three drop-down widgets, one for each gauge. Carefully select the type for each of your gauges, and click on "Save".
@@ -156,7 +156,7 @@ The Dash Gauges' basic function is to show some values on its gauges, and to pla
 
 If the Dash Gauges are operated stand-alone:
 - To quickly trigger the "empty" sequence, flip the side switch of your Dash Gauges. To "refill", flip that switch again.
-- To trigger a Time Travel sequence, press the time travel button located behind the "Primary" gauge on the rear of the Control Board, next to the SD card reader; you can also connect an [external button](Hardware.md#connecting-a-time-travel-button).
+- To trigger a Time Travel sequence, press the _Time Travel_ button located behind the "Primary" gauge on the rear of the Control Board, next to the SD card reader; you can also connect an [external button](Hardware.md#connecting-a-time-travel-button).
 
 Other features require a CircuitSetup [Time Circuits Display](#bttf-network-bttfn) and/or a connection to [Home Assistant](#home-assistant--mqtt) for control.
 
@@ -681,7 +681,7 @@ If a TCD is connected via BTTFN or MQTT, the Dash Gauges visually signals when t
 Enter the number of minutes until the Screen Saver should become active when the Dash Gauges are idle.
 
 The Screen Saver, when active, stops the "empty" alarm sound and disables all gauges and lights, until 
-- the time travel button is briefly pressed (the first press when the screen saver is active will not trigger a time travel),
+- the _Time Travel_ button is briefly pressed (the first press when the screen saver is active will not trigger a time travel),
 - on a connected TCD, a destination date is entered (only if TCD is wirelessly connected) or a time travel event is triggered (also when wired).
 
 The music player will continue to run.
