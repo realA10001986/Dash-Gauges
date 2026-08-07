@@ -270,126 +270,126 @@ Afterwards, the Dash Gauges and the TCD can communicate wirelessly and
    <tr><td>Function</td><td>Code on TCD</td></tr>
     <tr>
      <td align="left">"Refill"<sup>1</sup></td>
-     <td>009&#9166;</td>
+     <td><code>009</code></td>
     </tr>
    <tr>
      <td align="left">Set "full" percentage of "Primary" gauge (01-99%)</td>
-     <td>9101&#9166; - 9199&#9166;</td>
+     <td><code>9101</code> - 9199</code></td>
     </tr>
     <tr>
      <td align="left">Reset "full" percentage of "Primary" gauge</td>
-     <td align="left">9100&#9166;</td>
+     <td align="left"><code>9100</code></td>
     </tr>
     <tr>
      <td align="left">Set "full" percentage of "Percent Power" gauge (01-99%)</td>
-     <td align="left">9401&#9166; - 9499&#9166;</td>
+     <td align="left"><code>9401</code> - 9499</code></td>
     </tr>
     <tr>
      <td align="left">Reset "full" percentage of "Percent Power" gauge</td>
-     <td align="left">9400&#9166;</td>
+     <td align="left"><code>9400</code></td>
     </tr>
     <tr>
      <td align="left">Set "full" percentage of "Roentgens" gauge (01-99%)</td>
-     <td align="left">9701&#9166; - 9799&#9166;</td>
+     <td align="left"><code>9701</code> - 9799</code></td>
     </tr>
     <tr>
      <td align="left">Reset "full" percentage of "Roentgens" gauge</td>
-     <td align="left">9700&#9166;</td>
+     <td align="left"><code>9700</code></td>
     </tr>    
     <tr>
      <td align="left">Set volume level (00-20)</td>
-     <td align="left">9300&#9166; - 9320&#9166;</td>
+     <td align="left"><code>9300</code> - 9320</code></td>
     </tr>
     <tr>
      <td align="left"><a href="#the-music-player">Music Player</a>: Play/Stop</td>
-     <td align="left">9005&#9166;</td>
+     <td align="left"><code>9005</code></td>
     </tr>
     <tr>
      <td align="left"><a href="#the-music-player">Music Player</a>: Previous track</td>
-     <td align="left">9002&#9166;</td>
+     <td align="left"><code>9002</code></td>
     </tr>
     <tr>
      <td align="left"><a href="#the-music-player">Music Player</a>: Next track</td>
-     <td align="left">9008&#9166;</td>
+     <td align="left"><code>9008</code></td>
     </tr>
     <tr>
      <td align="left"><a href="#the-music-player">Music Player</a>: Select music folder (0-9)</td>
-     <td align="left">9050&#9166; - 9059&#9166;</td>
+     <td align="left"><code>9050</code> - <code>9059</code></td>
     </tr>
     <tr>
      <td align="left"><a href="#the-music-player">Music Player</a>: Shuffle off</td>
-     <td align="left">9222&#9166;</td>
+     <td align="left"><code>9222</code></td>
     </tr>
     <tr>
      <td align="left"><a href="#the-music-player">Music Player</a>: Shuffle on</td>
-     <td align="left">9555&#9166;</td>
+     <td align="left"><code>9555</code></td>
     </tr> 
     <tr>
      <td align="left"><a href="#the-music-player">Music Player</a>: Go to track 0</td>
-     <td align="left">9888&#9166;</td>
+     <td align="left"><code>9888</code></td>
     </tr>
     <tr>
      <td align="left"><a href="#the-music-player">Music Player</a>: Go to track xxx</td>
-     <td align="left">9888xxx&#9166;</td>
+     <td align="left"><code>9888xxx</code></td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key1.mp3</a>"</td>
-     <td align="left">9001&#9166; / 9501&#9166;</td>
+     <td align="left"><code>9001</code> / 9501</code></td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key2.mp3</a>"</td>
-     <td align="left">9502&#9166;</td>
+     <td align="left"><code>9502</code></td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key3.mp3</a>"</td>
-     <td align="left">9003&#9166; / 9503&#9166;</td>
+     <td align="left"><code>9003</code> / 9503</code></td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key4.mp3</a>"</td>
-     <td align="left">9004&#9166; / 9504&#9166;</td>
+     <td align="left"><code>9004</code> / 9504</code></td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key5.mp3</a>"</td>
-     <td align="left">9505&#9166;</td>
+     <td align="left"><code>9505</code></td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key6.mp3</a>"</td>
-     <td align="left">9006&#9166; / 9506&#9166;</td>
+     <td align="left"><code>9006</code> / 9506</code></td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key7.mp3</a>"</td>
-     <td align="left">9007&#9166; / 9507&#9166;</td>
+     <td align="left"><code>9007</code> / 9507</code></td>
     </tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key8.mp3</a>"</td>
-     <td align="left">9508&#9166;</td>
+     <td align="left"><code>9508</code></td>
     </tr>
     <tr>
      <td align="left">Play "<a href="#additional-custom-sounds">key9.mp3</a>"</td>
-     <td align="left">9009&#9166; / 9509&#9166;</td>
+     <td align="left"><code>9009</code> / 9509</code></td>
     </tr>
     <tr>
      <td align="left">Say current IP address</td>
-     <td align="left">9090&#9166;</td>
+     <td align="left"><code>9090</code></td>
     </tr>
     <tr>
      <td align="left">Disable <a href='#car-setup'>Car mode</a><sup>1</sup></td>
-     <td align="left">9990&#9166;</td>
+     <td align="left"><code>9990</code></td>
     </tr>   
     <tr>
      <td align="left">Enable <a href='#car-setup'>Car mode</a><sup>1</sup></td>
-     <td align="left">9991&#9166;</td>
+     <td align="left"><code>9991</code></td>
     </tr>   
     <tr>
      <td align="left">Reboot the device<sup>1</sup></td>
-     <td align="left">9064738&#9166;</td>
+     <td align="left"><code>9064738</code></td>
     </tr>
     <tr>
      <td align="left">Delete static IP address<br>and WiFi-AP password<sup>1</sup></td>
-     <td align="left">9123456&#9166;</td>
+     <td align="left"><code>9123456</code></td>
     </tr>
     <tr>
      <td align="left">Unlock "gauge type" selection in Config Portal</td>
-     <td align="left">9317931&#9166;</td>
+     <td align="left"><code>9317931</code></td>
     </tr>
 </table>
 
