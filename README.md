@@ -176,7 +176,6 @@ Your replacements need to be put in the root (top-most) directory of the SD card
 - "startup.mp3". Played when the Dash Gauges are connected to power and finished booting;
 - "refill.mp3". Played during the "refill"-sequence;
 - "alarm.mp3". Played when the alarm sounds (triggered by a Time Circuits Display via BTTFN or MQTT);
-- "0.mp3" through "9.mp3", "dot.mp3": Numbers for IP address read-out.
 - "dooropen.mp3"/"doorclose.mp3": Played when the state of the door switch changes.
 
 ### Additional Custom Sounds
