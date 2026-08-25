@@ -90,4 +90,8 @@ extern bool useMQTT;
 extern bool pubMP;
 #endif
 
+#ifdef DG_PROFILER
+void debugOutput(const char *format, ...);
+#endif
+
 #endif

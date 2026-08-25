@@ -15,8 +15,8 @@
  ***                          Version Strings                          ***
  *************************************************************************/
 
-#define DG_VERSION       "V1.34"            // Do NOT change format.
-#define DG_VERSION_EXTRA "JUL172026"
+#define DG_VERSION       "V1.35"            // Do NOT change format.
+#define DG_VERSION_EXTRA "AUG252026"
 
 /*************************************************************************
  ***             Configuration for peripherals/features                ***
@@ -48,6 +48,8 @@
 
 //#define DG_DBG              // Generic except below
 //#define DG_DBG_NET          // Prop network related
+//#define DG_DBG_BL
+//#define DG_PROFILER
 
 /*************************************************************************
  ***                  esp32-arduino version detection                  ***
@@ -61,11 +63,6 @@
     #endif
 #endif
 #endif
-
-/*************************************************************************
- ***                            Sanitation                             ***
- *************************************************************************/
-
 
 /*************************************************************************
  ***                             GPIO pins                             ***

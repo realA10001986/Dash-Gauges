@@ -318,7 +318,6 @@ WiFiManagerParameter custom_noETTOL("uEtNL", "TCD signals Time Travel without 5s
 
 WiFiManagerParameter custom_haveSD(wmBuildHaveSD, WFM_SECTS);
 WiFiManagerParameter custom_CfgOnSD("CfgOnSD", "Save secondary settings on SD<br><span>Check this to avoid flash wear</span>", settings.CfgOnSD, "class='mt5'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
-//WiFiManagerParameter custom_sdFrq("sdFrq", "4MHz SD clock speed<br><span>Checking this might help in case of SD card problems</span>", settings.sdFreq, "style='margin-top:12px'", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
 WiFiManagerParameter custom_upd("upd", "Show update notifications on power-up", settings.upd, "", WFM_LABEL_AFTER|WFM_IS_CHKBOX);
 
 #ifdef DG_HAVEDOORSWITCH
@@ -564,7 +563,6 @@ void wifi_setup()
       
       &custom_haveSD,         // 2(3)
       &custom_CfgOnSD,
-      //&custom_sdFrq,
       &custom_upd,
   
       #ifdef DG_HAVEDOORSWITCH
@@ -891,7 +889,7 @@ void wifi_loop()
 #endif
 
     if(millis() - lastUpdateCheck > 24*60*60*1000) {
-        if(!TTrunning && !dgBusy) {
+        if(!(csf & CSF_TT) && !dgBusy) {
             if(checkAudioDone()) {
                 checkForUpdate();
             }
@@ -903,7 +901,7 @@ void wifi_loop()
         carMode = !!(wifiLoopSaveAction & WLA_SET_CM_ON);
         if(!*settings.cm_ssid) carMode = false;
         if(carMode != ocm) {
-            dgBusy = true;  // Force MP "off" state
+            dgBusy = 1;  // Force MP "off" state
             mp_stop(true);
             stopAudio();
             saveCarMode();
@@ -920,7 +918,7 @@ void wifi_loop()
 
         int temp;
 
-        dgBusy = true;  // Force MP "off" state
+        dgBusy = 1;  // Force MP "off" state
         mp_stop(true);
         stopAudio();
 
@@ -1043,7 +1041,6 @@ void wifi_loop()
 
             oldCfgOnSD = settings.CfgOnSD[0];
             evalCB(settings.CfgOnSD, &custom_CfgOnSD);
-            //evalCB(settings.sdFreq, &custom_sdFrq);
 
             #ifdef DG_HAVEDOORSWITCH
             evalCB(settings.dsPlay, &custom_dsPlay);
@@ -1415,7 +1412,7 @@ static void checkForUpdate()
     if(uver) {
         haveCVer = true;
         if(((uver << 8) | urev) > ((cver << 8) | crev)) {
-            snprintf(newversion, sizeof(newversion), "%d.%d", uver, urev);
+            snprintf(newversion, sizeof(newversion), "%d.%02d", uver, urev);
         }
     }
 
@@ -1569,11 +1566,14 @@ static void preUpdateCallback()
     wifiAPOffDelay = 0;
     origWiFiOffDelay = 0;
 
-    dgBusy = true;    // Force MP "off" state
+    dgBusy = 1;  // Force MP "off" state
     mp_stop(true);
     stopAudio();
 
     flushDelayedSave();
+
+    // Switch gauges and lights off
+    gaugesCompleteOff();
 
     showWaitSequence();
 }
@@ -1602,7 +1602,7 @@ static bool preWiFiScanCallback()
     // Do not allow a WiFi scan under some circumstances (as
     // it may disrupt sequences)
     
-    if(TTrunning || emptyAlarm || startup || startAlarm || refill || refillWA)
+    if(csf & (CSF_TT|CSF_EMPTYALM|CSF_ST|CSF_STARTALM|CSF_REFILL|CSF_REFILLWA))
         return false;
 
     return true;
@@ -1699,7 +1699,6 @@ static void updateConfigPortalValues()
     setCBVal(&custom_noETTOL, settings.noETTOLead);
 
     setCBVal(&custom_CfgOnSD, settings.CfgOnSD);
-    //setCBVal(&custom_sdFrq, settings.sdFreq);
 
     #ifdef DG_HAVEDOORSWITCH
     setCBVal(&custom_dsPlay, settings.dsPlay);
@@ -2778,11 +2777,9 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
         case 1:
             // Trigger Time Travel (if not running already)
             // Ignore command if TCD is connected by wire
-            if(!TCDconnected && !TTrunning && !dgBusy) {
+            if(!TCDbyWire && (!(csf & CSF_TT)) && !dgBusy) {
                 networkTimeTravel = true;
-                networkTCDTT = true;
-                networkReentry = false;
-                networkAbort = false;
+                networkReentry = networkAbort = false;
                 if(strlen(tempBuf) == 20) {
                     networkLead = a2i(&tempBuf[11]);
                     networkP1 = a2i(&tempBuf[16]);
@@ -2795,14 +2792,15 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
         case 2:   // Re-entry
             // Start re-entry (if TT currently running)
             // Ignore command if TCD is connected by wire
-            if(!TCDconnected && TTrunning && networkTCDTT) {
-                networkReentry = true;
+            if(!TCDbyWire) {
+                if(csf & CSF_TT) networkReentry = true;
+                else networkTimeTravel = false;
             }
             break;
-        case 3:   // Abort TT (TCD fake-powered down during TT)
+        case 3:   // Abort TT (eg. TCD fake-powered down during TT)
             // Ignore command if TCD is connected by wire
             // (mainly because this is no network-triggered TT)
-            if(!TCDconnected && TTrunning && networkTCDTT) {
+            if(!TCDbyWire && ((csf & CSF_TT) || networkTimeTravel)) {
                 networkAbort = true;
             }
             break;
@@ -2834,7 +2832,7 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length)
         if(!cmdList[i]) return;
 
         // Ignore (and don't even queue) if off
-        if(!FPBUnitIsOn && (!(k & 0x80)))
+        if((csf & CSF_OFF) && (!(k & 0x80)))
             return;
 
         // Ignore (and don't even queue) if busy
@@ -3016,6 +3014,25 @@ bool mqttPublish(const char *topic, const char *pl, unsigned int len)
     }
 
     return true;
-}           
+}
+
+#ifdef DG_PROFILER
+void debugOutput(const char *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+
+    char buf[256];
+    vsprintf(buf, format, args);
+    
+    if(useMQTT) {
+        mqttPublish("bttf/dg/debug", buf, strlen(buf));
+    } else {
+        Serial.printf(buf);
+    }
+
+    va_end(args);
+}
+#endif
 
 #endif

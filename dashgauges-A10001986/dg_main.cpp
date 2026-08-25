@@ -70,6 +70,9 @@ unsigned long powerupMillis = 0;
 #ifdef DG_DBG
 unsigned long debugTimer = 0;
 #endif
+#ifdef DG_PROFILER
+static uint32_t oldCSF = 0;
+#endif
 
 // Gauges
 
@@ -101,17 +104,24 @@ static DGButton sideSwitch = DGButton(SIDESWITCH_PIN,
 static bool          isSSwitchPressed = false;
 static bool          isSSwitchChange = false;
 
+#define DG_BPRESSED  1
+#define DG_BHELDS    2
+#define DG_BHELDE    4
+#define DG_BEHELDS   8
+#define DG_BEHELDE   16
+#define DG_BLOCKED   32
+#define DG_BEHELDSI  64
+
 // The tt button / TCD tt trigger
+#define TT_DEBOUNCE      50  // tt button debounce time in ms
+#define TT_PRESS_TIME   200  // tt button will register a short press
+#define TT_HOLD_TIME   5000  // time in ms holding the tt button will count as a long press
+#define TT_EHOLD_TIME 10000  // time in ms holding the button will count as an extra long press
 static DGButton TTKey = DGButton(TT_IN_PIN,
     false,    // Button is active HIGH
     false     // Disable internal pull-up resistor
 );
-
-#define TT_DEBOUNCE    50    // tt button debounce time in ms
-#define TT_PRESS_TIME 200    // tt button will register a short press
-#define TT_HOLD_TIME 5000    // time in ms holding the tt button will count as a long press
-static bool isTTKeyPressed = false;
-static bool isTTKeyHeld = false;
+uint32_t ttBS = 0;
 
 // "Button 1"
 #define B1_DEBOUNCE     50   // button debounce time in ms
@@ -122,12 +132,7 @@ static DGButton Button1 = DGButton(BUTTON1_PIN,
     false,    // Button is active HIGH
     false     // Disable internal pull-up resistor (non-existent on GPIO36 anyway)
 );
-
-static bool isB1Pressed = false;
-static bool isB1HeldStart = false;
-static bool isB1HeldEnd = false;
-static bool isB1EHeldStart = false;
-static bool isB1EHeldEnd = false;
+uint32_t b1BS = 0;
 
 static bool dsTTout = false;
 
@@ -176,26 +181,28 @@ unsigned long        doPlayDoorSoundNow = 0;
 
 static unsigned long swInitNow = 0;
 
-bool showUpdAvail = true;
+uint32_t csf = 0;
+
+bool     showUpdAvail = true;
 
 #define STARTUP_DELAY 2300
-bool                 startup = false;
 static unsigned long startupNow = 0;
 
 #define REFILL_DELAY 1235
-bool                 refill = false;
 static unsigned long refillNow = 0;
-bool                 refillWA = false;
 
 static unsigned long autoRefill = 0;
 static unsigned long autoMute = 0;
 
 #define ALARM_DELAY 1000
-bool                 startAlarm = false;
 static unsigned long startAlarmNow = 0;
+#ifdef DG_DBG_BL
+static uint16_t bi = 0;
+#endif
+
+#define SCASEG 11
 
 bool networkTimeTravel = false;
-bool networkTCDTT      = false;
 bool networkReentry    = false;
 bool networkAbort      = false;
 bool networkAlarm      = false;
@@ -203,15 +210,14 @@ uint16_t networkLead   = ETTO_LEAD;
 uint16_t networkP1     = 6600;
 
 static bool tcdIsBusy  = false;
-bool        dgBusy     = false;
+int         dgBusy     = 0;
 
-static int16_t gpsSpeed = -1;
-static int16_t oldGpsSpeed = -1;
-static bool    spdIsRotEnc = false;
+static bool    spdIsNonGPS = false;
+static int16_t tcdSpeed    = -1;
+static int16_t oldTCDSpeed = -1;
 
 static bool useNM = false;
 static bool tcdNM = false;
-bool        dgNM  = false;
 
 static bool useFPO = false;
 static bool tcdFPO = false;
@@ -223,15 +229,10 @@ bool doPrepareTT = false;
 bool doWakeup = false;
 
 // Time travel status flags etc.
-bool                 TTrunning = false;  // TT sequence is running
-static bool          extTT = false;      // TT was triggered by TCD
 static unsigned long TTstart = 0;
 static unsigned long TTfUpdNow = 0;
 static unsigned long P0duration = ETTO_LEAD;
 static unsigned long P1_maxtimeout = 10000;
-static bool          TTP0 = false;
-static bool          TTP1 = false;
-static bool          TTP2 = false;
 static unsigned long TTfUpdLNow = 0;
 static unsigned long TTfUpdCNow = 0; 
 static unsigned long TTfUpdRNow = 0;
@@ -256,7 +257,7 @@ static bool          playTTsounds = true; // for stand-alone TT
 // Volume-factor for "travelstart" sounds
 #define TT_SOUND_FACT 0.60f
 
-bool         TCDconnected = false;
+bool         TCDbyWire  = false;
 static bool  noETTOLead = false;
 
 static bool          volchanged = false;
@@ -269,10 +270,8 @@ static bool          ssActive = false;
 
 static bool          nmOld = false;
 static bool          fpoOld = false;
-bool                 FPBUnitIsOn = true;
 
 #define EMPTY_INTERVAL   (832/2)
-bool                 emptyAlarm = false;
 static unsigned long emptyAlarmNow = 0;
 
 static bool          FPOffemptyAlarm = false;
@@ -397,7 +396,7 @@ static uint32_t commandQueue[16] = { 0 };
 
 // Forward declarations ------
 
-static void timeTravel(bool TCDtriggered, uint16_t P0Dur, uint16_t P1Dur = 0);
+static void timeTravel(bool TCDtriggered, uint16_t P0Dur = P0_DUR, uint16_t P1Dur = 0);
 
 static void setTTOUT(uint8_t stat);
 
@@ -425,7 +424,10 @@ static void play_door_snd(int doorNum, bool isOpen);
 #endif
 static void ttkeyScan();
 static void TTKeyPressed();
-static void TTKeyHeld();
+static void TTKeyHeldStart();
+static void TTKeyHeldEnd();
+static void TTKeyEHeldStart();
+static void TTKeyEHeldEnd();
 
 static void Button1Scan();
 static void Button1Pressed();
@@ -440,6 +442,10 @@ static void ssRestartTimer();
 
 static void prepareTT();
 static void wakeup();
+
+static void refill_plutonium();
+static bool set_empty();
+static void scra();
 
 static void volWasChanged();
 static void waitAudioDone();
@@ -604,22 +610,25 @@ void main_setup()
     autoMute = temp * 1000;
 
     // Determine if Time Circuits Display is connected
-    // via wire, and is source of GPIO tt trigger
-    TCDconnected = evalBool(settings.TCDpresent);
+    // by wire and therefore is source of GPIO tt trigger
+    TCDbyWire = evalBool(settings.TCDpresent);
     noETTOLead = evalBool(settings.noETTOLead);
 
     // Set up TT button / TCD trigger
     TTKey.begin();
     TTKey.attachPress(TTKeyPressed);
-    if(!TCDconnected) {
+    if(!TCDbyWire) {
         // If we have a physical button, we need
         // reasonable values for debounce and press
-        TTKey.setTiming(TT_DEBOUNCE, TT_PRESS_TIME, TT_HOLD_TIME);
-        TTKey.attachLongPressStart(TTKeyHeld);
+        TTKey.setTiming(TT_DEBOUNCE, TT_PRESS_TIME, TT_HOLD_TIME, TT_EHOLD_TIME);
+        TTKey.attachLongPressStart(TTKeyHeldStart);
+        TTKey.attachLongPressStop(TTKeyHeldEnd);
+        TTKey.attachELongPressStart(TTKeyEHeldStart);
+        TTKey.attachELongPressStop(TTKeyEHeldEnd);
     } else {
         // If the TCD is connected, we can go more to the edge
         TTKey.setTiming(5, 50, 100000);
-        // Long press ignored when TCD is connected
+        // Long/ELong press ignored when TCD is connected
     }
 
     // Set up Button 1
@@ -637,9 +646,9 @@ void main_setup()
     #endif
     if(check_allow_CPA()) {
         showWaitSequence();
-        dgBusy = true;  // Force MP "off" state, if state happens to be sent
+        dgBusy = 1;  // Force MP "off" state, if state happens to be sent
         if(prepareCopyAudioFiles()) {
-            play_file("/_installing.mp3", PA_ALLOWSD, 1.0f);
+            play_file("/_installing.mp3", PA_ALLOWSD);
             waitAudioDone();
         }
         doCopyAudioFiles();
@@ -674,6 +683,9 @@ void main_setup()
     gauges.setValuePercent(1, center_gauge_idle);
     gauges.setValuePercent(2, right_gauge_idle);
 
+    // Set busy to avoid premature bttfn messages
+    dgBusy++;
+
     // Initialize BTTF network
     bttfn_setup();
     bttfn_loop();
@@ -700,7 +712,7 @@ void main_setup()
 
     if(useBTTFN && useFPO && (WiFi.status() == WL_CONNECTED)) {
 
-        FPBUnitIsOn = false;
+        csf |= CSF_OFF;
         tcdFPO = fpoOld = doorTCDFPO = true;
 
         Serial.println("Waiting for TCD fake power on");
@@ -708,16 +720,20 @@ void main_setup()
     } else {
 
         // Otherwise boot:
-        FPBUnitIsOn = true;
+        csf &= ~CSF_OFF;
         
         // Play startup
         gauge_lights_on();
-        startup = true;
+
+        csf |= CSF_ST;
         startupNow = millis();
         
         ssRestartTimer();
 
     }
+
+    // Unset busy
+    dgBusy--;
 }
 
 void main_loop()
@@ -732,22 +748,26 @@ void main_loop()
     dsScan();
     #endif
 
+    #ifdef DG_PROFILER
+    #define PROFLAGS (CSF_OFF|CSF_REFILL|CSF_REFILLWA|CSF_STARTALM|CSF_ST|CSF_TT)
+    if((csf & PROFLAGS) != oldCSF) {
+        debugOutput("1: CSF 0x%x (prev: 0x%x)\n", (csf & PROFLAGS), oldCSF);
+        oldCSF = csf & PROFLAGS;
+    }
+    #endif
+
     // Follow TCD fake power
     if(useFPO && (tcdFPO != fpoOld)) {
         if((fpoOld = tcdFPO)) {
 
             // Power off:
-            FPBUnitIsOn = false;
+            csf |= CSF_OFF;
 
-            // Back up "empty" alarm state
-            FPOffemptyAlarm = emptyAlarm;
+            // Backup "empty" alarm state
+            FPOffemptyAlarm = !!(csf & CSF_EMPTYALM);
             FPOffemptyAlarmNow = emptyAlarmNow;
 
-            TTrunning = false;
-            startup = false;
-            startAlarm = false;
-            refill = false;
-            refillWA = false;
+            csf &= ~(CSF_TT|CSF_ST|CSF_STARTALM|CSF_EALM|CSF_REFILL|CSF_REFILLWA);
 
             stopEmptyAlarm();
             gauges.off(); 
@@ -759,15 +779,12 @@ void main_loop()
                 flushDelayedSave();
             }
 
-            doPrepareTT = false;
-            doWakeup = false;
-
             // FIXME - anything else?
             
         } else {
 
             // Power on: 
-            FPBUnitIsOn = true;
+            csf &= ~CSF_OFF;
 
             #ifdef DG_HAVEMQTT
             mp_sendStatus();
@@ -782,18 +799,18 @@ void main_loop()
                 FPOffemptyAlarm = false;   
             }
 
-            TTKey.reset();
-            isTTKeyHeld = isTTKeyPressed = false;
-            networkTimeTravel = false;
-            isSSwitchChange = false;
-
             ssRestartTimer();
             ssActive = false;
 
-            // Turn on lights & gauges (with delay)
-            gauge_lights_on();            
-            
-            startup = true;
+            // Turn on lights
+            gauge_lights_on();
+
+            networkTimeTravel = false;
+            doPrepareTT = false;
+            doWakeup = false;
+            isSSwitchChange = false;
+
+            csf |= CSF_ST;
             startupNow = millis();
             
             // FIXME - anything else?
@@ -801,51 +818,59 @@ void main_loop()
         }
     }
 
+    #ifdef DG_PROFILER
+    if(((csf & PROFLAGS) != oldCSF) || doPrepareTT || networkTimeTravel) {
+        debugOutput("2: CSF 0x%x (prev: 0x%x)   doPrep %d  nwTT %d\n", (csf & PROFLAGS), oldCSF, doPrepareTT, networkTimeTravel);
+        oldCSF = csf & PROFLAGS;
+    }
+    #endif
+
     // Eval flags set in handle_tcd_notification
     if(doPrepareTT) {
-        if(FPBUnitIsOn && !TTrunning) {
+        doPrepareTT = false;
+        if(!(csf & (CSF_OFF|CSF_TT))) {
             prepareTT();
         }
-        doPrepareTT = false;
     }
     if(doWakeup) {
-        if(FPBUnitIsOn && !TTrunning) {
+        doWakeup = false;
+        if(!(csf & (CSF_OFF|CSF_TT))) {
             wakeup();
         }
-        doWakeup = false;
     }
 
     // Timers
-    if(FPBUnitIsOn) {
+    if(!(csf & CSF_OFF)) {
         // Turn display on after startup delay
-        if(startup && (millis() - startupNow >= STARTUP_DELAY)) {
+        if((csf & CSF_ST) && (millis() - startupNow >= STARTUP_DELAY)) {
+            csf &= ~CSF_ST;
             gauges.on();
             if(checkGauges()) {    // Check if empty, and trigger alarm if so
-                play_file("/startup.mp3", PA_INTRMUS|PA_ALLOWSD, 1.0f);
+                play_file("/startup.mp3", PA_INTRMUS|PA_ALLOWSD);
             }
-            startup = false;
+            isSSwitchChange = false;
         }
         // Start alarm (after delay to give gauges time to go to 0)
-        if(startAlarm && (millis() - startAlarmNow >= ALARM_DELAY)) {
+        if((csf & CSF_STARTALM) && (millis() - startAlarmNow >= ALARM_DELAY)) {
             startEmptyAlarm();
-            startAlarm = false;
+            csf &= ~(CSF_STARTALM|CSF_EALM);
         }
         // Initiate refill after audio has finished
-        if(refillWA && (!playingEmpty || checkAudioDone())) {
+        if((csf & CSF_REFILLWA) && (!playingEmpty || checkAudioDone())) {
+            csf &= ~CSF_REFILLWA;
             play_file("/refill.mp3", PA_INTRMUS|PA_ALLOWSD, 0.6f);
-            refillWA = false;
             if(!ssActive) {
-                refill = true;
+                csf |= CSF_REFILL;
                 refillNow = millis();
             }
         }
         // Update gauges after refill (sound-sync'd)
-        if(refill && (millis() - refillNow >= REFILL_DELAY)) {
+        if((csf & CSF_REFILL) && (millis() - refillNow >= REFILL_DELAY)) {
+            csf &= ~CSF_REFILL;
             gauges.UpdateAll();
-            refill = false;
         }
-        if(!TTrunning && !startup && !startAlarm && !refill && !refillWA) {
-            if(autoRefill && emptyAlarm && (millis() - emptyAlarmNow >= autoRefill)) {
+        if(!(csf & (CSF_TT|CSF_ST|CSF_STARTALM|CSF_REFILL|CSF_REFILLWA))) {
+            if(autoRefill && (csf & CSF_EMPTYALM) && (millis() - emptyAlarmNow >= autoRefill)) {
                 refill_plutonium();
             }
             if(autoMute && playingEmpty && (millis() - emptyAlarmNow >= autoMute)) {
@@ -855,14 +880,20 @@ void main_loop()
     }
 
     // Side switch handling
-    if(FPBUnitIsOn && !TTrunning && !startup && !startAlarm && !refill && !refillWA) {
+    // Switch scanned below in ttkeyscan()
+    // Switch status changes deleted after OFF, TT, ST
+    // Switch status changes eval'd after StartAlarm, Refill(wa)
+    if(!(csf & (CSF_OFF|CSF_TT|CSF_ST|CSF_STARTALM|CSF_REFILL|CSF_REFILLWA))) {
         if(isSSwitchChange) {       // don't care about isSSwitchPressed
             if(ssActive) {
                 ssEnd();
-            } else if(emptyAlarm) {
+            } else if(csf & CSF_EMPTYALM) {
                 refill_plutonium();
             } else {
-                set_empty(); 
+                if(set_empty()) {
+                    if(b1BS & DG_BEHELDSI) csf |= CSF_EALM;  
+                }
+                b1BS &= ~DG_BEHELDSI;
             }
             isSSwitchChange = false;
             ssRestartTimer();
@@ -892,7 +923,7 @@ void main_loop()
         if(!dsPlayO || doorTCDFPO) {
             unsigned long del = dsOpen ? dsDelay : dsDelayC;
             if(!bttfn_send_door(dsOpen, 1, del)) {
-                if(!refillWA) {
+                if(!(csf & CSF_REFILLWA)) {
                     unsigned long timePassed = now - isDSwitchChangeNow;
                     if(del && (del > timePassed + 100)) {
                         dsTimer = true;
@@ -912,7 +943,7 @@ void main_loop()
         if(!dsPlayO || doorTCDFPO) {
             unsigned long del = d2sOpen ? dsDelay : dsDelayC;
             if(!bttfn_send_door(d2sOpen, 2, del)) {
-                if(!refillWA) {
+                if(!(csf & CSF_REFILLWA)) {
                     unsigned long timePassed = now - isD2SwitchChangeNow;
                     if(del && (del > timePassed + 100)) {
                         d2sTimer = true;
@@ -934,7 +965,7 @@ void main_loop()
             if(millis() - doPlayDoorSoundNow < 500) {
                 if(!bttfn_send_door(!!(doPlayDoorSound & 0xff), 0, 0)) {
                     // Door sound is lowest prio, play_door_snd aborts if sound currently played
-                    if(!refillWA) {
+                    if(!(csf & CSF_REFILLWA)) {
                         play_door_snd(1, !!(doPlayDoorSound & 0xff));
                     }
                 }
@@ -945,34 +976,54 @@ void main_loop()
     #endif
 
     // Button 1 evaluation
-    if(!TTrunning && !startup && !startAlarm && !refill && !refillWA) {
-        Button1Scan();
-        if(isB1EHeldEnd) {
-            bool ocm = carMode;
-            carMode = !carMode;
-            if(!*settings.cm_ssid) carMode = false;
-            if(ocm != carMode) {
-                saveCarMode();
-                prepareReboot();
-                delay(1000);
-                esp_restart();
+    // All functions valid regardless of fake power.
+    Button1Scan();
+    if(b1BS & DG_BEHELDE) {
+        if(b1BS & DG_BLOCKED) {
+            b1BS &= ~DG_BLOCKED;
+        } else if(!(csf & (CSF_TT|CSF_ST|CSF_STARTALM|CSF_REFILL|CSF_REFILLWA))) {
+            if(b1BS & DG_BEHELDSI) {
+                bool ocm = carMode;
+                carMode = !carMode;
+                if(!*settings.cm_ssid) carMode = false;
+                if(ocm != carMode) {
+                    saveCarMode();
+                    prepareReboot();
+                    delay(1000);
+                    esp_restart();
+                }
             }
-            isB1EHeldEnd = isB1Pressed = false;
-        } else if(isB1EHeldStart) {
-            isB1EHeldStart = false;
-            play_file("/buttonel.mp3", PA_INTRMUS|PA_ALLOWSD, 1.0f);
-        } else if(isB1HeldEnd) {
+        }
+        b1BS &= ~(DG_BEHELDSI|DG_BEHELDE|DG_BPRESSED);
+    } else if(b1BS & DG_BEHELDS) {
+        b1BS &= ~DG_BEHELDS;
+        if(!(b1BS & DG_BLOCKED) && !(csf & (CSF_TT|CSF_ST|CSF_STARTALM|CSF_REFILL|CSF_REFILLWA))) {
+            b1BS |= DG_BEHELDSI;
+            play_file("/buttonel.mp3", PA_INTRMUS|PA_ALLOWSD);
+        } else {
+            b1BS |= DG_BLOCKED;
+        }
+    } else if(b1BS & DG_BHELDE) {
+        b1BS &= ~(DG_BHELDE|DG_BPRESSED);
+        if(b1BS & DG_BLOCKED) {
+            b1BS &= ~DG_BLOCKED;
+        } else if(!(csf & (CSF_TT|CSF_ST|CSF_STARTALM|CSF_REFILL|CSF_REFILLWA))) {
             // Say IP address
-            isB1HeldEnd = isB1Pressed = false;
             flushDelayedSave();
             say_ip_address();
-        } else if(isB1HeldStart) {
-            isB1HeldStart = false;
-            play_file("/buttonl.mp3", PA_INTRMUS|PA_ALLOWSD, 1.0f);
-        } else if(isB1Pressed) {
+        }
+    } else if(b1BS & DG_BHELDS) {
+        b1BS &= ~DG_BHELDS;
+        if(!(csf & (CSF_TT|CSF_ST|CSF_STARTALM|CSF_REFILL|CSF_REFILLWA))) {
+            play_file("/buttonl.mp3", PA_INTRMUS|PA_ALLOWSD);
+        } else {
+            b1BS |= DG_BLOCKED;
+        }
+    } else if(b1BS & DG_BPRESSED) {
+        b1BS &= ~DG_BPRESSED;
+        if(!(csf & (CSF_TT|CSF_ST|CSF_STARTALM|CSF_REFILL|CSF_REFILLWA))) {
             // WiFi re-connect / restart from Power Save
             bool wasActiveM = false, waitShown = false;
-            isB1Pressed = false;
             if(wifiOnWillBlock()) {
                 wasActiveM = mp_stop();
                 stopAudio();
@@ -986,67 +1037,89 @@ void main_loop()
             // Restart mp if active before
             if(wasActiveM) mp_play();
         }
-    } else {
-        isB1EHeldStart = isB1EHeldEnd = isB1HeldStart = isB1HeldEnd = isB1Pressed = false;
-        Button1.reset();
     }
-    
+
     // TT button evaluation
-    if(FPBUnitIsOn && !TTrunning && !startup && !startAlarm && !refill && !refillWA) {
-        ttkeyScan();
-        if(isTTKeyHeld) {
+    ttkeyScan();  // Scans tt key and sideswitch
+    if(ttBS & DG_BEHELDE) {
+        ttBS &= ~(DG_BEHELDE|DG_BPRESSED);
+        if(ttBS & DG_BLOCKED) {
+            ttBS &= ~DG_BLOCKED;
+        } else {
+            scra();
+        }
+    } else if(ttBS & DG_BEHELDS) {
+        ttBS &= ~DG_BEHELDS;
+        if(!(ttBS & DG_BLOCKED) && !(csf & (CSF_TT|CSF_ST|CSF_STARTALM|CSF_REFILL|CSF_REFILLWA))) {
+            play_file("/buttonel.mp3", PA_INTRMUS|PA_ALLOWSD);
+        } else {
+            ttBS |= DG_BLOCKED;
+        }
+    } else if(ttBS & DG_BHELDE) {
+        ttBS &= ~(DG_BHELDE|DG_BPRESSED);
+        if(ttBS & DG_BLOCKED) {
+            ttBS &= ~DG_BLOCKED;
+        } else {
             ssEnd();
-            isTTKeyHeld = isTTKeyPressed = false;
-            // TT button hold unlocks gaugeType in Config Portal
+            // unlock gaugeType in Config Portal
             gaugeTypeLocked = false;
-            //if() {
-                play_file("/buttonl.mp3", PA_ALLOWSD, 1.0f);
-            //}
-        } else if(isTTKeyPressed) {
-            isTTKeyPressed = false;
-            if(!TCDconnected && ssActive) {
+        }
+    } else if(ttBS & DG_BHELDS) {
+        ttBS &= ~DG_BHELDS;
+        if(!(csf & (CSF_TT|CSF_ST|CSF_STARTALM|CSF_REFILL|CSF_REFILLWA))) {
+            play_file("/buttonl.mp3", PA_INTRMUS|PA_ALLOWSD);
+        } else {
+            ttBS |= DG_BLOCKED;
+        }
+    } else if(ttBS & DG_BPRESSED) {
+        ttBS &= ~DG_BPRESSED;
+        if(!(csf & (CSF_OFF|CSF_TT))) {
+            if(!TCDbyWire && ssActive) {
                 // First button press when ss is active only deactivates ss
                 ssEnd();
             } else {
-                if(TCDconnected) {
+                if(TCDbyWire) {
                     ssEnd();
                 }
-                if(TCDconnected || !bttfnTT || !bttfn_trigger_tt()) {
-                    // stand-alone TT with P0_DUR lead, not ETTO_LEAD;
-                    // if no sound to be played, even 0.
-                    timeTravel(TCDconnected, (TCDconnected && noETTOLead) ? 
-                                              0 : (TCDconnected ? ETTO_LEAD : 
-                                                    (playTTsounds ? P0_DUR : 0)));
+                if(TCDbyWire || !bttfnTT || !bttfn_trigger_tt()) {
+                    // P0 parm ignored for stand-alone TT
+                    timeTravel(TCDbyWire, noETTOLead ? 0 : ETTO_LEAD);
                 }
             }
         }
-    
-        // Check for BTTFN/MQTT-induced TT
-        if(networkTimeTravel) {
-            networkTimeTravel = false;
+    }
+
+    #ifdef DG_PROFILER
+    if(((csf & PROFLAGS) != oldCSF) || networkTimeTravel || networkAbort) {
+        debugOutput("3: CSF 0x%x (prev: 0x%x)   nwTT %d nwAB %d\n", (csf & PROFLAGS), oldCSF, networkTimeTravel, networkAbort);
+        oldCSF = csf & PROFLAGS;
+    }
+    #endif
+
+    // Check for BTTFN/MQTT-induced TT
+    if(networkTimeTravel) {
+        networkTimeTravel = false;
+        if(!(csf & (CSF_OFF|CSF_TT))) {
             if(!networkAbort) {
                 ssEnd();
-                timeTravel(networkTCDTT, networkLead, networkP1);
+                timeTravel(true, networkLead, networkP1);
             }
         }
-    } else {
-        isTTKeyHeld = isTTKeyPressed = false;
-        TTKey.reset();
     }
 
     now = millis();
 
     // The time travel sequences
     
-    if(TTrunning) {
+    if(csf & CSF_TT) {
 
-        if(extTT) {
+        if(csf & CSF_EXTTT) {
 
             // ***********************************************************************************
-            // TT triggered by TCD (BTTFN, GPIO or MQTT) *****************************************
+            // TT triggered by TCD (BTTFN, MQTT or GPIO) *****************************************
             // ***********************************************************************************
 
-            if(TTP0) {   // Acceleration - runs for ETTO_LEAD ms by default
+            if(csf & CSF_TTP0) {  // Acceleration - runs for ETTO_LEAD ms by default
 
                 if(!networkAbort && (now - TTstart < P0duration)) {
 
@@ -1056,25 +1129,37 @@ void main_loop()
 
                     // If we are aborted in P0,
                     // the entire TT is over for us.
-                    TTP0 = false;
-                    TTrunning = false;
-                    isTTKeyPressed = false;
+                    // No need for CheckGauges(), TT init refilled.
+                    csf &= ~(CSF_TTP0|CSF_TT|CSF_EALM);
                     ssRestartTimer();
                     setTTOUT(LOW);
+                    isSSwitchChange = false;
+                    
+                    #ifdef DG_PROFILER
+                    debugOutput("P0 Abort: CSF 0x%x (prev: 0x%x)\n", (csf & PROFLAGS), oldCSF);
+                    oldCSF = csf & PROFLAGS;
+                    networkAbort = false;
+                    #endif
 
                 } else {
 
-                    TTP0 = false;
-                    TTP1 = true;
+                    csf &= ~CSF_TTP0;
+                    csf |= CSF_TTP1;
                     TTstart = TTfUpdLNow = TTfUpdCNow = TTfUpdRNow = now;
                     setTTOUT(HIGH);
 
+                    #ifdef DG_PROFILER
+                    debugOutput("P1 Init: CSF 0x%x (prev: 0x%x)\n", (csf & PROFLAGS), oldCSF);
+                    oldCSF = csf & PROFLAGS;
+                    #endif
+
                 }
             }
-            if(TTP1) {   // Peak/"time tunnel" - ends with pin going LOW or BTTFN/MQTT "REENTRY" (or a long timeout)
 
-                if(((networkTCDTT && (!networkReentry && !networkAbort)) || 
-                    (!networkTCDTT && digitalRead(TT_IN_PIN)))               &&
+            if(csf & CSF_TTP1) {  // Peak/"time tunnel" - ends with pin going LOW or BTTFN/MQTT "REENTRY" (or a long timeout)
+
+                if(((!TCDbyWire && !networkReentry && !networkAbort) || 
+                    (TCDbyWire && digitalRead(TT_IN_PIN)))               &&
                     (millis() - TTstart < P1_maxtimeout) ) {
 
                     bool doUpd = false;
@@ -1109,8 +1194,8 @@ void main_loop()
                     
                 } else {
 
-                    TTP1 = false;
-                    TTP2 = true;
+                    csf &= ~CSF_TTP1;
+                    csf |= CSF_TTP2;
 
                     // P1 ends with empty; even if we were aborted in P1.
                     // There is no "half empty".
@@ -1125,17 +1210,20 @@ void main_loop()
                     
                 }
             }
-            if(TTP2) {   // Reentry - up to us
+
+            if(csf & CSF_TTP2) {  // Reentry - up to us
 
                 if(networkAbort || (now - TTstart > P2_ALARM_DELAY)) {
 
-                    // At very end:
+                    csf &= ~(CSF_TTP2|CSF_TT|CSF_EALM);
                     checkGauges();
-                    TTP2 = false;
-                    TTrunning = false;
-                    isTTKeyPressed = false;
                     ssRestartTimer();
                     setTTOUT(LOW);
+                    isSSwitchChange = false;
+                    makeEES();
+                    #ifdef DG_PROFILER
+                    networkAbort = false;
+                    #endif
 
                 }
             }
@@ -1146,7 +1234,7 @@ void main_loop()
             // TT triggered by button (if TCD not connected) or MQTT **********************
             // ****************************************************************************
           
-            if(TTP0) {   // Acceleration - runs for P0_DUR ms
+            if(csf & CSF_TTP0) {  // Acceleration - runs for P0_DUR ms
 
                 if(now - TTstart < P0_DUR) {
 
@@ -1154,15 +1242,15 @@ void main_loop()
                              
                 } else {
 
-                    TTP0 = false;
-                    TTP1 = true;
+                    csf &= ~CSF_TTP0;
+                    csf |= CSF_TTP1;
                     TTstart = TTfUpdLNow = TTfUpdCNow = TTfUpdRNow = now;
                     setTTOUT(HIGH);
                     
                 }
             }
             
-            if(TTP1) {   // Peak/"time tunnel" - runs for P1_DUR ms
+            if(csf & CSF_TTP1) {  // Peak/"time tunnel" - runs for P1_DUR ms
 
                 if(now - TTstart < P1_DUR) {
 
@@ -1202,8 +1290,8 @@ void main_loop()
                         play_file("/timetravel.mp3", PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL);
                     }
 
-                    TTP1 = false;
-                    TTP2 = true;
+                    csf &= ~CSF_TTP1;
+                    csf |= CSF_TTP2;
                     gauges.setValuePercent(0, left_gauge_empty);
                     gauges.setValuePercent(1, center_gauge_empty);
                     gauges.setValuePercent(2, right_gauge_empty);
@@ -1213,17 +1301,16 @@ void main_loop()
                     
                 }
             }
-            
-            if(TTP2) {   // Reentry - up to us
+
+            if(csf & CSF_TTP2) {    // Reentry - up to us
 
                 if(now - TTstart > P2_ALARM_DLY_SA) {
 
-                    // At very end:
+                    csf &= ~(CSF_TTP2|CSF_TT|CSF_EALM);
                     checkGauges();
-                    TTP2 = false;
-                    TTrunning = false;
-                    isTTKeyPressed = false;
                     ssRestartTimer();
+                    isSSwitchChange = false;
+                    makeEES();
 
                 }
             }
@@ -1236,32 +1323,32 @@ void main_loop()
         if(tcdNM) {
             // NM on: Set Screen Saver timeout to 10 seconds
             ssDelay = 10 * 1000;
-            dgNM = true;
+            csf |= CSF_NM;
         } else {
             // NM off: End Screen Saver; reset timeout to old value
             ssEnd();  // Doesn't do anything if fake power is off
             ssDelay = ssOrigDelay;
-            dgNM = false;
+            csf &= ~CSF_NM;
         }
         nmOld = tcdNM;
     }
 
     // Execute remote commands from TCD or MQTT
-    if(FPBUnitIsOn) {
+    if(!(csf & CSF_OFF)) {
         execute_remote_command();
     }
 
     // Wake up on RotEnc/Remote speed changes; on GPS only if old speed was <=0
-    if(gpsSpeed != oldGpsSpeed) {
-        if(FPBUnitIsOn && !TTrunning && (spdIsRotEnc || oldGpsSpeed <= 0) && gpsSpeed >= 0) {
+    if(tcdSpeed != oldTCDSpeed) {
+        if((!(csf & (CSF_OFF|CSF_TT))) && (spdIsNonGPS || oldTCDSpeed <= 0) && tcdSpeed >= 0) {
             wakeup();
         }
-        oldGpsSpeed = gpsSpeed;
+        oldTCDSpeed = tcdSpeed;
     }
     
     // "Screen saver"
-    if(FPBUnitIsOn) {
-        if(!ssActive && !TTrunning && !startup && !startAlarm && !refill && !refillWA && 
+    if(!(csf & CSF_OFF)) {
+        if(!ssActive && (!(csf & (CSF_TT|CSF_ST|CSF_STARTALM|CSF_REFILL|CSF_REFILLWA))) && 
            ssDelay && (millis() - ssLastActivity > ssDelay)) {
             ssStart();
         }
@@ -1277,23 +1364,23 @@ void main_loop()
             tcdNM = false;
             tcdFPO = false;
             doorTCDFPO = true;  // Allow door sounds if not connected
-            gpsSpeed = -1;
+            tcdSpeed = -1;
             lastBTTFNpacket = 0;
             BTTFNBootTO = true;
         }
     }
 
-    if(networkAlarm && !TTrunning && !startup && !startAlarm && !refill && !refillWA) {
+    if(networkAlarm && (!(csf & (CSF_TT|CSF_ST|CSF_STARTALM|CSF_REFILL|CSF_REFILLWA)))) {
         networkAlarm = false;
         if(evalBool(settings.playALsnd)) {
-            play_file("/alarm.mp3", PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL, 1.0f);
+            play_file("/alarm.mp3", PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL);
         }
-        // No special handling for !FPBUnitIsOn needed, when
+        // No special handling for CSF_OFF needed, when
         // special signal ends, it restores the old state
         emptyLED.specialSignal(DGSEQ_ALARM);
     }
 
-    if(!TTrunning && !startup && !startAlarm && !refill && !refillWA) {
+    if(!(csf & (CSF_TT|CSF_ST|CSF_STARTALM|CSF_REFILL|CSF_REFILLWA))) {
         // Save volume 10 seconds after last change
         if(volchanged && (now - volchgnow > 10000)) {
             volchanged = false;
@@ -1316,32 +1403,39 @@ void flushDelayedSave()
 
 static void timeTravel(bool TCDtriggered, uint16_t P0Dur, uint16_t P1Dur)
 {
-    if(TTrunning)
+    if(csf & CSF_TT)
         return;
 
     flushDelayedSave();
+
+    // Cut short startup sequence if active
+    if(csf & CSF_ST) {
+        csf &= ~CSF_ST;
+        gauges.on();
+        prepareTT();
+    }
     
     if(!TCDtriggered) {
         // If "empty", stand-alone TT is refused
-        if(emptyAlarm) return;
+        if(csf & CSF_EMPTYALM) return;
     } else {
         // If "empty" when TCD triggers TT, do a "quick refill"
-        if(emptyAlarm) {
+        if(csf & CSF_EMPTYALM) {
             prepareTT();
         }
     }
 
     // If refill sequence is currently running, cancel it
     // and update needles immediately.
-    if(refill || refillWA) {
+    if(csf & (CSF_REFILL|CSF_REFILLWA)) {
+        csf &= ~(CSF_REFILL|CSF_REFILLWA);
         gauges.UpdateAll();
-        refill = refillWA = false;
     }
 
     // Cancel startAlarm sequence
-    startAlarm = false;
+    csf &= ~(CSF_STARTALM|CSF_EALM);
 
-    TTrunning = true;
+    csf |= CSF_TT;
 
     // All props stop the musicplayer on TT if playTTsounds is true
     // (regardless of whether they are playing sound immediately or not)
@@ -1354,11 +1448,11 @@ static void timeTravel(bool TCDtriggered, uint16_t P0Dur, uint16_t P1Dur)
     }
         
     TTstart = TTfUpdNow = millis();
-    TTP0 = true;   // phase 0
-    TTP1 = TTP2 = false;
+    csf |= CSF_TTP0;  // phase 0
+    csf &= ~(CSF_TTP1|CSF_TTP2|CSF_EXTTT);
 
     // P1Dur, even if coming from TCD, is not used for timing, 
-    // but only to calculate steps  and for a max timeout
+    // but only to calculate steps and for a max timeout
     if(!P1Dur) {
         P1Dur = TCDtriggered ? P1_DUR_TCD : P1_DUR;
     }
@@ -1381,14 +1475,16 @@ static void timeTravel(bool TCDtriggered, uint16_t P0Dur, uint16_t P1Dur)
         TTFIntR = P1Dur / (((TTFIntR - right_gauge_empty) / TTStepR) + 2);
     }
     
-    if(TCDtriggered) {    // TCD-triggered TT (GPIO, BTTFN, MQTT-pub) (synced with TCD)
-        extTT = true;
+    if(TCDtriggered) {   
+        // TCD-triggered TT (BTTFN, MQTT-pub, GPIO) (synced with TCD)
+        csf |= CSF_EXTTT;
         P0duration = P0Dur;
         #ifdef DG_DBG
         Serial.printf("P0 duration is %d, P1 %d\n", P0duration, P1Dur);
         #endif
-    } else {              // button/MQTT-cmd triggered TT (stand-alone)
-        extTT = false;
+    } else {              
+        // button/MQTT-cmd triggered TT (stand-alone) 
+        // (EXTTT cleared above)
     }
 }
 
@@ -1397,7 +1493,13 @@ static void prepareTT()
     ssEnd();
 
     // Abort any running sequences
-    refill = refillWA = startAlarm = false;
+    csf &= ~(CSF_REFILL|CSF_REFILLWA|CSF_STARTALM|CSF_EALM);
+
+    // Cut short startup sequence if active
+    if(csf & CSF_ST) {
+        csf &= ~CSF_ST;
+        gauges.on();
+    }
 
     stopEmptyAlarm();
 
@@ -1431,12 +1533,12 @@ static void wakeup()
     doWakeup = false;
 }
 
-void refill_plutonium()
+static void refill_plutonium()
 {
     // Triggered by TCD via BTTFN/MQTT, sideswitch or autoRefill timeout.
     // Can come at any time
 
-    if(!FPBUnitIsOn || TTrunning)
+    if(csf & (CSF_OFF|CSF_TT))
         return;
 
     // Bail if already full.
@@ -1452,14 +1554,14 @@ void refill_plutonium()
     gauges.setValuePercent(2, right_gauge_idle);
 
     // Abort any running sequences
-    refill = refillWA = startAlarm = false;
+    csf &= ~(CSF_REFILL|CSF_REFILLWA|CSF_STARTALM|CSF_EALM);
 
     // Start two-staged refill if currently on empty alarm
     // refillWA waits for audio to finish, and then triggers timed refill
-    if(emptyAlarm) {
-        refillWA = playingEmpty;
+    if(csf & CSF_EMPTYALM) {
+        if(playingEmpty) csf |= CSF_REFILLWA;
         stopEmptyAlarm();
-        if(refillWA) return;
+        if(csf & CSF_REFILLWA) return;
     }
 
     // If not currently in alarm state (or sound was stopped), do timed refill
@@ -1470,23 +1572,23 @@ void refill_plutonium()
         return;
 
     // Trigger timed needle-update
-    refill = true;
+    csf |= CSF_REFILL;
     refillNow = millis();
 }
 
-void set_empty()
+static bool set_empty()
 {
     // Triggered by (user)MQTT or sideswitch
+    
     // Must not run when TTrunning or !FPBUnitIsOn
-
-    if(!FPBUnitIsOn || TTrunning)
-        return;
+    if(csf & (CSF_OFF|CSF_TT))
+        return false;
 
     // Bail if already empty.
     if( (gauges.getValuePercent(0) == left_gauge_empty) &&
         (gauges.getValuePercent(1) == center_gauge_empty) &&
         (gauges.getValuePercent(2) == right_gauge_empty) ) {
-        return;     
+        return false;     
     }
         
     gauges.setValuePercent(0, left_gauge_empty);
@@ -1498,17 +1600,27 @@ void set_empty()
         gauges.UpdateAll();
     }
     
-    startAlarm = true;
+    // Set CSF_EMPTYALM here already for checks elsewhere
+    csf |= (CSF_STARTALM|CSF_EMPTYALM);
     startAlarmNow = millis();
-    
-    emptyAlarm = true;  // Set this here already for checks elsewhere
-    
-    refill = refillWA = false;
+
+    csf &= ~(CSF_REFILL|CSF_REFILLWA);
     
     #ifdef DG_HAVEDOORSWITCH
     dsTimer = false;
     d2sTimer = false;
     #endif
+
+    return true;
+}
+
+static void scra()
+{
+    int16_t segList[2];
+    
+    segList[0] = 1;
+    segList[1] = SCASEG;
+    play_file((const char *)segList, PA_SCSEGS|PA_INTRMUS);
 }
 
 static void setTTOUT(uint8_t stat)
@@ -1530,7 +1642,7 @@ static void execute_remote_command()
     // No command execution during timed sequences
     // ssActive checked by individual command
 
-    if(!command || TTrunning || startup || startAlarm || refill || refillWA)
+    if(!command || (csf & (CSF_TT|CSF_ST|CSF_STARTALM|CSF_REFILL|CSF_REFILLWA)))
         return;
 
     commandQueue[oCmdIdx] = 0;
@@ -1612,7 +1724,7 @@ static void execute_remote_command()
                 if(!command) command = DEF_L_GAUGE_IDLE;
                 if(command > left_gauge_empty) {
                     left_gauge_idle = command;
-                    if(!emptyAlarm) {
+                    if(!(csf & CSF_EMPTYALM)) {
                         gauges.setValuePercent(0, left_gauge_idle);
                         gauges.UpdateAll();
                     }
@@ -1628,7 +1740,7 @@ static void execute_remote_command()
                 if(!command) command = DEF_C_GAUGE_IDLE;
                 if(command > center_gauge_empty) {
                     center_gauge_idle = command;
-                    if(!emptyAlarm) {
+                    if(!(csf & CSF_EMPTYALM)) {
                         gauges.setValuePercent(1, center_gauge_idle);
                         gauges.UpdateAll();
                     }
@@ -1644,7 +1756,7 @@ static void execute_remote_command()
                 if(!command) command = DEF_R_GAUGE_IDLE;
                 if(command > right_gauge_empty) {
                     right_gauge_idle = command;
-                    if(!emptyAlarm) {
+                    if(!(csf & CSF_EMPTYALM)) {
                         gauges.setValuePercent(2, right_gauge_idle);
                         gauges.UpdateAll();
                     }
@@ -1665,6 +1777,12 @@ static void execute_remote_command()
         } else if(command >= 501 && command <= 509) {
 
             play_key(command - 500);              // 501-509: Play keyX
+
+        #ifdef DG_DBG_BL
+        } else if(command >= 600 && command <= 629) {
+
+            bi = command - 600;
+        #endif
 
         } else {
 
@@ -1709,7 +1827,7 @@ static void execute_remote_command()
             case 0:
                 // Trigger stand-alone Time Travel
                 ssEnd();
-                timeTravel(false, ETTO_LEAD);
+                timeTravel(false, false);
                 break;
             case 1:
                 ssEnd();
@@ -1801,9 +1919,11 @@ static void say_ip_address()
 {
     uint8_t a, b, c, d;
     char ipbuf[16];
-    char numfname[] = "/x.mp3";
+    int16_t segList[1+(3*3)+3];
+    int j = 1;
+    int oldVol = aud_state.curVolume;
     
-    dgBusy = true;
+    dgBusy++;
     
     bool wasActive = mp_stop(true);
     
@@ -1812,27 +1932,32 @@ static void say_ip_address()
     flushDelayedSave();
     
     #ifdef DG_HAVEMQTT
-    if(!wasActive) mp_sendStatus();
+    // mp_stop(true) sends status, so no apparent need for this
+    //if(!wasActive) mp_sendStatus();
     #endif
+
+    if(!oldVol) aud_state.curVolume = DEFAULT_VOLUME;
                         
     wifi_getIP(a, b, c, d);
     sprintf(ipbuf, "%d.%d.%d.%d", a, b, c, d);
-    numfname[1] = ipbuf[0];
-    play_file(numfname, PA_INTRMUS|PA_ALLOWSD);
-    for(int i = 1; i < strlen(ipbuf); i++) {
-        if(ipbuf[i] == '.') {
-            append_file("/dot.mp3", PA_INTRMUS|PA_ALLOWSD);
-        } else {
-            numfname[1] = ipbuf[i];
-            append_file(numfname, PA_INTRMUS|PA_ALLOWSD);
-        }
-        while(append_pending()) {
-            mydelay(10);
-        }
+
+    for(int i = 0; i < strlen(ipbuf); i++) {
+        if(ipbuf[i] == '.')
+            segList[j++] = 10;
+        else 
+            segList[j++] = ipbuf[i] - '0';
     }
+    segList[0] = j - 1;
+
+    play_file((const char *)segList, PA_SCSEGS);
+
     waitAudioDone();
+    waitAudioDone();
+    waitAudioDone();
+
+    aud_state.curVolume = oldVol;
     
-    dgBusy = false;
+    dgBusy--;
     
     if(wasActive) mp_play();
     // Let audio_loop take care of updating MP status (if not playing at this point)
@@ -1847,7 +1972,7 @@ bool switchMusicFolder(uint8_t nmf, bool isSetup)
     if((musFolderNum != nmf) || isSetup) {
         uint8_t tempperc = 0;
 
-        dgBusy = true;
+        dgBusy++;
         
         if(!isSetup) {
             musFolderNum = nmf;
@@ -1882,7 +2007,7 @@ bool switchMusicFolder(uint8_t nmf, bool isSetup)
             endWaitSequence();
         }
 
-        dgBusy = false;
+        dgBusy--;
 
         // Let audio_loop take care of updating MP status
     }
@@ -1922,13 +2047,19 @@ static bool checkGauges()
     return true;
 }
 
+
+
 static void startEmptyAlarm()
 {
     play_empty();
-    emptyLED.startBlink(EMPTY_INTERVAL, 0);
+    #ifdef DG_DBG_BL
+    emptyLED.startBlink(EMPTY_INTERVAL, bi);
+    #else
+    emptyLED.startBlink(EMPTY_INTERVAL, 10);
+    #endif
     emptyAlarmNow = millis();
-    emptyAlarm = true;
-    startAlarm = false;                 // cancel timed sequence
+    csf |= CSF_EMPTYALM;
+    csf &= ~(CSF_STARTALM|CSF_EALM);  // cancel timed sequence
 }
 
 static void stopEmptyAlarm()
@@ -1936,7 +2067,7 @@ static void stopEmptyAlarm()
     if(playingEmpty) stopAudioAtLoopEnd();
     remove_appended_empty();
     emptyLED.stopBlink();
-    emptyAlarm = startAlarm = false;    // also cancel startAlarm timed sequence
+    csf &= ~(CSF_EMPTYALM|CSF_STARTALM|CSF_EALM);  // cancel startAlarm timed sequence
 }
 
 static void gauge_lights_on()
@@ -1978,7 +2109,7 @@ static void play_door_snd(int doorNum, bool isOpen)
     unsigned long now = millis();
     if((lastDoorNum == doorNum) || !lastDoorNum || (now - lastDoorSoundNow > 750)) {
         if(playingDoor || checkAudioDone()) {
-            play_file(isOpen ? "/dooropen.mp3" : "/doorclose.mp3", PA_ALLOWSD|PA_DOOR, 1.0f);
+            play_file(isOpen ? "/dooropen.mp3" : "/doorclose.mp3", PA_ALLOWSD|PA_DOOR);
             lastDoorSoundNow = now;
             lastDoorNum = doorNum;
         }
@@ -2035,38 +2166,54 @@ static void Button1Scan()
 
 static void TTKeyPressed()
 {
-    isTTKeyPressed = true;
+    ttBS |= DG_BPRESSED;
 }
 
-static void TTKeyHeld()
+static void TTKeyHeldStart()
 {
-    isTTKeyHeld = true;
+    ttBS |= DG_BHELDS;
+}
+
+static void TTKeyHeldEnd()
+{
+    ttBS |= DG_BHELDE;
+}
+
+static void TTKeyEHeldStart()
+{
+    ttBS &= ~DG_BHELDS;
+    ttBS |= DG_BEHELDS;
+}
+
+static void TTKeyEHeldEnd()
+{
+    ttBS |= DG_BEHELDE;
 }
 
 static void Button1Pressed()
 {
-    isB1Pressed = true;
+    b1BS |= DG_BPRESSED;
 }
 
 static void Button1HeldStart()
 {
-    isB1HeldStart = true;
+    b1BS |= DG_BHELDS;
 }
 
 static void Button1HeldEnd()
 {
-    isB1HeldEnd = true;
+    b1BS |= DG_BHELDE;
 }
 
 static void Button1EHeldStart()
 {
-    isB1HeldStart = false;
-    isB1EHeldStart = true;
+    b1BS &= ~DG_BHELDS;
+    b1BS |= DG_BEHELDS;
 }
 
 static void Button1EHeldEnd()
 {
-    isB1EHeldEnd = true;
+    b1BS |= DG_BEHELDE;
 }
 
 /* 
@@ -2084,7 +2231,7 @@ static void ssStart()
         return;
 
     // Stop empty alarm sound
-    if(emptyAlarm && playingEmpty) {
+    if((csf & CSF_EMPTYALM) && playingEmpty) {
         stopAudioAtLoopEnd();
     }
 
@@ -2101,7 +2248,7 @@ static void ssRestartTimer()
 
 static void ssEnd()
 {
-    if(!FPBUnitIsOn)
+    if(csf & CSF_OFF)
         return;
 
     ssRestartTimer();
@@ -2136,17 +2283,22 @@ void showCopyError()
     emptyLED.specialSignal(DGSEQ_ERRCOPY);
 }
 
-void allOff()
+void gaugesCompleteOff()
 {
     gauge_lights_off();
     gauges.off();
+}
+
+void allOff()
+{
+    gaugesCompleteOff();
     emptyLED.stopBlink();
     emptyLED.specialSignal(0);
 }
 
 void prepareReboot()
 {
-    dgBusy = true;
+    dgBusy = 1;
     mp_stop(true);
     stopAudio();
     allOff();
@@ -2272,9 +2424,9 @@ static void bttfn_eval_response(uint8_t *buf, bool checkCaps)
     }
     
     if(buf[5] & 0x02) {
-        gpsSpeed = (int16_t)(buf[18] | (buf[19] << 8));
-        if(gpsSpeed > 88) gpsSpeed = 88;
-        spdIsRotEnc = !!(buf[26] & (0x80|0x20));    // Speed is from RotEnc or Remote
+        tcdSpeed = (int16_t)(buf[18] | (buf[19] << 8));
+        if(tcdSpeed > 88) tcdSpeed = 88;
+        spdIsNonGPS = !!(buf[26] & (0x80|0x20));    // Speed is from RotEnc or Remote
     }
 
     if(buf[5] & 0x10) {
@@ -2338,20 +2490,20 @@ static void handle_tcd_notification(uint8_t *buf)
         if(seqCnt > bttfnTCDSeqCnt || seqCnt == 1) {
             switch(buf[8] | (buf[9] << 8)) {
             case BTTFN_SSRC_GPS:
-                spdIsRotEnc = false;
+                spdIsNonGPS = false;
                 break;
             case BTTFN_SSRC_P1:
                 // If packets come out-of-order, we might
                 // get this one before TTrunning, and we
                 // don't want a switch to usingGPSS only 
                 // because of P1 speed
-                if(!TTrunning) return;
+                if(!(csf & CSF_TT)) return;
                 // fall through
             default:
-                spdIsRotEnc = true;
+                spdIsNonGPS = true;
             }
-            gpsSpeed = (int16_t)(buf[6] | (buf[7] << 8));
-            if(gpsSpeed > 88) gpsSpeed = 88;
+            tcdSpeed = (int16_t)(buf[6] | (buf[7] << 8));
+            if(tcdSpeed > 88) tcdSpeed = 88;
         } else {
             #ifdef DG_DBG_NET
             Serial.printf("Out-of-sequence packet received from TCD %d %d\n", seqCnt, bttfnTCDSeqCnt);
@@ -2363,7 +2515,8 @@ static void handle_tcd_notification(uint8_t *buf)
         // Prepare for TT. Comes at some undefined point,
         // an undefined time before the actual tt, and
         // may not come at all.
-        // We disable our Screen Saver
+        // We disable our Screen Saver and do a "REFILL"
+        // if empty.
         // We don't ignore this if TCD is connected by wire,
         // because this signal does not come via wire.
         doPrepareTT = true;
@@ -2371,27 +2524,40 @@ static void handle_tcd_notification(uint8_t *buf)
     case BTTFN_NOT_TT:
         // Trigger Time Travel (if not running already)
         // Ignore command if TCD is connected by wire
-        if(!TCDconnected && !TTrunning && !dgBusy) {
+        if(!TCDbyWire && (!(csf & CSF_TT)) && !dgBusy) {
             networkTimeTravel = true;
-            networkTCDTT = true;
-            networkReentry = false;
-            networkAbort = false;
+            networkReentry = networkAbort = false;
             networkLead = buf[6] | (buf[7] << 8);
             networkP1 = buf[8] | (buf[9] << 8);
+            #ifdef DG_PROFILER
+            debugOutput("NOT_TT accepted\n");
+            #endif
+        #ifdef DG_PROFILER
+        } else {
+            debugOutput("NOT_TT ignored. TCD conn %d  CSF_TT %x  busy %d\n", TCDbyWire, csf & CSF_TT, dgBusy);
+        #endif
         }
         break;
     case BTTFN_NOT_REENTRY:
         // Start re-entry (if TT currently running)
         // Ignore command if TCD is connected by wire
-        if(!TCDconnected && (TTrunning || networkTimeTravel) && networkTCDTT) {
-            networkReentry = true;
+        if(!TCDbyWire) {
+            if(csf & CSF_TT) networkReentry = true;
+            else networkTimeTravel = false;
         }
         break;
     case BTTFN_NOT_ABORT_TT:
-        // Abort TT (if TT currently running)
+        // Abort TT (if TT currently running or triggered)
         // Ignore command if TCD is connected by wire
-        if(!TCDconnected && (TTrunning || networkTimeTravel) && networkTCDTT) {
+        if(!TCDbyWire && ((csf & CSF_TT) || networkTimeTravel)) {
             networkAbort = true;
+            #ifdef DG_PROFILER
+            debugOutput("NOT_ABORT_TT accepted\n");
+            #endif
+        #ifdef DG_PROFILER
+        } else {
+            debugOutput("NOT_ABORT_TT ignored. %d %d %d\n", TCDbyWire, csf & CSF_TT, networkTimeTravel);
+        #endif
         }
         break;
     case BTTFN_NOT_ALARM:
@@ -2639,7 +2805,7 @@ static bool bttfn_trigger_tt()
     if(!bttfn_connected())
         return false;
 
-    if(TTrunning || tcdIsBusy)
+    if((csf & CSF_TT) || tcdIsBusy)
         return false;
 
     BTTFNPreparePacket();

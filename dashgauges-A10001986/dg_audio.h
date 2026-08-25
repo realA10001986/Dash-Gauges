@@ -56,18 +56,20 @@
 #define _DG_AUDIO_H
 
 // Default volume (index)
-#define DEFAULT_VOLUME 6
+#define DEFAULT_VOLUME 8
 #define VOL_LEVELS 21
 
-#define PA_LOOP    0x0001
-#define PA_INTRMUS 0x0002
-#define PA_ALLOWSD 0x0004
-#define PA_DYNVOL  0x0008
-#define PA_ISEMPTY 0x0010
-#define PA_WAV     0x0020
-#define PA_DOOR    0x0040
-#define PA_MUSIC   0x0080
-// upper 8 bits all taken
+#define PA_LOOP    0x00001
+#define PA_INTRMUS 0x00002
+#define PA_ALLOWSD 0x00004
+#define PA_DYNVOL  0x00008
+#define PA_ISEMPTY 0x00010
+#define PA_WAV     0x00020
+#define PA_DOOR    0x00040
+#define PA_MUSIC   0x00080
+#define PA_SCSEGS  0x20000
+#define PA_DOID3TS 0x40000
+// 1ff00 bits taken
 #define PA_MASKA   (PA_LOOP|PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL|PA_ISEMPTY)
 
 void audio_setup();
@@ -88,6 +90,8 @@ void stopAudio();
 void stopAudioAtLoopEnd();
 bool stop_key();
 bool append_pending();
+
+void makeEES();
 
 void     mp_init(bool isSetup);
 void     mp_play(bool forcePlay = true);

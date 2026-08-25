@@ -117,6 +117,16 @@
 
 /*  Changelog
  *
+ *  2026/08/25 (A10001986) [1.35]
+ *    **********************************************************************************
+ *    ** If updating from below 1.30, please see boxed note at version 1.31 below     **
+ *    **********************************************************************************
+ *    - New soundpack (DG06)
+ *    - Some logic changes with regard to sequences interrupting each other
+ *    - Unmute audio if muted while speaking IP address
+ *    - More robust error handling in case of malformed config files
+ *    - SD: More compatibility fixes
+ *    - Code optimizations and minor fixes
  *  2026/07/17 (A10001986) [1.34]
  *    **********************************************************************************
  *    ** If updating from below 1.30, please see boxed note at version 1.31 below     **
@@ -144,7 +154,7 @@
  *      (through TCD-AP) by holding "Button 1" for 6 seconds (triple-beep) or through 
  *      the Config Portal.
  *    - Behavior of Button 1 changed: Press is still a brief press. Holding the button
- *      to read out the IP address means holding it until a double-beep sounds, then
+ *      to read out the IP address now means holding it until a double-beep sounds, then
  *      the button must be released. (Previously, the IP read-out started automatically
  *      after 2 seconds, without releasing the button, and no sound was played.)
  *    - Fix race condition in Fake Power logic
@@ -577,6 +587,6 @@ void loop()
     bttfn_loop();
 }
 
-#if defined(DG_DBG) || defined(DG_DBG_NET)
+#if defined(DG_DBG) || defined(DG_DBG_NET) || defined(DG_PROFILER)
 #warning "Debug output is enabled. Binary not suitable for release."
 #endif

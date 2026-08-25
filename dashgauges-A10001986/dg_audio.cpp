@@ -107,9 +107,18 @@ static int      sampleCnt = 0;
 
 bool            playingEmpty = false;
 bool            playingEmptyEnds = false;
+static char     ees[] = "/empty0.wav";
+static char     eess[] = "0123";
+static int      eecnt = 0;
 uint16_t        key_playing = 0;
 
 bool            playingDoor = false;
+
+#define SC_VER 1
+static const char     sc_fn[] = "/SC.bin";
+static const uint32_t sc_magic = (SC_VER << 24) | 0x434344;
+static AudioFileSourceLoop *srcSC = NULL;
+static int16_t        segList[31];
 
 static char     append_audio_file[256];
 static float    append_vol;
@@ -126,6 +135,8 @@ unsigned long   renNow1;
 unsigned long   renNow2;
 
 static float    getVolume();
+
+static void     checkForSC();
 
 static int      mp_findMaxNum();
 static bool     mp_checkForFile(int num);
@@ -179,6 +190,10 @@ void audio_setup()
     for(int i = 0; i < 10; i++) {
         mfstatus[i] = mp_checkForFolder(i);
     }
+
+    checkForSC();
+
+    makeEES();
 
     audioInitDone = true;
 }
@@ -251,10 +266,31 @@ static int32_t skipID3(char *buf)
     return 0;
 }
 
+static void setupLoopAndBegin(AudioFileSourceLoop *src, uint32_t flags)
+{
+    int32_t pos = 0;
+    char buf[10];
+
+    buf[0] = 0;
+    
+    src->setPlayLoop(!!(flags & PA_LOOP));
+
+    if(flags & PA_WAV) {
+        wav->begin(src, out);
+        src->setStartPos(wav->startPos);  // Yes, AFTER begin! Need wav->startPos!
+    } else {
+        if(flags & PA_DOID3TS) {
+            src->read((void *)buf, 10);
+            pos = skipID3(buf);
+            src->seek(pos, SEEK_SET);
+        }
+        src->setStartPos(pos);
+        mp3->begin(src, out);
+    }
+}
+
 void play_file(const char *audio_file, uint32_t flags, float volumeFactor)
 {
-    char buf[64];
-    int32_t curSeek = 0;
     #ifdef DG_HAVEMQTT
     bool mpWasActive = false;
     #endif
@@ -286,48 +322,32 @@ void play_file(const char *audio_file, uint32_t flags, float volumeFactor)
     }
 
     curVolFact = volumeFactor;
-    dynVol     = (flags & PA_DYNVOL) ? true : false;
+    dynVol     = !!(flags & PA_DYNVOL);
 
-    playingEmpty = (flags & PA_ISEMPTY) ? true : false;
+    playingEmpty = !!(flags & PA_ISEMPTY);
     playingEmptyEnds = false;
-    playingDoor = (flags & PA_DOOR) ? true : false;
+    playingDoor = !!(flags & PA_DOOR);
     key_playing = flags & 0x1ff00;
     
     out->SetGain(getVolume());
 
-    buf[0] = 0;
-
-    if(haveSD && ((flags & PA_ALLOWSD) || FlashROMode) && mySD0L->open(audio_file)) {
-
-        mySD0L->setPlayLoop(!!(flags & PA_LOOP));
-
-        if(flags & PA_WAV) {
-            wav->begin(mySD0L, out);
-            mySD0L->setStartPos(wav->startPos);
-        } else {
-            mySD0L->read((void *)buf, 10);
-            curSeek = skipID3(buf);
-            mySD0L->setStartPos(curSeek);
-            mySD0L->seek(curSeek, SEEK_SET);
-            mp3->begin(mySD0L, out);
+    if(flags & PA_SCSEGS) {
+        for(int i = 0; i <= ((const int16_t *)audio_file)[0] && i <= 30; i++) {
+            segList[i] = ((const int16_t *)audio_file)[i];
         }
+        if(srcSC && srcSC->open_c(sc_fn, (const int16_t *)segList)) {
+            mp3->begin(srcSC, out);
+        } else {
+            key_playing = 0;
+            playingEmpty = playingDoor = false;
+        }
+    } else if(haveSD && ((flags & PA_ALLOWSD) || FlashROMode) && mySD0L->open(audio_file)) {
+        setupLoopAndBegin(mySD0L, flags|PA_DOID3TS);
         #ifdef DG_DBG
         Serial.println("Playing from SD");
         #endif
     } else if(haveFS && myFS0L->open(audio_file)) {
-
-        myFS0L->setPlayLoop(!!(flags & PA_LOOP));
-
-        if(flags & PA_WAV) {
-            wav->begin(myFS0L, out);
-            myFS0L->setStartPos(wav->startPos);
-        } else {
-            myFS0L->read((void *)buf, 10);
-            curSeek = skipID3(buf);
-            myFS0L->setStartPos(curSeek);
-            myFS0L->seek(curSeek, SEEK_SET);
-            mp3->begin(myFS0L, out);
-        }
+        setupLoopAndBegin(myFS0L, flags);
         #ifdef DG_DBG
         Serial.println("Playing from flash FS");
         #endif
@@ -351,7 +371,9 @@ void play_file(const char *audio_file, uint32_t flags, float volumeFactor)
 
 void play_empty()
 {
-    play_file("/empty.wav", PA_LOOP|PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL|PA_WAV|PA_ISEMPTY, 0.6f);
+    ees[6] = eess[(eecnt++) & 3];
+    play_file((csf & CSF_EALM) ? ees : "/empty.wav", PA_LOOP|PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL|PA_WAV|PA_ISEMPTY, 0.6f);
+    csf &= ~CSF_EALM;
 }
 
 //void append_empty()
@@ -416,7 +438,7 @@ static float getVolume()
 
     vol_val *= curVolFact;
 
-    if(dgNM) vol_val *= 0.3f;
+    if(csf & CSF_NM) vol_val *= 0.3f;
       
     // Do not totally mute
     // 0.02 is the lowest audible gain
@@ -433,6 +455,21 @@ bool check_file_SD(const char *audio_file)
 {
     return (haveSD && SD.exists(audio_file));
 }
+
+static void checkForSC()
+{
+    unsigned int sps = 0;
+    uint32_t tbuf[3];
+    bool srcMedium;
+    
+    if((sps = check_file_len(sc_fn, srcMedium, (uint8_t *)&tbuf[0], 12))) {
+        if((tbuf[0] == sc_magic) && (tbuf[1] == sps ^ sc_magic)) {
+            if(srcMedium) srcSC = myFS0L;
+            else          srcSC = mySD0L;
+        }
+    }
+}
+
 
 bool checkAudioDone()
 {
@@ -478,6 +515,16 @@ bool stop_key()
         return true;
     }
     return false;
+}
+
+void makeEES()
+{
+    for(int i = 0; i < 4; i++) {
+        int ti = esp_random() % 4;
+        char t = eess[ti];
+        eess[ti] = eess[i];
+        eess[i] = t;
+    }
 }
 
 /*
@@ -705,7 +752,7 @@ static bool mp_play_int(bool force)
 
     mp_buildFileName(fnbuf, playList[mpCurrIdx]);
     if(SD.exists(fnbuf)) {
-        if(force) play_file(fnbuf, PA_MUSIC|PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL, 1.0f);
+        if(force) play_file(fnbuf, PA_MUSIC|PA_INTRMUS|PA_ALLOWSD|PA_DYNVOL);
         mpActive = force;
         aud_state.curTrack = playList[mpCurrIdx];
         #ifdef DG_HAVEMQTT
@@ -719,8 +766,8 @@ static bool mp_play_int(bool force)
 #ifdef DG_HAVEMQTT
 void mp_sendStatus(int force)
 {
-    if(pubMP && mqttConnected()) {
-        aud_state.state = (!FPBUnitIsOn || TTrunning || !haveMusic || dgBusy) ? 0 : (mpActive ? 1 : 2);         
+    if(pubMP && mqttConnected()) {      
+        aud_state.state = ((csf & (CSF_OFF|CSF_TT)) || dgBusy || !haveMusic) ? 0 : (mpActive ? 1 : 2);         
         if(memcmp((void *)&mpOldState, (void *)&aud_state, sizeof(aud_state)) || force) {
             static const char statec[] = "OPI";
             char msg[128];

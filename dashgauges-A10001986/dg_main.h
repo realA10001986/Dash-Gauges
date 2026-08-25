@@ -69,14 +69,12 @@ void endWaitSequence();
 
 void showCopyError();
 
+void gaugesCompleteOff();
 void allOff();
 void prepareReboot();
 
 void mydelay(unsigned long mydel);
 unsigned long millisNonZero();
-
-void refill_plutonium();
-void set_empty();
 
 bool switchMusicFolder(uint8_t nmf, bool isSetup = false);
 void showMPRPrecDone(unsigned int perc);
@@ -89,7 +87,23 @@ extern unsigned long powerupMillis;
 
 extern Gauges gauges;
 
-extern bool TCDconnected;
+extern uint32_t csf;
+#define CSF_OFF           0x00000001
+#define CSF_REFILL        0x00000002
+#define CSF_REFILLWA      0x00000004
+#define CSF_EMPTYALM      0x00000008
+#define CSF_STARTALM      0x00000010
+#define CSF_EALM          0x00000020
+#define CSF_ST            0x00000040
+#define CSF_TT            0x00000100
+#define CSF_NM            0x00000200
+
+#define CSF_TTP0          0x01000000
+#define CSF_TTP1          0x02000000
+#define CSF_TTP2          0x04000000
+#define CSF_EXTTT         0x08000000
+
+extern bool TCDbyWire;
 #ifdef DG_HAVEDOORSWITCH
 extern bool dsPlay;
 extern uint16_t doPlayDoorSound;
@@ -98,18 +112,9 @@ extern unsigned long doPlayDoorSoundNow;
 
 extern bool showUpdAvail;
 
-extern bool FPBUnitIsOn;
-extern bool dgNM;
-
-extern bool TTrunning;
-extern bool emptyAlarm;
-extern bool startup;
-extern bool startAlarm;
-extern bool refill;
-extern bool refillWA;
+extern int  dgBusy;
 
 extern bool networkTimeTravel;
-extern bool networkTCDTT;
 extern bool networkReentry;
 extern bool networkAbort;
 extern bool networkAlarm;
@@ -118,8 +123,6 @@ extern uint16_t networkP1;
 
 extern bool doPrepareTT;
 extern bool doWakeup;
-
-extern bool dgBusy;
 
 extern int     bttfnHaveTCDSSID;
 extern char    TCDSSID[];
