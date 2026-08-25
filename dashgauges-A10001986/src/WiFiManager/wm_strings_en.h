@@ -152,7 +152,8 @@ static const char HTTP_STYLE_SET[]  PROGMEM =
 static const char HTTP_STYLE_UPL[]  PROGMEM =
     "input[type='file']{background:#fff;border:1px solid " HTTP_BLUE "}"
     "div.ba{font-size:80%;border-radius:5px;margin:0}"
-    "div.bar{background:#dc3630;color:#fff}";
+    "div.bar{background:#dc3630;color:#fff}"
+    "div.bap{background:#fa0}";
 
 static const char HTTP_STYLE_END [] PROGMEM = "</style>";
 
@@ -195,7 +196,7 @@ static const char HTTP_FORM_PARAM_HEAD[]  PROGMEM = "<hr>";
 static const char HTTP_FORM_PARAM[]       PROGMEM = "<input id='{i}' name='{n}' {l} value='{v}' {c} {f}>";
 static const char HTTP_FORM_END[]         PROGMEM = "<button type='submit'>Save</button></form>";
 
-static const char HTTP_FORM_WIFI[]        PROGMEM = "<div class='ss'><div class='hl'>WiFi connection</div><label for='s'>Network name (SSID)</label><br><input id='s' name='s' maxlength='32' autocorrect='off' autocapitalize='none' placeholder='{V}' oninput='var x=ge(\"fg\");var y=ge(\"p\");y.disabled=false;if(!this.value.length&&this.placeholder.length){if(x&&!y.value.length){x.style.display=\"\"}y.placeholder=y.getAttribute(\"data-ph\")||\"********\";}else{if(x){x.style.display=\"none\"}y.placeholder=\"\"}'><br><label for='p'>Password</label><br><input id='p' name='p' maxlength='64' type='password' placeholder='{p}' data-ph='{p}' oninput='var x=ge(\"fg\");if(x){var y=ge(\"s\");if(!y.value.length&&y.placeholder.length){if(this.value.length){x.style.display=\"none\"}else{x.style.display=\"\"}}}'><br><label><input type='checkbox' onclick='f()' style='margin:0px 5px 10px 0px'>Show password when typing</label><br><label for='s'>BSSID (Access Point MAC)<br><span>Leave this empty unless you have multiple APs with the same SSID and want to connect to a specific AP: Click 'Scan for Networks', 'Show All' and select AP.</span></label><br><input id='b' name='b' maxlength='17' autocorrect='off' autocomplete='off' value='{h}' pattern='^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$' placeholder='XX:XX:XX:XX:XX:XX'><br>";
+static const char HTTP_FORM_WIFI[]        PROGMEM = "<div class='ss'><div class='hl'>WiFi connection</div><label for='s'>Network name (SSID)</label><br><input id='s' name='s' maxlength='32' autocorrect='off' autocapitalize='none' placeholder='{V}' oninput='var x=ge(\"fg\");var y=ge(\"p\");y.disabled=false;if(!this.value.length&&this.placeholder.length){if(x&&!y.value.length){x.style.display=\"\"}y.placeholder=y.getAttribute(\"data-ph\")||\"********\";}else{if(x){x.style.display=\"none\"}y.placeholder=\"\"}'><br><label for='p'>Password</label><br><input id='p' name='p' maxlength='64' type='password' placeholder='{p}' data-ph='{p}' oninput='var x=ge(\"fg\");if(x){var y=ge(\"s\");if(!y.value.length&&y.placeholder.length){if(this.value.length){x.style.display=\"none\"}else{x.style.display=\"\"}}}'><br><label><input type='checkbox' onclick='f()' style='margin:0px 5px 10px 0px'>Show password when typing</label><br><label for='s'>BSSID (Access Point MAC)<br><span>Leave this empty unless you have multiple APs with the same SSID and want to select the AP with the best signal: Click 'Scan for Networks', 'Show All' and select AP.</span></label><br><input id='b' name='b' maxlength='17' autocorrect='off' autocomplete='off' value='{h}' pattern='^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$' placeholder='XX:XX:XX:XX:XX:XX'><br>";
 #define           HTTP_FORM_WIFI_END      HTTP_DIV_END
 static const char HTTP_WIFI_ITEM[]        PROGMEM = "<div><a href='#p' onclick='return {t}(this)' data-ssid='{V}' title='{R}'>{v}</a>{c}<div role='img' aria-label='{r}dBm' title='{r}dBm' class='q q-{q} {i}'></div></div>";
 static const char HTTP_FORM_SECT_HEAD[]   PROGMEM = "<div class='is'>";
@@ -240,9 +241,11 @@ static const char HTTP_UPLOADSND1A[]      PROGMEM = "<div class='ss c' style='li
 static const char HTTP_UPLOADSND2[]       PROGMEM = ".bin) and/or mp3 file upload<br>";
 static const char HTTP_UPLOAD_SLINK1[]    PROGMEM = "<div class='c ba";
 static const char HTTP_UPLOAD_SLINK1A[]   PROGMEM = " bar";
-static const char HTTP_UPLOAD_SLINK1B[]   PROGMEM = "'>Required sound-pack: ";
+static const char HTTP_UPLOAD_SLINK1B[]   PROGMEM = " bap";
+static const char HTTP_UPLOAD_SLINK1C[]   PROGMEM = "'>Required sound-pack: ";
 static const char HTTP_UPLOAD_SLINK2[]    PROGMEM = " [";
 static const char HTTP_UPLOAD_SLINK2A[]   PROGMEM = "<strong>not</strong> ";
+static const char HTTP_UPLOAD_SLINK2B[]   PROGMEM = "partly ";
 static const char HTTP_UPLOAD_SLINK3[]    PROGMEM = "installed]</div>";
 static const char HTTP_UPLOADSND3[]       PROGMEM = "<input type='file' name='upac' multiple accept='.bin,application/octet-stream,.mp3,audio/mpeg'><br><button id='uacb' type='submit' class='h'>Upload</button></div></form>";
 static const char HTTP_UPLOAD_SDMSG[]     PROGMEM = "<br>SD card required for sound upload</div>";
