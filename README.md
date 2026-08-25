@@ -29,6 +29,7 @@ Firmware features include
 - advanced network-accessible [Config Portal](#the-config-portal) for setup (http://gauges.local)
 - [Home Assistant](#home-assistant--mqtt) (MQTT) support
 - built-in OTA installer for firmware updates and audio files
+- &#128007; &#129370; &#129370; &#127381;
 
 >This [repository](https://dg.out-a-ti.me) is the upstream source for CircuitSetup's releases. The only difference is that both code and documentation [here](https://dg.out-a-ti.me) might be ahead in development.
 
