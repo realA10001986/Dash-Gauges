@@ -932,23 +932,23 @@ The "Empty" light is used for the following signals:
 
 <table>
     <tr>
-     <td align="left"><img src="img/s_wait.png" style="zoom:0.5"><!--Blinking at 2Hz--></td>
+     <td align="left"><img src="img/s_wait.png"><!--Blinking at 2Hz--></td>
      <td align="left">Please wait, busy</td>
     </tr>
     <tr>
-     <td align="left"><img src="img/s_alm.png" style="zoom:0.5"><!--4 1-second-blinks--></td>
+     <td align="left"><img src="img/s_alm.png"><!--4 1-second-blinks--></td>
      <td align="left"><a href="#receive-commands-from-time-circuits-display">Alarm</a> (from TCD via BTTFN/MQTT)</td>
     </tr>
     <tr>
-     <td align="left">3 long blinks, 3 short blinks, 3 long blinks (SOS in morse)</td>
-     <td align="left">Error: Sound pack <a href="#sound-pack-installation">not installed</a> or outdated</td>
+     <td align="left"><img src="img/s_sos.png"><!--3 long blinks, 3 short blinks, 3 long blinks (SOS in morse)</td>
+     <td align="left">Error: Sound pack <a href="#sound-pack-installation">not installed</a> or outdated</td>-->
     </tr>
     <tr>
-     <td align="left">2 brief blinks, 1 second pause, repeat</td>
+     <td align="left"><img src="img/s_errsp.png"><!--2 brief blinks, 1 second pause, repeat--></td>
      <td align="left">Error: Sound pack installation error</td>
     </tr>
     <tr>
-     <td align="left">6 very quick blinks</td>
+     <td align="left"><img src="img/s_upd.png"><!--6 very quick blinks--></td>
      <td align="left">Firmware update available; shown briefly at power-up (optional)</td>
     </tr>
 </table>
