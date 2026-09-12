@@ -932,7 +932,7 @@ The "Empty" light is used for the following signals:
 
 <table>
     <tr>
-     <td align="left">Blinking at 2Hz</td>
+     <td align="left"><img src="img/s_wait.png"><!--Blinking at 2Hz--></td>
      <td align="left">Please wait, busy</td>
     </tr>
     <tr>
