@@ -940,8 +940,8 @@ The "Empty" light is used for the following signals:
      <td align="left"><a href="#receive-commands-from-time-circuits-display">Alarm</a> (from TCD via BTTFN/MQTT)</td>
     </tr>
     <tr>
-     <td align="left"><img src="img/s_sos.png"><!--3 long blinks, 3 short blinks, 3 long blinks (SOS in morse)</td>
-     <td align="left">Error: Sound pack <a href="#sound-pack-installation">not installed</a> or outdated</td>-->
+     <td align="left"><img src="img/s_sos.png"><!--3 long blinks, 3 short blinks, 3 long blinks (SOS in morse)--></td>
+     <td align="left">Error: Sound pack <a href="#sound-pack-installation">not installed</a> or outdated</td>
     </tr>
     <tr>
      <td align="left"><img src="img/s_errsp.png"><!--2 brief blinks, 1 second pause, repeat--></td>
