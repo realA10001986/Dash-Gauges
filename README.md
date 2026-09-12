@@ -932,11 +932,11 @@ The "Empty" light is used for the following signals:
 
 <table>
     <tr>
-     <td align="left"><img src="img/s_wait.png"><!--Blinking at 2Hz--></td>
+     <td align="left"><img src="img/s_wait.png" style="zoom:0.5"><!--Blinking at 2Hz--></td>
      <td align="left">Please wait, busy</td>
     </tr>
     <tr>
-     <td align="left">4 1-second-blinks</td>
+     <td align="left"><img src="img/s_alm.png" style="zoom:0.5"><!--4 1-second-blinks--></td>
      <td align="left"><a href="#receive-commands-from-time-circuits-display">Alarm</a> (from TCD via BTTFN/MQTT)</td>
     </tr>
     <tr>
