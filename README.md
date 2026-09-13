@@ -933,7 +933,7 @@ The "Empty" light is used for the following signals:
 <table>
     <tr>
      <td align="left"><img src="img/s_wait.png"><!--Blinking at 2Hz--></td>
-     <td align="left">Please wait, busy</td>
+     <td align="left">Busy, please wait</td>
     </tr>
     <tr>
      <td align="left"><img src="img/s_alm.png"><!--4 1-second-blinks--></td>
@@ -949,7 +949,7 @@ The "Empty" light is used for the following signals:
     </tr>
     <tr>
      <td align="left"><img src="img/s_upd.png"><!--6 very quick blinks--></td>
-     <td align="left">Firmware update available; shown briefly at power-up (optional)</td>
+     <td align="left">Firmware update available; shown briefly at power-up</td>
     </tr>
 </table>
 
