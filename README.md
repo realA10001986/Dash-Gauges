@@ -941,7 +941,7 @@ The "Empty" light is used for the following signals:
     </tr>
     <tr>
      <td align="left"><img src="img/s_sos.png"><!--3 long blinks, 3 short blinks, 3 long blinks (SOS in morse)--></td>
-     <td align="left">Error: Sound pack <a href="#sound-pack-installation">not installed</a> or outdated</td>
+     <td align="left">Error: Sound pack <a href="#sound-pack-installation">not installed</a> or outdated. Shown briefly at power-up.</td>
     </tr>
     <tr>
      <td align="left"><img src="img/s_errsp.png"><!--2 brief blinks, 1 second pause, repeat--></td>
