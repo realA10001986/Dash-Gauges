@@ -207,7 +207,8 @@ The uploaded files are stored to the root folder of the SD card, so this way of 
 
 The firmware contains a simple music player to play mp3 files located on the SD card. This player is controlled by a TCD connected through BTTFN, or through [HA/MQTT](#control-the-dash-gauges-via-mqtt).
 
-*The maximum bitrate is __128kpbs__. The free [Adapter](https://macroplant.com/adapter/audio-converter) tool can re-encode your mp3 files in batches.*
+> [!NOTE]
+> The maximum mp3 bitrate is __128kpbs__. The free [Adapter](https://macroplant.com/adapter/audio-converter) tool can re-encode your mp3 files in batches.
 
 To be recognized, your mp3 files need to be organized in music folders named *music0* through *music9*. The folder number is 0 by default, i.e. the player starts searching for music in folder *music0*. The folder number can be changed in the Config Portal ("Settings") or through the TCD keypad (```905x```) or HA/MQTT (```MP_FOLDER_x```).
 
