@@ -949,7 +949,7 @@ The "Empty" light is used for the following signals:
     </tr>
     <tr>
      <td align="left"><img src="img/s_upd.png"><!--6 very quick blinks--></td>
-     <td align="left">Firmware update available; shown briefly at power-up</td>
+     <td align="left">Firmware update available. Shown briefly at power-up.</td>
     </tr>
 </table>
 
