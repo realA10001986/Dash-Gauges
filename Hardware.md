@@ -86,15 +86,15 @@ _Note: CircuitSetup-produced boards are pre-configured for analog gauges; they h
 #### Configuration for digital gauges (blue numbers):
 - Left gauge:
   - Blue_3: Bridge DIG3 by wire
-  - Blue_4: Close DIG4 solder jumper (ANA4 [purple 4] must be open)
+  - Blue_4: Close DIG4 solder jumper (ANA4 [purple_4] must be open)
   - (R3, R4 [purple_3]: Leave unpopulated or remove)
 - Center gauge:    
   - Blue_1: Bridge DIG1 by wire
-  - Blue_2: Close DIG2 solder jumper; ANA2 (purple_2) must be open
+  - Blue_2: Close DIG2 solder jumper; ANA2 [purple_2] must be open
   - (R1, R2: [purple_1]: Leave unpopulated or remove)
-- Roentgens gauge (connected to "Digital Roentgens" connector [green 6]:
+- Roentgens gauge (connected to "Digital Roentgens" connector [green_6]:
   - Blue_5: Bridge DIG5 by wire
-  - (R5/R6 [purple 5]: Don't matter, have no influence on this connector)
+  - (R5/R6 [purple_5]: Don't matter, have no influence on this connector)
 
 Example for configuration for three digital gauges:
 
