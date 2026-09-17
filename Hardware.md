@@ -64,15 +64,15 @@ Digital gauges, as well as connecting anything to connector [green_6], require 1
 
 #### Configuration for analog gauges (purple numbers):
 - Left gauge ("Primary"):
-  - Purple_3: Resistors R3, R4: Populate depending on gauge and supply voltage; see [here](#appendix-a-resistors-for-gauges).
+  - Purple_3: Resistors R3, R4: Populate depending on gauge; see [here](#appendix-a-resistors-for-gauges).
   - Purple_4: Close ANA4 solder jumper; DIG4 [blue_4] must be open
   - Leave "DIG3" [blue_3] unconnected/open
 - Center Gauge ("Percent Power"):
-  - Purple_1: Resistors R1, R2: Populate depending on gauge and supply voltage; see [here](#appendix-a-resistors-for-gauges).
+  - Purple_1: Resistors R1, R2: Populate depending on gauge; see [here](#appendix-a-resistors-for-gauges).
   - Purple_2: Close ANA2 solder jumper; DIG2 [blue_2] must be open
   - Leave "DIG1" [blue_1] unconnected/open
 - "Roentgens" gauge, connected to "Analog Roentgens" connector [green_3]:
-  - Purple_5: Resistors R5, R6: Populate depending on gauge and supply voltage; see [here](#appendix-a-resistors-for-gauges).
+  - Purple_5: Resistors R5, R6: Populate depending on gauge; see [here](#appendix-a-resistors-for-gauges).
   - (DIG5 [blue_5]: Does not matter, has no influence on this connector)
  
 Example for configuration for three analog gauges:
