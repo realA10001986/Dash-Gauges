@@ -768,17 +768,17 @@ This can also be set/changed through a TCD keypad via BTTFN (```9222``` / ```955
 
 #### <ins>Settings for BTTFN communication</ins>
 
-##### &#9193; Hostname or IP address of TCD
+##### &#9193; Hostname of TCD
 
-If you want to have your Dash Gauges to communicate with a Time Circuits Display wirelessly ("BTTF-Network"), enter the TCD's hostname - usually 'timecircuits' - or IP address here. Hostname is preferred because it makes the setup independent of the network environment.
-
-##### &#9193; Follow TCD night-mode
-
-If this option is checked, and your TCD goes into night mode, the Dash Gauges will activate the Screen Saver with a very short timeout, and reduce its audio volume.
+If you want to have your SID to communicate with a Time Circuits Display wirelessly ("BTTF-Network"), enter the TCD's hostname - usually 'timecircuits' - here. Although specifying the TCD's IP address is supported as well, the hostname is preferred because it makes your setup independent of the network environment.
 
 ##### &#9193; Follow TCD fake power
 
 If this option is checked, and your TCD is equipped with a fake power switch, the Dash Gauges will also fake-power up/down. If fake power is off, no LED is active and the Dash Gauges will ignore all input.
+
+##### &#9193; Follow TCD night-mode
+
+If this option is checked, and your TCD goes into night mode, the Dash Gauges will activate the Screen Saver with a very short timeout, and reduce its audio volume.
 
 ##### &#9193; TT button triggers BTTFN-wide TT
 
