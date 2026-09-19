@@ -780,7 +780,7 @@ If this option is checked, and your TCD is equipped with a fake power switch, th
 
 If this option is checked, and your TCD goes into night mode, the Dash Gauges will activate the Screen Saver with a very short timeout, and reduce its audio volume.
 
-##### &#9193; TT button triggers BTTFN-wide TT
+##### &#9193; TT button triggers BTTFN-wide Time Travel
 
 If the dash gauges are connected to a TCD through BTTFN, this option allows to trigger a synchronized time travel on all BTTFN-connected devices when pressing the _Time Travel_ button, just as if the Time Travel was triggered by the TCD. If this option is unchecked, pressing the _Time Travel_ button only triggers a Time Travel sequence on the Dash Gauges.
 
