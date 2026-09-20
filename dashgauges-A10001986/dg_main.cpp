@@ -137,7 +137,7 @@ uint32_t b1BS = 0;
 static bool dsTTout = false;
 
 // The door switches
-#ifdef DG_HAVEDOORSWITCH
+#ifdef HAVE_DOORSWITCH
 static DGButton doorSwitch = DGButton(DOOR_SWITCH_PIN,
     true,    // Switch is active LOW
     true     // Enable internal pull-up resistor (does not have one though)
@@ -296,7 +296,7 @@ static bool          mprengaugetouched = false;
 #define BTTFN_TYPE_SID     2    // SID
 #define BTTFN_TYPE_PCG     3    // Dash Gauges
 #define BTTFN_TYPE_VSR     4    // VSR
-#define BTTFN_TYPE_AUX     5    // Aux (user custom device)
+#define BTTFN_TYPE_AUX     5    // Aux (user custom device, Jukebox)
 #define BTTFN_TYPE_REMOTE  6    // Futaba remote control
 #define BTTFN_NOT_PREPARE  1
 #define BTTFN_NOT_TT       2
@@ -402,6 +402,7 @@ static void setTTOUT(uint8_t stat);
 
 static void execute_remote_command();
 static void say_ip_address();
+static bool switchMusicFolder(uint8_t nmf, bool isSetup = false);
 
 static void startEmptyAlarm();
 static void stopEmptyAlarm();
@@ -413,7 +414,7 @@ static void gauge_lights_off();
 static void sideSwitch_scan();
 static void sideSwitchLongPress();
 static void sideSwitchLongPressStop();
-#ifdef DG_HAVEDOORSWITCH
+#ifdef HAVE_DOORSWITCH
 static void doorSwitch_scan();
 static void dsScan();
 static void doorSwitchLongPress();
@@ -454,7 +455,7 @@ static uint8_t restrict_gauge_idle(int val, int minimum, int maximum, uint8_t de
 static uint8_t restrict_gauge_empty(int val, int minimum, int maximum, uint8_t def);
 
 static bool bttfn_trigger_tt();
-#ifdef DG_HAVEDOORSWITCH
+#ifdef HAVE_DOORSWITCH
 static bool bttfn_send_door(bool doorOpen, int doorNum, unsigned long del);
 #endif
 static void bttfn_setup();
@@ -471,7 +472,7 @@ void main_boot()
     // Some init
 
     // Preliminarily set optional TT-OUT to LOW
-    #ifdef DG_HAVEDOORSWITCH
+    #ifdef HAVE_DOORSWITCH
     pinMode(DOOR2_SWITCH_PIN, OUTPUT);
     digitalWrite(DOOR2_SWITCH_PIN, LOW);
     #endif
@@ -496,14 +497,14 @@ void main_boot2()
 {
     int8_t gaugeIDA = 0, gaugeIDB = 0, gaugeIDC = 0;
 
-    #ifdef DG_HAVEDOORSWITCH
+    #ifdef HAVE_DOORSWITCH
     dsTTout = evalBool(settings.dsTTout);
     #else
     dsTTout = true;
     #endif
     
     // Init door switch(es)
-    #ifdef DG_HAVEDOORSWITCH
+    #ifdef HAVE_DOORSWITCH
     doorSwitch.begin();
     doorSwitch.setTiming(50, 10, 50);
     doorSwitch.attachLongPressStart(doorSwitchLongPress);
@@ -583,7 +584,7 @@ void main_setup()
     useFPO = evalBool(settings.useFPO);
     bttfnTT = evalBool(settings.bttfnTT);
 
-    #ifdef DG_HAVEDOORSWITCH
+    #ifdef HAVE_DOORSWITCH
     dsPlay = evalBool(settings.dsPlay);
     dsPlayO = evalBool(settings.dsPlayO);
     doorTCD = evalBool(settings.dsPlayTCD);
@@ -697,7 +698,7 @@ void main_setup()
     }
     sideSwitch_scan();
     isSSwitchChange = false;
-    #ifdef DG_HAVEDOORSWITCH
+    #ifdef HAVE_DOORSWITCH
     doorSwitch_scan();
     isDSwitchChange = false;
     isD2SwitchChange = false;
@@ -744,7 +745,7 @@ void main_loop()
     gauges.loop();
 
     // Scan door switches
-    #ifdef DG_HAVEDOORSWITCH
+    #ifdef HAVE_DOORSWITCH
     dsScan();
     #endif
 
@@ -786,7 +787,7 @@ void main_loop()
             // Power on: 
             csf &= ~CSF_OFF;
 
-            #ifdef DG_HAVEMQTT
+            #ifdef HAVE_MQTT
             mp_sendStatus();
             #endif
 
@@ -820,7 +821,7 @@ void main_loop()
 
     #ifdef DG_PROFILER
     if(((csf & PROFLAGS) != oldCSF) || doPrepareTT || networkTimeTravel) {
-        debugOutput("2: CSF 0x%x (prev: 0x%x)   doPrep %d  nwTT %d\n", (csf & PROFLAGS), oldCSF, doPrepareTT, networkTimeTravel);
+        debugOutput("2: CSF 0x%x (prev: 0x%x)   doPrep %d  nwTT %d  TCDwire %d\n", (csf & PROFLAGS), oldCSF, doPrepareTT, networkTimeTravel, TCDbyWire);
         oldCSF = csf & PROFLAGS;
     }
     #endif
@@ -901,7 +902,7 @@ void main_loop()
     }
 
     // Door switch/sound handling
-    #ifdef DG_HAVEDOORSWITCH
+    #ifdef HAVE_DOORSWITCH
     now = millis();
     if(dsTimer && now - dsNow >= dsADelay) {
         // delay door sound by max 500ms, otherwise effect is lost and we skip it
@@ -1160,7 +1161,7 @@ void main_loop()
 
                 if(((!TCDbyWire && !networkReentry && !networkAbort) || 
                     (TCDbyWire && digitalRead(TT_IN_PIN)))               &&
-                    (millis() - TTstart < P1_maxtimeout) ) {
+                   (millis() - TTstart < P1_maxtimeout) ) {
 
                     bool doUpd = false;
                     
@@ -1606,7 +1607,7 @@ static bool set_empty()
 
     csf &= ~(CSF_REFILL|CSF_REFILLWA);
     
-    #ifdef DG_HAVEDOORSWITCH
+    #ifdef HAVE_DOORSWITCH
     dsTimer = false;
     d2sTimer = false;
     #endif
@@ -1827,7 +1828,7 @@ static void execute_remote_command()
             case 0:
                 // Trigger stand-alone Time Travel
                 ssEnd();
-                timeTravel(false, false);
+                timeTravel(false);
                 break;
             case 1:
                 ssEnd();
@@ -1906,7 +1907,7 @@ static void execute_remote_command()
             break;
         default:                                  // 888xxx: goto song #xxx
             if((command / 1000) == 888) {
-                uint16_t num = command - 888000;
+                int num = command - 888000;
                 num = mp_gotonum(num, true);
             }
             break;
@@ -1931,7 +1932,7 @@ static void say_ip_address()
     
     flushDelayedSave();
     
-    #ifdef DG_HAVEMQTT
+    #ifdef HAVE_MQTT
     // mp_stop(true) sends status, so no apparent need for this
     //if(!wasActive) mp_sendStatus();
     #endif
@@ -1963,7 +1964,7 @@ static void say_ip_address()
     // Let audio_loop take care of updating MP status (if not playing at this point)
 }
 
-bool switchMusicFolder(uint8_t nmf, bool isSetup)
+static bool switchMusicFolder(uint8_t nmf, bool isSetup)
 {
     bool waitShown = false;
 
@@ -2099,7 +2100,7 @@ static void sideSwitchLongPressStop()
     isSSwitchChange = true;
 }
 
-#ifdef DG_HAVEDOORSWITCH
+#ifdef HAVE_DOORSWITCH
 static void play_door_snd(int doorNum, bool isOpen)
 {
     // Sounds for same door may interrupt themselves; if sound for
@@ -2301,6 +2302,7 @@ void prepareReboot()
     dgBusy = 1;
     mp_stop(true);
     stopAudio();
+    wifiMDNSGoodBye();
     allOff();
     setTTOUT(LOW);
     flushDelayedSave();
@@ -2319,7 +2321,7 @@ static void volWasChanged()
     volchgnow = millis();
     storeCurVolume();
     updateConfigPortalVolValues();
-    #ifdef DG_HAVEMQTT
+    #ifdef HAVE_MQTT
     mp_sendStatus();
     #endif
 }
@@ -2341,7 +2343,7 @@ static void myloop()
 {
     wifi_loop();
     audio_loop();
-    #ifdef DG_HAVEDOORSWITCH
+    #ifdef HAVE_DOORSWITCH
     dsScan();
     #endif
     bttfn_loop_quick();
@@ -2846,7 +2848,7 @@ static bool bttfn_send_command(uint8_t cmd, uint8_t p1, uint8_t p2)
     return true;
 }
 
-#ifdef DG_HAVEDOORSWITCH
+#ifdef HAVE_DOORSWITCH
 static bool bttfn_send_door(bool doorOpen, int doorNum, unsigned long del)
 {
     if(!TCDSupportsCMDDOOR || !doorTCD || tcdIsBusy || (dsPlayTCDO && !tcdFPO))

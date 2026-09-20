@@ -15,8 +15,8 @@
  ***                          Version Strings                          ***
  *************************************************************************/
 
-#define DG_VERSION       "V1.35"            // Do NOT change format.
-#define DG_VERSION_EXTRA "AUG252026"
+#define DG_VERSION       "V1.36"            // Do NOT change format.
+#define DG_VERSION_EXTRA "SEP202026"
 
 /*************************************************************************
  ***             Configuration for peripherals/features                ***
@@ -24,10 +24,10 @@
 
 // Uncomment for support of door switches/door sounds
 // Comment if using DOORx_SWITCH_PINs for something else
-#define DG_HAVEDOORSWITCH
+#define HAVE_DOORSWITCH
 
 // Uncomment for HomeAssistant MQTT protocol support
-#define DG_HAVEMQTT
+#define HAVE_MQTT
 
 // Version of Control Board
 #define CB_VERSION 4
@@ -58,8 +58,8 @@
 #if defined __has_include && __has_include(<esp_arduino_version.h>)
 #include <esp_arduino_version.h>
 #ifdef ESP_ARDUINO_VERSION_MAJOR
-    #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(2,0,8)
-    #define HAVE_GETNEXTFILENAME
+    #if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(2,0,8)
+    #error "ESP-arduino >= 2.0.8 required"
     #endif
 #endif
 #endif

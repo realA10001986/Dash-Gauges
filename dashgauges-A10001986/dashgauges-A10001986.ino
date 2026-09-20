@@ -117,6 +117,22 @@
 
 /*  Changelog
  *
+ *  2026/09/20 (A10001986) [1.36]
+ *    **********************************************************************************
+ *    ** If updating from below 1.30, please see boxed note at version 1.31 below     **
+ *    **********************************************************************************
+ *    - Car Mode: Automatically pair Dash Gauges to currently connected TCD by means of
+ *      the TCD's BSSID upon first successful connection in Car Mode. This avoids 
+ *      connecting to other people's TCDs if in close range (meet-ups, exhibitions).
+ *    - Fix minor issues with ID3v1 and ID3v2.4-UTF8 tags
+ *    - Speed up booting with folders containing many files
+ *    - Music Player: The "TCD_DONE.TXT" file is now obsolete. The firmware instead uses
+ *      a cache file in the top-most folder of the SD card ("musicXc") which needs to be
+ *      deleted when files are added to the respective folder.
+ *    - Protect the Dash Gauges from uploading a wrong firmware by accident. The filename
+ *      of the firmware binary now must contain the word "gauges". The check is case-
+ *      insensitive.
+ *    - Bonjour/mDNS: Send good-bye packet on controlled reboots
  *  2026/08/25 (A10001986) [1.35]
  *    **********************************************************************************
  *    ** If updating from below 1.30, please see boxed note at version 1.31 below     **

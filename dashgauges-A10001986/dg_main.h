@@ -76,7 +76,6 @@ void prepareReboot();
 void mydelay(unsigned long mydel);
 unsigned long millisNonZero();
 
-bool switchMusicFolder(uint8_t nmf, bool isSetup = false);
 void showMPRPrecDone(unsigned int perc);
 
 void addCmdQueue(uint32_t command);
@@ -104,7 +103,7 @@ extern uint32_t csf;
 #define CSF_EXTTT         0x08000000
 
 extern bool TCDbyWire;
-#ifdef DG_HAVEDOORSWITCH
+#ifdef HAVE_DOORSWITCH
 extern bool dsPlay;
 extern uint16_t doPlayDoorSound;
 extern unsigned long doPlayDoorSoundNow;

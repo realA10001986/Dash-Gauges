@@ -62,6 +62,10 @@ void unmount_fs();
 
 unsigned int check_file_len(const char *audio_file, bool& srcMedium, uint8_t *tbuf, uint32_t tsz);
 
+void deleteFileFromSD(const char *fn);
+bool readFileFromSD(const char *fn, uint8_t *buf, int len);
+bool writeFileToSD(const char *fn, uint8_t *buf, int len);
+
 bool evalBool(char *s);
 
 void write_settings();
@@ -222,7 +226,7 @@ struct Settings {
     char gaugeIDB[4]        = MS(DEF_GAUGE_TYPE);
     char gaugeIDC[4]        = MS(DEF_GAUGE_TYPE);
 
-#ifdef DG_HAVEMQTT  
+#ifdef HAVE_MQTT  
     char useMQTT[2]         = "0";
     char mqttVers[2]        = "0"; // 0 = 3.1.1, 1 = 5.0
     char mqttServer[80]     = "";  // ip or domain [:port]  

@@ -31,11 +31,12 @@ class AudioFileSourceLoop : public AudioFileSource
     uint32_t getSize() override              { return f ? f.size() : 0; }
     uint32_t getPos() override               { return f ? ((ftype == 2) ? (csegOLen - csegLen) : f.position()) : 0; }
     void setStartPos(int32_t newStartPos)    { startPos = newStartPos; }
+    void setEndPos(int32_t newEndPos)        { endPos = newEndPos; }
     void setPlayLoop(bool playLoop)          { doPlayLoop = playLoop; }
 
   protected:
     File    f;
-    int32_t startPos = 0;
+    int32_t startPos = 0, endPos = 0;
     bool    doPlayLoop = false;
     int     ftype = 0;
     
