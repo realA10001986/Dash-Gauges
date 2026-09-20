@@ -216,7 +216,7 @@ The names of the audio files must only consist of three-digit numbers, starting 
 
 Since manually renaming mp3 files is somewhat cumbersome, the firmware can do this for you: Just copy your files with their original filenames to a music folder of your choice; when selecting that folder, the files will be sorted alphabetically and renamed according to the 3-digit name scheme. (If you want your tracks in a specific order, you must rename them, for instance by inserting a letter or number at the start.) The renaming process can take a while (11 minutes for 1000 files in bad cases). Mac users are advised to delete the ._ files from the SD before putting it back into the Dash Gauges as this speeds up the process. While the renaming is in progress, the Dash Gauges' right-most analog gauge shows the percentage of files yet to be processed.
 
-To add files to a music folder later, just copy them to the folder and delete the file "TCD_DONE.TXT" (so that the firmware knows that something has changed). 
+To add files to a music folder later, just copy them to the music folder, and delete the cache file "musicXc" (X being the folder number) located in the top-most folder. That way that the firmware knows that something has changed and will examine the folder.
 
 To start and stop music playback, enter keypad command ```9005``` on your TCD. Keypad command ```9002``` jumps to the previous track, ```9008``` to the next one.
 
@@ -479,7 +479,7 @@ This configuration can easily be achieved by putting both the TCD and the Dash G
 #### Dash Gauges
 
 One-time configuration steps:
-- Enter the Config Portal on the Dash Gauges, click on *Settings* and check that the hostname of the TCD (usually "timecircuits") is present in the  **_Hostname or IP address of TCD_** under *Wireless communication (BTTF-Network)* settings; do _not_ use an IP address.
+- Enter the Config Portal on the Dash Gauges, click on *Settings* and check that the hostname of the TCD (usually "timecircuits") is present in the  **_Hostname of TCD_** under *Wireless communication (BTTF-Network)* settings.
 - Furthermore, on the *WiFi Configuration* page, check that the TCD's WiFi network name (SSID; usually "TCD-AP") and password (if the TCD is configured with a password) are present under *Car mode settings*.
 
 If everything is in place, you can enable Car mode on the Dash Gauges by holding _Button 1_ for six seconds, until a triple-beep sounds, and then release it. The Dash Gauges will reboot and attempt to connect to the TCD's AP. (_Button 1_ is located behind the "Percent Power" gauge on the control board.)
@@ -590,7 +590,7 @@ In order to connect your Dash Gauges to your WiFi network, all you need to do is
  
 >By default, the Dash Gauges request an IP address via DHCP. However, you can also configure a static IP for the Dash Gauges by entering the IP, netmask, gateway and DNS server. All four fields must be filled for a valid static IP configuration. If you want to stick to DHCP, leave those four fields empty.
 
-If there are several APs with identical SSID nearby, the Dash Gauges will connect to the first one found, which might not be the one with the strongest signal. It is therefore recommended to select the nearest/strongest AP by its BSSID (AP's MAC address). You can either manually find out your AP's BSSID and enter it or have it filled out automatically: Click "Scan for networks", then "Show all". If you click on an AP, its BSSID will be copied into BSSID field in the form below. To see which AP is which, hover over the name to see its BSSID as a tooltip.
+If there are several APs with identical SSID nearby, the Dash Gauges will connect to the first one found, which might not be the one with the strongest signal. It is therefore recommended to select the nearest/strongest AP by its BSSID (AP's MAC address, a unique identifier for a specific AP)). You can either manually find out your AP's BSSID and enter it or have it filled out automatically: Click "Scan for networks", then "Show all". If you click on an AP, its BSSID will be copied into BSSID field in the form below. To see which AP is which, hover over the name to see its BSSID as a tooltip.
 
 ##### &#9193; Forget Saved WiFi Network
 
@@ -602,7 +602,8 @@ In Car mode, the device connects to the TCD-AP as configured here instead of the
 
 Enter your TCD's network name (usually "TCD-AP") in **_Network name (SSID) of TCD-AP_** and the TCD's AP password (if configured on the TCD) in **_Password for TCD-AP_**. 
 
->In the unlikely case that multiple TCD's are in range, you can single out your TCD by its BSSID. The TCD displays its BSSID on its *WiFi Configuration* page.
+The **_TCD-AP BSSID_** field is optional for you to fill out. The TCD displays its BSSID (unique access point identifier) on its *WiFi Configuration* page, so you could copy it into this field on your Dash Gauges. If the _TCD-AP BSSID_ field is left empty, it will be filled out automatically upon the first successful connection to your TCD in Car Mode. This pairs your Dash Gauges to your TCD and avoids connecting to other people's TCDs at meet-ups with other cars nearby.
+> If you ever need to connect your Dash Gauges to a different TCD (or, for instance, swap out your TCD's circuit board), this field needs to be cleared in order to pair your Dash Gauges to the new TCD. Note that if the Dash Gauges fail to connect to a BSSID-identified TCD, they will boot into [AP-Mode](#connecting-to-a-wifi-network) ("DG-AP").
 
 If you want to enter Car mode immediately after saving your settings, check **_Enable car mode now_**. You can also later enable Car mode by holding _Button 1_ for six seconds (until a triple-beep is emitted).
 
