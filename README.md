@@ -208,7 +208,7 @@ The uploaded files are stored to the root folder of the SD card, so this way of 
 The firmware contains a simple music player to play mp3 files located on the SD card. This player is controlled by a TCD connected through BTTFN, or through [HA/MQTT](#control-the-dash-gauges-via-mqtt).
 
 > [!NOTE]
-> The maximum mp3 bitrate is __128kpbs__. The free [Adapter](https://macroplant.com/adapter/audio-converter) tool can re-encode your mp3 files in batches.
+> The maximum mp3 bitrate is __128kpbs__. The free [Adapter&#10548;](https://macroplant.com/adapter/audio-converter) tool can re-encode your mp3 files in batches.
 
 To be recognized, your mp3 files need to be organized in music folders named *music0* through *music9*. The folder number is 0 by default, i.e. the player starts searching for music in folder *music0*. The folder number can be changed in the Config Portal ("Settings") or through the TCD keypad (```905x```) or HA/MQTT (```MP_FOLDER_x```).
 
@@ -216,7 +216,7 @@ The names of the audio files must only consist of three-digit numbers, starting 
 
 Since manually renaming mp3 files is somewhat cumbersome, the firmware can do this for you: Just copy your files with their original filenames to a music folder of your choice; when selecting that folder, the files will be sorted alphabetically and renamed according to the 3-digit name scheme. (If you want your tracks in a specific order, you must rename them, for instance by inserting a letter or number at the start.) The renaming process can take a while (11 minutes for 1000 files in bad cases). Mac users are advised to delete the ._ files from the SD before putting it back into the Dash Gauges as this speeds up the process. While the renaming is in progress, the Dash Gauges' right-most analog gauge shows the percentage of files yet to be processed.
 
-To add files to a music folder later, just copy them to the music folder, and delete the cache file "musicXc" (X being the folder number) located in the top-most folder. That way that the firmware knows that something has changed and will examine the folder.
+To add files to a music folder later, just copy them to the music folder, and delete the cache file "musicXc" (X being the folder number) located in the top-most folder. That way that the firmware knows that something has changed and will re-examine the folder.
 
 To start and stop music playback, enter keypad command ```9005``` on your TCD. Keypad command ```9002``` jumps to the previous track, ```9008``` to the next one.
 
