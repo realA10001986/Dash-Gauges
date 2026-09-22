@@ -34,7 +34,7 @@ The terms "analog" and "digital" have the following meaning in this document:
 
 ### Control Board Hardware Configuration
 
-In order to make the Control Board as versatile as possible, there are some solder jumpers (ie adjacent solder pads which are connected using solder), and easy-to-solder through-the-hole resistors which need to be added depending on the other hardware used. Recent CircuitSetup boards have jumpers insatead of solder-jumpers, and trimpots instead of holes for resistors. The picture below show the old version.
+In order to make the Control Board as versatile as possible, there are some solder jumpers (ie adjacent solder pads which are connected using solder), and easy-to-solder through-the-hole resistors which need to be added depending on the other hardware used. Recent CircuitSetup boards have jumpers instead of solder-jumpers, and trimpots instead of holes for resistors. The picture below show the old version.
 
 | [<img src="hardware/img/cb-analog-s.jpg">](hardware/img/cb-analog.jpg) |
 |:--:| 
