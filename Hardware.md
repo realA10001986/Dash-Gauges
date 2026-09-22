@@ -196,6 +196,7 @@ To find out suitable resistor values for R1/R2 and/or R3/R4 on the Control Board
 Movie-accurate dials for those gauges are available in the [faces-labels](https://github.com/realA10001986/Dash-Gauges/tree/main/hardware/faces-labels) folder. In order to avoid the old dial shining through the new dial, apply the new label on the back-side of the original dial. To apply the labels properly, cut them precisely at the bottom and the right hand side (leave some extra at the top and the left hand side), then place the dial in the corner of a 90 deg angled ruler, and align the sticker at the bottom and right hand side. Slowly apply the sticker from the bottom up to avoid bubbles, and in the end, with the sticker facing down, use an Exacto knife to cut off the surplus.
 
 ![Alignment](hardware/img/phaostron_align.jpg)
+![Alignment](hardware/img/phaostron_align2.jpg)
 
 For illumination, there are LEDs mounted on the back of the Control Board that reach into the enclosures of the gauges. These require a 6mm hole in the rear of the metal enclosure (center: 7mm from barrel bottom edge). I used a 5mm yellow LED (590nm). Most replicas use white LEDs, but I think on the A-Car as shown in the Petersen Museum, there are yellow ones used, and I found white ones too bright. 
 
