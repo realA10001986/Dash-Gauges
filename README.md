@@ -39,7 +39,9 @@ For information on updating the firmware of your Dash Gauges, see [here](#firmwa
 
 >The following instructions only need to be followed once, on fresh Dash Gauges. They do not need to be repeated after a firmware update.
 
-The first step is to establish access to the configuration website ("Config Portal") in order to configure your Dash Gauges:
+The first step is to put a **good-quality** ("endurance", "long life", ...) **microSD card into the card slot**. The maximum size is 32GB and the card must be FAT32 formatted. [More information](#sd-card)
+
+The second step is to establish access to the configuration website ("Config Portal") in order to configure your Dash Gauges:
 
 - Power up the device and wait a few seconds.
 - Connect your computer or handheld device to the WiFi network "DG-AP".
