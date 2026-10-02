@@ -393,7 +393,7 @@ CircuitSetup-produced boards have pre-installed trimpots (trimmer potentiometers
 - Remove all built-in resistors, caps etc from the meter. The meter's input terminals must be directly connected to the meter's coil. **Note**: The trimpots allow for a total resistance of between 2k and 6k for the Phaostron gauges, and between 10k+20R and 60k+20R for the Roentgens gauge. This covers nearly all meters I have tested. However: If your required resistance is beyond that, you will need to either replace the additional THT resistor on the board (R3, R2 for the Phaostron gauges, R6 for the Roentgens) or add another resistor elsewhere (eg. inside the meter).
 - Check that the trimpot for the meter [purple_3, purple_1, purple_5] is at its maximum resistance; turn it until either you hear a "click" or the screw blocks.
 - Connect the meter to the Control Board.
-- Power up; after the startup-sequence, hold the "Time Travel" button for 5 seconds.
+- Power up; after the startup-sequence, hold the "Time Travel" button on the Dash Gauges's Control Board for 5 seconds.
 - Navigate your browser to the Config Portal.
 - Set the Gauge Type to "Generic analog 0-5V"
   
