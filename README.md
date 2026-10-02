@@ -884,7 +884,7 @@ If you are using a 12V power supply or want to avoid cramming two wires into the
 
 This selects the type of gauge hardware and the way of connection. In order to protect your props, this is locked by default. To unlock this setting
 
-- either hold the _Time Travel_ button for 5 seconds or
+- either hold the _Time Travel_ button on the Dash Gauges' control board for 5 seconds or
 - enter 9317931 on a wirelessly connected TCD,
 
 then reload the page in your browser.
