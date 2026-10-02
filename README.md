@@ -146,7 +146,7 @@ A full reference of the Config Portal is [here](#appendix-a-the-config-portal).
 The firmware needs to know the type of gauges installed; by default, power output to the gauges is disabled.
 
 In order to configure the Dash Gauges for your specific hardware,
-- hold the _Time Travel_ button for 5 seconds (until a beep is emitted),
+- hold the _Time Travel_ button on the Dash Gauge's control board for 5 seconds (until a beep is emitted),
 - then enter the Config Portal as described above, and click on "Settings".
 
 Near the bottom of this page, there are three drop-down widgets, one for each gauge. Carefully select the type for each of your gauges, and click on "Save".
