@@ -82,8 +82,8 @@ Click on "WiFi Configuration" and either select a network from the top of the pa
 
 >The device requests an IP address via DHCP, unless you entered valid data in the fields for static IP addresses (IP, gateway, netmask, DNS). If the device is inaccessible as a result of incorrect static IPs, 
 >- power-down the device,
->- hold the _Time Travel_ button,
->- power-up the device (while still holding the _Time Travel_ button)
+>- press the _Time Travel_ button on the Control Board (located behind the left gauge) and keep it pressed,
+>- power-up the device,
 >- wait until the "Empty" LED flashes briefly,
 >- flip the Side Switch twice within 10 seconds,
 >- wait until the "Empty" LED lights up,
@@ -377,10 +377,6 @@ Afterwards, the Dash Gauges and the TCD can communicate wirelessly and
      <td align="left"><code>9064738</code></td>
     </tr>
     <tr>
-     <td align="left">Delete static IP address<br>and WiFi-AP password<sup>1</sup></td>
-     <td align="left"><code>9123456</code></td>
-    </tr>
-    <tr>
      <td align="left">Unlock "gauge type" selection in Config Portal</td>
      <td align="left"><code>9317931</code></td>
     </tr>
@@ -631,8 +627,8 @@ By default, and if this field is empty, the Dash Gauges' own WiFi network ("DG-A
 
 If you forget this password and are thereby locked out of your Dash Gauges, 
 - power-down the device,
-- hold the _Time Travel_ button,
-- power-up the device (while still holding the _Time Travel_ button)
+- press the _Time Travel_ button on the Control Board (located behind the left-most gauge) and keep it pressed,
+- power-up the device,
 - wait until the "Empty" LED flashes briefly,
 - flip the Side Switch twice within 10 seconds,
 - wait until the "Empty" LED lights up,
