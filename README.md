@@ -546,6 +546,21 @@ Alternatively, you can install the sound-pack the following way:
 </ul>
 </details>
 
+<!--
+## Factory Reset
+
+To reset your Dash Gauges to factory default settings, 
+- power-down the device,
+- press _Button 1_ on the Control Board (located behind the center gauge) and keep it pressed,
+- power-up the device,
+- wait until the "Empty" LED flashes briefly,
+- flip the Side Switch six times within 10 seconds (the "Empty" light will go on on the sixth time),
+- then release the _Time Travel_ button.
+
+The Dash Gauges will reboot in AP-mode.
+
+-->
+
 ---
 
 ## Appendix A: The Config Portal
