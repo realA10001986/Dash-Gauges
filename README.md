@@ -84,7 +84,7 @@ Click on "WiFi Configuration" and either select a network from the top of the pa
 >- power-down the device,
 >- press the _Time Travel_ button on the Control Board (located behind the left gauge) and keep it pressed,
 >- power-up the device,
->- wait until the "Empty" LED flashes briefly,
+>- wait until the "Empty" light flashes briefly,
 >- flip the Side Switch twice within 10 seconds,
 >- wait until the "Empty" LED lights up,
 >- then release the _Time Travel_ button.
@@ -553,7 +553,7 @@ To reset your Dash Gauges to factory default settings,
 - power-down the device,
 - press _Button 1_ on the Control Board (located behind the center gauge) and keep it pressed,
 - power-up the device,
-- wait until the "Empty" LED flashes briefly,
+- wait until the "Empty" light flashes briefly,
 - flip the Side Switch six times within 10 seconds (the "Empty" light will go on on the sixth time),
 - then release the _Time Travel_ button.
 
@@ -646,7 +646,7 @@ If you forget this password and are thereby locked out of your Dash Gauges,
 - power-down the device,
 - press the _Time Travel_ button on the Control Board (located behind the left-most gauge) and keep it pressed,
 - power-up the device,
-- wait until the "Empty" LED flashes briefly,
+- wait until the "Empty" light flashes briefly,
 - flip the Side Switch twice within 10 seconds,
 - wait until the "Empty" LED lights up,
 - then release the _Time Travel_ button.
