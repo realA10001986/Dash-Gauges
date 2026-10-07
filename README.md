@@ -557,7 +557,9 @@ To reset your Dash Gauges to factory default settings,
 - flip the Side Switch six times within 10 seconds (the "Empty" light will go on on the sixth time),
 - then release the _Time Travel_ button.
 
-The Dash Gauges will reboot in AP-mode.
+This clears all settings to their defaults except the 'Gauges Hardware' settings. 
+
+Since any configured WiFi connection is deleted as well, the Dash Gauges will reboot in AP-Mode.
 
 -->
 
