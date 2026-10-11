@@ -651,7 +651,7 @@ If you forget this password and are thereby locked out of your Dash Gauges,
 - wait until the "Empty" LED lights up,
 - then release the _Time Travel_ button.
 
-This procedure temporarily (until a reboot) clears the WiFi password, allowing unprotected access to the Config Portal. (Note that this procedure also deletes static IP address data; the device will return to using DHCP after a reboot.)
+The Dash Gauges will boot and start the access point - this once - without a password, thereby giving you an opportunity to connect without a password and to either look up or change said password. When you reboot or power-cycle the Dash Gauges, the AP will be password protected again.
 
 ##### &#9193; WiFi channel
 
