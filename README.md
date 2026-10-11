@@ -90,6 +90,8 @@ Click on "WiFi Configuration" and either select a network from the top of the pa
 >- then release the _Time Travel_ button.
 >
 >This procedure causes static IP data to be deleted; the device will return to DHCP after a reboot.
+<!-- 
+>The device will continue booting, but - this once - use DHCP and ignore static IP data. This gives your an opportunity to correct or clear that data, otherwise it will be effective again after the next reboot.-->
 
 </details>
 
@@ -554,7 +556,7 @@ To reset your Dash Gauges to factory default settings,
 - press _Button 1_ on the Control Board (located behind the center gauge) and keep it pressed,
 - power-up the device,
 - wait until the "Empty" light flashes briefly,
-- flip the Side Switch six times within 10 seconds (the "Empty" light will go on on the sixth time),
+- flip the Side Switch exactly six times within 10 seconds (the "Empty" light will go on on the sixth time),
 - then release the _Time Travel_ button.
 
 This clears all settings to their defaults except the 'Gauges Hardware' settings. 
