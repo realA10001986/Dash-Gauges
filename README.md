@@ -85,13 +85,11 @@ Click on "WiFi Configuration" and either select a network from the top of the pa
 >- press the _Time Travel_ button on the Control Board (located behind the left gauge) and keep it pressed,
 >- power-up the device,
 >- wait until the "Empty" light flashes briefly,
->- flip the Side Switch twice within 10 seconds,
+>- flip the Side Switch twice within 10 seconds<!-- ("Empty" will light up after the second flip)-->,
 >- wait until the "Empty" LED lights up,
 >- then release the _Time Travel_ button.
 >
->This procedure causes static IP data to be deleted; the device will return to DHCP after a reboot.
-<!-- 
->The device will continue booting, but - this once - use DHCP and ignore static IP data. This gives your an opportunity to correct or clear that data, otherwise it will be effective again after the next reboot.-->
+>This procedure causes static IP data to be deleted; the device will return to using DHCP.
 
 </details>
 
@@ -649,7 +647,7 @@ If you forget this password and are thereby locked out of your Dash Gauges,
 - press the _Time Travel_ button on the Control Board (located behind the left-most gauge) and keep it pressed,
 - power-up the device,
 - wait until the "Empty" light flashes briefly,
-- flip the Side Switch twice within 10 seconds,
+- flip the Side Switch twice within 10 seconds<!-- ("Empty" will light up on the second flip)-->,
 - wait until the "Empty" LED lights up,
 - then release the _Time Travel_ button.
 
