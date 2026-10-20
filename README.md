@@ -34,6 +34,16 @@ Firmware features include
 
 For information on updating the firmware of your Dash Gauges, see [here](#firmware-installation--firmware-update).
 
+#### What's new in 2.00
+
+- Re-arrange WiFi Configuration page for a better user experience
+- BTTFN: "Hostname of TCD" now defaults to "timecircuits" instead of being empty. As a result, factory-fresh Dash Gauges now connect to a TCD in the network without any user configuration changes.
+- Holding Button 1 during (real)power-on and, while still holding Button 1, flipping the side-switch exactly six times within 10 seconds resets all settings, except the Gauge Hardware settings, to factory defaults.
+- New sound-pack (DG07)
+- Sound-pack uploads are done through the top file selector, and no longer through the bottom one. The bottom one is for custom mp3 file upload only.
+- **Future firmware updates may only consist of one single file instead of "main firmware" plus "sound-pack". Firmware updates will require an SD card. In order to update to versions beyond 2.00, version 2.00 must be installed first.**
+
+
 ## Initial Configuration
 
 **Some key features of your Dash Gauges require an SD card.** The first step is therefore to put a **good-quality** ("endurance", "industrial", "long life", ...) **and empty microSD card into the card slot**. The SD card must be inserted before powering up the Dash Gauges. It is not recognized if inserted while the Dash Gauges are running. Furthermore, do not remove the SD card while the Dash Gauges are powered.
@@ -537,7 +547,7 @@ To update the sound-pack of your Dash Gauges,
 <br>
 Alternatively, you can install the sound-pack the following way:
 <ul>
-<li>Using a computer, copy "DGA.bin" to a FAT32 formatted SD card and rename it to "DGA.bin",</li>
+<li>Using a computer, copy "DGA-DGxx.bin" to a FAT32 formatted SD card and rename it to "DGA.bin",</li>
 <li>power down the Dash Gauges,</li>
 <li>insert this SD card into the slot and</li>
 <li>power up the Dash Gauges; the sound-pack will be installed automatically.</li>
