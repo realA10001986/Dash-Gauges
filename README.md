@@ -78,15 +78,14 @@ Click on "WiFi Configuration" and either select a network from the top of the pa
 <details>
 <summary>More...</summary>
 
->If there are several APs with identical SSID nearby, you can select a specific AP by its BSSID (AP's MAC address). You can either manually find out your AP's BSSID and enter it or have it filled out automatically: Click "Scan for networks", then "Show all". If you click on an AP, its BSSID will be copied into BSSID field in the form below. To see which AP is which, hover over the name to see its BSSID as a tooltip.
+>If there are several APs with identical SSID nearby, you can select a specific AP by its BSSID (AP's MAC address). You can either manually find out your AP's BSSID and enter it or have it filled out automatically: Click "Scan for networks", then "Show all APs". If you click on an AP, its BSSID will be copied into BSSID field in the form below. To see which AP is which, hover over the name to see its BSSID as a tooltip.
 
 >The device requests an IP address via DHCP, unless you entered valid data in the fields for static IP addresses (IP, gateway, netmask, DNS). If the device is inaccessible as a result of incorrect static IPs, 
 >- power-down the device,
 >- press the _Time Travel_ button on the Control Board (located behind the left gauge) and keep it pressed,
 >- power-up the device,
 >- wait until the "Empty" light flashes briefly,
->- flip the Side Switch twice within 10 seconds<!-- ("Empty" will light up after the second flip)-->,
->- wait until the "Empty" LED lights up,
+>- flip the Side Switch twice within 10 seconds ("Empty" will light up after the second flip),
 >- then release the _Time Travel_ button.
 >
 >This procedure causes static IP data to be deleted; the device will return to using DHCP.
@@ -506,7 +505,7 @@ The firmware consists of two parts: The main firmware, and a sound-pack.
 
 First, download main firmware and sound-pack. Both files are in every [Release package](https://github.com/realA10001986/Dash-Gauges/releases/latest), and named
 - "**dashgauges-A10001986-Vx.xx.bin**" for A10001986 releases, "**Dash-Gauges_vX.YY.bin**" for CircuitSetup releases
-- "**sound-pack-dgXX.zip**" for A10001986 releases, "**DGA.bin**" for CircuitSetup releases.
+- "**DGA-DGxx.bin**" for A10001986 releases, "**DGA.bin**" for CircuitSetup releases.
 
 ### Main firmware
 
@@ -528,10 +527,9 @@ After updating the main firmware, there will be a notification on the Config Por
 _Installing the sound-pack requires an [SD card](#initial-configuration)._
 
 To update the sound-pack of your Dash Gauges, 
-- (if the sound-pack is a zip file, extract it. It contains one file named DGA.bin)
 - enter the [Config Portal](#the-config-portal),
 - click on "Update & Upload",
-- select the DGA.bin file in the _bottom_ file selector, and
+- select the DGA-DGxx.bin file in the _top_ file selector, and
 - click on *Upload*.
 
 <details>
@@ -539,14 +537,13 @@ To update the sound-pack of your Dash Gauges,
 <br>
 Alternatively, you can install the sound-pack the following way:
 <ul>
-<li>Using a computer, copy "DGA.bin" to the root directory of a FAT32 formatted SD card;</li>
+<li>Using a computer, copy "DGA.bin" to a FAT32 formatted SD card and rename it to "DGA.bin",</li>
 <li>power down the Dash Gauges,</li>
 <li>insert this SD card into the slot and</li>
 <li>power up the Dash Gauges; the sound-pack will be installed automatically.</li>
 </ul>
 </details>
 
-<!--
 ## Factory Reset
 
 To reset your Dash Gauges to factory default settings, 
@@ -560,8 +557,6 @@ To reset your Dash Gauges to factory default settings,
 This clears all settings to their defaults except the 'Gauges Hardware' settings. 
 
 Since any configured WiFi connection is deleted as well, the Dash Gauges will reboot in AP-Mode.
-
--->
 
 ---
 
@@ -601,13 +596,27 @@ Through this page you can either connect your Dash Gauges to your local WiFi net
 
 In order to connect your Dash Gauges to your WiFi network, all you need to do is either to click on one of the networks listed at the top or to enter a __Network name (SSID)__, and optionally a __password__ (WPAx). If there is no list displayed, click on "Scan for networks".
  
->By default, the Dash Gauges request an IP address via DHCP. However, you can also configure a static IP for the Dash Gauges by entering the IP, netmask, gateway and DNS server. All four fields must be filled for a valid static IP configuration. If you want to stick to DHCP, leave those four fields empty.
-
-If there are several APs with identical SSID nearby, the Dash Gauges will connect to the first one found, which might not be the one with the strongest signal. It is therefore recommended to select the nearest/strongest AP by its BSSID (AP's MAC address, a unique identifier for a specific AP)). You can either manually find out your AP's BSSID and enter it or have it filled out automatically: Click "Scan for networks", then "Show all". If you click on an AP, its BSSID will be copied into BSSID field in the form below. To see which AP is which, hover over the name to see its BSSID as a tooltip.
+If there are several APs with identical SSID nearby, the Dash Gauges will connect to the first one found, which might not be the one with the strongest signal. It is therefore recommended to select the nearest/strongest AP by its BSSID (AP's MAC address, a unique identifier for a specific AP)). You can either manually find out your AP's BSSID and enter it or have it filled out automatically: Click "Scan for networks", then "Show all APs". If you click on an AP, its BSSID will be copied into BSSID field in the form below. To see which AP is which, hover over the name to see its BSSID as a tooltip.
 
 ##### &#9193; Forget Saved WiFi Network
 
 Checking this box (and clicking SAVE) deletes the currently saved WiFi network (SSID and password as well as static IP data) and reboots the device; it will restart in "access point" (AP) mode. See [here](#connecting-to-a-wifi-network).
+
+##### &#9193;  Static IP
+
+By default, the Dash Gauges request an IP address via DHCP. However, you can also configure a static IP for the Dash Gauges by entering the IP, netmask, gateway and DNS server. All four fields must be filled for a valid static IP configuration. If you want to stick to DHCP, leave those four fields empty.
+
+##### &#9193; WiFi connection attempts
+
+Number of times the firmware tries to reconnect to a WiFi network, before falling back to AP-mode. See [here](#connecting-to-a-wifi-network)
+
+##### &#9193; Hostname
+
+The device's hostname in the WiFi network. Defaults to 'gauges'. This also is the domain name at which the Config Portal is accessible from a browser in the same local network. The URL of the Config Portal then is http://<i>hostname</i>.local (the default is http://gauges.local)
+
+If you have several Dash Gauges in your local network, please give them unique hostnames.
+
+_This setting applies to both AP-mode and when your Dash Gauges are connected to a WiFi network._ 
 
 ##### &#9193; Car mode settings
 
@@ -619,18 +628,6 @@ The **_TCD-AP BSSID_** field is optional for you to fill out. The TCD displays i
 > If you ever need to connect your Dash Gauges to a different TCD (or, for instance, swap out your TCD's circuit board), this field needs to be cleared in order to pair your Dash Gauges to the new TCD. Note that if the Dash Gauges fail to connect to a BSSID-identified TCD, they will boot into [AP-Mode](#connecting-to-a-wifi-network) ("DG-AP").
 
 If you want to enter Car mode immediately after saving your settings, check **_Enable car mode now_**. You can also later enable Car mode by holding _Button 1_ for six seconds (until a triple-beep is emitted).
-
-##### &#9193; Hostname
-
-The device's hostname in the WiFi network. Defaults to 'gauges'. This also is the domain name at which the Config Portal is accessible from a browser in the same local network. The URL of the Config Portal then is http://<i>hostname</i>.local (the default is http://gauges.local)
-
-If you have several Dash Gauges in your local network, please give them unique hostnames.
-
-_This setting applies to both AP-mode and when your Dash Gauges are connected to a WiFi network._ 
-
-##### &#9193; WiFi connection attempts
-
-Number of times the firmware tries to reconnect to a WiFi network, before falling back to AP-mode. See [here](#connecting-to-a-wifi-network)
 
 #### <ins>Settings for AP-mode</ins>
 
@@ -647,8 +644,7 @@ If you forget this password and are thereby locked out of your Dash Gauges,
 - press the _Time Travel_ button on the Control Board (located behind the left-most gauge) and keep it pressed,
 - power-up the device,
 - wait until the "Empty" light flashes briefly,
-- flip the Side Switch twice within 10 seconds<!-- ("Empty" will light up on the second flip)-->,
-- wait until the "Empty" LED lights up,
+- flip the Side Switch twice within 10 seconds ("Empty" will light up on the second flip),
 - then release the _Time Travel_ button.
 
 The Dash Gauges will boot and start the access point - this once - without a password, thereby giving you an opportunity to connect without a password and to either look up or change said password. When you reboot or power-cycle the Dash Gauges, DG-AP will be password protected again.
@@ -661,7 +657,7 @@ WiFI channel selection is key for a trouble-free operation. Disturbed WiFi commu
 
 If a WiFi Scan was done (which can be triggered by clicking "Scan for networks"), 
 
-- a list of networks is displayed at the top of the page; click "Show All" to list all networks including their channel;
+- a list of networks is displayed at the top of the page; click "Show All APs" to list all APs including their channel;
 - a "proposed channel" is displayed near the "WiFi channel" drop-down, based on a rather simple heuristic. The banner is green when a channel is excellent, grey when it is impeded by overlapping channels, and when that banner is red operation in AP mode is not recommended due to channels all being used.
 
 The channel proposition is based on all WiFi networks found; it does not take non-WiFi equipment (baby monitors, cordless phones, Bluetooth devices, microwave ovens, etc) into account.
