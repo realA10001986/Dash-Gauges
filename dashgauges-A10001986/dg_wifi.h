@@ -4,6 +4,7 @@
  * (C) 2023-2026 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.out-a-ti.me
+ * This code was written without the use of artificial intelligence.
  *
  * WiFi and Config Portal handling
  *
@@ -86,6 +87,9 @@ extern bool wifiAPIsOff;
 extern bool wifiInAPMode;
 
 extern bool carMode;
+
+extern bool bootAPwithoutStaticIP;
+extern bool bootAPwithoutPW;
 
 #ifdef HAVE_MQTT
 extern bool useMQTT;

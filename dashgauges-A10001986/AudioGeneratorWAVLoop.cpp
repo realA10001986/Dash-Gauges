@@ -4,6 +4,7 @@
   
   Copyright (C) 2017  Earle F. Philhower, III
   Adapted by Thomas Winischhofer (A10001986), 2023/2025
+  This code was written without the use of artificial intelligence.
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,7 +22,6 @@
 
 #include "AudioGeneratorWAVLoop.h"
 
-#define DBG_OUT
 //define DBG_OUT audioLogger->printf_P
 
 AudioGeneratorWAVLoop::AudioGeneratorWAVLoop()
@@ -42,7 +42,7 @@ AudioGeneratorWAVLoop::~AudioGeneratorWAVLoop()
 
 bool AudioGeneratorWAVLoop::stop()
 {
-    if(!running) return true;
+    //if(!running) return true;
     running = false;
     freeBuf();
     output->stop();
@@ -164,34 +164,34 @@ bool AudioGeneratorWAVLoop::ReadWAVInfo()
   
     // Header == "RIFF"
     if(!ReadU32(&u32)) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
         return false;
     };
     if(u32 != 0x46464952) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: cannot read WAV, invalid RIFF header, got: %08X \n"), (uint32_t) u32);
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: cannot read WAV, invalid RIFF header, got: %08X \n"), (uint32_t) u32);
         return false;
     }
   
     // Skip ChunkSize
     if(!ReadU32(&u32)) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
         return false;
     };
   
     // Format == "WAVE"
     if(!ReadU32(&u32)) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
         return false;
     };
     if(u32 != 0x45564157) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: cannot read WAV, invalid WAVE header, got: %08X \n"), (uint32_t) u32);
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: cannot read WAV, invalid WAVE header, got: %08X \n"), (uint32_t) u32);
         return false;
     }
   
     // there might be JUNK or PAD - ignore it by continuing reading until we get to "fmt "
     while (1) {
         if(!ReadU32(&u32)) {
-            DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
+            //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
             return false;
         };
         if(u32 == 0x20746d66) break; // 'fmt '
@@ -199,64 +199,64 @@ bool AudioGeneratorWAVLoop::ReadWAVInfo()
   
     // subchunk size
     if(!ReadU32(&u32)) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
         return false;
     };
     if(u32 == 16) { toSkip = 0; }
     else if(u32 == 18) { toSkip = 18 - 16; }
     else if(u32 == 40) { toSkip = 40 - 16; }
     else {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: cannot read WAV, appears not to be standard PCM \n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: cannot read WAV, appears not to be standard PCM \n"));
         return false;
     } // we only do standard PCM
   
     // AudioFormat
     if(!ReadU16(&u16)) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
         return false;
     };
     if(u16 != 1) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: cannot read WAV, AudioFormat appears not to be standard PCM \n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: cannot read WAV, AudioFormat appears not to be standard PCM \n"));
         return false;
     } // we only do standard PCM
   
     // NumChannels
     if(!ReadU16(&channels)) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
         return false;
     };
     if((channels<1) || (channels>2)) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: cannot read WAV, only mono and stereo are supported \n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: cannot read WAV, only mono and stereo are supported \n"));
         return false;
     } // Mono or stereo support only
   
     // SampleRate
     if(!ReadU32(&sampleRate)) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
         return false;
     };
     if(sampleRate < 1) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: cannot read WAV, unknown sample rate \n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: cannot read WAV, unknown sample rate \n"));
         return false;
     }  // Weird rate, punt.  Will need to check w/DAC to see if supported
   
     // Ignore byterate and blockalign
     if(!ReadU32(&u32)) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
         return false;
     };
     if(!ReadU16(&u16)) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
         return false;
     };
   
     // Bits per sample
     if(!ReadU16(&bitsPerSample)) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
         return false;
     };
     if((bitsPerSample!=8) && (bitsPerSample != 16)) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: cannot read WAV, only 8 or 16 bits is supported \n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: cannot read WAV, only 8 or 16 bits is supported \n"));
         return false;
     }  // Only 8 or 16 bits
   
@@ -264,7 +264,7 @@ bool AudioGeneratorWAVLoop::ReadWAVInfo()
     while (toSkip) {
         uint8_t ign;
         if(!ReadU8(&ign)) {
-            DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
+            //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
             return false;
         };
         toSkip--;
@@ -274,28 +274,28 @@ bool AudioGeneratorWAVLoop::ReadWAVInfo()
     do {
       // id == "data"
       if(!ReadU32(&u32)) {
-          DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
+          //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
           return false;
       };
       if(u32 == 0x61746164) break; // "data"
       // Skip size, read until end of chunk
       if(!ReadU32(&u32)) {
-          DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
+          //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
           return false;
       };
       if(!file->seek(u32, SEEK_CUR)) {
-          DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data, seek failed\n"));
+          //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data, seek failed\n"));
           return false;
       }
     } while (1);
     if(!file->isOpen()) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: cannot read WAV, file is not open\n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: cannot read WAV, file is not open\n"));
         return false;
     };
   
     // Skip size, read until end of file...
     if(!ReadU32(&u32)) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: failed to read WAV data\n"));
         return false;
     };
     //availBytes = u32;
@@ -306,7 +306,7 @@ bool AudioGeneratorWAVLoop::ReadWAVInfo()
     // Now set up the buffer or fail
     buff = reinterpret_cast<uint8_t *>(malloc(buffSize));
     if(!buff) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: cannot read WAV, failed to set up buffer \n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::ReadWAVInfo: cannot read WAV, failed to set up buffer \n"));
         return false;
     };
     buffPtr = 0;
@@ -321,40 +321,40 @@ bool AudioGeneratorWAVLoop::ReadWAVInfo()
 bool AudioGeneratorWAVLoop::begin(AudioFileSource *source, AudioOutput *output)
 {
     if(!source) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::begin: failed: invalid source\n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::begin: failed: invalid source\n"));
         return false;
     }
     file = source;
     if(!output) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::begin: invalid output\n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::begin: invalid output\n"));
         return false;
     }
     this->output = output;
     if(!file->isOpen()) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::begin: file not open\n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::begin: file not open\n"));
         return false;
     } // Error
   
     if(!ReadWAVInfo()) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::begin: failed during ReadWAVInfo\n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::begin: failed during ReadWAVInfo\n"));
         return false;
     }
   
     if(!output->SetRate(sampleRate)) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::begin: failed to SetRate in output\n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::begin: failed to SetRate in output\n"));
         return freeBuf();
     }
     // Output is always 16bit
     if(!output->SetBitsPerSample(16)) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::begin: failed to SetBitsPerSample in output\n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::begin: failed to SetBitsPerSample in output\n"));
         return freeBuf();
     }
     if(!output->SetChannels(channels)) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::begin: failed to SetChannels in output\n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::begin: failed to SetChannels in output\n"));
         return freeBuf();
     }
     if(!output->begin()) {
-        DBG_OUT(PSTR("AudioGeneratorWAVLoop::begin: output's begin did not return true\n"));
+        //DBG_OUT(PSTR("AudioGeneratorWAVLoop::begin: output's begin did not return true\n"));
         return freeBuf();
     }
   

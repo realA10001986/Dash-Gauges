@@ -4,6 +4,7 @@
  * (C) 2023-2026 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.out-a-ti.me
+ * This code was written without the use of artificial intelligence.
  *
  * Main controller
  *
@@ -346,6 +347,7 @@ static uint32_t      BTTFUDPID = 0;
 static unsigned long lastBTTFNpacket = 0;
 static unsigned long lastBTTFNKA = 0;
 static unsigned long bttfnLastNotData = 0;
+static unsigned long BTTFNstartPolling = 0;
 static bool          BTTFNBootTO = false;
 static bool          haveTCDIP = false;
 static IPAddress     bttfnTcdIP;
@@ -360,6 +362,7 @@ static bool          TCDSupportsNOTData = false;
 static bool          TCDSupportsCMDDOOR = false;
 static bool          TCDSupportsSSID = false;
 static bool          bttfnDataNotEnabled = false;
+static bool          BTTFNstopGrowInt = false;
 static uint32_t      tcdHostNameHash = 0;
 static byte          BTTFMCBuf[BTTF_PACKET_SIZE];
 static IPAddress     bttfnMcIP(224, 0, 0, 224);
@@ -648,11 +651,11 @@ void main_setup()
     if(check_allow_CPA()) {
         showWaitSequence();
         dgBusy = 1;  // Force MP "off" state, if state happens to be sent
-        if(prepareCopyAudioFiles()) {
+        if(prepare_install_sp()) {
             play_file("/_installing.mp3", PA_ALLOWSD);
             waitAudioDone();
         }
-        doCopyAudioFiles();
+        do_install_sp();
         // We never return here. The ESP is rebooted.
     }
 
@@ -1367,6 +1370,8 @@ void main_loop()
             doorTCDFPO = true;  // Allow door sounds if not connected
             tcdSpeed = -1;
             lastBTTFNpacket = 0;
+            BTTFNstartPolling = millis();
+            BTTFNstopGrowInt = false;
             BTTFNBootTO = true;
         }
     }
@@ -1883,17 +1888,6 @@ static void execute_remote_command()
                 prepareReboot();
                 delay(1000);
                 esp_restart();
-            }
-            break;
-        case 123456:
-            flushDelayedSave();
-            if(!injected) {
-                deleteIpSettings();               // 123456: deletes IP settings
-                if(settings.appw[0]) {
-                    settings.appw[0] = 0;         // and clears AP mode WiFi password
-                    write_settings();
-                }
-                ssRestartTimer();
             }
             break;
         case 317931:                              // 317931: Unlock Gauge Type selection in Config Portal
@@ -2785,6 +2779,27 @@ static bool BTTFNSendRequest()
     return true;
 }
 
+static unsigned long BTTFNCalcPollInterval()
+{
+    if(!lastBTTFNpacket) {
+        // We never received anything. Grow polling interval
+        if(!BTTFNstopGrowInt) {
+            unsigned long pollingTime = millis() - BTTFNstartPolling;
+            if(pollingTime < 5*60*1000) {
+                return BTTFN_POLL_INT;
+            } else if(pollingTime < 10*60*1000) {
+                return BTTFN_POLL_INT * 3;
+            } else if(pollingTime < 30*60*1000) {
+                return BTTFN_POLL_INT * 6;
+            }
+            BTTFNstopGrowInt = true;
+        }
+        return BTTFN_POLL_INT * 30;
+    }
+
+    return BTTFN_POLL_INT;
+}
+
 static bool bttfn_connected()
 {
     if(!useBTTFN)
@@ -2942,7 +2957,7 @@ void bttfn_loop()
         if(!BTTFNWiFiUp && (WiFi.status() == WL_CONNECTED)) {
             BTTFNUpdateNow = 0;
         }
-        if((!BTTFNUpdateNow) || (millis() - BTTFNUpdateNow > BTTFN_POLL_INT)) {
+        if((!BTTFNUpdateNow) || (millis() - BTTFNUpdateNow > BTTFNCalcPollInterval())) {
             BTTFNSendRequest();
         }
     }

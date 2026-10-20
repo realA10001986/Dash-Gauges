@@ -4,6 +4,7 @@
  * (C) 2023-2026 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.out-a-ti.me
+ * This code was written without the use of artificial intelligence.
  *
  * Settings & file handling
  * 
@@ -100,11 +101,14 @@
 #define DECLARE_D_JSON(x,n) DynamicJsonDocument n(x);
 #endif 
 
+#define SND_REQ_VERSION "DG07"
 #define NUM_AUDIOFILES 17
-#define SND_REQ_VERSION "DG06"
-#define AC_FMTV 2
 #define AC_TS   1028607
-#define AC_OHSZ (14 + ((NUM_AUDIOFILES+1)*(32+4)))
+#define AC_FMTV 3
+#define AC_OHSZ (19 + ((NUM_AUDIOFILES+1)*(32+8)))
+
+Settings settings;
+IPSettings ipsettings;
 
 // Secondary settings
 // Do not change or insert new values, this
@@ -127,10 +131,8 @@ static struct [[gnu::packed]] {
 
 static int      secSetValidBytes = 0;
 static uint32_t secSettingsHash  = 0;
-static bool     haveSecSettings  = false;
 static int      terSetValidBytes = 0;
 static uint32_t terSettingsHash  = 0;
-static bool     haveTerSettings  = false;
 
 static uint32_t mainConfigHash = 0;
 static uint32_t ipHash = 0;
@@ -141,6 +143,7 @@ static const char *CONID  = "DGAA";
 const char        rspv[] = SND_REQ_VERSION;
 static uint32_t   soa = AC_TS;
 static bool       ic = false;
+static int        ict = 0;
 static uint8_t*   f(uint8_t *d, uint32_t m, int y) { return d; }
 static char       *uploadFileNames[MAX_SIM_UPLOADS] = { NULL };
 static char       *uploadRealFileNames[MAX_SIM_UPLOADS] = { NULL };
@@ -151,7 +154,7 @@ static const char *secCfgName = "/dg2cfg";          // Secondary settings (flash
 static const char *terCfgName = "/dg3cfg";          // Tertiary settings (SD)
 
 #ifdef SETTINGS_TRANSITION_2
-static const char *obsFiles[] = {
+static const char * const obsFiles[] = {
     "/dgipcfg.json", "/dgvolcfg.json", "/dgmcfg.json", "/_installing.mp3",
     NULL
 };
@@ -161,8 +164,8 @@ static const char fwfn[]      = "/dgfw.bin";
 static const char fwfnold[]   = "/dgfw.old";
 
 static const char *fsNoAvail = "File System not available";
-static const char *failFileWrite = "Failed to open file for writing";
 #ifdef DG_DBG
+static const char *failFileWrite = "Failed to open file for writing";
 static const char *badConfig = "Settings bad/missing/incomplete; writing new file";
 #endif
 
@@ -274,6 +277,13 @@ unsigned int check_file_len(const char *fn, bool& srcMedium, uint8_t *tbuf, uint
     return s;
 }
 
+static void deleteFileFromFS(const char *fn)
+{
+    if(haveFS) {
+        MYNVS.remove(fn);
+    }
+}
+
 void deleteFileFromSD(const char *fn)
 {
     if(haveSD) {
@@ -337,6 +347,7 @@ bool readFileFromSD(const char *fn, uint8_t *buf, int len)
 }
 
 // Read file of known size from NVS
+/*
 static bool readFileFromFS(const char *fn, uint8_t *buf, int len)
 {
     if(!haveFS || !MYNVS.exists(fn))
@@ -345,6 +356,7 @@ static bool readFileFromFS(const char *fn, uint8_t *buf, int len)
     File myFile = MYNVS.open(fn, FILE_READ);
     return readFile(myFile, buf, len);
 }
+*/
 
 static bool writeFile(File& myFile, uint8_t *buf, int len)
 {
@@ -904,6 +916,74 @@ static void removeObsFiles()
     #endif
 }
 
+void resettofactorydefault()
+{
+    const char *fns[] = {
+        cfgName, ipCfgName, secCfgName, terCfgName
+    };
+    Settings newSettings;
+
+    for(int i = 0; i < sizeof(fns) / sizeof(fns[0]); i++) {
+        deleteFileFromFS(fns[i]);
+        deleteFileFromSD(fns[i]);
+    }
+
+    // Preserve gauge hardware settings, set rest to default
+    memcpy(newSettings.gaugeIDA, settings.gaugeIDA, sizeof(settings.gaugeIDA));
+    memcpy(newSettings.gaugeIDB, settings.gaugeIDB, sizeof(settings.gaugeIDB));
+    memcpy(newSettings.gaugeIDC, settings.gaugeIDC, sizeof(settings.gaugeIDC));
+    memcpy((void *)&settings, (void *)&newSettings, sizeof(settings));
+    write_settings();
+}
+
+static bool checkforReset(int pin, int num)
+{        
+    delay(50);
+    if(digitalRead(pin)) {
+
+        unsigned long mnow = millis();
+        bool ssState, newSSState;
+        int ssCount = 0;
+        int ledpin = EMPTY_LED_PIN;
+        
+        ssState = digitalRead(SIDESWITCH_PIN);
+
+        // Pre-maturely use empty led
+        pinMode(ledpin, OUTPUT);
+        digitalWrite(ledpin, HIGH);
+        delay(200);
+        digitalWrite(ledpin, LOW);
+
+        while(1) {
+            if(millis() - mnow > 10*1000) break;
+            if(!digitalRead(pin)) {
+                delay(50);
+                if(!digitalRead(pin)) break;
+            }
+
+            digitalWrite(ledpin, (ssCount == num) ? HIGH : LOW);
+            
+            if(digitalRead(SIDESWITCH_PIN) != ssState) {
+                delay(50);
+                if((newSSState = digitalRead(SIDESWITCH_PIN)) != ssState) {
+                    ssCount++;
+                    ssState = newSSState;
+                }
+            } else {
+                delay(50);
+            }
+        }
+
+        while(digitalRead(pin)) {}
+
+        digitalWrite(ledpin, LOW);
+
+        return (ssCount == num);
+    }
+
+    return false;
+}
+
 /*
  * settings_setup()
  * 
@@ -914,15 +994,22 @@ static void removeObsFiles()
  */
 void settings_setup()
 {
+    #ifdef DG_DBG
     const char *funcName = "settings_setup";
+    #endif
     bool writedefault = false;
     bool freshFS = false;
     int alienVER = -1;
     int cfgReadCount = 0;
 
-    // Pre-maturely use TT button and side switch (initialized again later)
+    // Pre-maturely use on-board buttons and side switch (initialized again later)
     pinMode(TT_IN_PIN, INPUT);
+    pinMode(BUTTON1_PIN, INPUT);
+    #if CB_VERSION < 4
     pinMode(SIDESWITCH_PIN, INPUT);
+    #else
+    pinMode(SIDESWITCH_PIN, INPUT_PULLUP);
+    #endif
     
     delay(20);
 
@@ -1081,14 +1168,12 @@ void settings_setup()
     // Load secondary config file
     if(loadConfigFile(secCfgName, (uint8_t *)&secSettings, sizeof(secSettings), secSetValidBytes)) {
         secSettingsHash = calcHash((uint8_t *)&secSettings, sizeof(secSettings));
-        haveSecSettings = true;
     }
 
     // Load tertiary config file (SD only)
     if(haveSD) {
         if(loadConfigFile(terCfgName, (uint8_t *)&terSettings, sizeof(terSettings), terSetValidBytes, 1)) {
             terSettingsHash = calcHash((uint8_t *)&terSettings, sizeof(terSettings));
-            haveTerSettings = true;
         }
     }
 
@@ -1102,59 +1187,31 @@ void settings_setup()
     
     // Check if SD contains our default sound files
     if(haveSD && (haveFS || FlashROMode)) {
-        allowCPA = check_if_default_audio_present();
+        allowCPA = check_for_new_sp();
     }
 
     for(int i = 0; i < MAX_SIM_UPLOADS; i++) {
         uploadFileNames[i] = uploadRealFileNames[i] = NULL;
     }
 
-    // Allow user to delete static IP data by holding time travel
-    // while booting and switching side switch twice within 10 seconds
     if(digitalRead(TT_IN_PIN)) {
-        delay(50);
-        if(digitalRead(TT_IN_PIN)) {
-
-            unsigned long mnow = millis();
-            bool ssState, newSSState;
-            int ssCount = 0;
-            int ledpin = EMPTY_LED_PIN;
-            
-            ssState = digitalRead(SIDESWITCH_PIN);
-
-            // Pre-maturely use empty led
-            pinMode(ledpin, OUTPUT);
-            digitalWrite(ledpin, HIGH);
-            delay(200);
-            digitalWrite(ledpin, LOW);
-
-            while(1) {
-                if((ssCount == 2) || (millis() - mnow > 10*1000)) break;
-                  
-                if(digitalRead(SIDESWITCH_PIN) != ssState) {
-                    delay(50);
-                    if((newSSState = digitalRead(SIDESWITCH_PIN)) != ssState) {
-                        ssCount++;
-                        ssState = newSSState;
-                    }
-                } else {
-                    delay(50);
-                }
-            }
-
-            if(ssCount == 2) {
-    
-                Serial.printf("%s: Deleting ip config; temporarily clearing AP mode WiFi password\n", funcName);
-    
-                deleteIpSettings();
-    
-                // Set AP mode password to empty (not written, only until reboot!)
-                settings.appw[0] = 0;
-    
-                digitalWrite(ledpin, HIGH);
-                while(digitalRead(TT_IN_PIN)) {  }
-                digitalWrite(ledpin, LOW);
-            }
+        // Allow user to delete static IP data by holding time travel
+        // while booting and switching side switch twice within 10 seconds
+        if(checkforReset(TT_IN_PIN, 2)) {
+            Serial.println("Booting without static IP and without WiFi AP password");
+            bootAPwithoutStaticIP = true;
+            bootAPwithoutPW = true;
+        }
+    } else if(digitalRead(BUTTON1_PIN)) {
+        // Allow user to restore to factory defaults by holding Button 1
+        // while booting and switching side switch 6 times within 10 seconds
+        if(checkforReset(BUTTON1_PIN, 6)) {
+            Serial.println("Restoring factory defaults");
+            resettofactorydefault();
+            // no prepareReboot, not initialized yet
+            unmount_fs();
+            delay(2000);
+            esp_restart();
         }
     }
 }
@@ -1165,13 +1222,8 @@ void settings_setup()
 
 void loadCurVolume()
 {
-    if(haveSecSettings) {
-        #ifdef DG_DBG
-        Serial.println("loadCurVolume: extracting from secSettings");
-        #endif
-        if(secSettings.curVolume <= VOL_LEVELS - 1) {
-            aud_state.curVolume = secSettings.curVolume;
-        }
+    if(secSettings.curVolume <= VOL_LEVELS - 1) {
+        aud_state.curVolume = secSettings.curVolume;
     }
 }
 
@@ -1194,9 +1246,7 @@ void saveCurVolume()
 
 static void loadUpdAvail()
 {
-    if(haveSecSettings) {
-        showUpdAvail = !!secSettings.showUpdAvail;
-    }
+    showUpdAvail = !!secSettings.showUpdAvail;
 }
 
 void saveUpdAvail()
@@ -1211,12 +1261,8 @@ void saveUpdAvail()
 
 void loadUpdVers(int &v, int& r)
 {
-    if(haveSecSettings) {
-        v = secSettings.updateV;
-        r = secSettings.updateR;
-    } else {
-        v = r = 0;
-    }
+    v = secSettings.updateV;
+    r = secSettings.updateR;
 }
 
 void saveUpdVers(int v, int r)
@@ -1242,9 +1288,7 @@ void saveAllSecCP()
 
 static void loadCarMode()
 {
-    if(haveSecSettings) {
-        carMode = !!secSettings.carMode;
-    }
+    carMode = !!secSettings.carMode;
 }
 
 void saveCarMode()
@@ -1259,13 +1303,8 @@ void saveCarMode()
 
 void loadMusFoldNum()
 {
-    if(haveTerSettings) {
-        #ifdef DG_DBG
-        Serial.println("loadMusFoldNum: extracting from terSettings");
-        #endif
-        if(terSettings.musFolderNum <= 9) {
-            musFolderNum = terSettings.musFolderNum;
-        }
+    if(terSettings.musFolderNum <= 9) {
+        musFolderNum = terSettings.musFolderNum;
     }
 }
 
@@ -1277,9 +1316,7 @@ void saveMusFoldNum()
 
 void loadShuffle()
 {
-    if(haveTerSettings) {
-        aud_state.mpShuffle = terSettings.mpShuffle;
-    }
+    aud_state.mpShuffle = terSettings.mpShuffle;
 }
 
 void saveShuffle()
@@ -1485,17 +1522,82 @@ static uint32_t getuint32(uint8_t *buf)
     return t;
 }
 
-static void cfc(File& sfile, bool doCopy, int& haveErr, int& haveWriteErr)
+static uint32_t cc(File& f, uint32_t s, uint8_t *buf, uint32_t bufSize)
 {
-    const char *funcName = "cfc";
-    uint8_t buf1[1+32+4];
-    uint8_t buf2[1024];
-    uint32_t s;
-    bool skip = false, tSD = false;
+    static const uint32_t cc_table[] = {
+        0x00000000, 0x1db71064, 0x3b6e20c8, 0x26d930ac,
+        0x76dc4190, 0x6b6b51f4, 0x4db26158, 0x5005713c,
+        0xedb88320, 0xf00f9344, 0xd6d6a3e8, 0xcb61b38c,
+        0x9b64c2b0, 0x86d3d2d4, 0xa00ae278, 0xbdbdf21c
+    };
+    uint32_t cc = ~0L;
+    uint8_t  a;
+    size_t   rd;
+
+    while((rd = f.read(buf, bufSize))) {
+        s -= rd;
+        for(int i = 0; i < rd; i++) {
+            a = buf[i];
+            cc = cc_table[(cc ^ a) & 0x0f] ^ (cc >> 4);
+            cc = cc_table[(cc ^ (a >> 4)) & 0x0f] ^ (cc >> 4);
+        }
+    }
+
+    cc ^= s;
+
+    return ~cc;
+};
+
+static bool dfile_open(File& file, bool tSD, const char *fn, uint32_t s, uint32_t c, bool& sk, uint8_t *buf, int bufSize)
+{
+    File t;
+    fs::FS *myFS = tSD ? (fs::FS*)&SD : (fs::FS*)&MYNVS;
+
+    if(!s) {
+        myFS->remove(fn);
+        sk = true;
+        return true;
+    }
+    
+    if((t = myFS->open(fn, FILE_READ))) {
+        if(t.size() == s) {
+            if(c == cc(t, s, buf, bufSize)) {
+                sk = true;
+                return true;
+            }
+        }
+        t.close();
+    }
+
+    sk = false;
+    return (file = myFS->open(fn, FILE_WRITE));
+}
+
+static void dfile_delete(const char *buf1, bool tSD)
+{
+    if(tSD) 
+        deleteFileFromSD(buf1);
+    else 
+        deleteFileFromFS(buf1);
+}
+
+static void cfc(uint8_t *bbuf, int bbufSize, File& sfile, bool doCopy, int& haveErr, int& haveWriteErr)
+{
+    #ifdef DG_DBG
+    static const char *funcName = "cfc";
+    #endif
+    uint8_t buf1[1+32+4+4], rbuf[512];
+    uint8_t *cbuf;
+    int     cbufSize;
+    uint32_t s, c;
+    bool skip = false, tSD = FlashROMode;
     File dfile;
 
+    cbuf = bbuf ? bbuf : rbuf;
+    cbufSize = bbuf ? bbufSize : sizeof(rbuf);
+
     buf1[0] = '/';
-    sfile.read(buf1 + 1, 32+4);   
+    sfile.read(buf1 + 1, 32+4+4);   
     s = getuint32((*r)(buf1 + 1, soa, 32) + 32);
     if(buf1[1] == '_') {
         tSD = true;
@@ -1504,32 +1606,36 @@ static void cfc(File& sfile, bool doCopy, int& haveErr, int& haveWriteErr)
         skip = !doCopy;
     }
     if(!skip) {
-        if((dfile = (tSD || FlashROMode) ? SD.open((const char *)buf1, FILE_WRITE) : MYNVS.open((const char *)buf1, FILE_WRITE))) {
-            uint32_t t = 1024;
-            #ifdef DG_DBG
-            Serial.printf("%s: Opened destination file: %s, length %d\n", funcName, (const char *)buf1, s);
-            #endif
-            while(s > 0) {
-                t = (s < t) ? s : t;
-                if(sfile.read(buf2, t) != t) {
-                    haveErr++;
-                    break;
-                }
-                if(dfile.write((*r)(buf2, soa, t), t) != t) {
-                    haveErr++;
-                    haveWriteErr++;
-                    break;
-                }
-                s -= t;
-            }
-        } else {
+        c = getuint32(buf1 + 1 + 32 + 4);
+        if(!dfile_open(dfile, tSD, (const char *)buf1, s, c, skip, cbuf, cbufSize)) {
             haveErr++;
             haveWriteErr++;
-            Serial.printf("%s: Error opening destination file: %s\n", funcName, buf1);
+            Serial.printf("Error opening destination file: %s\n", buf1);
         }
+    }
+    if(!skip && !haveErr) {
+        uint32_t t = cbufSize;
+        #ifdef DG_DBG
+        Serial.printf("%s: Opened destination file: %s\n", funcName, (const char *)buf1);
+        #endif
+        while(s > 0) {
+            t = (s < t) ? s : t;
+            if(sfile.read(cbuf, t) != t) {
+                haveErr++;
+                break;
+            }
+            if(dfile.write((*r)(cbuf, soa, t), t) != t) {
+                haveErr++;
+                haveWriteErr++;
+                break;
+            }
+            s -= t;
+        }
+        dfile.close();
+        if(haveErr) dfile_delete((const char *)buf1, tSD);
     } else {
         #ifdef DG_DBG
-        Serial.printf("%s: Skipped file: %s, length %d\n", funcName, (const char *)buf1, s);
+        Serial.printf("%s: Skipped file: %s\n", funcName, (const char *)buf1);
         #endif
         sfile.seek(sfile.position() + s);
     }
@@ -1540,9 +1646,9 @@ bool check_allow_CPA()
     return allowCPA;
 }
 
-bool check_if_default_audio_present()
+bool check_for_new_sp()
 {
-    uint8_t dbuf[16];
+    uint8_t dbuf[20];
     File file;
     size_t ts;
 
@@ -1553,42 +1659,66 @@ bool check_if_default_audio_present()
 
     if(SD.exists(CONFN)) {
         if(file = SD.open(CONFN, FILE_READ)) {
-            ts = file.size();
-            file.read(dbuf, 14);
-            file.close();
-            if((!memcmp(dbuf, CONID, 4))         && 
-               ((*(dbuf+4) & 0x7f) == AC_FMTV)   &&
-               (!memcmp(dbuf+5, rspv, 4))        &&
-               (*(dbuf+9) == (NUM_AUDIOFILES+1)) &&
-               (getuint32(dbuf+10) == soa)           &&
-               (ts > soa + AC_OHSZ)) {
-                ic = true;
-                if(!(*(dbuf+4) & 0x80)) r  = f;
+            ts = file.read(dbuf, 19);
+            if(idSpCallback(dbuf, ts) > 1) {
+                ts = file.size();
+                if((!memcmp(dbuf+13, rspv, 4))        &&
+                   (*(dbuf+17) == (NUM_AUDIOFILES+1)) &&
+                   (getuint32(dbuf+5) == soa)         &&
+                   (ts > soa + AC_OHSZ)) {
+                    ic = true;
+                    if(!(*(dbuf+4) & 0x80)) r  = f;
+                    ict = *(dbuf+18);
+                }
             }
+            file.close();
         }
     }
 
     return ic;
 }
 
-bool prepareCopyAudioFiles()
+size_t idSpCallback(uint8_t *dbuf, size_t len)
 {
-    int i, haveErr = 0, haveWriteErr = 0;
+    size_t t = 0;
+    if(len >= 12) {
+        if(!memcmp(dbuf, CONID, 4)) {
+            t = 1;         
+            if(((*(dbuf+4) & 0x7f) == AC_FMTV) &&
+               ((*(dbuf+5) ^ 0x55) == *(dbuf+9))) {
+                t = (size_t)getuint32(dbuf+5) + 128;
+            }
+        }
+    }
+    return t;
+}
+
+static void _inst_sp_common(int totnof, bool isCopy, int& haveErr, int& haveWriteErr)
+{
+    File sfile;
+    
+    if(sfile = SD.open(CONFN, FILE_READ)) {
+        uint8_t *buf = (uint8_t *)malloc(4096);
+        sfile.seek(19);
+        for(int i = 0; i < totnof; i++) {
+           cfc(buf, 4096, sfile, isCopy, haveErr, haveWriteErr);
+           if(haveErr) break;
+        }
+        free(buf);
+        sfile.close();
+    } else {
+        haveErr++;
+    }
+}
+
+bool prepare_install_sp()
+{
+    int haveErr = 0, haveWriteErr = 0;
     
     if(!ic)
         return true;
 
-    File sfile;
-    if(sfile = SD.open(CONFN, FILE_READ)) {
-        sfile.seek(14);
-        for(i = 0; i < NUM_AUDIOFILES+1; i++) {
-           cfc(sfile, false, haveErr, haveWriteErr);
-           if(haveErr) break;
-        }
-        sfile.close();
-    } else {
-        return false;
-    }
+    _inst_sp_common(ict, false, haveErr, haveWriteErr);
 
     return (haveErr == 0);
 }
@@ -1596,10 +1726,10 @@ bool prepareCopyAudioFiles()
 // Returns false if copy failed because of a write error (which 
 //    might be cured by a reformat of the FlashFS)
 // Returns true if ok or source error (file missing, read error)
-// Sets delIDfile to true if copy fully succeeded
-static bool copy_audio_files(bool& delIDfile)
+// Sets delIDfile to true in any case (to avoid repeated flash-hurting attempts)
+static bool install_sp(bool& delIDfile)
 {
-    int i, haveErr = 0, haveWriteErr = 0;
+    int haveErr = 0, haveWriteErr = 0;
 
     if(!allowCPA) {
         delIDfile = false;
@@ -1607,34 +1737,24 @@ static bool copy_audio_files(bool& delIDfile)
     }
 
     if(ic) {
-        File sfile;
-        if(sfile = SD.open(CONFN, FILE_READ)) {
-            sfile.seek(14);
-            for(i = 0; i < NUM_AUDIOFILES+1; i++) {
-               cfc(sfile, true, haveErr, haveWriteErr);
-               if(haveErr) break;
-            }
-            sfile.close();
-        } else {
-            haveErr++;
-        }
+        _inst_sp_common(ict, true, haveErr, haveWriteErr);
     } else {
         haveErr++;
     }
 
-    delIDfile = (haveErr == 0);
+    delIDfile = true;   // (haveErr == 0);
 
     return (haveWriteErr == 0);
 }
 
-void doCopyAudioFiles()
+void do_install_sp()
 {
     bool delIDfile = false;
 
-    if((!copy_audio_files(delIDfile)) && !FlashROMode) {
+    if((!install_sp(delIDfile)) && !FlashROMode) {
         // If copy fails because of a write error, re-format flash FS
         reInstallFlashFS();
-        copy_audio_files(delIDfile);// Retry copy
+        install_sp(delIDfile);// Retry copy
     }
 
     if(haveSD) {

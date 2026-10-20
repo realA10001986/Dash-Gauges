@@ -4,6 +4,7 @@
  * (C) 2023-2026 Thomas Winischhofer (A10001986)
  * https://github.com/realA10001986/Dash-Gauges
  * https://dg.out-a-ti.me
+ * This code was written without the use of artificial intelligence.
  *
  * Global definitions
  */
@@ -15,8 +16,8 @@
  ***                          Version Strings                          ***
  *************************************************************************/
 
-#define DG_VERSION       "V1.36"            // Do NOT change format.
-#define DG_VERSION_EXTRA "SEP202026"
+#define DG_VERSION       "V2.00"            // Do NOT change format.
+#define DG_VERSION_EXTRA "OCT202026"
 
 /*************************************************************************
  ***             Configuration for peripherals/features                ***
