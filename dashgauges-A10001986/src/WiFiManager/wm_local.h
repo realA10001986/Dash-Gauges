@@ -1,20 +1,13 @@
 /**
  * wm_local.h - DG
  *
- * Based on:
- * WiFiManager, a library for the ESP32/Arduino platform
- * Creator tzapu (tablatronix)
- * Version 2.0.15
- * License MIT
- *
- * Adapted by Thomas Winischhofer (A10001986)
  */
 
 #ifndef wm_local_h
 #define wm_local_h
 
-//#define _A10001986_DBG
-//#define _A10001986_V_DBG
+#define DEVNAME "Dash Gauges"
+#define WEBFORMID "G"
 
 #define WM_MDNS
 
@@ -30,6 +23,10 @@
 #define WM_CCM
 
 #define WM_FWPROT "GAUGES"
+#define WM_FWPROTSP "DGA"
+
+//#define _A10001986_DBG
+//#define _A10001986_V_DBG
 
 // #define WM_AP_STATIC_IP
 // #define WM_APCALLBACK
