@@ -517,6 +517,9 @@ First, download main firmware and sound-pack. Both files are in every [Release p
 - "**dashgauges-A10001986-Vx.xx.bin**" for A10001986 releases, "**Dash-Gauges_vX.YY.bin**" for CircuitSetup releases
 - "**DGA-DGxx.bin**" for A10001986 releases, "**DGA.bin**" for CircuitSetup releases.
 
+> [!TIP]
+> &#127381; If you want to update several props at a time, you can download all current files from one place: https://all.out-a-ti.me
+
 ### Main firmware
 
 To update the main firmware of your Dash Gauges, 
