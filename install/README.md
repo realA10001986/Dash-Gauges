@@ -1,5 +1,6 @@
 __Users of mobile devices__: You can easily download the update file(s) from the [Release](https://dgr.out-a-ti.me) page, under "Assets".
 
+If you want to update __several props at a time__, download the files for all props from [one place](https://all.out-a-ti.me).
 ___
 
 This folder holds all files necessary for immediate installation on your Dash Gauges. Here you'll find
